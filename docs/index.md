@@ -13,4 +13,4 @@
 [TSNE Clickable](https://blab.github.io/cartography/TSNEFluClickable.html)\
 [PCA Brush](https://blab.github.io/cartography/PCAFluBrush.html)\
 [PCA Clickable](https://blab.github.io/cartography/PCAFluClickable.html)\
-[UMAP Brush](https://blab.github.io/cartography/UMAPFluClickable.html)
+[UMAP Brush](https://blab.github.io/cartography/UMAPFluBrush.html)
