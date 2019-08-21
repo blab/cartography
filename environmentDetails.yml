@@ -1,0 +1,17 @@
+name: EnvironmentDetails
+channels:
+  - defaults
+  - bioconda
+  - conda-forge
+  - pip
+dependencies:
+  - seaborn
+  - altair
+  - pandas
+  - numpy
+  - python=3.6
+  - scikit-learn
+  - umap-learn
+  - jsonschema
+  - pip:
+    - .
