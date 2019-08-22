@@ -13,8 +13,8 @@
 [TSNE Clickable](https://blab.github.io/cartography/TSNEFluClickable.html)\
 [PCA Brush](https://blab.github.io/cartography/PCAFluBrush.html)\
 [PCA Clickable](https://blab.github.io/cartography/PCAFluClickable.html)\
-[UMAP Brush](https://blab.github.io/cartography/UMAPFluBrush.html)
+[UMAP Brush](https://blab.github.io/cartography/UMAPFluBrush.html)\
 
 # Tree Linked Flu Chart with PCA, MDS, TSNE, and UMAP
 
-[Linked Chart][(https://blab.github.io/cartography/FullLinkedChartClickable.html)\
+[Linked Chart](https://blab.github.io/cartography/FullLinkedChartClickable.html)
