@@ -1,0 +1,18 @@
+name: Cartography
+channels:
+  - defaults
+  - bioconda
+  - conda-forge
+dependencies:
+  - seaborn
+  - altair
+  - pandas
+  - numpy
+  - biopython
+  - python=3.6
+  - scikit-learn
+  - umap-learn
+  - jsonschema
+  - jupyterlab
+  - pip:
+    - nextstrain-augur
