@@ -1,9 +1,10 @@
-name: Cartography
+name: cartography
 channels:
   - defaults
   - bioconda
   - conda-forge
 dependencies:
+  - pip
   - seaborn
   - altair
   - pandas
