@@ -17,4 +17,4 @@
 
 # Tree Linked Flu Chart with PCA, MDS, TSNE, and UMAP
 
-<iframe src="https://blab.github.io/cartography/FullLinkedChartClickable.html" style="width: 1000x; height: 1000px;"></iframe>
+<iframe src="https://blab.github.io/cartography/FullLinkedChartClickable.html" style="width: 1000px; height: 850px;"></iframe>
