@@ -1,0 +1,1023 @@
+{
+  "annotations": {
+    "2K": {
+      "end": 6897,
+      "start": 6828,
+      "strand": 1
+    },
+    "CA": {
+      "end": 456,
+      "start": 90,
+      "strand": 1
+    },
+    "ENV": {
+      "end": 2472,
+      "start": 960,
+      "strand": 1
+    },
+    "MP": {
+      "end": 960,
+      "start": 735,
+      "strand": 1
+    },
+    "NS1": {
+      "end": 3528,
+      "start": 2472,
+      "strand": 1
+    },
+    "NS2A": {
+      "end": 4206,
+      "start": 3528,
+      "strand": 1
+    },
+    "NS2B": {
+      "end": 4596,
+      "start": 4206,
+      "strand": 1
+    },
+    "NS3": {
+      "end": 6447,
+      "start": 4596,
+      "strand": 1
+    },
+    "NS4A": {
+      "end": 6828,
+      "start": 6447,
+      "strand": 1
+    },
+    "NS4B": {
+      "end": 7650,
+      "start": 6897,
+      "strand": 1
+    },
+    "NS5": {
+      "end": 10359,
+      "start": 7650,
+      "strand": 1
+    },
+    "PRO": {
+      "end": 735,
+      "start": 456,
+      "strand": 1
+    },
+    "nuc": {
+      "end": 10769,
+      "start": 0,
+      "strand": 1
+    }
+  },
+  "author_info": {
+    "Assis et al": {
+      "journal": "Unpublished",
+      "n": 12,
+      "paper_url": "?",
+      "title": "The genetic diversity and evolution of Zika virus strains isolated from blood donor samples"
+    },
+    "Atkinson et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Complete genomic sequence of Zika virus isolated from a clinical semen sample"
+    },
+    "Azevedo et al": {
+      "journal": "Unpublished",
+      "n": 4,
+      "paper_url": "?",
+      "title": "Genome sequences of four Zika virus isolates from Brazil"
+    },
+    "Balaraman et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Zika virus infection in pregnant mice"
+    },
+    "Baronti et al": {
+      "journal": "Genome Announc 2 (3), e00500-14 (2014)",
+      "n": 1,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/24903869",
+      "title": "Complete coding sequence of zika virus from a French polynesia outbreak in 2013"
+    },
+    "Barrows et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Repurposed drug candidates to treat ZIKV infection in pregnancy"
+    },
+    "Barzon et al": {
+      "journal": "Euro Surveill. 21 (32) (2016)",
+      "n": 3,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/27542178",
+      "title": "Infection dynamics in a traveller with persistent shedding of Zika virus RNA in semen for six months after returning from Haiti to Italy, January 2016"
+    },
+    "Bi et al": {
+      "journal": "Chin. Sci. Bull. 61 (22), 2463-2474 (2016)",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Genetic and Biological Characterization for Zika Viruses Imported through Shenzhen Port"
+    },
+    "Bittar et al": {
+      "journal": "Unpublished",
+      "n": 3,
+      "paper_url": "?",
+      "title": "Sequencing of the complete genome of Zika virus from Brazil"
+    },
+    "Black et al": {
+      "journal": "?",
+      "n": 43,
+      "paper_url": "?",
+      "title": "Genetic characterization of the Zika virus epidemic in the US Virgin Islands"
+    },
+    "Blohm et al": {
+      "journal": "Genome Announc 5 (17), e00231-17 (2017)",
+      "n": 2,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/28450510",
+      "title": "Complete Genome Sequences of Identical Zika virus Isolates in a Nursing Mother and Her Infant"
+    },
+    "Bonaldo et al": {
+      "journal": "PLoS Negl Trop Dis 10 (6), E0004816 (2016)",
+      "n": 3,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/27341420",
+      "title": "Isolation of Infective Zika Virus from Urine and Saliva of Patients in Brazil"
+    },
+    "Boukadida et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Complete Zika Virus Genome Sequences from a Serum Sample and after Isolation in Vero Cells"
+    },
+    "Bronzoni et al": {
+      "journal": "Unpublished",
+      "n": 3,
+      "paper_url": "?",
+      "title": "Molecular characterization of arbovirus from the Amazon Basin, Brazil"
+    },
+    "Calvet et al": {
+      "journal": "Lancet Infect Dis 16 (6), 653-660 (2016)",
+      "n": 1,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/26897108",
+      "title": "Detection and sequencing of Zika virus from amniotic fluid of fetuses with microcephaly in Brazil: a case study"
+    },
+    "Carletti et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Isolation of infectious Zika virus from sera in a traveller returning from Brazil to Italy"
+    },
+    "Chiu et al": {
+      "journal": "Unpublished",
+      "n": 4,
+      "paper_url": "?",
+      "title": "Epidemic establishment and cryptic transmission of Zika virus in Brazil and the Americas"
+    },
+    "Cunha et al": {
+      "journal": "Genome Announc 4 (2) (2016)",
+      "n": 1,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/26941134",
+      "title": "First Complete Genome Sequence of Zika Virus (Flaviviridae, Flavivirus) from an Autochthonous Transmission in Brazil"
+    },
+    "Delatorre et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Insights on the Zika virus genome single nucleotide polymorphisms related neurological disease"
+    },
+    "Deng et al": {
+      "journal": "Unpublished",
+      "n": 3,
+      "paper_url": "?",
+      "title": "Isolation and characterization of Zika virus imported to China in C6/36 mosquito cells"
+    },
+    "Diaz-Quinonez et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Molecular characterization of Zika virus in Mexico"
+    },
+    "Donald et al": {
+      "journal": "PLoS Negl Trop Dis 10 (10), E0005048 (2016)",
+      "n": 1,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/27706161",
+      "title": "Full Genome Sequence and sfRNA Interferon Antagonist Activity of Zika Virus from Recife, Brazil"
+    },
+    "Driggers et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Zika virus infection with prolonged maternal viremia and fetal brain abnormalities"
+    },
+    "Enfissi et al": {
+      "journal": "Lancet 387 (10015), 227-228 (2016)",
+      "n": 2,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/26775124",
+      "title": "Zika virus genome from the Americas"
+    },
+    "Faria et al": {
+      "journal": "Nature 546 (7658), 406-410 (2017)",
+      "n": 48,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/28538727",
+      "title": "Establishment and cryptic transmission of Zika virus in Brazil and the Americas"
+    },
+    "Giovanetti et al": {
+      "journal": "Infect. Genet. Evol. 41, 142-145 (2016)",
+      "n": 1,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/27071531",
+      "title": "Zika virus complete genome from Salvador, Bahia, Brazil"
+    },
+    "Green et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Zika viral sequence identified in Fortaleza, Brazil"
+    },
+    "Grubaugh et al": {
+      "journal": "Nature (2017) In press",
+      "n": 50,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/28538723",
+      "title": "Genomic epidemiology reveals multiple introductions of Zika virus into the United States"
+    },
+    "Guo et al": {
+      "journal": "Submitted (14-DEC-2017) Infectious Animal Platform, Institute of Laboratory Animal Sciences, Chinese Academy of Medical Sciences & Comparative Medicine Center, Peking Union Medica, Pan Jia Yuan Nan Li No. 5, Chao Yang District, Beijing, Beijing 100021, China",
+      "n": 2,
+      "paper_url": "?",
+      "title": "Direct Submission"
+    },
+    "Hashimoto et al": {
+      "journal": "Emerging Infect. Dis. 23 (7), 1223-1225 (2017)",
+      "n": 1,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/28445122",
+      "title": "Importation of Zika Virus from Vietnam to Japan, November 2016"
+    },
+    "Hill et al": {
+      "journal": "Lancet Infect Dis 19 (10), 1138-1147 (2019)",
+      "n": 3,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/31559967",
+      "title": "Emergence of the Asian lineage of Zika virus in Angola: an outbreak investigation"
+    },
+    "Ho et al": {
+      "journal": "Lancet Infect Dis (2017) In press",
+      "n": 117,
+      "paper_url": "?",
+      "title": "Outbreak of Zika virus infection in Singapore: an epidemiological, entomological, virological, and clinical analysis"
+    },
+    "Huang et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Transmission of zika virus through daily family life - implications for a concern in medical care and nursing of zika patients"
+    },
+    "Iovine et al": {
+      "journal": "Clin. Infect. Dis. 64 (1), 72-75 (2017)",
+      "n": 1,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/27694479",
+      "title": "Coinfection With Zika and Dengue-2 Viruses in a Traveler Returning From Haiti, 2016: Clinical Presentation and Genetic Analysis"
+    },
+    "Izquierdo-Suzan et al": {
+      "journal": "Emerging Infect. Dis. 25 (8), 1477-1484 (2019)",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Natural Vertical Transmission of Zika Virus in Larval Aedes aegypti Populations, Morelos, Mexico"
+    },
+    "Kamelian et al": {
+      "journal": "Unpublished",
+      "n": 5,
+      "paper_url": "?",
+      "title": "Phylogenetic surveillance of travel-related Zika virus infections through whole-genome sequencing methods"
+    },
+    "Karan et al": {
+      "journal": "Unpublished",
+      "n": 8,
+      "paper_url": "?",
+      "title": "Imported cases of Zika virus disease in Russia in 2016-2017"
+    },
+    "Kato et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "The almost complete sequence of Zika virus imported from Thailand to Japan in 2017"
+    },
+    "Kneubehl et al": {
+      "journal": "Submitted (26-APR-2017) Molecular Virology and Microbiology, Baylor College of Medicine, One Baylor Plaza, Houston, TX 77030, USA",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Direct Submission"
+    },
+    "Laiton Donato et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Complete genome sequence Zika Virus strain without evidence of genetic variability after passage in Vero cells and brain inoculation BALB/c mice"
+    },
+    "Lamson et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Rapid Method for Sequencing Whole Genome Sequence of Zika Virus"
+    },
+    "Lanciotti et al": {
+      "journal": "Emerging Infect. Dis. 22 (5), 933-935 (2016)",
+      "n": 6,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/27088323",
+      "title": "Phylogeny of Zika Virus in Western Hemisphere, 2015"
+    },
+    "Lasala-Sanchez et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Zika virus polyprotein sequence isolated from a fetus-brain of Cuba pregnant traveler diagnosed in Spain (Madrid)"
+    },
+    "Lednicky et al": {
+      "journal": "PLoS Negl Trop Dis 10 (4), E0004687 (2016)",
+      "n": 2,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/27111294",
+      "title": "Zika Virus Outbreak in Haiti in 2014: Molecular and Clinical Data"
+    },
+    "Leguia et al": {
+      "journal": "Unpublished",
+      "n": 6,
+      "paper_url": "?",
+      "title": "Full-genome amplification and sequencing of Zika viruses using a targeted amplification approach"
+    },
+    "Li et al": {
+      "journal": "Submitted (17-JUL-2019) Yunnan Center for Disease Control Prevention, Institute for Acute Communicable Disease Prevention and Control, No. 158, Dongsi Street, Xishan District., Kunming, Yunnan 650022, China",
+      "n": 3,
+      "paper_url": "?",
+      "title": "Direct Submission"
+    },
+    "Lin et al": {
+      "journal": "Unpublished",
+      "n": 2,
+      "paper_url": "?",
+      "title": "Imported Zika virus strains, Taiwan, 2016"
+    },
+    "Marques et al": {
+      "journal": "Submitted (14-JUN-2017) Institute for Medical Engineering and Science, Massachusetts Institute of Technology, 77 Massachusetts Ave, Building 48-419, Cambridge, MA 02139, USA",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Direct Submission"
+    },
+    "Marquez et al": {
+      "journal": "Genome Announc 5 (8), e01673-16 (2017)",
+      "n": 2,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/28232448",
+      "title": "First Complete Genome Sequences of Zika Virus Isolated from Febrile Patient Sera in Ecuador"
+    },
+    "Metsky et al": {
+      "journal": "Nature 546 (7658), 411-415 (2017)",
+      "n": 90,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/28538734",
+      "title": "Zika virus evolution and spread in the Americas"
+    },
+    "Miranda et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Brazilian Zika virus genome sequence"
+    },
+    "Mlakar et al": {
+      "journal": "N. Engl. J. Med. 374 (10), 951-958 (2016)",
+      "n": 1,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/26862926",
+      "title": "Zika Virus Associated with Microcephaly"
+    },
+    "Moutailler et al": {
+      "journal": "Viruses 11 (10), E904 (2019)",
+      "n": 9,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/31569736",
+      "title": "A New High-Throughput Tool to Screen Mosquito-Borne Viruses in Zika Virus Endemic/Epidemic Areas"
+    },
+    "Murray et al": {
+      "journal": "Emerging Infect. Dis. 23 (1), 99-101 (2017)",
+      "n": 1,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/27748649",
+      "title": "Prolonged Detection of Zika Virus in Vaginal Secretions and Whole Blood"
+    },
+    "Mutebi et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Zika Virus: Isolate from Mosquitoes, Miami Dade, 2016"
+    },
+    "Naccache et al": {
+      "journal": "Emerging Infect. Dis. 22 (10), 1788-1792 (2016)",
+      "n": 11,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/27448188",
+      "title": "Distinct Zika Virus Lineage in Salvador, Bahia, Brazil"
+    },
+    "Ng et al": {
+      "journal": "Unpublished",
+      "n": 3,
+      "paper_url": "?",
+      "title": "Genome sequences of local transmitted Zika viruses in Singapore in 2016"
+    },
+    "Nunes et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Emergence of Zika virus in Brazil: Detection of Asian genotype"
+    },
+    "Oh et al": {
+      "journal": "Unpublished",
+      "n": 2,
+      "paper_url": "?",
+      "title": "Complete genome sequence of Zika virus isolated from imported cases in the Republic of Korea, 2016"
+    },
+    "Oliveira et al": {
+      "journal": "Viruses 10 (11), E615 (2018)",
+      "n": 23,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/30405055",
+      "title": "Persistence and Intra-Host Genetic Evolution of Zika Virus Infection in Symptomatic Adults: A Special View in the Male Reproductive System"
+    },
+    "Ozawa et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Zika virus isolate ZIKV/Hu/Yokohama/1/2016"
+    },
+    "Paoaafaite et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Epidemiology and dissemination patterns of emerging arboviruses in the Pacific region, 2012-2017"
+    },
+    "Pettersson et al": {
+      "journal": "MBio 7 (5), e01239-16 (2016)",
+      "n": 13,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/27729507",
+      "title": "How Did Zika Virus Emerge in the Pacific Islands and Latin America?"
+    },
+    "Pickett et al": {
+      "journal": "Submitted (28-MAR-2019) J. Craig Venter Institute, 9704 Medical Center Drive, Rockville, MD 20850, USA",
+      "n": 38,
+      "paper_url": "?",
+      "title": "Direct Submission"
+    },
+    "Piorkowski et al": {
+      "journal": "New Microbes New Infect 11, 52-53 (2016)",
+      "n": 1,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/27274849",
+      "title": "Complete coding sequence of Zika virus from Martinique outbreak in 2015"
+    },
+    "Prilipov et al": {
+      "journal": "Submitted (13-AUG-2017) Molecular Genetics, Ivanovsky virilogy Institute, Gamalei Centre of Microbiology and Epidemiology, Gamalei str., 16, Moscow 123098, Russia",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Direct Submission"
+    },
+    "Pyke et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Isolation of Zika virus from a viremic patient from Australia with travel to Tonga, 2016"
+    },
+    "Quick et al": {
+      "journal": "Nat Protoc 12 (6), 1261-1276 (2017)",
+      "n": 5,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/28538739",
+      "title": "Multiplex PCR method for MinION and Illumina sequencing of Zika and other virus genomes directly from clinical samples"
+    },
+    "Rios et al": {
+      "journal": "Unpublished",
+      "n": 4,
+      "paper_url": "?",
+      "title": "Database for Reference Grade Microbial Sequences (FDA-ARGOS)"
+    },
+    "Sermeno-Correa et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Characterization of Zika virus isolate from mosquitoes in Sucre, Colombia"
+    },
+    "Sevilla-Reyes et al": {
+      "journal": "Unpublished",
+      "n": 2,
+      "paper_url": "?",
+      "title": "Comparative analysis between the genomes of intra-host and cell cultured Zika virus obtained from a Mexican symptomatic patient"
+    },
+    "Shabman et al": {
+      "journal": "Submitted (29-APR-2016) J. Craig Venter Institute, 9704 Medical Center Drive, Rockville, MD 20850, USA",
+      "n": 16,
+      "paper_url": "?",
+      "title": "Direct Submission"
+    },
+    "Song et al": {
+      "journal": "Emerg Microbes Infect 6 (11), E93 (2017)",
+      "n": 2,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/29089591",
+      "title": "Could Zika virus emerge in Mainland China? Virus isolation from nature in Culex quinquefasciatus, 2016"
+    },
+    "Souza et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Complete Genome of a Zika Virus Isolate, Amazonas, Brazil, 2016"
+    },
+    "Stalin Raj et al": {
+      "journal": "Submitted (18-MAR-2016) Department of Viroscience, Erasmus Medical Center, Dr Molewaterplein 50, Rotterdam 3015 GE, the Netherlands",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Direct Submission"
+    },
+    "Strottmann et al": {
+      "journal": "Unpublished",
+      "n": 3,
+      "paper_url": "?",
+      "title": "Molecular characterization of three Brazilian isolates of zika virus reveals genomic plasticity"
+    },
+    "Sun et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Returning ex-patriot Chinese to Guangdong, China, increases the risk for the local transmission of Zika virus"
+    },
+    "Swaminathan et al": {
+      "journal": "N. Engl. J. Med. 375 (19), 1907-1909 (2016)",
+      "n": 1,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/27681699",
+      "title": "Fatal Zika Virus Infection with Secondary Nonsexual Transmission"
+    },
+    "Tabata et al": {
+      "journal": "Cell Host Microbe 20 (2), 155-166 (2016)",
+      "n": 2,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/27443522",
+      "title": "Zika Virus Targets Different Primary Human Placental Cells, Suggesting Two Routes for Vertical Transmission"
+    },
+    "Taira et al": {
+      "journal": "Jpn. J. Infect. Dis. 70 (5), 586-589 (2017)",
+      "n": 1,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/28367888",
+      "title": "The First Case of Zika Virus Isolated from a Japanese Patient Who Returned to Japan from Fiji in 2016"
+    },
+    "Tan et al": {
+      "journal": "Viruses 10 (1), E44 (2018)",
+      "n": 21,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/29346272",
+      "title": "Viral and Antibody Kinetics, and Mosquito Infectivity of an Imported Case of Zika Fever Due to Asian Genotype (American Strain) in Singapore"
+    },
+    "Teixeira et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Full coding sequence of the Zika Virus isolate HS-2015-BA-01"
+    },
+    "Terzian et al": {
+      "journal": "Sci Rep 8 (1), 16034 (2018)",
+      "n": 4,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/30375482",
+      "title": "Evidence of natural Zika virus infection in neotropical non-human primates in Brazil"
+    },
+    "Theze et al": {
+      "journal": "Unpublished",
+      "n": 57,
+      "paper_url": "?",
+      "title": "Tracking Zika virus spread in Central America and Mexico using metagenomic sequencing"
+    },
+    "Tong et al": {
+      "journal": "Unpublished",
+      "n": 5,
+      "paper_url": "?",
+      "title": "A case cluster with of Zika virus infection that was imported to China in 2016"
+    },
+    "Troesemeier et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Genome sequence of a candidate World Health Organization reference strain for Zika virus for nucleic acid testing"
+    },
+    "Tsetsarkin et al": {
+      "journal": "MBio 7 (4), e01114-16 (2016)",
+      "n": 1,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/27555311",
+      "title": "A Full-Length Infectious cDNA Clone of Zika Virus from the 2015 Epidemic in Brazil as a Genetic Platform for Studies of Virus-Host Interactions and Vaccine Development"
+    },
+    "Valdespino-Vazquez et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Extra-CNS spread of Zika virus in a congenitally-infected newborn"
+    },
+    "White et al": {
+      "journal": "Submitted (29-AUG-2017) Environmental and Global Health, University of Florida - Gainesville, 1225 Center Drive, Room 4155, Gainesville, FL 32610, USA",
+      "n": 9,
+      "paper_url": "?",
+      "title": "Direct Submission"
+    },
+    "Wise et al": {
+      "journal": "Submitted (31-AUG-2017) Research, Public Health England, PHE Porton Down, Manor Farm Road, Salisbury, Wiltshire SP4 0JG, United Kingdom",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Direct Submission"
+    },
+    "Wongsurawat et al": {
+      "journal": "Emerging Infect. Dis. 24 (9) (2018) In press",
+      "n": 6,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/29985788",
+      "title": "Case of Microcephaly after Congenital Infection with Asian Lineage Zika Virus, Thailand"
+    },
+    "Wu et al": {
+      "journal": "Unpublished",
+      "n": 6,
+      "paper_url": "?",
+      "title": "Zika virus infection associated with severe liver dysfunction and coagulation disorder"
+    },
+    "Yoshida et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Detection of Zika virus in Tokyo, Japan"
+    },
+    "Zhang et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Phylogenetic analyses of the imported Zika virus cases to China, 2016"
+    },
+    "Zhao et al": {
+      "journal": "Unpublished",
+      "n": 1,
+      "paper_url": "?",
+      "title": "Isolation of infectious Zika virus from saliva in a traveller returning from Samoa to Shenzhen, China,2016"
+    },
+    "van Boheemen et al": {
+      "journal": "Sci Rep 7 (1), 2368 (2017)",
+      "n": 1,
+      "paper_url": "https://www.ncbi.nlm.nih.gov/pubmed/28539654",
+      "title": "Quasispecies composition and evolution of a typical Zika virus clinical isolate from Suriname"
+    }
+  },
+  "color_options": {
+    "authors": {
+      "key": "authors",
+      "legendTitle": "Authors",
+      "menuItem": "authors",
+      "type": "discrete"
+    },
+    "country": {
+      "color_map": [
+        [
+          "thailand",
+          "#511EA8"
+        ],
+        [
+          "vietnam",
+          "#4928B4"
+        ],
+        [
+          "singapore",
+          "#4334BF"
+        ],
+        [
+          "french_polynesia",
+          "#4041C7"
+        ],
+        [
+          "american_samoa",
+          "#3F50CC"
+        ],
+        [
+          "fiji",
+          "#3F5ED0"
+        ],
+        [
+          "china",
+          "#4379CD"
+        ],
+        [
+          "japan",
+          "#4B8FC1"
+        ],
+        [
+          "brazil",
+          "#56A0AF"
+        ],
+        [
+          "peru",
+          "#5CA7A4"
+        ],
+        [
+          "ecuador",
+          "#63AC99"
+        ],
+        [
+          "colombia",
+          "#6BB18E"
+        ],
+        [
+          "french_guiana",
+          "#73B583"
+        ],
+        [
+          "suriname",
+          "#7CB878"
+        ],
+        [
+          "venezuela",
+          "#86BB6E"
+        ],
+        [
+          "panama",
+          "#A4BE56"
+        ],
+        [
+          "nicaragua",
+          "#AFBD4F"
+        ],
+        [
+          "honduras",
+          "#B9BC4A"
+        ],
+        [
+          "el_salvador",
+          "#C2BA46"
+        ],
+        [
+          "guatemala",
+          "#CCB742"
+        ],
+        [
+          "mexico",
+          "#D3B240"
+        ],
+        [
+          "martinique",
+          "#DAAC3D"
+        ],
+        [
+          "guadeloupe",
+          "#DFA43B"
+        ],
+        [
+          "saint_barthelemy",
+          "#E39B39"
+        ],
+        [
+          "usvi",
+          "#E68F36"
+        ],
+        [
+          "puerto_rico",
+          "#E68234"
+        ],
+        [
+          "jamaica",
+          "#E67431"
+        ],
+        [
+          "dominican_republic",
+          "#E4632E"
+        ],
+        [
+          "haiti",
+          "#E1512A"
+        ],
+        [
+          "cuba",
+          "#DF4027"
+        ],
+        [
+          "usa",
+          "#DC2F24"
+        ]
+      ],
+      "key": "country",
+      "legendTitle": "country",
+      "menuItem": "country"
+    },
+    "gt": {
+      "key": "genotype",
+      "legendTitle": "Genotype",
+      "menuItem": "genotype",
+      "type": "discrete"
+    },
+    "num_date": {
+      "key": "num_date",
+      "legendTitle": "Sampling date",
+      "menuItem": "date",
+      "type": "continuous"
+    },
+    "region": {
+      "color_map": [
+        [
+          "china",
+          "#4042C7"
+        ],
+        [
+          "southeast_asia",
+          "#4274CE"
+        ],
+        [
+          "japan_korea",
+          "#69B091"
+        ],
+        [
+          "oceania",
+          "#88BB6C"
+        ],
+        [
+          "africa",
+          "#CEB541"
+        ],
+        [
+          "south_america",
+          "#E56C2F"
+        ],
+        [
+          "north_america",
+          "#DC2F24"
+        ]
+      ],
+      "key": "region",
+      "legendTitle": "region",
+      "menuItem": "region"
+    }
+  },
+  "defaults": {
+    "mapTriplicate": true
+  },
+  "filters": [
+    "country",
+    "region",
+    "authors"
+  ],
+  "geo": {
+    "country": {
+      "american_samoa": {
+        "latitude": -14.27806,
+        "longitude": -170.7025
+      },
+      "angola": {
+        "latitude": -11.8775767,
+        "longitude": 17.5691241
+      },
+      "australia": {
+        "latitude": -24.7761085,
+        "longitude": 134.755
+      },
+      "brazil": {
+        "latitude": -10.3333332,
+        "longitude": -53.1999999
+      },
+      "canada": {
+        "latitude": 61.0666922,
+        "longitude": -107.991707
+      },
+      "china": {
+        "latitude": 35.000074,
+        "longitude": 104.999927
+      },
+      "colombia": {
+        "latitude": 2.893108,
+        "longitude": -73.7845142
+      },
+      "cuba": {
+        "latitude": 22.0,
+        "longitude": -79.5
+      },
+      "dominican_republic": {
+        "latitude": 18.50012,
+        "longitude": -69.98857
+      },
+      "ecuador": {
+        "latitude": -1.3397667,
+        "longitude": -79.3666964
+      },
+      "el_salvador": {
+        "latitude": 13.68935,
+        "longitude": -89.18718
+      },
+      "fiji": {
+        "latitude": -18.1239695,
+        "longitude": 179.0122737
+      },
+      "french_guiana": {
+        "latitude": 4.93333,
+        "longitude": -52.33333
+      },
+      "french_polynesia": {
+        "latitude": -17.6797,
+        "longitude": -149.4068
+      },
+      "guadeloupe": {
+        "latitude": 16.265,
+        "longitude": -61.551
+      },
+      "guatemala": {
+        "latitude": 15.6356088,
+        "longitude": -89.8988086
+      },
+      "haiti": {
+        "latitude": 19.1399952,
+        "longitude": -72.3570971
+      },
+      "honduras": {
+        "latitude": 15.0610686,
+        "longitude": -84.5978533
+      },
+      "jamaica": {
+        "latitude": 18.16667,
+        "longitude": -77.25
+      },
+      "japan": {
+        "latitude": 35.68536,
+        "longitude": 139.75309
+      },
+      "martinique": {
+        "latitude": 14.6415,
+        "longitude": -61.0242
+      },
+      "mexico": {
+        "latitude": 19.4325301,
+        "longitude": -99.1332101
+      },
+      "nicaragua": {
+        "latitude": 13.0,
+        "longitude": -85.0
+      },
+      "panama": {
+        "latitude": 8.3096067,
+        "longitude": -81.3066245
+      },
+      "peru": {
+        "latitude": -10.0,
+        "longitude": -75.25
+      },
+      "puerto_rico": {
+        "latitude": 18.2459121,
+        "longitude": -66.4164147
+      },
+      "saint_barthelemy": {
+        "latitude": 17.9049171,
+        "longitude": -62.847207
+      },
+      "singapore": {
+        "latitude": 1.2904527,
+        "longitude": 103.852038
+      },
+      "suriname": {
+        "latitude": 4.1413025,
+        "longitude": -56.0771186
+      },
+      "thailand": {
+        "latitude": 14.8971921,
+        "longitude": 100.83273
+      },
+      "usa": {
+        "latitude": 39.7837304,
+        "longitude": -100.4458824
+      },
+      "usvi": {
+        "latitude": 18.3378801,
+        "longitude": -64.8982827
+      },
+      "venezuela": {
+        "latitude": 8.0,
+        "longitude": -66.0
+      },
+      "vietnam": {
+        "latitude": 16.16667,
+        "longitude": 107.83333
+      }
+    },
+    "region": {
+      "africa": {
+        "latitude": 4.070194,
+        "longitude": 21.824559
+      },
+      "china": {
+        "latitude": 35.000074,
+        "longitude": 104.999927
+      },
+      "japan_korea": {
+        "latitude": 35.845119,
+        "longitude": 136.736386
+      },
+      "north_america": {
+        "latitude": 28.2367447,
+        "longitude": -97.738017
+      },
+      "oceania": {
+        "latitude": -25.0562891,
+        "longitude": 152.008576
+      },
+      "south_america": {
+        "latitude": -13.083583,
+        "longitude": -58.470721
+      },
+      "southeast_asia": {
+        "latitude": 3.020567,
+        "longitude": 112.390683
+      }
+    }
+  },
+  "maintainer": [
+    "Trevor Bedford",
+    "http://bedford.io/team/trevor-bedford/"
+  ],
+  "panels": [
+    "tree",
+    "map",
+    "entropy"
+  ],
+  "title": "Real-time tracking of Zika virus evolution",
+  "updated": "13 Dec 2019",
+  "virus_count": 677
+}
