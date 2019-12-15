@@ -60,7 +60,6 @@ Nextstrain.com can only handle diseases that have clear phylogenies, or where th
 </ul>
 <li> <b> Hamming distance was used to create a similarity matrix</b> </li>
 </ol>
-<ul>
 <p>
 Each genome was split into separate nucleotides and compared with other nucleotides in the same site on other genomes using Hamming Distance. Only a difference between the main nucleotide pairs of A,G,C,and T was counted; Gaps (N) and other characters were not, as counting gaps would artificially cause shorter genomes to always be incredibly different compared to longer genomes (a shorter strain doesn’t necessarily mean complete genetic dissimilarity -- which is what counting gaps implies).
 <br> This data was read out to a .csv file to cut processing time, and metadata was read into and merged with the genomic data (using Pandas Dataframes). The strain metadata was provided by the tree build for the influenza build (matadata_h3n2_ha), and the clade membership metadata was provided by a .json build of the influenza H3N2 tree. The similarity distance matrix was plotted using Altair (https://altair-viz.github.io/) and colored by clade assignment. 
