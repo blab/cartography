@@ -78,11 +78,11 @@ Each reduction was then compared with each other in 2 different ways:
 <ol>
 <li> Pairwise vs euclidean distance scatterplot with the Pearson's Coefficient as the common metric
 <ul>
-<li>This reveals patters in reductions including local versus global recapitulation, effectiveness of technique at preserving accurate distances, and how clustered the data appears
+<li>This reveals patterns in reductions including local versus global recapitulation, effectiveness of technique at preserving accurate distances, and how clustered the data appears
 </ul>
-<li> Between vs Within clade distance boxplots with the ratio of between clade distance and within clade distance used as the common metric
+<li> Between vs Within clade distance boxplots, with the ratio of between clade distance and within clade distance used as the common metric
 <ul>
-<li>This reveals patterns concerning how spaced out the clusters are from eachother, how well the technique clusters data accurately, and how each technique deals with outliers
+<li>This reveals patterns concerning how spaced out the clusters are from each other, how well the technique clusters data accurately, and how each technique deals with outliers.
 </ul>
 </ol>
 
@@ -91,11 +91,11 @@ Each reduction was then compared with each other in 2 different ways:
 
 # RESULTS:
 
-## Qualitative:
+<p> <b> 1) Scaling and Centering the Data </b>
+<br> Because PCA (Principal Component Analysis) is made to reduce multidimensional data, and not distance matrices, PCA was used to analyze the data in this format. While the ratio given by the within vs between boxplot was 47:1, which reveals a very accurately clustered set of data, the data was not truly transformed to show any new patters or information - it looked almost identical to the .json rendering of the tree. 
+<iframe src="https://blab.github.io/cartography/FullLinkedChartClickable.html" style="width: 1700px; height: 850px;" frameBorder="0"></iframe>
 
-<p> <b> For 1) Scaling and Centering the Data </b>
-<br> There didn’t seem to be any noticeable/useful patterns found in any of the embeddings
-<br> <b> For 2) Pairwise distance between genomes </b>
+<br> <b> 2) Pairwise distance between genomes </b>
 
 <br> Pairwise distance matrix of genome values worked best for creating plots (show both types of plot and explain why one is better using actual numbers)
 <br> By comparing each genome with each other genome and clustering based on their pairwise distance takes the overall structure of the multidimensional data and groups together genomes that have similar differences -- which means it’s clumped by either region or genetic diversity. 
@@ -104,8 +104,6 @@ Each reduction was then compared with each other in 2 different ways:
 <br> MDS had better clustering by clade and by similar regions; however, lots of the points were layered on top of each other (clade 3c3.A was impossible to see in clusters 1 and 2 and clusters 3 and 4) (as the algorithm largely makes its mapping with respect to between-object distances - local structure is preserved but not global)
 t-SNE clustered genetically similar clades well, but did not place similar clusters next to each other (t-SNE has a large focus on local structure while still maintaining some global structure (presence of multiple scales of clusters))
 </p>
-
-## Quantitative
 
 <p>
 
