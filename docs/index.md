@@ -94,7 +94,7 @@ Each reduction was then compared with each other in 2 different ways:
 <p> <b> 1) Scaling and Centering the Data </b>
 <br> Because PCA (Principal Component Analysis) is made to reduce multidimensional data, and not distance matrices, PCA was used to analyze the data in this format. While the ratio given by the within vs between boxplot was 47:1, which reveals a very accurately clustered set of data, the data was not truly transformed to show any new patters or information - it looked almost identical to the .json rendering of the tree. 
 <iframe src="https://blab.github.io/cartography/PCAFluBrush.html" style="width: 1700px; height: 300px;" frameBorder="0"></iframe>
-<iframe src="https://blab.github.io/cartography/PCABoxplot.html" style="width: 450px; height: 250px;" frameBorder="0"></iframe>
+<iframe src="https://blab.github.io/cartography/PCABoxplot.html" style="width: 550px; height: 300px;" frameBorder="0"></iframe>
 <br> <b> 2) Pairwise distance between genomes </b>
 
 <br> Pairwise distance matrix of genome values worked best for creating plots (show both types of plot and explain why one is better using actual numbers)
