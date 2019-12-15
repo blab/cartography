@@ -793,9 +793,7 @@
     "CA": [],
     "ENV": [],
     "MP": [],
-    "NS1": [
-     "M349V"
-    ],
+    "NS1": [],
     "NS2A": [],
     "NS2B": [
      "I26V"
@@ -874,7 +872,9 @@
     "NS1": [],
     "NS2A": [],
     "NS2B": [],
-    "NS3": [],
+    "NS3": [
+     "K537R"
+    ],
     "NS4A": [
      "V6E",
      "M7I",
@@ -2431,14 +2431,16 @@
   "Brazil/2016/ZBRX14": {
    "aa_muts": {
     "2K": [],
-    "CA": [],
-    "ENV": [],
+    "CA": [
+     "D107E"
+    ],
+    "ENV": [
+     "G195A"
+    ],
     "MP": [],
     "NS1": [],
     "NS2A": [],
-    "NS2B": [
-     "A22T"
-    ],
+    "NS2B": [],
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
@@ -2452,9 +2454,13 @@
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [],
+    "ENV": [
+     "G195A"
+    ],
     "MP": [],
-    "NS1": [],
+    "NS1": [
+     "A182V"
+    ],
     "NS2A": [],
     "NS2B": [],
     "NS3": [],
@@ -4486,7 +4492,9 @@
     "NS1": [],
     "NS2A": [],
     "NS2B": [],
-    "NS3": [],
+    "NS3": [
+     "M334T"
+    ],
     "NS4A": [],
     "NS4B": [],
     "NS5": [],
@@ -4571,12 +4579,20 @@
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [],
+    "ENV": [
+     "T267M"
+    ],
     "MP": [],
     "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
+    "NS2A": [
+     "V206M"
+    ],
+    "NS2B": [
+     "I98M"
+    ],
+    "NS3": [
+     "M334T"
+    ],
     "NS4A": [],
     "NS4B": [],
     "NS5": [],
@@ -6128,7 +6144,6 @@
     "NS4A": [],
     "NS4B": [],
     "NS5": [
-     "V267A",
      "G854R"
     ],
     "PRO": []
@@ -6518,7 +6533,9 @@
   "MEX/2016/mex34": {
    "aa_muts": {
     "2K": [],
-    "CA": [],
+    "CA": [
+     "G105S"
+    ],
     "ENV": [
      "V153A"
     ],
@@ -6578,11 +6595,12 @@
   "MEX/2016/mex37": {
    "aa_muts": {
     "2K": [],
-    "CA": [],
+    "CA": [
+     "G105S"
+    ],
     "ENV": [],
     "MP": [],
     "NS1": [
-     "A222T",
      "K339R"
     ],
     "NS2A": [],
@@ -6713,8 +6731,7 @@
     "NS4A": [],
     "NS4B": [],
     "NS5": [
-     "V355I",
-     "C525R"
+     "V355I"
     ],
     "PRO": [
      "M12L"
@@ -6734,9 +6751,7 @@
     "NS2B": [
      "G46E"
     ],
-    "NS3": [
-     "I40V"
-    ],
+    "NS3": [],
     "NS4A": [],
     "NS4B": [
      "A235T"
@@ -7186,7 +7201,9 @@
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
-    "NS4B": [],
+    "NS4B": [
+     "F28I"
+    ],
     "NS5": [],
     "PRO": []
    }
@@ -7208,7 +7225,9 @@
      "S356F"
     ],
     "NS4A": [],
-    "NS4B": [],
+    "NS4B": [
+     "F28I"
+    ],
     "NS5": [
      "I78V",
      "A677S"
@@ -7227,9 +7246,7 @@
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
-    "NS4B": [
-     "V178A"
-    ],
+    "NS4B": [],
     "NS5": [],
     "PRO": []
    }
@@ -7620,23 +7637,6 @@
     "PRO": []
    }
   },
-  "NODE_0000000": {
-   "aa_muts": {},
-   "aa_sequences": {
-    "2K": "SPQDNQMAIIIMVAVGLLGLITA",
-    "CA": "MKNPKKKSGGFRIVNMLKRGVARVSPFGGLKRLPAGLLLGHGPIRMVLAILAFLRFTAIKPSLGLINRWGSVGKKEAMEIIKKFKKDLAAMLRIINARKEKKRRGADTSVGIVGLLLTTAMA",
-    "ENV": "IRCIGVSNRDFVEGMSGGTWVDVVLEHGGCVTVMAQDKPTVDIELVTTTVSNMAEVRSYCYEASISDMASDSRCPTQGEAYLDKQSDTQYVCKRTLVDRGWGNGCGLFGKGSLVTCAKFACSKKMTGKSIQPENLEYRIMLSVHGSQHSGMIVNDTGHETDENRAKVEITPNSPRAEATLGGFGSLGLDCEPRTGLDFSDLYYLTMNNKHWLVHKEWFHDIPLPWHAGADTGTPHWNNKEALVEFKDAHAKRQTVVVLGSQEGAVHTALAGALEAEMDGAKGRLSSGHLKCRLKMDKLRLKGVSYSLCTAAFTFTKIPAETLHGTVTVEVQYAGTDGPCKVPAQMAVDMQTLTPVGRLITANPVITESTENSKMMLELDPPFGDSYIVIGVGEKKITHHWHRSGSTIGKAFEATVRGAKRMAVLGDTAWDFGSVGGALNSLGKGIHQIFGAAFKSLFGGMSWFSQILIGTLLMWLGLNTKNGSISLMCLALGGVLIFLSTAVSA",
-    "MP": "AVTLPSHSTRKLQTRSQTWLESREYTKHLIRVENWIFRNPGFALAAAAIAWLLGSSTSQKVIYLVMILLIAPAYS",
-    "NS1": "DVGCSVDFSKKETRCGTGVFVYNDVEAWRDRYKYHPDSPRRLAAAVKQAWEDGICGISSVSRMENIMWRSVEGELNAILEENGVQLTVVVGSVKNPMWRGPQRLPVPVNELPHGWKAWGKSYFVRAAKTNNSFVVDGDTLKECPLKHRAWNSFLVEDHGFGVFHTSVWLKVREDYSLECDPAVIGTAVKGKEAVHSDLGYWIESEKNDTWRLKRAHLIEMKTCEWPKSHTLWTDGIEESDLIIPKSLAGPLSHHNTREGYRTQMKGPWHSEELEIRFEECPGTKVHVEETCGTRGPSLRSTTASGRVIEEWCCRECTMPPLSFRAKDGCWYGMEIRPRKEPESNLVRSMVTA",
-    "NS2A": "GSTDHMDHFSLGVLVILLMVQEGLKKRMTTKIIISTSMAVLVAMILGGFSMSDLAKLAILMGATFAEMNTGGDVAHLALIAAFKVRPALLVSFIFRANWTPRESMLLALASCLLQTAISALEGDLMVLINGFALAWLAIRAMVVPRTDNITLAILAALTPLARGTLLVAWRAGLATCGGFMLLSLKGKGSVKKNLPFVMALGLTAVRLVDPINVVGLLLLTRSGKR",
-    "NS2B": "SWPPSEVLTAVGLICALAGGFAKADIEMAGPMAAVGLLIVSYVVSGKSVDMYIERAGDITWEKDAEVTGNSPRLDVALDESGDFSLVEDDGPPMREIILKVVLMTICGMNPIAIPFAAGAWYVYVKTGKR",
-    "NS3": "SGALWDVPAPKEVKKGETTDGVYRVMTRRLLGSTQVGVGVMQEGVFHTMWHVTKGSALRSGEGRLDPYWGDVKQDLVSYCGPWKLDAAWDGHSEVQLLAVPPGERARNIQTLPGIFKTKDGDIGAVALDYPAGTSGSPILDKCGRVIGLYGNGVVIKNGSYVSAITQGRREEETPVECFEPSMLKKKQLTVLDLHPGAGKTRRVLPEIVREAIKTRLRTVILAPTRVVAAEMEEALRGLPVRYMTTAVNVTHSGTEIVDLMCHATFTSRLLQPIRVPNYNLYIMDEAHFTDPSSIAARGYISTRVEMGEAAAIFMTATPPGTRDAFPDSNSPIMDTEVEVPERAWSSGFDWVTDHSGKTVWFVPSVRNGNEIAACLTKAGKRVIQLSRKTFETEFQKTKHQEWDFVVTTDISEMGANFKADRVIDSRRCLKPVILDGERVILAGPMPVTHASAAQRRGRIGRNPNKPGDEYLYGGGCAETDEDHAHWLEARMLLDNIYLQDGLIASLYRPEADKVAAIEGEFKLRTEQRKTFVELMKRGDLPVWLAYQVASAGITYTDRRWCFDGTTNNTIMEDSVPAEVWTRYGEKRVLKPRWMDARVCSDHAALKSFKEFAAGKR",
-    "NS4A": "GAAFGVMEALGTLPGHMTERFQEAIDNLAVLMRAETGSRPYKAAAAQLPETLETIMLLGLLGTVSLGIFFVLMRNKGIGKMGFGMVTLGASAWLMWLSEIEPARIACVLIVVFLLLVVLIPEPEKQR",
-    "NS4B": "NELGWLERTKSDLSHLMGRREEGATIGFSMDIDLRPASAWAIYAALTTFITPAVQHAVTTSYNNYSLMAMATQAGVLFGMGKGMPFYAWDFGVPLLMIGCYSQLTPLTLIVAIILLVAHYMYLIPGLQAAAARAAQKRTAAGIMKNPVVDGIVVTDIDTMTIDPQVEKKMGQVLLIAVAVSSAILSRTAWGWGEAGALITAATSTLWEGSPNKYWNSSTATSLCNIFRGSYLAGASLIYTVTRNAGLVKRR",
-    "NS5": "GGGTGETLGEKWKARLNQMSALEFYSYKKSGITEVCREEARRALKDGVATGGHAVSRGSAKLRWLVERGYLQPYGKVIDLGCGRGGWSYYAATIRKVQEVKGYTKGGPGHEEPMLVQSYGWNIVRLKSGVDVFHMAAEPCDTLLCDIGESSSSPEVEEARTLRVLSMVGDWLEKRPGAFCIKVLCPYTSTMMETLERLQRRYGGGLVRVPLSRNSTHEMYWVSGAKSNTIKSVSTTSQLLLGRMDGPRRPVKYEEDVNLGSGTRAVVSCAEAPNMKIIGNRIERIRSEHAETWFFDENHPYRTWAYHGSYEAPTQGSASSLINGVVRLLSKPWDVVTGVTGIAMTDTTPYGQQRVFKEKVDTRVPDPQEGTRQVMSMVSSWLWKELGKHKRPRVCTKEEFINKVRSNAALGAIFEEEKEWKTAVEAVNDPRFWALVDKEREHHLRGECQSCVYNMMGKREKKQGEFGKAKGSRAIWYMWLGARFLEFEALGFLNEDHWMGRENSGGGVEGLGLQRLGYVLEEMSRIPGGRMYADDTAGWDTRISRFDLENEALITNQMEKGHRALALAIIKYTYQNKVVKVLRPAEKGKTVMDIISRQDQRGSGQVVTYALNTFTNLVVQLIRNMEAEEVLEMQDLWLLRRSEKVTNWLQSNGWDRLKRMAVSGDDCVVKPIDDRFAHALRFLNDMGKVRKDTQEWKPSTGWDNWEEVPFCSHHFNKLHLKDGRSIVVPCRHQDELIGRARVSPGAGWSIRETACLAKSYAQMWQLLYFHRRDLRLMANAICSSVPVDWVPTGRTTWSIHGKGEWMTTEDMLVVWNRVWIEENDHMEDKTPVTKWTDIPYLGKREDLWCGSLIGHRPRTTWAENIKNTVNMVRRIIGDEEKYMDYLSTQVRYLGEEGSTPGVL",
-    "PRO": "AEVTRRGSAYYMYLDRSDAGEAISFPTTLGMNKCYIQIMDLGHMCDATMSYECPMLDEGVEPDDVDCWCNTTSTWVVYGTCHHKKGEARRSRR"
-   }
-  },
   "NODE_0000001": {
    "aa_muts": {
     "2K": [],
@@ -7655,7 +7655,7 @@
     "PRO": []
    }
   },
-  "NODE_0000004": {
+  "NODE_0000005": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -7673,39 +7673,7 @@
     "PRO": []
    }
   },
-  "NODE_0000005": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000007": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000008": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -7737,7 +7705,7 @@
     "PRO": []
    }
   },
-  "NODE_0000010": {
+  "NODE_0000013": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -7753,7 +7721,27 @@
     "PRO": []
    }
   },
-  "NODE_0000014": {
+  "NODE_0000016": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [
+     "A106V"
+    ],
+    "ENV": [],
+    "MP": [],
+    "NS1": [
+     "V21I"
+    ],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000018": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -7769,7 +7757,7 @@
     "PRO": []
    }
   },
-  "NODE_0000015": {
+  "NODE_0000019": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -7778,16 +7766,23 @@
     "NS1": [],
     "NS2A": [],
     "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
+    "NS3": [
+     "R617K"
+    ],
+    "NS4A": [
+     "G1R"
+    ],
     "NS4B": [],
     "NS5": [
-     "T808I"
+     "D170I",
+     "W171G",
+     "L172F",
+     "E173G"
     ],
     "PRO": []
    }
   },
-  "NODE_0000020": {
+  "NODE_0000021": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -7815,9 +7810,7 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [
-     "Q650R"
-    ],
+    "NS5": [],
     "PRO": []
    }
   },
@@ -7853,61 +7846,13 @@
     "PRO": []
    }
   },
-  "NODE_0000025": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000026": {
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000027": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [
-     "A197T"
+    "ENV": [
+     "I445V"
     ],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000028": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
     "MP": [],
     "NS1": [],
     "NS2A": [],
@@ -7915,7 +7860,9 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "T646A"
+    ],
     "PRO": []
    }
   },
@@ -7935,62 +7882,6 @@
     "PRO": []
    }
   },
-  "NODE_0000030": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000031": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000032": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [
-     "T267M"
-    ],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [
-     "V206M"
-    ],
-    "NS2B": [
-     "I98M"
-    ],
-    "NS3": [
-     "M334T"
-    ],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000033": {
    "aa_muts": {
     "2K": [],
@@ -8003,7 +7894,9 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "Q650R"
+    ],
     "PRO": []
    }
   },
@@ -8014,103 +7907,9 @@
     "ENV": [],
     "MP": [],
     "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000035": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000036": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000037": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000038": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000039": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000040": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
+    "NS2A": [
+     "G123D"
+    ],
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
@@ -8135,103 +7934,7 @@
     "PRO": []
    }
   },
-  "NODE_0000042": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000043": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000044": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000045": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000046": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000047": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000048": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -8274,28 +7977,10 @@
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
-    "NS4B": [],
+    "NS4B": [
+     "A197T"
+    ],
     "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000051": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [
-     "I445V"
-    ],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [
-     "T646A"
-    ],
     "PRO": []
    }
   },
@@ -8322,9 +8007,7 @@
     "ENV": [],
     "MP": [],
     "NS1": [],
-    "NS2A": [
-     "G123D"
-    ],
+    "NS2A": [],
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
@@ -8352,26 +8035,6 @@
   "NODE_0000055": {
    "aa_muts": {
     "2K": [],
-    "CA": [
-     "A106V"
-    ],
-    "ENV": [],
-    "MP": [],
-    "NS1": [
-     "V21I"
-    ],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000056": {
-   "aa_muts": {
-    "2K": [],
     "CA": [],
     "ENV": [],
     "MP": [],
@@ -8382,47 +8045,6 @@
     "NS4A": [],
     "NS4B": [],
     "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000057": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000058": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [
-     "R617K"
-    ],
-    "NS4A": [
-     "G1R"
-    ],
-    "NS4B": [],
-    "NS5": [
-     "D170I",
-     "W171G",
-     "L172F",
-     "E173G"
-    ],
     "PRO": []
    }
   },
@@ -8438,7 +8060,9 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "T808I"
+    ],
     "PRO": []
    }
   },
@@ -8486,9 +8110,7 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [
-     "T808I"
-    ],
+    "NS5": [],
     "PRO": []
    }
   },
@@ -8524,55 +8146,7 @@
     "PRO": []
    }
   },
-  "NODE_0000065": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000066": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000067": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000068": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -8604,103 +8178,7 @@
     "PRO": []
    }
   },
-  "NODE_0000070": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000071": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000072": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000073": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000074": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000075": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000076": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -8754,22 +8232,6 @@
     "CA": [],
     "ENV": [],
     "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000080": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
     "NS1": [
      "M63I"
     ],
@@ -8784,7 +8246,7 @@
     "PRO": []
    }
   },
-  "NODE_0000081": {
+  "NODE_0000080": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -8864,55 +8326,7 @@
     "PRO": []
    }
   },
-  "NODE_0000086": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000087": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000088": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000089": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -8944,119 +8358,7 @@
     "PRO": []
    }
   },
-  "NODE_0000091": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000092": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000093": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000094": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000095": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000096": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000097": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000098": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -9088,87 +8390,7 @@
     "PRO": []
    }
   },
-  "NODE_0000100": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000101": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000102": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000103": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000104": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000105": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -9216,22 +8438,6 @@
     "PRO": []
    }
   },
-  "NODE_0000108": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000109": {
    "aa_muts": {
     "2K": [],
@@ -9264,89 +8470,7 @@
     "PRO": []
    }
   },
-  "NODE_0000111": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000112": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000113": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000114": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [
-     "S64T"
-    ],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000115": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000116": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -9363,6 +8487,22 @@
     "NS3": [
      "V360I"
     ],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000116": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
     "NS4A": [],
     "NS4B": [],
     "NS5": [],
@@ -9397,39 +8537,9 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000119": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000120": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "R42H"
+    ],
     "PRO": []
    }
   },
@@ -9461,77 +8571,11 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [
-     "R42H"
-    ],
-    "PRO": []
-   }
-  },
-  "NODE_0000123": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000124": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
     "NS5": [],
     "PRO": []
    }
   },
   "NODE_0000125": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000126": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000127": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -9567,7 +8611,9 @@
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [],
+    "ENV": [
+     "S64T"
+    ],
     "MP": [],
     "NS1": [],
     "NS2A": [],
@@ -9645,22 +8691,6 @@
     "PRO": []
    }
   },
-  "NODE_0000134": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000135": {
    "aa_muts": {
     "2K": [],
@@ -9709,39 +8739,23 @@
     "PRO": []
    }
   },
-  "NODE_0000138": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000139": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000140": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000141": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -9758,22 +8772,6 @@
     "NS5": [
      "N556S"
     ],
-    "PRO": []
-   }
-  },
-  "NODE_0000141": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
     "PRO": []
    }
   },
@@ -9794,22 +8792,6 @@
    }
   },
   "NODE_0000143": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000144": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -9857,54 +8839,6 @@
     "PRO": []
    }
   },
-  "NODE_0000147": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000148": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000149": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000150": {
    "aa_muts": {
     "2K": [],
@@ -9913,7 +8847,9 @@
     "MP": [],
     "NS1": [],
     "NS2A": [],
-    "NS2B": [],
+    "NS2B": [
+     "A22T"
+    ],
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
@@ -9965,7 +8901,9 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "H442Y"
+    ],
     "PRO": []
    }
   },
@@ -10017,75 +8955,7 @@
     "PRO": []
    }
   },
-  "NODE_0000157": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000158": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [
-     "I98M"
-    ],
-    "NS5": [
-     "P831L"
-    ],
-    "PRO": []
-   }
-  },
-  "NODE_0000159": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000160": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000161": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -10117,22 +8987,6 @@
     "PRO": []
    }
   },
-  "NODE_0000163": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000164": {
    "aa_muts": {
     "2K": [],
@@ -10145,9 +8999,7 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [
-     "N258D"
-    ],
+    "NS5": [],
     "PRO": []
    }
   },
@@ -10167,38 +9019,28 @@
     "PRO": []
    }
   },
-  "NODE_0000166": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000167": {
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [
-     "F153L"
+    "ENV": [
+     "T309N"
     ],
+    "MP": [],
+    "NS1": [],
     "NS2A": [],
     "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
+    "NS3": [
+     "D120G"
+    ],
+    "NS4A": [
+     "L48M"
+    ],
     "NS4B": [],
     "NS5": [
-     "P139S"
+     "Y74H",
+     "I322V",
+     "S642P"
     ],
     "PRO": []
    }
@@ -10213,7 +9055,9 @@
     "NS2A": [],
     "NS2B": [],
     "NS3": [],
-    "NS4A": [],
+    "NS4A": [
+     "F4L"
+    ],
     "NS4B": [],
     "NS5": [],
     "PRO": []
@@ -10235,27 +9079,13 @@
     "PRO": []
    }
   },
-  "NODE_0000170": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000171": {
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [],
+    "ENV": [
+     "N309T"
+    ],
     "MP": [],
     "NS1": [],
     "NS2A": [],
@@ -10269,9 +9099,7 @@
   },
   "NODE_0000172": {
    "aa_muts": {
-    "2K": [
-     "V15A"
-    ],
+    "2K": [],
     "CA": [],
     "ENV": [],
     "MP": [],
@@ -10291,23 +9119,9 @@
     "CA": [],
     "ENV": [],
     "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000174": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
+    "NS1": [
+     "K191R"
+    ],
     "NS2A": [],
     "NS2B": [],
     "NS3": [],
@@ -10340,15 +9154,15 @@
     "ENV": [],
     "MP": [],
     "NS1": [],
-    "NS2A": [
-     "I139V"
-    ],
+    "NS2A": [],
     "NS2B": [],
-    "NS3": [],
+    "NS3": [
+     "K537R"
+    ],
     "NS4A": [],
     "NS4B": [],
     "NS5": [
-     "V267A"
+     "A91T"
     ],
     "PRO": []
    }
@@ -10373,45 +9187,17 @@
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000179": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [
-     "E67D"
+    "ENV": [
+     "K118R"
     ],
-    "PRO": []
-   }
-  },
-  "NODE_0000180": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
+    "MP": [
+     "K27R"
+    ],
     "NS1": [],
     "NS2A": [],
-    "NS2B": [],
+    "NS2B": [
+     "I112V"
+    ],
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
@@ -10420,70 +9206,6 @@
    }
   },
   "NODE_0000181": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000182": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000183": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000184": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000185": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -10511,27 +9233,13 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "I554V"
+    ],
     "PRO": []
    }
   },
   "NODE_0000187": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000188": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -10552,100 +9260,22 @@
     "2K": [],
     "CA": [],
     "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000190": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000191": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [
-     "I80T"
+    "MP": [
+     "T14A"
     ],
-    "ENV": [],
-    "MP": [],
     "NS1": [],
     "NS2A": [],
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000192": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000193": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "W654R"
+    ],
     "PRO": []
    }
   },
   "NODE_0000194": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000195": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -10677,55 +9307,7 @@
     "PRO": []
    }
   },
-  "NODE_0000197": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000198": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000199": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000200": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -10752,9 +9334,11 @@
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
-    "NS4B": [],
+    "NS4B": [
+     "I98M"
+    ],
     "NS5": [
-     "A91V"
+     "P831L"
     ],
     "PRO": []
    }
@@ -10807,24 +9391,6 @@
     "PRO": []
    }
   },
-  "NODE_0000205": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [
-     "V330L"
-    ],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000206": {
    "aa_muts": {
     "2K": [],
@@ -10837,7 +9403,9 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "N258D"
+    ],
     "PRO": []
    }
   },
@@ -10857,59 +9425,27 @@
     "PRO": []
    }
   },
-  "NODE_0000208": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [
-     "V267A"
-    ],
-    "PRO": []
-   }
-  },
   "NODE_0000209": {
    "aa_muts": {
     "2K": [],
     "CA": [],
     "ENV": [],
     "MP": [],
-    "NS1": [],
-    "NS2A": [
-     "S52N"
+    "NS1": [
+     "F153L"
     ],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000210": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
     "NS2A": [],
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "P139S"
+    ],
     "PRO": []
    }
   },
-  "NODE_0000211": {
+  "NODE_0000210": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -10941,75 +9477,11 @@
     "PRO": []
    }
   },
-  "NODE_0000213": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000214": {
    "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000215": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000216": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [
-     "M460I"
+    "2K": [
+     "V15A"
     ],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000217": {
-   "aa_muts": {
-    "2K": [],
     "CA": [],
     "ENV": [],
     "MP": [],
@@ -11030,32 +9502,16 @@
     "ENV": [],
     "MP": [],
     "NS1": [],
-    "NS2A": [],
+    "NS2A": [
+     "I139V"
+    ],
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000219": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [
-     "N207S"
+    "NS5": [
+     "V267A"
     ],
-    "MP": [],
-    "NS1": [
-     "R338K"
-    ],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
     "PRO": []
    }
   },
@@ -11071,9 +9527,7 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [
-     "V267A"
-    ],
+    "NS5": [],
     "PRO": []
    }
   },
@@ -11089,7 +9543,9 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "E67D"
+    ],
     "PRO": []
    }
   },
@@ -11173,6 +9629,22 @@
     "PRO": []
    }
   },
+  "NODE_0000229": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
   "NODE_0000230": {
    "aa_muts": {
     "2K": [],
@@ -11205,55 +9677,18 @@
     "PRO": []
    }
   },
-  "NODE_0000232": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [
-     "D170I",
-     "W171G",
-     "L172F",
-     "E173G"
-    ],
-    "PRO": []
-   }
-  },
   "NODE_0000233": {
    "aa_muts": {
     "2K": [],
-    "CA": [],
+    "CA": [
+     "I80T"
+    ],
     "ENV": [],
     "MP": [],
     "NS1": [],
     "NS2A": [],
     "NS2B": [],
     "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000234": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [
-     "K537R"
-    ],
     "NS4A": [],
     "NS4B": [],
     "NS5": [],
@@ -11276,7 +9711,7 @@
     "PRO": []
    }
   },
-  "NODE_0000237": {
+  "NODE_0000236": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -11304,23 +9739,9 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000239": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "A91V"
+    ],
     "PRO": []
    }
   },
@@ -11328,37 +9749,19 @@
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [],
+    "ENV": [
+     "V330L"
+    ],
     "MP": [],
     "NS1": [],
     "NS2A": [],
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
-    "NS4B": [],
+    "NS4B": [
+     "I162T"
+    ],
     "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000241": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [
-     "G100A"
-    ],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [
-     "M572L"
-    ],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [
-     "R525C"
-    ],
     "PRO": []
    }
   },
@@ -11410,38 +9813,6 @@
     "PRO": []
    }
   },
-  "NODE_0000245": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000246": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000247": {
    "aa_muts": {
     "2K": [],
@@ -11470,9 +9841,7 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [
-     "V267A"
-    ],
+    "NS5": [],
     "PRO": []
    }
   },
@@ -11504,7 +9873,9 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "V267A"
+    ],
     "PRO": []
    }
   },
@@ -11515,71 +9886,9 @@
     "ENV": [],
     "MP": [],
     "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000252": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000253": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000254": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000255": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
+    "NS2A": [
+     "S52N"
+    ],
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
@@ -11604,27 +9913,13 @@
     "PRO": []
    }
   },
-  "NODE_0000257": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000258": {
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [],
+    "ENV": [
+     "M460I"
+    ],
     "MP": [],
     "NS1": [],
     "NS2A": [],
@@ -11652,29 +9947,17 @@
     "PRO": []
    }
   },
-  "NODE_0000260": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000261": {
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [],
+    "ENV": [
+     "N207S"
+    ],
     "MP": [],
-    "NS1": [],
+    "NS1": [
+     "R338K"
+    ],
     "NS2A": [],
     "NS2B": [],
     "NS3": [],
@@ -11696,31 +9979,13 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "V267A"
+    ],
     "PRO": []
    }
   },
   "NODE_0000263": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [
-     "V194A"
-    ],
-    "NS2A": [
-     "V206M"
-    ],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000268": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -11733,6 +9998,43 @@
     "NS4A": [],
     "NS4B": [],
     "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000265": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000269": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [
+     "D170I",
+     "W171G",
+     "L172F",
+     "E173G"
+    ],
     "PRO": []
    }
   },
@@ -11752,7 +10054,7 @@
     "PRO": []
    }
   },
-  "NODE_0000273": {
+  "NODE_0000276": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -11768,7 +10070,7 @@
     "PRO": []
    }
   },
-  "NODE_0000275": {
+  "NODE_0000277": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -11777,59 +10079,9 @@
     "NS1": [],
     "NS2A": [],
     "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000278": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000279": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [
-     "S5G"
+    "NS3": [
+     "K537R"
     ],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [
-     "I176L"
-    ],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000281": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
     "NS4A": [],
     "NS4B": [],
     "NS5": [],
@@ -11868,6 +10120,26 @@
     "PRO": []
    }
   },
+  "NODE_0000284": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [
+     "G100A"
+    ],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [
+     "M572L"
+    ],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
   "NODE_0000285": {
    "aa_muts": {
     "2K": [],
@@ -11880,75 +10152,13 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000286": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000287": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000289": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "R525C"
+    ],
     "PRO": []
    }
   },
   "NODE_0000291": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000292": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -11980,71 +10190,7 @@
     "PRO": []
    }
   },
-  "NODE_0000294": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000295": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000296": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000297": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000298": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -12071,23 +10217,9 @@
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000300": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
+    "NS4B": [
+     "V178A"
+    ],
     "NS5": [],
     "PRO": []
    }
@@ -12100,47 +10232,37 @@
     "MP": [],
     "NS1": [],
     "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
+    "NS2B": [
+     "M32L"
+    ],
+    "NS3": [
+     "I283V"
+    ],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000302": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000303": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "E522K"
+    ],
     "PRO": []
    }
   },
   "NODE_0000304": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000305": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -12165,25 +10287,13 @@
     "NS1": [],
     "NS2A": [],
     "NS2B": [],
-    "NS3": [],
+    "NS3": [
+     "T215A"
+    ],
     "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000308": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
+    "NS4B": [
+     "H15Q"
+    ],
     "NS5": [],
     "PRO": []
    }
@@ -12204,7 +10314,7 @@
     "PRO": []
    }
   },
-  "NODE_0000310": {
+  "NODE_0000314": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -12220,7 +10330,7 @@
     "PRO": []
    }
   },
-  "NODE_0000312": {
+  "NODE_0000315": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -12232,23 +10342,9 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000313": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "V267A"
+    ],
     "PRO": []
    }
   },
@@ -12257,24 +10353,6 @@
     "2K": [],
     "CA": [],
     "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000317": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [
-     "S455L"
-    ],
     "MP": [],
     "NS1": [],
     "NS2A": [],
@@ -12362,9 +10440,7 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [
-     "R515K"
-    ],
+    "NS5": [],
     "PRO": []
    }
   },
@@ -12400,47 +10476,13 @@
     "PRO": []
    }
   },
-  "NODE_0000325": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000326": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000327": {
    "aa_muts": {
     "2K": [],
     "CA": [],
     "ENV": [],
     "MP": [],
-    "NS1": [
-     "T222A"
-    ],
+    "NS1": [],
     "NS2A": [],
     "NS2B": [],
     "NS3": [],
@@ -12453,24 +10495,6 @@
   "NODE_0000328": {
    "aa_muts": {
     "2K": [],
-    "CA": [
-     "G105S"
-    ],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000329": {
-   "aa_muts": {
-    "2K": [],
     "CA": [],
     "ENV": [],
     "MP": [],
@@ -12484,55 +10508,7 @@
     "PRO": []
    }
   },
-  "NODE_0000330": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000332": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000333": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000334": {
+  "NODE_0000331": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -12552,6 +10528,22 @@
     "PRO": []
    }
   },
+  "NODE_0000334": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
   "NODE_0000335": {
    "aa_muts": {
     "2K": [],
@@ -12561,13 +10553,9 @@
     "NS1": [],
     "NS2A": [],
     "NS2B": [],
-    "NS3": [
-     "T215A"
-    ],
+    "NS3": [],
     "NS4A": [],
-    "NS4B": [
-     "H15Q"
-    ],
+    "NS4B": [],
     "NS5": [],
     "PRO": []
    }
@@ -12642,30 +10630,12 @@
     "CA": [],
     "ENV": [],
     "MP": [],
-    "NS1": [],
+    "NS1": [
+     "V194A"
+    ],
     "NS2A": [
-     "A97V"
+     "V206M"
     ],
-    "NS2B": [
-     "V67I"
-    ],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [
-     "R327K"
-    ],
-    "PRO": []
-   }
-  },
-  "NODE_0000344": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
@@ -12698,50 +10668,8 @@
     "MP": [],
     "NS1": [],
     "NS2A": [],
-    "NS2B": [
-     "M32L"
-    ],
-    "NS3": [
-     "I283V"
-    ],
-    "NS4A": [],
-    "NS4B": [
-     "V178A"
-    ],
-    "NS5": [
-     "E522K"
-    ],
-    "PRO": []
-   }
-  },
-  "NODE_0000348": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
     "NS2B": [],
     "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000349": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [
-     "V40I"
-    ],
     "NS4A": [],
     "NS4B": [],
     "NS5": [],
@@ -12786,33 +10714,19 @@
     "CA": [],
     "ENV": [],
     "MP": [],
-    "NS1": [
-     "N130S"
+    "NS1": [],
+    "NS2A": [
+     "A97V"
     ],
-    "NS2A": [],
-    "NS2B": [],
+    "NS2B": [
+     "V67I"
+    ],
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
     "NS5": [
-     "N280S"
+     "R327K"
     ],
-    "PRO": []
-   }
-  },
-  "NODE_0000353": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
     "PRO": []
    }
   },
@@ -12848,7 +10762,7 @@
     "PRO": []
    }
   },
-  "NODE_0000356": {
+  "NODE_0000357": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -12857,18 +10771,14 @@
     "NS1": [],
     "NS2A": [],
     "NS2B": [],
-    "NS3": [
-     "K187R"
-    ],
+    "NS3": [],
     "NS4A": [],
-    "NS4B": [
-     "A132V"
-    ],
+    "NS4B": [],
     "NS5": [],
     "PRO": []
    }
   },
-  "NODE_0000357": {
+  "NODE_0000358": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -12900,45 +10810,13 @@
     "PRO": []
    }
   },
-  "NODE_0000361": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000362": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [
-     "S51T"
-    ],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000364": {
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [],
+    "ENV": [
+     "S455L"
+    ],
     "MP": [],
     "NS1": [],
     "NS2A": [],
@@ -12953,15 +10831,11 @@
   "NODE_0000365": {
    "aa_muts": {
     "2K": [],
-    "CA": [
-     "V21A"
-    ],
+    "CA": [],
     "ENV": [],
     "MP": [],
     "NS1": [],
-    "NS2A": [
-     "H5Y"
-    ],
+    "NS2A": [],
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
@@ -12982,43 +10856,13 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "R515K"
+    ],
     "PRO": []
    }
   },
-  "NODE_0000367": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000369": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000370": {
+  "NODE_0000368": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -13035,40 +10879,6 @@
    }
   },
   "NODE_0000371": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [
-     "I78V"
-    ],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000372": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000373": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -13092,26 +10902,14 @@
     "MP": [],
     "NS1": [],
     "NS2A": [],
-    "NS2B": [],
+    "NS2B": [
+     "S5G"
+    ],
     "NS3": [],
     "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000375": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
+    "NS4B": [
+     "I176L"
+    ],
     "NS5": [],
     "PRO": []
    }
@@ -13128,32 +10926,11 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [
-     "S642P"
-    ],
+    "NS5": [],
     "PRO": []
    }
   },
-  "NODE_0000379": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [
-     "V669*",
-     "K670R"
-    ],
-    "PRO": []
-   }
-  },
-  "NODE_0000381": {
+  "NODE_0000378": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -13169,28 +10946,7 @@
     "PRO": []
    }
   },
-  "NODE_0000382": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [
-     "K326E"
-    ],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [
-     "C525R",
-     "I526T"
-    ],
-    "PRO": []
-   }
-  },
-  "NODE_0000383": {
+  "NODE_0000380": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -13218,9 +10974,7 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [
-     "P527S"
-    ],
+    "NS5": [],
     "PRO": []
    }
   },
@@ -13246,41 +11000,9 @@
     "CA": [],
     "ENV": [],
     "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [
-     "K384R"
+    "NS1": [
+     "T222A"
     ],
-    "PRO": []
-   }
-  },
-  "NODE_0000387": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000388": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
     "NS2A": [],
     "NS2B": [],
     "NS3": [],
@@ -13306,28 +11028,6 @@
     "PRO": []
    }
   },
-  "NODE_0000391": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [
-     "Y122H"
-    ],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [
-     "H355Y"
-    ],
-    "NS4A": [],
-    "NS4B": [
-     "I26M"
-    ],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000392": {
    "aa_muts": {
     "2K": [],
@@ -13337,11 +11037,11 @@
     "NS1": [],
     "NS2A": [],
     "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [
-     "I176M"
+    "NS3": [
+     "V40I"
     ],
+    "NS4A": [],
+    "NS4B": [],
     "NS5": [],
     "PRO": []
    }
@@ -13350,9 +11050,25 @@
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [
-     "V23I"
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [
+     "P527S"
     ],
+    "PRO": []
+   }
+  },
+  "NODE_0000394": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
     "MP": [],
     "NS1": [],
     "NS2A": [],
@@ -13361,34 +11077,6 @@
     "NS4A": [],
     "NS4B": [],
     "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000394": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [
-     "Y59H"
-    ],
-    "MP": [],
-    "NS1": [
-     "F8L",
-     "E342G"
-    ],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [
-     "E7G"
-    ],
-    "NS5": [
-     "S26P",
-     "C36S",
-     "H110R",
-     "L386I"
-    ],
     "PRO": []
    }
   },
@@ -13404,7 +11092,9 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "K384R"
+    ],
     "PRO": []
    }
   },
@@ -13424,39 +11114,7 @@
     "PRO": []
    }
   },
-  "NODE_0000397": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000398": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000400": {
+  "NODE_0000399": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -13478,23 +11136,9 @@
     "CA": [],
     "ENV": [],
     "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000402": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
+    "NS1": [
+     "I78V"
+    ],
     "NS2A": [],
     "NS2B": [],
     "NS3": [],
@@ -13508,25 +11152,15 @@
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [
-     "T309N"
-    ],
+    "ENV": [],
     "MP": [],
     "NS1": [],
     "NS2A": [],
     "NS2B": [],
-    "NS3": [
-     "D120G"
-    ],
-    "NS4A": [
-     "L48M"
-    ],
+    "NS3": [],
+    "NS4A": [],
     "NS4B": [],
-    "NS5": [
-     "Y74H",
-     "I322V",
-     "S642P"
-    ],
+    "NS5": [],
     "PRO": []
    }
   },
@@ -13536,47 +11170,18 @@
     "CA": [],
     "ENV": [],
     "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [
-     "F4L"
+    "NS1": [
+     "K326E"
     ],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000405": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
     "NS2A": [],
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000406": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "C525R",
+     "I526T"
+    ],
     "PRO": []
    }
   },
@@ -13584,24 +11189,6 @@
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [
-     "N309T"
-    ],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000408": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
     "ENV": [],
     "MP": [],
     "NS1": [],
@@ -13610,81 +11197,13 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "S642P"
+    ],
     "PRO": []
    }
   },
   "NODE_0000409": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [
-     "K191R"
-    ],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000410": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000411": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000412": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [
-     "K537R"
-    ],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [
-     "A91T"
-    ],
-    "PRO": []
-   }
-  },
-  "NODE_0000413": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -13704,28 +11223,6 @@
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [
-     "K118R"
-    ],
-    "MP": [
-     "K27R"
-    ],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [
-     "I112V"
-    ],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000415": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
     "ENV": [],
     "MP": [],
     "NS1": [],
@@ -13734,23 +11231,10 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000416": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "V669*",
+     "K670R"
+    ],
     "PRO": []
    }
   },
@@ -13802,19 +11286,23 @@
     "PRO": []
    }
   },
-  "NODE_0000421": {
+  "NODE_0000420": {
    "aa_muts": {
     "2K": [],
     "CA": [],
     "ENV": [],
     "MP": [],
-    "NS1": [],
+    "NS1": [
+     "N130S"
+    ],
     "NS2A": [],
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "N280S"
+    ],
     "PRO": []
    }
   },
@@ -13827,27 +11315,13 @@
     "NS1": [],
     "NS2A": [],
     "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [
-     "I554V"
+    "NS3": [
+     "K187R"
     ],
-    "PRO": []
-   }
-  },
-  "NODE_0000423": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
     "NS4A": [],
-    "NS4B": [],
+    "NS4B": [
+     "A132V"
+    ],
     "NS5": [],
     "PRO": []
    }
@@ -13856,7 +11330,9 @@
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [],
+    "ENV": [
+     "S51T"
+    ],
     "MP": [],
     "NS1": [],
     "NS2A": [],
@@ -13865,26 +11341,6 @@
     "NS4A": [],
     "NS4B": [],
     "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000425": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [
-     "T14A"
-    ],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [
-     "W654R"
-    ],
     "PRO": []
    }
   },
@@ -13904,7 +11360,7 @@
     "PRO": []
    }
   },
-  "NODE_0000429": {
+  "NODE_0000428": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -13912,9 +11368,7 @@
     "MP": [],
     "NS1": [],
     "NS2A": [],
-    "NS2B": [
-     "A22T"
-    ],
+    "NS2B": [],
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
@@ -13922,14 +11376,18 @@
     "PRO": []
    }
   },
-  "NODE_0000430": {
+  "NODE_0000429": {
    "aa_muts": {
     "2K": [],
-    "CA": [],
+    "CA": [
+     "V21A"
+    ],
     "ENV": [],
     "MP": [],
     "NS1": [],
-    "NS2A": [],
+    "NS2A": [
+     "H5Y"
+    ],
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
@@ -13950,9 +11408,7 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [
-     "H442Y"
-    ],
+    "NS5": [],
     "PRO": []
    }
   },
@@ -13988,26 +11444,12 @@
     "PRO": []
    }
   },
-  "NODE_0000434": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000435": {
    "aa_muts": {
     "2K": [],
-    "CA": [],
+    "CA": [
+     "D107E"
+    ],
     "ENV": [],
     "MP": [],
     "NS1": [],
@@ -14016,7 +11458,9 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "Y202H"
+    ],
     "PRO": []
    }
   },
@@ -14036,7 +11480,7 @@
     "PRO": []
    }
   },
-  "NODE_0000438": {
+  "NODE_0000439": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -14065,24 +11509,6 @@
     "NS4A": [],
     "NS4B": [],
     "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000441": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [
-     "M114V"
-    ],
     "PRO": []
    }
   },
@@ -14134,39 +11560,7 @@
     "PRO": []
    }
   },
-  "NODE_0000445": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000446": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000447": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -14201,39 +11595,9 @@
   "NODE_0000449": {
    "aa_muts": {
     "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000450": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000451": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
+    "CA": [
+     "D107E"
+    ],
     "ENV": [],
     "MP": [],
     "NS1": [],
@@ -14252,29 +11616,20 @@
     "CA": [],
     "ENV": [],
     "MP": [],
-    "NS1": [],
-    "NS2A": [],
+    "NS1": [
+     "V194A"
+    ],
+    "NS2A": [
+     "V127A"
+    ],
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000453": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "Y202H",
+     "K580R"
+    ],
     "PRO": []
    }
   },
@@ -14290,6 +11645,26 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
+    "NS5": [
+     "T833A"
+    ],
+    "PRO": []
+   }
+  },
+  "NODE_0000455": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [
+     "R324W"
+    ],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
     "NS5": [],
     "PRO": []
    }
@@ -14297,9 +11672,7 @@
   "NODE_0000456": {
    "aa_muts": {
     "2K": [],
-    "CA": [
-     "D107E"
-    ],
+    "CA": [],
     "ENV": [],
     "MP": [],
     "NS1": [],
@@ -14344,67 +11717,7 @@
     "PRO": []
    }
   },
-  "NODE_0000459": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [
-     "G195A"
-    ],
-    "MP": [],
-    "NS1": [
-     "A182V"
-    ],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000460": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [
-     "Y202H"
-    ],
-    "PRO": []
-   }
-  },
-  "NODE_0000461": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [
-     "V194A"
-    ],
-    "NS2A": [
-     "V127A"
-    ],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [
-     "K580R"
-    ],
-    "PRO": []
-   }
-  },
-  "NODE_0000462": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -14448,9 +11761,7 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [
-     "T833A"
-    ],
+    "NS5": [],
     "PRO": []
    }
   },
@@ -14460,10 +11771,10 @@
     "CA": [],
     "ENV": [],
     "MP": [],
-    "NS1": [
-     "R324W"
+    "NS1": [],
+    "NS2A": [
+     "I80T"
     ],
-    "NS2A": [],
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
@@ -14473,54 +11784,6 @@
    }
   },
   "NODE_0000466": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000467": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000468": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000469": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -14552,22 +11815,6 @@
     "PRO": []
    }
   },
-  "NODE_0000471": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000472": {
    "aa_muts": {
     "2K": [],
@@ -14584,59 +11831,7 @@
     "PRO": []
    }
   },
-  "NODE_0000473": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000474": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [
-     "F28I"
-    ],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000475": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [
-     "I80T"
-    ],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000476": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -14668,7 +11863,7 @@
     "PRO": []
    }
   },
-  "NODE_0000478": {
+  "NODE_0000480": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -14680,11 +11875,13 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "L195M"
+    ],
     "PRO": []
    }
   },
-  "NODE_0000480": {
+  "NODE_0000481": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -14754,7 +11951,9 @@
     "CA": [],
     "ENV": [],
     "MP": [],
-    "NS1": [],
+    "NS1": [
+     "S58F"
+    ],
     "NS2A": [],
     "NS2B": [],
     "NS3": [],
@@ -14764,7 +11963,7 @@
     "PRO": []
    }
   },
-  "NODE_0000487": {
+  "NODE_0000488": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -14792,61 +11991,13 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000490": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
     "NS5": [
-     "L195M"
+     "A833T"
     ],
     "PRO": []
    }
   },
-  "NODE_0000491": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000492": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000493": {
+  "NODE_0000490": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -14867,122 +12018,6 @@
     "2K": [],
     "CA": [],
     "ENV": [],
-    "MP": [],
-    "NS1": [
-     "S58F"
-    ],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000498": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000499": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [
-     "A833T"
-    ],
-    "PRO": []
-   }
-  },
-  "NODE_0000500": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000501": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000503": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000504": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000505": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
     "MP": [
      "Y74H"
     ],
@@ -14998,121 +12033,7 @@
     "PRO": []
    }
   },
-  "NODE_0000506": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000507": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000509": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000511": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000512": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000513": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000518": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [
-     "G292E"
-    ],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000520": {
+  "NODE_0000501": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -15132,7 +12053,25 @@
     "PRO": []
    }
   },
-  "NODE_0000523": {
+  "NODE_0000511": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [
+     "G292E"
+    ],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000513": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -15152,7 +12091,7 @@
     "PRO": []
    }
   },
-  "NODE_0000524": {
+  "NODE_0000514": {
    "aa_muts": {
     "2K": [],
     "CA": [
@@ -15172,7 +12111,7 @@
     "PRO": []
    }
   },
-  "NODE_0000525": {
+  "NODE_0000515": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -15190,7 +12129,127 @@
     "PRO": []
    }
   },
-  "NODE_0000526": {
+  "NODE_0000516": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [
+     "M114V"
+    ],
+    "PRO": []
+   }
+  },
+  "NODE_0000518": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [
+     "Y122H"
+    ],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [
+     "H355Y"
+    ],
+    "NS4A": [],
+    "NS4B": [
+     "I26M"
+    ],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000519": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [
+     "I176M"
+    ],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000520": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [
+     "V23I"
+    ],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000521": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [
+     "Y59H"
+    ],
+    "MP": [],
+    "NS1": [
+     "F8L",
+     "E342G"
+    ],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [
+     "E7G"
+    ],
+    "NS5": [
+     "S26P",
+     "C36S",
+     "H110R",
+     "L386I"
+    ],
+    "PRO": []
+   }
+  },
+  "NODE_0000522": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000523": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -15222,22 +12281,6 @@
     "PRO": []
    }
   },
-  "NODE_0000528": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000529": {
    "aa_muts": {
     "2K": [],
@@ -15254,39 +12297,7 @@
     "PRO": []
    }
   },
-  "NODE_0000530": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000531": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000532": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -15474,22 +12485,6 @@
     "PRO": []
    }
   },
-  "NODE_0000550": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000553": {
    "aa_muts": {
     "2K": [],
@@ -15524,38 +12519,6 @@
     "PRO": [
      "E21K"
     ]
-   }
-  },
-  "NODE_0000557": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000558": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
    }
   },
   "NODE_0000559": {
@@ -15645,38 +12608,6 @@
    }
   },
   "NODE_0000563": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000564": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000565": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -15892,7 +12823,7 @@
     "PRO": []
    }
   },
-  "NODE_0000578": {
+  "NODE_0000581": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -15908,7 +12839,7 @@
     "PRO": []
    }
   },
-  "NODE_0000579": {
+  "NODE_0000610": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -15916,408 +12847,6 @@
     "MP": [],
     "NS1": [],
     "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000583": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000584": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000585": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000594": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000595": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000597": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000598": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000599": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000600": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000601": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000602": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000604": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000607": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000608": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000609": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000619": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000620": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000623": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000626": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000628": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000630": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000631": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000632": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000633": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000634": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [
-     "S2L"
-    ],
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
@@ -16349,45 +12878,13 @@
     "ENV": [],
     "MP": [],
     "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000641": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000643": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [
-     "S186P"
+    "NS2A": [
+     "S2L"
     ],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
     "NS5": [],
     "PRO": []
    }
@@ -16424,87 +12921,25 @@
     "PRO": []
    }
   },
+  "NODE_0000646": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [
+     "S186P"
+    ],
+    "NS5": [],
+    "PRO": []
+   }
+  },
   "NODE_0000649": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000650": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000651": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000653": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000656": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000657": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -16522,7 +12957,7 @@
     "PRO": []
    }
   },
-  "NODE_0000658": {
+  "NODE_0000659": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -16538,55 +12973,7 @@
     "PRO": []
    }
   },
-  "NODE_0000660": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000661": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000663": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000666": {
+  "NODE_0000664": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -16604,55 +12991,7 @@
     "PRO": []
    }
   },
-  "NODE_0000667": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000668": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
   "NODE_0000669": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000671": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -16681,64 +13020,18 @@
     "NS4A": [],
     "NS4B": [],
     "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000673": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
     "PRO": [
      "T74A"
     ]
-   }
-  },
-  "NODE_0000674": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000675": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
    }
   },
   "NODE_0000681": {
    "aa_muts": {
     "2K": [],
     "CA": [],
-    "ENV": [],
+    "ENV": [
+     "A343V"
+    ],
     "MP": [],
     "NS1": [],
     "NS2A": [],
@@ -16751,54 +13044,6 @@
    }
   },
   "NODE_0000682": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000683": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000684": {
-   "aa_muts": {
-    "2K": [],
-    "CA": [],
-    "ENV": [],
-    "MP": [],
-    "NS1": [],
-    "NS2A": [],
-    "NS2B": [],
-    "NS3": [],
-    "NS4A": [],
-    "NS4B": [],
-    "NS5": [],
-    "PRO": []
-   }
-  },
-  "NODE_0000687": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -16829,6 +13074,183 @@
     "NS5": [
      "T347P"
     ],
+    "PRO": []
+   }
+  },
+  "NODE_0000693": {
+   "aa_muts": {},
+   "aa_sequences": {
+    "2K": "SPQDNQMAIIIMVAVGLLGLITA",
+    "CA": "MKNPKKKSGGFRIVNMLKRGVARVSPFGGLKRLPAGLLLGHGPIRMVLAILAFLRFTAIKPSLGLINRWGSVGKKEAMEIIKKFKKDLAAMLRIINARKEKKRRGADTSVGIVGLLLTTAMA",
+    "ENV": "IRCIGVSNRDFVEGMSGGTWVDVVLEHGGCVTVMAQDKPTVDIELVTTTVSNMAEVRSYCYEASISDMASDSRCPTQGEAYLDKQSDTQYVCKRTLVDRGWGNGCGLFGKGSLVTCAKFACSKKMTGKSIQPENLEYRIMLSVHGSQHSGMIVNDTGHETDENRAKVEITPNSPRAEATLGGFGSLGLDCEPRTGLDFSDLYYLTMNNKHWLVHKEWFHDIPLPWHAGADTGTPHWNNKEALVEFKDAHAKRQTVVVLGSQEGAVHTALAGALEAEMDGAKGRLSSGHLKCRLKMDKLRLKGVSYSLCTAAFTFTKIPAETLHGTVTVEVQYAGTDGPCKVPAQMAVDMQTLTPVGRLITANPVITESTENSKMMLELDPPFGDSYIVIGVGEKKITHHWHRSGSTIGKAFEATVRGAKRMAVLGDTAWDFGSVGGALNSLGKGIHQIFGAAFKSLFGGMSWFSQILIGTLLMWLGLNTKNGSISLMCLALGGVLIFLSTAVSA",
+    "MP": "AVTLPSHSTRKLQTRSQTWLESREYTKHLIRVENWIFRNPGFALAAAAIAWLLGSSTSQKVIYLVMILLIAPAYS",
+    "NS1": "DVGCSVDFSKKETRCGTGVFVYNDVEAWRDRYKYHPDSPRRLAAAVKQAWEDGICGISSVSRMENIMWRSVEGELNAILEENGVQLTVVVGSVKNPMWRGPQRLPVPVNELPHGWKAWGKSYFVRAAKTNNSFVVDGDTLKECPLKHRAWNSFLVEDHGFGVFHTSVWLKVREDYSLECDPAVIGTAVKGKEAVHSDLGYWIESEKNDTWRLKRAHLIEMKTCEWPKSHTLWTDGIEESDLIIPKSLAGPLSHHNTREGYRTQMKGPWHSEELEIRFEECPGTKVHVEETCGTRGPSLRSTTASGRVIEEWCCRECTMPPLSFRAKDGCWYGMEIRPRKEPESNLVRSMVTA",
+    "NS2A": "GSTDHMDHFSLGVLVILLMVQEGLKKRMTTKIIISTSMAVLVAMILGGFSMSDLAKLAILMGATFAEMNTGGDVAHLALIAAFKVRPALLVSFIFRANWTPRESMLLALASCLLQTAISALEGDLMVLINGFALAWLAIRAMVVPRTDNITLAILAALTPLARGTLLVAWRAGLATCGGFMLLSLKGKGSVKKNLPFVMALGLTAVRLVDPINVVGLLLLTRSGKR",
+    "NS2B": "SWPPSEVLTAVGLICALAGGFAKADIEMAGPMAAVGLLIVSYVVSGKSVDMYIERAGDITWEKDAEVTGNSPRLDVALDESGDFSLVEDDGPPMREIILKVVLMTICGMNPIAIPFAAGAWYVYVKTGKR",
+    "NS3": "SGALWDVPAPKEVKKGETTDGVYRVMTRRLLGSTQVGVGVMQEGVFHTMWHVTKGSALRSGEGRLDPYWGDVKQDLVSYCGPWKLDAAWDGHSEVQLLAVPPGERARNIQTLPGIFKTKDGDIGAVALDYPAGTSGSPILDKCGRVIGLYGNGVVIKNGSYVSAITQGRREEETPVECFEPSMLKKKQLTVLDLHPGAGKTRRVLPEIVREAIKTRLRTVILAPTRVVAAEMEEALRGLPVRYMTTAVNVTHSGTEIVDLMCHATFTSRLLQPIRVPNYNLYIMDEAHFTDPSSIAARGYISTRVEMGEAAAIFMTATPPGTRDAFPDSNSPIMDTEVEVPERAWSSGFDWVTDHSGKTVWFVPSVRNGNEIAACLTKAGKRVIQLSRKTFETEFQKTKHQEWDFVVTTDISEMGANFKADRVIDSRRCLKPVILDGERVILAGPMPVTHASAAQRRGRIGRNPNKPGDEYLYGGGCAETDEDHAHWLEARMLLDNIYLQDGLIASLYRPEADKVAAIEGEFKLRTEQRKTFVELMKRGDLPVWLAYQVASAGITYTDRRWCFDGTTNNTIMEDSVPAEVWTRYGEKRVLKPRWMDARVCSDHAALKSFKEFAAGKR",
+    "NS4A": "GAAFGVMEALGTLPGHMTERFQEAIDNLAVLMRAETGSRPYKAAAAQLPETLETIMLLGLLGTVSLGIFFVLMRNKGIGKMGFGMVTLGASAWLMWLSEIEPARIACVLIVVFLLLVVLIPEPEKQR",
+    "NS4B": "NELGWLERTKSDLSHLMGRREEGATIGFSMDIDLRPASAWAIYAALTTFITPAVQHAVTTSYNNYSLMAMATQAGVLFGMGKGMPFYAWDFGVPLLMIGCYSQLTPLTLIVAIILLVAHYMYLIPGLQAAAARAAQKRTAAGIMKNPVVDGIVVTDIDTMTIDPQVEKKMGQVLLIAVAVSSAILSRTAWGWGEAGALITAATSTLWEGSPNKYWNSSTATSLCNIFRGSYLAGASLIYTVTRNAGLVKRR",
+    "NS5": "GGGTGETLGEKWKARLNQMSALEFYSYKKSGITEVCREEARRALKDGVATGGHAVSRGSAKLRWLVERGYLQPYGKVIDLGCGRGGWSYYAATIRKVQEVKGYTKGGPGHEEPMLVQSYGWNIVRLKSGVDVFHMAAEPCDTLLCDIGESSSSPEVEEARTLRVLSMVGDWLEKRPGAFCIKVLCPYTSTMMETLERLQRRYGGGLVRVPLSRNSTHEMYWVSGAKSNTIKSVSTTSQLLLGRMDGPRRPVKYEEDVNLGSGTRAVVSCAEAPNMKIIGNRIERIRSEHAETWFFDENHPYRTWAYHGSYEAPTQGSASSLINGVVRLLSKPWDVVTGVTGIAMTDTTPYGQQRVFKEKVDTRVPDPQEGTRQVMSMVSSWLWKELGKHKRPRVCTKEEFINKVRSNAALGAIFEEEKEWKTAVEAVNDPRFWALVDKEREHHLRGECQSCVYNMMGKREKKQGEFGKAKGSRAIWYMWLGARFLEFEALGFLNEDHWMGRENSGGGVEGLGLQRLGYVLEEMSRIPGGRMYADDTAGWDTRISRFDLENEALITNQMEKGHRALALAIIKYTYQNKVVKVLRPAEKGKTVMDIISRQDQRGSGQVVTYALNTFTNLVVQLIRNMEAEEVLEMQDLWLLRRSEKVTNWLQSNGWDRLKRMAVSGDDCVVKPIDDRFAHALRFLNDMGKVRKDTQEWKPSTGWDNWEEVPFCSHHFNKLHLKDGRSIVVPCRHQDELIGRARVSPGAGWSIRETACLAKSYAQMWQLLYFHRRDLRLMANAICSSVPVDWVPTGRTTWSIHGKGEWMTTEDMLVVWNRVWIEENDHMEDKTPVTKWTDIPYLGKREDLWCGSLIGHRPRTTWAENIKNTVNMVRRIIGDEEKYMDYLSTQVRYLGEEGSTPGVL",
+    "PRO": "AEVTRRGSAYYMYLDRSDAGEAISFPTTLGMNKCYIQIMDLGHMCDATMSYECPMLDEGVEPDDVDCWCNTTSTWVVYGTCHHKKGEARRSRR"
+   }
+  },
+  "NODE_0000694": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000695": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000696": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000697": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000698": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000699": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000700": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000701": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000702": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000703": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
     "PRO": []
    }
   },
@@ -16896,6 +13318,22 @@
     "PRO": []
    }
   },
+  "NODE_0000708": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
   "NODE_0000709": {
    "aa_muts": {
     "2K": [],
@@ -16912,7 +13350,119 @@
     "PRO": []
    }
   },
+  "NODE_0000710": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000711": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
   "NODE_0000712": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000713": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000714": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000715": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000716": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000717": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -16960,6 +13510,70 @@
     "PRO": []
    }
   },
+  "NODE_0000720": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000721": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000722": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000723": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
   "NODE_0000724": {
    "aa_muts": {
     "2K": [],
@@ -16992,6 +13606,22 @@
     "PRO": []
    }
   },
+  "NODE_0000726": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
   "NODE_0000727": {
    "aa_muts": {
     "2K": [],
@@ -17008,7 +13638,3415 @@
     "PRO": []
    }
   },
+  "NODE_0000728": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000729": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
   "NODE_0000730": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000731": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000732": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000733": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000734": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000735": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000736": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000737": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000738": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000739": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000740": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000741": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000742": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000743": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000744": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000745": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000746": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000747": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000748": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000749": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000750": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000751": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000752": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000753": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000754": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000755": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000756": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000757": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000758": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000759": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000760": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000761": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000762": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000763": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000764": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000765": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000766": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000767": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000768": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000769": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000770": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000771": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000772": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000773": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000774": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000775": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000776": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000777": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000778": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000779": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000780": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000781": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000782": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000783": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000784": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000785": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000786": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000787": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000788": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000789": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000790": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000791": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000792": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000793": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000794": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000795": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000796": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000797": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000798": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000799": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000800": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000801": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000802": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000803": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000804": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000805": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000806": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000807": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000808": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000809": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000810": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000811": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000812": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000813": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000814": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000815": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000816": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000817": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000818": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000819": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000820": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000821": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000822": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000823": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000824": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000825": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000826": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000827": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000828": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000829": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000830": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000831": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000832": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000833": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000834": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000835": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000836": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000837": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000838": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000839": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000840": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000841": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000842": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000843": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000844": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000845": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000846": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000847": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000848": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000849": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000850": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000851": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000852": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000853": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000854": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000855": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000856": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000857": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000858": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000859": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000860": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000861": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000862": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000863": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000864": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000865": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000866": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000867": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000868": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000869": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000870": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000871": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000872": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000873": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000874": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000875": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000876": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000877": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000878": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000879": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000880": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000881": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000882": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000883": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000884": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000885": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000886": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000887": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000888": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000889": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000890": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000891": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000892": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000893": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000894": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000895": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000896": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000897": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000898": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000899": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000900": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000901": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000902": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000903": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000904": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000905": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000906": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000907": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000908": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000909": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000910": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000911": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000912": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000913": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000914": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000915": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000916": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000917": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000918": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000919": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000920": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000921": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000922": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000923": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000924": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000925": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000926": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000927": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000928": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000929": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000930": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000931": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000932": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000933": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000934": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000935": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000936": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000937": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000938": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000939": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000940": {
+   "aa_muts": {
+    "2K": [],
+    "CA": [],
+    "ENV": [],
+    "MP": [],
+    "NS1": [],
+    "NS2A": [],
+    "NS2B": [],
+    "NS3": [],
+    "NS4A": [],
+    "NS4B": [],
+    "NS5": [],
+    "PRO": []
+   }
+  },
+  "NODE_0000941": {
    "aa_muts": {
     "2K": [],
     "CA": [],
@@ -17357,7 +17395,9 @@
     "NS3": [],
     "NS4A": [],
     "NS4B": [],
-    "NS5": [],
+    "NS5": [
+     "A91V"
+    ],
     "PRO": []
    }
   },
@@ -17374,9 +17414,7 @@
     "NS2B": [],
     "NS3": [],
     "NS4A": [],
-    "NS4B": [
-     "I162T"
-    ],
+    "NS4B": [],
     "NS5": [],
     "PRO": []
    }
@@ -18198,8 +18236,7 @@
     "2K": [],
     "CA": [],
     "ENV": [
-     "L298F",
-     "A343V"
+     "L298F"
     ],
     "MP": [],
     "NS1": [],
@@ -18257,8 +18294,7 @@
     "2K": [],
     "CA": [],
     "ENV": [
-     "V341I",
-     "A343V"
+     "V341I"
     ],
     "MP": [],
     "NS1": [],
@@ -18268,7 +18304,9 @@
     "NS4A": [],
     "NS4B": [],
     "NS5": [],
-    "PRO": []
+    "PRO": [
+     "A74T"
+    ]
    }
   },
   "SG_048": {
@@ -18468,9 +18506,7 @@
      "T25I"
     ],
     "NS5": [],
-    "PRO": [
-     "T74A"
-    ]
+    "PRO": []
    }
   },
   "SG_060": {
@@ -19256,7 +19292,9 @@
     "NS5": [
      "G85E"
     ],
-    "PRO": []
+    "PRO": [
+     "T74A"
+    ]
    }
   },
   "SG_108": {
