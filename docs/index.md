@@ -66,22 +66,22 @@ Each genome was split into separate nucleotides and compared with other nucleoti
 <br>
 The similarity matrix was transformed for plotting by using 4 different dimensionality reduction techniques ordered by algorithmic complexity: 
 <ul> 
-<li> PCA (scikit-Learn)
-<li> MDS (scikit-Learn)
-<li> t-SNE (scikit-Learn)
-<li> UMAP (umap-Learn)
+<li> PCA (scikit-Learn)</li>
+<li> MDS (scikit-Learn)</li>
+<li> t-SNE (scikit-Learn)</li>
+<li> UMAP (umap-Learn)</li>
 </ul>
 This data was then made into a distance matrix, with each genome’s distance from another in the reduced space was plotted against the pairwise distance between the two genomes, and by using the numpy method triu_indices, which only stores values of the matrix’s upper triangle (as distance matrices are symmetrical on the diagonal), the amount of data was reduced.
 <br>
 Each reduction was then compared with each other in 2 different ways: 
 <ol>
-<li> Pairwise vs euclidean distance scatterplot with the Pearson's Coefficient as the common metric
+<li> Pairwise vs euclidean distance scatterplot with the Pearson's Coefficient as the common metric</li>
 <ul>
-<li>This reveals patterns in reductions including local versus global recapitulation, effectiveness of technique at preserving accurate distances, and how clustered the data appears
+<li>This reveals patterns in reductions including local versus global recapitulation, effectiveness of technique at preserving accurate distances, and how clustered the data appears.</li>
 </ul>
-<li> Between vs Within clade distance boxplots, with the ratio of between clade distance and within clade distance used as the common metric
+<li> Between vs Within clade distance boxplots, with the ratio of between clade distance and within clade distance used as the common metric</li>
 <ul>
-<li>This reveals patterns concerning how spaced out the clusters are from each other, how well the technique clusters data accurately, and how each technique deals with outliers.
+<li>This reveals patterns concerning how spaced out the clusters are from each other, how well the technique clusters data accurately, and how each technique deals with outliers.</li>
 </ul>
 </ol>
 
@@ -98,7 +98,7 @@ Each reduction was then compared with each other in 2 different ways:
 <br> The pairwise distance matrix was reduced using MDS, t-SNE, and UMAP. Comparing the pairwise vs euclidean scatterplots of these three embeddings, it can be seen that MDS's Cluster 1 and 2 Pearson Coefficient was the highest of them, sugesting the data is best correlated using MDS. The points on the scatterplot start out fairly concentrated at the origin, and spread out from there, which is an indicator that MDS is a local, rather than global, reduction technique. Locally preserving techniques tend to focus on retaining distances and structure on a smaller scale, usually within a cluster, and focuses less on retaining a "global" appearance of the data. The same pattern is observed with t-SNE to a much larger extent, as the points begin to spread out from the line of best fit much earlier on than MDS. UMAP, however, is a techinique aimed at preserving both local and global structure, and this is seen in UMAPs scatter plot. While the points do spread out as the pairwise distance gets larger, the points stay fairly concentrated in the same area. 
 <iframe src="https://blab.github.io/cartography/FullScatterplot.html" style="width: 1700px; height: 300px;" frameBorder="0"></iframe>
 <br> Comparing the within vs between clade boxplots for MDS, t-SNE, and UMAP, UMAP has the largest ratio of within vs between clade distance (1:7). This means that UMAP is recapitulating genetic diversity through euclidean distance with more distance than the original hamming distance matrix (which has a ratio of 1:3). MDS and t-SNE both had a ratio of 1:2. 
-<iframe src="https://blab.github.io/cartography/FullBoxplot.html" style="width: 1700px; height: 300px;" frameBorder="0"></iframe>
+<iframe src="https://blab.github.io/cartography/FullBoxplot.html" style="width: 1700px; height: 400px;" frameBorder="0"></iframe>
 
 
 
