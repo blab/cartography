@@ -1,3 +1,67 @@
+"""Functions for manipulating and plotting pairwise distances and reduced
+dimensionality embeddings of distance matrices.
+"""
+import numpy as np
+
+
+def get_hamming_distances(genomes):
+    """Calculate pairwise Hamming distances between the given list of genomes
+    and return the nonredundant array of values for use with scipy's squareform function.
+    Bases other than standard nucleotides (A, T, C, G) are ignored.
+
+    Parameters
+    ----------
+    genomes : list
+        a list of strings corresponding to genomes that should be compared
+
+
+    Returns
+    -------
+    list
+        a list of distinct Hamming distances as a vector-form distance vector
+
+    >>> genomes = ["ATGCT", "ATGCT", "ACGCT"]
+    >>> get_hamming_distances(genomes)
+    [0, 1, 1]
+
+    >>> genomes = ["AT-GCT", "AT--CT", "AC--CT"]
+    >>> get_hamming_distances(genomes)
+    [0, 1, 1]
+    """
+    # Define an array of valid nucleotides to use in pairwise distance calculations.
+    # Using a numpy array of byte strings allows us to apply numpy.isin later.
+    nucleotides = np.array([b'A', b'T', b'C', b'G'])
+
+    # Convert genome strings into numpy arrays to enable vectorized comparisons.
+    genome_arrays = [
+        np.frombuffer(genome.encode(), dtype="S1")
+        for genome in genomes
+    ]
+
+    # Precalculate positions of valid bases (A, T, C, and G) in each genome to speed up later comparisons.
+    valid_bases = [
+        np.isin(genome_array, nucleotides)
+        for genome_array in genome_arrays
+    ]
+
+    # Calculate Hamming distance between all distinct pairs of genomes at valid bases.
+    # The resulting list is a reduced representation of a symmetric matrix that can be
+    # converted to a square matrix with scipy's squareform function:
+    # https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.squareform.html
+    hamming_distances = []
+    for i in range(len(genomes)):
+        # Only compare the current genome, i, with all later genomes.
+        # This avoids repeating comparisons or comparing each genome to itself.
+        for j in range(i + 1, len(genomes)):
+            # Find all mismatches between these two genomes.
+            mismatches = genome_arrays[i] != genome_arrays[j]
+
+            # Count the number of mismatches where both genomes have valid bases.
+            hamming_distances.append((mismatches & valid_bases[i] & valid_bases[j]).sum())
+
+    return hamming_distances
+
+
 """
 principal_Df -- Data from data reduction (-T-SNE, MDS, etc) (pandas DataFrame)
 result_metadata -- the metadata that is being read in (Pandas DataFrame)
