@@ -83,15 +83,20 @@ Scaling and Centering the Data
 
 Influenza:
 
-- Because PCA (Principal Component Analysis) reduces multidimensional data and not distance matrices, PCA was used to analyze the data in this format. While the ratio given by the within vs between violin plot was 24:1 and a positive R^2 correlation of .57, revealing a tightly clustered set of data, the data was not transformed to show any new pattern or information, and clustered the data almost identically to the .json rendering of the tree.
-<iframe src="https://blab.github.io/cartography/PCAFluBrush.html" style="width: 800px; height: 400px;" frameBorder="0"></iframe>
+- Because PCA (Principal Component Analysis) reduces multidimensional data and not distance matrices, PCA was used to analyze the data in this format. While the ratio given by the within vs between violin plot was 24:1 and a positive R^2 correlation of .739, revealing a tightly clustered set of data, the data was not transformed to show any new pattern or information, and clustered the data almost identically to the .json rendering of the tree.
+<iframe src="https://blab.github.io/cartography/PCAFluBrush.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
 
 ![](PCAViolinPlotFlu.png)
 ![](PCAScatterplotLOESSFlu.png)
 
 Zika:
 
-- The Ratio given by the within vs between violin plot was 1:1, revealing data not clustered at all. The chart reflects this, having no pattern whatsoever. 
+- The Ratio given by the within vs between violin plot was 1:1 and a R^2 correlation of .011, revealing data not clustered at all. The chart reflects this, having no pattern whatsoever. 
+<iframe src="https://blab.github.io/cartography/PCAZikaBrush.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
+
+![](PCAViolinPlotZika.png)
+![](PCAScatterplotLOESSZika.png)
+
 Pairwise distance between genomes
 
 Pairwise distance matrix of genome values worked best for creating plots (show both types of plot and explain why one is better using actual numbers)
