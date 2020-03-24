@@ -44,7 +44,9 @@ The Modules and dependencies necessary to run this code well as instructions are
 - jsonschema
 - jupyterlab
 - nextstrain-augur
+
 [Docker](https://www.docker.com/) is also needed to run the tree builds, but to install this a computer must have certain software. More detailed instructions can be found on the website linked above. To run the code on Cartography, however, Docker is not necessary. 
+
 ### Methods:
 A tree build was run using nextstrain-cli for influenza H3N2 to obtain genomic data. An aligned FASTA file was created in the results folder of the flu tree build. The build can be found at [Fauna](https://github.com/nextstrain/fauna/tree/master/builds) under "FLU" (instructions on running the build are also housed there). The created FASTA file is available [here](https://github.com/blab/cartography/tree/master/notebooks/Data) for free use. This file was then read and translated into 2 arrays using the [BioPython package SeqIO](https://biopython.org/DIST/docs/api/Bio.SeqIO-module.html), where one array held the strain identifiers, and the other the full genome corresponding to the strain identifier.
 
@@ -59,9 +61,10 @@ The second approach used Hamming distance to create a similarity matrix. Each ge
 ![](PaperImages/SimilarityMatrixExplanation.png)
 
 The similarity matrix was read out to a .csv file to cut processing time. The similarity distance matrix was reduced through MDS, t-SNE, and UMAP, plotted using [Altair](https://altair-viz.github.io/) ,and colored by clade assignment. Clade membership metadata was provided by a .json build of the influenza H3N2 tree (the build can be found at https://github.com/blab/cartography/tree/master/notebooks/Data) . The 3 different dimensionality reduction techniques are ordered below by algorithmic complexity: 
-MDS (scikit-Learn)
-t-SNE (scikit-Learn)
-UMAP (umap-Learn)
+- MDS (scikit-Learn)
+- t-SNE (scikit-Learn)
+- UMAP (umap-Learn)
+
 To further analyze the embeddings’ ability to accurately capture the multidimensional data, two separate plots were made: pairwise vs euclidean distance scatterplots with a LOESS best fit line, and within vs between clade violin plots per embedding.
 
 Pairwise vs euclidean distance scatterplots: 
@@ -78,7 +81,7 @@ Scaling and Centering the Data
 Influenza:
 - Because PCA (Principal Component Analysis) reduces multidimensional data and not distance matrices, PCA was used to analyze the data in this format. While the ratio given by the within vs between violin plot was 24:1 and a positive R^2 correlation of .57, revealing a tightly clustered set of data, the data was not transformed to show any new pattern or information, and clustered the data almost identically to the .json rendering of the tree.
 <iframe src="https://blab.github.io/cartography/PCAFluBrush.html" style="width: 800px; height: 400px;" frameBorder="0"></iframe>
-![]((PCAViolinPlotFlu.png)
+![](PCAViolinPlotFlu.png)
 ![](PCAScatterplotLOESSFlu.png)
 Zika:
 - The Ratio given by the within vs between violin plot was 1:1, revealing data not clustered at all. The chart reflects this, having no pattern whatsoever. 
