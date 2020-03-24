@@ -67,17 +67,20 @@ The similarity matrix was read out to a .csv file to cut processing time. The si
 
 To further analyze the embeddings’ ability to accurately capture the multidimensional data, two separate plots were made: pairwise vs euclidean distance scatterplots with a LOESS best fit line, and within vs between clade violin plots per embedding.
 
-Pairwise vs euclidean distance scatterplots: 
-The similarity matrix’s upper triangle values are made into a flattened numpy array using [numpy.triu_indices()](https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.triu_indices.html) and joined with a flattened numpy array of euclidean distances between each embedding’s coordinate points in a Pandas Dataframe. This dataframe is plotted using seaborn and [statsplots’ LOESS function](https://www.statsmodels.org/stable/generated/statsmodels.nonparametric.smoothers_lowess.lowess.html) . This data was made into a distance matrix as well, where each genome’s distance from another in the reduced space was plotted against the pairwise distance between the two genomes. The pairwise distance was on the x axis, and the euclidean distance was on the y axis. Linear regression data was calculated from the Pandas Dataframe using [linregress](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html) .
+Pairwise vs euclidean distance scatterplots:
+ 
+The similarity matrix’s upper triangle values are made into a flattened numpy array using [numpy.triu_indices()](https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.triu_indices.html) and joined with a flattened numpy array of euclidean distances between each embedding’s coordinate points in a Pandas Dataframe. This dataframe is plotted using seaborn and [statsplots’ LOESS function](https://www.statsmodels.org/stable/generated/statsmodels.nonparametric.smoothers_lowess.lowess.html) . This data was made into a distance matrix as well, where each genome’s distance from another in the reduced space was plotted against the pairwise distance between the two genomes. The pairwise distance was on the x axis, and the euclidean distance was on the y axis. Linear regression data was calculated from the Pandas Dataframe using [linregress](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html).
 
-Between vs Within clade Violin plots
+Between vs Within clade Violin plots:
 
 The matrix of euclidean distances for each embedding was flattened, and each comparison was labeled as a “within clade” or “between clade” comparison using the clade assignments from the .json build of the tree. Violin plots were made using [seaborn](https://seaborn.pydata.org/) , separated by clade status and euclidean distance on the y axis.  
 
-RESULTS:
-(PCAViolinPlotFlu.png)
-Qualitative:
+# RESULTS:
+
+### Qualitative:
+
 Scaling and Centering the Data
+
 Influenza:
 - Because PCA (Principal Component Analysis) reduces multidimensional data and not distance matrices, PCA was used to analyze the data in this format. While the ratio given by the within vs between violin plot was 24:1 and a positive R^2 correlation of .57, revealing a tightly clustered set of data, the data was not transformed to show any new pattern or information, and clustered the data almost identically to the .json rendering of the tree.
 <iframe src="https://blab.github.io/cartography/PCAFluBrush.html" style="width: 800px; height: 400px;" frameBorder="0"></iframe>
