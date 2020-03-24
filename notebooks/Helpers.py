@@ -2,7 +2,11 @@
 dimensionality embeddings of distance matrices.
 """
 import numpy as np
-
+import altair as alt
+import pandas as pd
+from scipy.spatial.distance import squareform, pdist
+from scipy.stats import linregress
+import statsmodels
 
 def get_hamming_distances(genomes):
     """Calculate pairwise Hamming distances between the given list of genomes
@@ -62,33 +66,51 @@ def get_hamming_distances(genomes):
     return hamming_distances
 
 
-"""
-principal_Df -- Data from data reduction (-T-SNE, MDS, etc) (pandas DataFrame)
-result_metadata -- the metadata that is being read in (Pandas DataFrame)
-fields, the parts of metadata that should be concatenated with princiapl_Df (list)
-"""
-
-
 def concatenate_results_with_strain_data(principal_Df, result_metadata, fields):
-    import pandas as pd
+    """Takes the data from data reductions (T-SNE, MDS, etc) and pairs up each strain's euclidean plotpoints with its metadata
+    
+    Parameters
+    ----------
+    principal_Df: Pandas Dataframe
+        Data from data reduction
+    result_metadata: Pandas Dataframe
+        the metadata that is being read in (Pandas DataFrame)
+    fields: list
+        the parts of metadata that should be concatenated with princiapl_Df (eg. "strain", "region", "country")
+        
+    Returns
+    --------
+    finalDf: Pandas Dataframe
+        the concatenated Pandas Dataframe
+    """
     finalDf = pd.concat([principal_Df, result_metadata[fields]], axis=1)
     return finalDf
 
 
-"""
-Defining Fields:
-finalDf: The data that is used to generate the scatter plot (pandas DataFrame)
-x, the data you want on the x axis (string)
-y, the data you want on the y axis (string)
-Titlex,the name you want on the x axis (string)
-Titley, the name you want on the y axis (string)
-Tooltip, when scanning over a point, the data you want avaiable (list)
-Color, what the scatterplot is colored by (String)
-"""
-
-
 def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip, color):
-    import altair as alt
+    """Creates an interactive scatterplot in altair
+    
+    Parameters
+    -----------
+    finalDf: Pandas Dataframe
+        the data that is used to generate the scatter plot
+    x: string
+        the data for the x axis
+    y: string
+        the data for the y axis
+    Titlex: string
+        the name for the x axis
+    Titley: string
+        the name for the y axis
+    Tooltip: list
+        the data available when scanning over a plot
+    Color: string
+        what the scatterplot is colored by
+    
+    Returns
+    --------
+    an Altair chart 
+    """
     brush = alt.selection(type='interval', resolve='global')
     chart = alt.Chart(finalDf).mark_circle(size=60).encode(
         x=alt.X(x, title=Titlex),
@@ -100,18 +122,25 @@ def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip,
     return chart
 
 
-"""
-dataframe: dataframe including node data and dimensionality reduction data (Pandas Dataframe)
-list_of_data: list of all the names of the columns in the dataframe for which you want graphs: goes in the order of [x1,y1,x2,y2,x3,y3] etc.(list)
-list_of_titles: list of all the TITLES you want for each axis: goes in order of[x1,y1,x2,y2,x3,y3] etc.(list)
-color: what the data should be colored by (string)
-ToolTip: when hovering over the data, what data should be shown (list)
-"""
-
-
 def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color, ToolTip):
-    import altair as alt
-    import pandas as pd
+    """Creates a linked brushable altair plot with the tree and the charts appended
+    Parameters
+    -----------
+    dataframe: Pandas Dataframe
+        dataframe including node data and dimensionality reduction data 
+    list_of_data: list
+        list of all the names of the columns in the dataframe for which you want graphs: goes in the order of [x1,y1,x2,y2,x3,y3] etc.
+    list_of_titles: list
+        list of all the TITLES you want for each axis: goes in order of[x1,y1,x2,y2,x3,y3] etc.
+    color: string
+        what the data should be colored by (ex. by clade, by region)
+    ToolTip: list
+        when hovering over the data, what data should be shown
+        
+    Returns
+    ---------
+    A brushable altair plot combining the tree with the plots of columns passed in
+    """
     list_of_chart = []
     if(len(list_of_data) % 2 != 0 or len(list_of_titles) % 2 != 0):
         raise Exception(
@@ -154,8 +183,24 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
 
 
 def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, colors, fields, ToolTip):
-    import altair as alt
-    import pandas as pd
+    """
+    Parameters
+    -----------
+    dataframe: Pandas Dataframe
+        dataframe including node data and dimensionality reduction data 
+    list_of_data: list
+        list of all the names of the columns in the dataframe for which you want graphs: goes in the order of [x1,y1,x2,y2,x3,y3] etc.
+    list_of_titles: list
+        list of all the TITLES you want for each axis: goes in order of[x1,y1,x2,y2,x3,y3] etc.
+    color: string
+        what the data should be colored by (ex. by clade, by region)
+    ToolTip: list
+        when hovering over the data, what data should be shown
+        
+    Returns
+    ---------
+    A clickable altair plot combining the tree with the plots of columns passed in
+    """
     list_of_chart = []
     if(len(list_of_data) % 2 != 0 or len(list_of_titles) % 2 != 0):
         raise Exception(
@@ -210,13 +255,28 @@ def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, c
 
 
 def scatterplot_xyvalues(strains, similarity_matrix, df_merged, column1, column2, type_of_embedding):
-    import pandas as pd
-    import altair as alt
-    import numpy as np
-    from scipy.spatial.distance import squareform, pdist
-    from scipy.stats import linregress
-    import pandas as pd
-    import numpy as np
+    """Returns a unraveled similarity matrix Pandas dataframe of pairwise and euclidean distances for each strain pair 
+     Parameters
+    -----------
+    strains: list
+        list of strains for the build (ex. A/Oman/5263/2017)
+    similarity_matrix: Pandas Dataframe
+        a similarity matrix using hamming distance to compare pairwise distance between each strain
+    df_merged: Pandas Dataframe
+        dataframe containing the clade information and euclidean coordinates of each strain in an embedding (PCA, MDS, t-SNE, UMAP)
+    column1: string
+        the name of the first column in df_merged to compare distance between
+    column2: string
+        the name of the second column in df_merged to compare distance between
+    type_of_embedding: string
+        "MDS", "PCA", "TSNE", or "UMAP"
+    n_sample:
+        how many strains to sample (altair cannot currently run with that many strains, sample around 1000 - 2000)
+        
+    Returns 
+    ---------
+    A Pandas Dataframe of pairwise and euclidean distances for every strain pair
+    """
     embedding_df = df_merged[[column1, column2, 'strain']]
     pairwise_distance_array = np.array(similarity_matrix)[
         np.triu_indices(len(df_merged), k=0)]
@@ -233,7 +293,7 @@ def scatterplot_xyvalues(strains, similarity_matrix, df_merged, column1, column2
     row_column.columns = ["row", "column"]
 
     euclidean_df = get_euclidean_data_frame(
-        df_merged, column1, column2, "MDS").dropna()
+        df_merged, column1, column2, type_of_embedding).dropna()
     euclidean_df.columns = ["euclidean", "clade_status", "embedding"]
 
     row_column_pairwise = row_column.merge(
@@ -250,13 +310,29 @@ def scatterplot_xyvalues(strains, similarity_matrix, df_merged, column1, column2
 
 
 def scatterplot_tooltips(strains, similarity_matrix, df_merged, column1, column2, type_of_embedding, n_sample):
-    import pandas as pd
-    import altair as alt
-    import numpy as np
-    from scipy.spatial.distance import squareform, pdist
-    from scipy.stats import linregress
-    import pandas as pd
-    import numpy as np
+    """uses scatterplot_xyvalues, returns a pairwise vs euclidean scatterplot
+    
+    Parameters
+    -----------
+    strains: list
+        list of strains for the build (ex. A/Oman/5263/2017)
+    similarity_matrix: Pandas Dataframe
+        a similarity matrix using hamming distance to compare pairwise distance between each strain
+    df_merged: Pandas Dataframe
+        dataframe containing the clade information and euclidean coordinates of each strain in an embedding (PCA, MDS, t-SNE, UMAP)
+    column1: string
+        the name of the first column in df_merged to compare distance between
+    column2: string
+        the name of the second column in df_merged to compare distance between
+    type_of_embedding: string
+        "MDS", "PCA", "TSNE", or "UMAP"
+    n_sample:
+        how many strains to sample (altair cannot currently run with that many strains, sample around 1000 - 2000)
+    
+    Returns
+    ----------
+    An altair pairwise vs Euclidean scatterplot with tooltips
+    """
     alt.data_transformers.disable_max_rows()
 
     total_df = scatterplot_xyvalues(strains, similarity_matrix,
@@ -271,45 +347,20 @@ def scatterplot_tooltips(strains, similarity_matrix, df_merged, column1, column2
     ).properties(title="Genetic vs. Euclidean scatterplot: " + type_of_embedding + "  (R^2 = " + str((r_value ** 2).round(3)) + ")", height=200, width=300)
     return chart
 
-
-def LOESS_scatterplot(strains, similarity_matrix, df_merged, column1, column2, type_of_embedding, n_sample):
-    import pandas as pd
-    import altair as alt
-    import numpy as np
-    from scipy.spatial.distance import squareform, pdist
-    from scipy.stats import linregress
-    import pandas as pd
-    import numpy as np
-    import statsmodels
-    total_df = scatterplot_xyvalues(strains, similarity_matrix,
-        df_merged, column1, column2, type_of_embedding)
-    y_values = statsmodels.nonparametric.smoothers_lowess.lowess(
-        total_df["euclidean"], total_df["genetic"], frac=0.6666666666666666, it=3, delta=0.0, is_sorted=False, missing='drop', return_sorted=True)
-
-    PD_Y_values = pd.DataFrame(y_values)
-    PD_Y_values.columns = ["LOWESS_x", "LOWESS_y"]
-
-    line = alt.Chart(PD_Y_values).mark_line(color='red').encode(
-        alt.X('LOWESS_x'),
-        alt.Y('LOWESS_y')
-    )
-
-    chart = scatterplot_tooltips(strains, similarity_matrix,
-        df_merged, column1, column2, type_of_embedding, n_sample)
-    return chart + line
-
-
 def get_euclidean_data_frame(sampled_df, column1, column2, embedding):
-    import pandas as pd
-    import altair as alt
-    import numpy as np
-    from scipy.spatial.distance import squareform, pdist
-    from scipy.stats import linregress
-    import pandas as pd
-    import numpy as np
-    import statsmodels
-    """
-    Returns a data frame of Euclidean distances for the requested embedding columns.
+    """Gives a dataframe of euclidean distances for embedding columns to use in plotting and analysis
+    Parameters
+    -----------
+    sampled_df: pandas DataFrame
+        a dataframe of euclidean coordinate points containing the two columns passed in 
+    column1: string
+        the name of the first column in sampled_df
+    column2: string
+        the name of the second column in sampled_df
+
+    Returns
+    ----------
+    A data frame of Euclidean distances for the requested embedding columns.
     
     The given `sampled_df` MUST include a "clade_membership" column.
     """
