@@ -77,7 +77,7 @@ The Between vs Within clade Violin plots assess the strength of the relationship
 
 # RESULTS:
 
-Scaling and Centering the Data
+## Scaling and Centering the Data
 
 Influenza:
 
@@ -96,7 +96,7 @@ Influenza:
 ![](PCAViolinPlotZika.png)
 ![](PCAScatterplotLOESSZika.png)
 
-Pairwise distance between genomes
+## Pairwise distance between genomes
 
 ### Influenza:
 
@@ -123,7 +123,7 @@ Pairwise distance matrix of genome values worked best for creating plots with cl
 <iframe src="https://blab.github.io/cartography/TSNEUMAPClickableFlu.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
  
 Overall, the best recapitulation of the phylogenetic clades of the four analyzed was that of MDS and UMAP, because they preserved more local and global structure. However, t-SNE did better at separating clusters than MDS, as in MDS, lots of the points were layered on top of each other (clade A1b/131K was impossible to see in clusters 1 and 2). This makes sense, as the MDS algorithm largely makes its mapping with respect to between-object distances - local structure is preserved but not global. 
-t-SNE clustered genetically similar clades well, but did not place similar clusters next to each other (t-SNE has a large focus on local structure while still maintaining some global structure (presence of multiple scales of clusters))
+t-SNE clustered genetically similar clades as well, but did not place similar clusters next to each other, as t-SNE focuses on local structure while still maintaining some global structure.
 
 # Tree Linked Flu Chart with PCA, MDS, TSNE, and UMAP
 
