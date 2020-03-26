@@ -110,13 +110,13 @@ The same pattern is observed with t-SNE to a much larger extent, as the points b
 
 <iframe src="https://blab.github.io/cartography/TSNEFluBrush.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
 ![](TSNEViolinPlotFlu.png)
-![](TSNEScatterplotLOESSFlu.png)
+![](TSNEScatterplotFlu.png)
 
 UMAP is a techinique aimed at preserving both local and global structure, and this is relected in the fairly linear spread of UMAP's genetic vs euclidean scatter plot. While the points do spread out as the pairwise distance gets larger, the points stay fairly concentrated in a set distance from the best fit line. UMAP's violin plot has a median to median ratio of 9, reflecting a densely clustered and highly accurate embedding at placing strains in their correct clade. UMAP's within clade violin plot's density is concentrated at a lower euclidean distance, further illustrating UMAP's tightly clustered embedding.  
 
 <iframe src="https://blab.github.io/cartography/UMAPFluBrush.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
 ![](UMAPViolinPlotFlu.png)
-![](UMAPScatterplotLOESSFlu.png)
+![](UMAPScatterplotFlu.png)
 
 Pairwise distance matrix of genome values worked best for creating plots with clusterings that revealed later patterns with clades. In the t-SNE embedding for influenza, the clade A1b/131K is split into three clusters that also appear to slice the tree in three clean pieces. Looking at the tree, this "slicing" seems to have revealed patterns in the tree that were not seen in the tree until a later build. UMAP to some degree also shows this pattern. 
 
