@@ -102,7 +102,7 @@ Pairwise distance between genomes
 
 The pairwise distance matrix was reduced using MDS, t-SNE, and UMAP. The MDS between vs within clade graph' violin plots have a median to median ratio of 4, which correlates to a significant difference in density at a given distance (on the y). This difference indicates that the embedding is fairly clustered and accurate at placing strains in the correct clade. Comparing the pairwise vs euclidean scatterplots of these three embeddings, it can be seen that MDS's Cluster 1 and 2 Pearson Coefficient was the highest of them (r = .723), sugesting the data is best correlated using MDS. The points on the scatterplot start out fairly concentrated at the origin, and continually get more spread out, which is an indicator that MDS is a local, rather than global, reduction technique. Locally preserving techniques focus more heavily on on retaining distances and structure on a smaller scale, usually within a cluster, and focuses less on retaining the "global" appearance of the data. 
 
-<iframe src="https://blab.github.io/cartography/MDSFluBrush.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
+<iframe src="C:/Users/srava/BedfordProjects/cartography/docs/MDSFluBrush.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
 ![](MDSViolinPlotFlu.png)
 ![](MDSScatterplotLOESSFlu.png)
 
