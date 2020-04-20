@@ -185,7 +185,7 @@ This is different from other embeddings, because PCA, MDS, and t-SNE do not set 
 
 ## Figure One
 
-<iframe src="https://blab.github.io/cartography/TSNEUMAPClickableFlu.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
+<iframe src="https://blab.github.io/cartography/FullLinkedChartClickableFlu.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
 
 ## Figure Two
 
