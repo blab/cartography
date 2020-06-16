@@ -38,14 +38,10 @@ We test this method by applying it to viruses whose genomes are known to undergo
 Recombination: occurs when at least two viral genomes co-infect the same host cell and exchange genetic segments. 
 Shuffling/reassortment, a particular type of recombination, occurs in viruses with segmented genomes, which by interchanging complete genome segments, gives rise to new segment combinations [@pérez-losada_arenas_galán_palero_gonzález-candelas_2014].
 
-[PCA][1]
-[MDS][2]
-[t-SNE][3]
-[U-MAP][4]
-[1]: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4792409/
-[2]: https://onlinelibrary.wiley.com/doi/abs/10.1002/wcs.1203
-[3]: http://www.jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf
-[4]: https://arxiv.org/pdf/1802.03426.pdf
+[PCA](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4792409/)
+[MDS](https://onlinelibrary.wiley.com/doi/abs/10.1002/wcs.1203)
+[t-SNE](http://www.jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf)
+[U-MAP](https://arxiv.org/pdf/1802.03426.pdf)
 
 # METHODS:
 
@@ -184,16 +180,28 @@ This is different from other embeddings, because PCA, MDS, and t-SNE do not set 
 
 
 ## Figure One
-
+:::{.out .html}
 <iframe src="https://blab.github.io/cartography/FullLinkedChartClickableFlu.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
+:::
+:::{.out .pdf}
+![](docs/FullLinkedChartClickableFlu.pdf)
+:::
+
 
 ## Figure Two
-
+:::{.out .html}
 ![](FullScatterplotFlu.png)
-
+:::
+:::{.out .pdf}
+![](docs/FullScatterplotFlu.pmg)
+:::
 ## Figure Three
+:::{.out .html}
 ![](FullViolinPlotFlu.png)
-
+:::
+:::{.out .pdf}
+![](docs/FullViolinPlotFlu.png)
+:::
 
 
 ## Zika:
@@ -233,14 +241,28 @@ The data points from different clades were far apart and incredibly densely pack
 The embedding did translate the data differently than the rendering of the tree, giving much more euclidean space between points that were more genetically diverse and packing genetically similar strains very close together, if not stacked. 
 This is different from other embeddings, because PCA, MDS, and t-SNE scale the data based on the largest genetic distance disparity instead of UMAP’s ability to scale more euclidean distance between points very genetically dissimilar (scaling euclidean distance exponentially compared to genetic distance).
 
-## Figure 4
+## Figure Four
+:::{.out .html}
 <iframe src="https://blab.github.io/cartography/FullLinkedChartClickableZika.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
+:::
+:::{.out .pdf}
+![](docs/FullLinkedChartClickableZika.pdf)
+:::
 
-## Figure 5
+## Figure Five
+:::{.out .html}
 ![](FullScatterplotZika.png)
-
-## Figure 6
+:::
+:::{.out .pdf}
+![](docs/FullScatterplotZika.png)
+:::
+## Figure Six
+:::{.out .html}
 ![](FullViolinPlotZika.png)
+:::
+:::{.out .pdf}
+![](docs/FullViolinPlotZika.png)
+:::
 
 ## SUMMARY OF RESULTS ACROSS VIRUSES
 

@@ -15,5 +15,11 @@ dependencies:
   - umap-learn
   - jsonschema
   - jupyterlab
+  - matplotlib
+  - pandoc
   - pip:
-    - nextstrain-augur
+    - pathlib
+    - statsmodels
+    - statistics
+    - snakemake
+    - nextstrain-augur==5.4.1
