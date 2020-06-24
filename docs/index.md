@@ -25,23 +25,21 @@ author: "Sravani Nanduri"
 # DESCRIPTION OF THE PROBLEM:
 
 Phylogenetic inference is a fundamental tool for understanding genealogical relationships among human pathogenic viruses. 
-However, recombination and reassortment of viral genomes invalidates basic phylogenetic assumptions of inheritance and requires more sophisticated approaches. 
-Some approaches have been to split a genome into multiple phylogenies in order to model the evolution of nonrecombinant fragments by using a genetic algorithm to scan strains for recombination breakpoints, quantifying and analyzing the impact of recombination at each breakpoint, and breaking the phylogeny at the important breakpoints [@kosakovsky_pond_posada_gravenor_woelk_frost_2006]. 
-These genetic algorithms for recombination detection include GARD [@kosakovsky_GARD_2006], RDP4 [@martin_murrell_khoosal_muhire_2017], and others. 
-Work with different dimensionality reduction techniques and genetic data has also been done; PCA has been used to estimate and model ancestry in unrelated individuals to remove ancestry’s confounding factor in genetic association studies [@alexander_novembre_lange_2009].
-Another application of PCA to genetic data from European samples showed that for Europeans where all four grandparents originated in the same country, PCA could map their country of origin quite accurately in a two dimensional map [@GenesMirrorGeography2008].
-PCA was also used to reveal Zika’s genetic diversity and spread in the Americas by assessing clustering of multidimensional genetic data[@H.C.109348].
-We present a novel approach to understanding relationships among viral genomes by transforming genomic data and then using dimensionality reduction methods such as PCA, MDS, t-SNE, and UMAP.
-We evaluate this method by applying it to viruses whose genomes are phylogenetically tractable (we used influenza H3N2 and Zika).
-We test this method by applying it to viruses whose genomes are known to undergo substantial recombination, such as MERS, COVID-19, and others. 
+However, recombination and reassortment of viral genomes invalidates basic phylogenetic assumptions of inheritance and requires more sophisticated approaches.
+One approach has been to split a genome into multiple phylogenies to model the evolution of the nonrecombinant fragments by using a genetic algorithm that scans strains for recombination breakpoints, quantifies and analyzes the impact of recombination at each breakpoint, and breaks the phylogeny at the most important breakpoints [@kosakovsky_pond_posada_gravenor_woelk_frost_2006].
+Finding recombination breakpoints relies on detection of a recombination signal through methods such as CHIMAERA and LARD, which use split decomposition, a method which depicts parallel edges between sequences if there are conflicting phylogenetic signals in the data [@Posada13757][@10.1093/oxfordjournals.molbev.a026121][@martin_murrell_khoosal_muhire_2017].
+An alternate strategy is to compare viral genomes with alternative methods that do not make the same strong assumptions as phylogenetic inference (e.g., PCA, MDS, etc.)
+PCA has been used to estimate and model ancestry in unrelated individuals and plot peoples genomes to reveal patterns in national origin [@alexander_novembre_lange_2009][@GenesMirrorGeography2008], and was also used to genotype major classes of structural variants - structural differences such as deletion, duplication, and novel sequence insertion - in diverse populations to map their population stratification [@sudmant_1000_gene_paper].
+PCA was also used to reveal Zika’s genetic diversity and spread in the Americas by assessing clustering of multidimensional genetic data [@H.C.109348].
+MDS has been applied to H3N2 sequences to inspect relationships between all gene segments, which is closely related to the subject of this paper, for the difference that Rambaut et .al. 2008 looks at between-gene diversity rather than within-gene [@rambaut_pybus_nelson_viboud_taubenberger_holmes_2008].
+PCA, t-SNE, and UMAP have all been used to describe and correlate human genomes and characteristics, which has shown that even within broader population groups, family members were projected nearer to each other in the embeddings[diaz-papkovich_anderson-trocmé_ben-eghan_gravel_2019]. 
+We present a novel approach to understanding relationships among viral genomes by transforming genomic data and then using dimensionality reduction methods such as PCA, MDS, t-SNE, and UMAP. 
+We investigate the degree to which this method can recapitulate known phylogenetic relationships for viruses whose genomes are phylogenetically tractable (we used influenza H3N2 and Zika).
+We apply this method to viruses whose genomes are known to undergo substantial recombination, such as MERS and SARS-CoV-2 to assess how well each method is able to reconstruct previously identified biologically-meaningful clusters.
 
 Recombination: occurs when at least two viral genomes co-infect the same host cell and exchange genetic segments. 
 Shuffling/reassortment, a particular type of recombination, occurs in viruses with segmented genomes, which by interchanging complete genome segments, gives rise to new segment combinations [@pérez-losada_arenas_galán_palero_gonzález-candelas_2014].
 
-[PCA](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4792409/)
-[MDS](https://onlinelibrary.wiley.com/doi/abs/10.1002/wcs.1203)
-[t-SNE](http://www.jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf)
-[U-MAP](https://arxiv.org/pdf/1802.03426.pdf)
 
 # METHODS:
 
@@ -50,42 +48,42 @@ Shuffling/reassortment, a particular type of recombination, occurs in viruses wi
 The analysis environment can be recreated using conda and all installation instructions are available on [Cartography’s github](https://github.com/blab/cartography), where cartography.yml already has the modules below to install.
 
 ### Methods:
-Influenza A/H3N2 and Zika genomes were analyzed, creating a FASTA file of multiple sequence alignments with mafft via augur align and phylogenies with IQ-TREE via augur tree.
+We analyzed Influenza A/H3N2 and Zika genomes and created a FASTA file of multiple sequence alignments with MAFFT v7.407 [@Katoh2002] via augur align [@Hadfield2018] and phylogenies with IQ-TREE v1.6.10 [@Nguyen2014] via augur tree version 5.4.1.
 
-This file was then read and translated into 2 arrays using the [BioPython package SeqIO](https://biopython.org/DIST/docs/api/Bio.SeqIO-module.html), where one array held the strain identifiers, and the other the full genome corresponding to the strain identifier.
+We used two different methods of transforming the data; Scaling and centering the data, and a Hamming distance similarity matrix.
+For Scaling and Centering the data, we performed PCA on the matrix of nucleotides from the multiple sequence alignment using scikit-learn [@jolliffe_cadima_2016].
 
-Two different methods of transforming the data were used; Scaling and centering the data, and a Hamming distance similarity matrix.
-For Scaling and Centering the data, PCA was performed on the matrix of nucleotides from the multiple sequence alignment using scikit-learn [@jolliffe_cadima_2016].
-
-The second approach used Hamming distance to create a similarity matrix. 
-By comparing every genome with every other genome and clustering based on their pairwise distance, the algorithm takes the overall structure of the multidimensional data and groups together genomes that have similar differences.
+The second approach we used Hamming distance was to create a similarity matrix. 
+By comparing every genome with every other genome and clustering based on their pairwise distance, distance-based methods take the overall structure of the multidimensional data and groups together genomes that have similar differences.
 This means the data is clustered by genetic diversity (in a phylogenetic tree genetic diversity is categorized using clades).
 Each genome was split into separate nucleotides and compared with other nucleotides in the same site on other genomes.
-Only a difference between the main nucleotide pairs (AGCT) was counted -- gaps (N) were not.
+We only counted a difference between the main nucleotide pairs (AGCT) -- gaps (N) were not.
 This is because some sequences were significantly shorter than others, and a shorter strain does not necessarily mean complete genetic dissimilarity, which is what counting gaps implied. 
 
-The similarity matrix was read out to a .csv file to cut processing time. 
-The similarity distance matrix was reduced through MDS, t-SNE, and UMAP, plotted using [Altair](https://altair-viz.github.io/) ,and colored by clade assignment.
+We reduced the similarity distance matrix through MDS, t-SNE, and UMAP, plotted using [Altair](https://altair-viz.github.io/) ,and colored by clade assignment.
 Clade membership metadata was provided by a .json build of the influenza H3N2 tree (the build can be found at https://github.com/blab/cartography/tree/master/notebooks/Data).
 The 3 different dimensionality reduction techniques are ordered below by publication date: 
 - [MDS](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.MDS.html)
 - [t-SNE](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html)
 - [UMAP](https://umap-learn.readthedocs.io/en/latest/)
 
-To further analyze the embeddings’ ability to accurately capture the multidimensional data, two separate plots were made: pairwise vs euclidean distance scatterplots with a LOESS best fit line, and within vs between clade violin plots per embedding.
+To further analyze the embeddings’ ability to accurately capture the multidimensional data, we made two separate plots: hamming vs euclidean distance scatterplots with a LOESS best fit line, and within vs between clade violin plots per embedding.
 
-Pairwise vs euclidean distance scatterplots:
+Hamming distance vs euclidean distance scatterplots:
  
-Pairwise vs Euclidean distance plots assess the local and global structure of the embedding as well as assess the overall strength of the embedding's recapitulation.
-The closer the Pearson Coefficient is to 1, the better the embedding is at preserving genetic dissimilarity in euclidean space.
+Hamming distance vs Euclidean distance plots assess the local and global structure of the embedding as well as assess the overall strength of the embedding's recapitulation.
+The Hamming distance of nucleotide sequences is plotted on the x axis, and the euclidean distance between the points in the embedding are plotted on the y axis.
+By plotting these distance measurements, we can observe how correlated the dataset is.
+The higher the correlation, the better a function can describe the relationship between the Hamming distance value and the euclidean distance value. 
+In this way, constant correlation in a plot reveals that the embedding tends to capture and retain local patterns rather than global, and splayed points point to a global structure preservation over local. 
+Therefore, the closer the Pearson Coefficient is to 1, the better the embedding is at preserving genetic dissimilarity in euclidean space.
 The LOESS line drawn through the plot assesses the best fit function for the embedding.
-To create the plot, the similarity matrix’s upper triangle values were made into a distance matrix where each genome’s distance from another in their respective reduced embedding space was plotted against the pairwise distance between the two genomes.
-The pairwise distance was on the x axis, and the euclidean distance was on the y axis.
-Linear regression data was calculated from the Pandas Dataframe using [linregress](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html).
+
+
 
 Between vs Within clade Violin plots:
 
-The Between vs Within clade Violin plots assess the strength of the relationship between euclidean distance and clade status of two respective points.
+The Between vs Within clade Violin plots visually represent how well Euclidean distances can distinguish virus genomes from different clades, or shows the probability of a certain Euclidean distance being used to classify the within vs between status of a given pair of genomes. 
 The density of the violin plot at a specific distance gives the relative probability of two strains with that distance being in same or different clades.
 The median to median ratio is an indicator of how well the embedding clusters the data.
 The larger the ratio between the medians of between vs within clade violin plots, the better the embedding is at clustering and compartmentalizing data into their clades.
@@ -96,48 +94,34 @@ Violin plots were made using [seaborn](https://seaborn.pydata.org/) , separated 
 
 ### EXPECTATIONS FOR PCA, MDS, t-SNE, and UMAP
 
-PCA (Principal Component Analysis) reduces multidimensional data, increasing interpretability while minimizing information loss.
-This is done through creating variables that are linear functions of the set that also maximize variance, then solving an eigenvalue/eigenvector problem to reduce the data into less dimensions.[@jolliffe_cadima_2016] 
-However, PCA relies on linear assumptions, meaning PCA is focused on finding orthogonal projections that contain the highest variance.
-PCA does not affect the scale of the data, and does not normalize the data as part of the algorithm. 
+Principal Component Analysis (PCA) reduces multidimensional data, increasing interpretability while minimizing information loss.
+PCA relies on linear assumptions, does not affect the scale of the data, and does not normalize the data as part of the algorithm. 
 PCA is almost entirely focused on retaining the global structure and variance of the data, and therefore one of its limitations is revealing patterns locally. 
 PCA is not an algorithm to be used on a similarity matrix, and is instead intended for transformed and normalized multidimensional data.
 In the context of this paper, PCA will be used on transformed and normalized genetic data and not on the similarity matrix described above.
-Because PCA retains global structure, few clear clusters different than the overall shape of the phylogenetic tree will be seen. 
 
-
-MDS (Multidimensional Scaling) refers to statistical techniques that reduce the complexity of a data set by quantifying similarity judgments, increasing interpretability of local relational structures mired in the dataset.
-MDS outputs a “map” that spatially conveys the relationships among the items, with dissimilar data points farther away from each other (effectively clustering data based off of similarity). [@hout_papesh_goldinger_2012] 
-MDS requires a specific “placement” of each item to find the “true” solution wherein the distances correlate perfectly to the quantified similarity index (which is often impossible - MDS gets as close as possible to this).
-Some limitations to MDS include that only one symmetric matrix is allowed as input, and the scale of measurement is ordinal (non numerical).
-MDS preserves global patterns over local patterns, but the algorithm’s importance on translating dissimilarity to distance does preserve some larger patterns in local structure as well.
+Multidimensional Scaling (MDS) refers to statistical techniques that reduce the complexity of a data set by quantifying similarity judgments, which increases the interpretability of local relational structures mired in the dataset.
+A limitation to MDS is that only one symmetric matrix is allowed as input, and the scale of measurement is non-numerical.
+MDS preserves global patterns over local, but the algorithm’s importance on translating dissimilarity to distance does preserve some larger patterns in local structure as well.
 In the context of this paper, MDS will cluster data into sparse “sections” of the map while not creating actual clusters. 
-The data’s true global shape will be more important to MDS than these clusters. 
 
-
-t-SNE (t-distributed Stochastic Neighbor Embedding) visualizes high-dimensional data by giving each datapoint a location in a 2 to 3 dimensional map.
-t-SNE is better than other techniques at creating a single map that reveals both local and global patterns in the dataset.
-t-SNE uses randomization to analyze the implicit structure of the data, influencing the way in which each subset of the data is displayed in the overall embedding.t-SNE is focused largely on local structure over global structure, and t-SNE’s projection of clusters and distances between clusters are not analogous to dissimilarity - in other words, t-SNE focuses heavily on projecting similarity rather than dissimilarity [@maaten2008visualizing].
-Some limitations to t-SNE is the non-convexity of optimization stemming from the existence of multiple local minima and its complex manifolds that, while not a linear projection, makes assumptions about the data that may not be accurate.
-t-SNE also reduces data’s dimensionality based on local properties of data, meaning data with intrinsically high dimensional structure will not be projected accurately.
+t-distributed Stochastic Neighbor Embedding (t-SNE) visualizes high-dimensional data by giving each datapoint a location in a 2 to 3 dimensional map.
+t-SNE is focused largely on local structure over global structure, and t-SNE’s projection of clusters and distances between clusters are not analogous to dissimilarity - in other words, t-SNE focuses heavily on projecting similarity rather than dissimilarity [@maaten2008visualizing].
+Because t-SNE reduces data’s dimensionality based on local properties of data, data with intrinsically high dimensional structure will not be projected accurately.
 In the context of this paper, t-SNE will create tight clusters that clearly indicate genetic similarity, but will not create an accurate global picture of the data.
 
-
 UMAP (Uniform Manifold Approximation and Projection) is a manifold learning technique for dimension reduction based in Riemannian geometry and algebraic topology [@lel2018umap].
-UMAP is more competitive with t-SNE for visualization quality and preserves more global structure with a much faster run time.
-UMAP has no computational restrictions on embedding dimensions, making it largely useful for machine learning.
 Some limitations include its lack of maturity - this novel technique does not have firmly established or robust practices and libraries to use UMAP best.
 In the context of this paper, UMAP will reveal a tightly clustered set of data that retains both the global structure of the data and the clusters and similarities present at the local level. 
-
 
 # EXPECTATIONS FOR VIRUSES:
 
 ## Influenza:
 
-H3N2 Influenza in this project is used as a proof of concept.
-As influenza only reassorts and does not recombine, the genetic diversity of the flu is low enough to create phylogenetic transmission trees per chromosome, and differences between clades is very pronounced.
-It can be reasonably assumed that H3N2 influenza is a good test case for Cartography.
-One of the chromosomes genetic data (HA) for H3N2 was used for the tree and the corresponding embeddings. 
+H3N2 Influenza in this project is used as a proof of concept as influenza only reassorts and does not recombine. 
+We use H3N2's HA sequences as they have a relatively high mutation rate compared to the other gene segments, it encodes a protein that is a target of human immunity, and has traditionally been used for analysis of influenza evolution. 
+As these sequences are biologically relevant, short, and do not recombine, the genomes can be reasonably assigned to phylogenetic clades. 
+Therefore, it can be assumed that H3N2 HA influenza is a good test case for Cartography.
 
 ## SUMMARY OF RESULTS FOR INFLUENZA 
 
@@ -193,7 +177,7 @@ This is different from other embeddings, because PCA, MDS, and t-SNE do not set 
 ![](FullScatterplotFlu.png)
 :::
 :::{.out .pdf}
-![](docs/FullScatterplotFlu.pmg)
+![](docs/FullScatterplotFlu.png)
 :::
 ## Figure Three
 :::{.out .html}
@@ -207,7 +191,8 @@ This is different from other embeddings, because PCA, MDS, and t-SNE do not set 
 ## Zika:
 
 Zika: Zika in this project is used as a test case. 
-As zika genes all exist on the same genome and zika’s genome is considerably longer than H3N2 Influenza genome, the genetic diversity of zika, while low enough to create phylogenetic transmission tree, clades are hard to distinguish from each other - zika transmission trees are often colored by region and country for this reason. 
+While H3N2 Influenza is a globally distributed virus that has caused infections seasonally for decades, Zika is a fairly new human pathogenic virus that has a restricted geographic distribution that recapitulates the patterns of viral transmission. 
+Therefore, Zika is better compartamentalized by region than by clade. 
 It can be reasonably assumed that zika is a good test case for Cartography.
 
 ## SUMMARY OF RESULTS FOR ZIKA: 
@@ -223,7 +208,8 @@ The data points followed the LOESS line in an extremely linear fashion, which, g
 The ratio between the medians given by the within vs between violin plot for MDS was 7:1, revealing very tightly clustered data. 
 Some data points from different clades did overlap each other, but given that MDS retains global structure, this result is expected.
 The density of the within clade violin plot is at lower euclidean distances than the density of the between clade violin plot, revealing that it is quite easy to distinguish the between vs within clade measure given a euclidean distance (Figure 6). 
-MDS translated genetic distance to euclidean distance exactly - this pattern is clearly shown in the pairwise vs euclidean graph for MDS, as the LOESS line and the data points surrounding it have a linear 1:1 relationship between genetic and euclidean distance.
+There strong correlation between in the axes in the pairwise vs euclidean graph for MDS reveal an embedding that translates hamming distance to euclidean distance without much variability. 
+
 t-SNE: t-SNE reduced the pairwise distance matrix (Figure 4). 
 The t-SNE pairwise vs euclidean distance plot gave a pearson coefficient of .530, which was the lowest of the 3 embeddings that reduced pairwise distance matrix data. 
 The data points splayed out from the LOESS line as genetic distance increased along the x axis, which, given that t-SNE favors retaining local patterns over global patterns and therefore euclidean and genetic distance begin to diverge increasingly, upholds preexisting beliefs about the algorithm (Figure 5). 
@@ -274,7 +260,8 @@ Pearson Coefficient studies the effectiveness of an embedding at preserving a re
 For MDS, however, the embedding relies almost entirely on creating an exact 1:1 genetic:euclidean relationship, so the pearson coefficient was much higher. 
 In the same vein, as the algorithms shifted towards retaining local patterns over global patterns, the disparity between the densities of the between vs within violin plots became more pronounced. 
 Because the violin plots assess an embedding’s ability to distinguish between clades (how clustered the embedding is), the more exaggerated the differences between euclidean and genetic distance, the more disparate the densities are. 
-t-SNE’s within clade violin plot had the most concentrated density at around 5, and its between clade violin plot had the most concentrated density at around 45. By comparison, the genetic distance within:between was 45:60.  
+t-SNE’s within clade violin plot had the most concentrated density at around 5, and its between clade violin plot had the most concentrated density at around 45. 
+By comparison, the genetic distance within:between was 45:60.  
 
 
 # Works Cited

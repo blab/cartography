@@ -1,3 +1,5 @@
+conda "envs.cartography.yml"
+
 subworkflow fluWorkFlow:
 	workdir:
 		"seasonal-flu-nextstrain"
@@ -12,13 +14,13 @@ rule all:
 		"docs/cartography.html"
 rule run_json:
 	input:
-		fluWorkFlow(expand("auspice/flu_seasonal_h3n2_ha_2y_tree.json), 
+		fluWorkFlow("auspice/flu_seasonal_h3n2_ha_2y_tree.json), 
 		zikaWorkFlow("auspice/zika-cartography_tree.json")
 	output:
 		"zika-nextstrain/aligned.fasta",
 		"zika-nextstrain/auspice/zika-cartography_tree.json",
-		"seasonal-flu/aligned_cdc_h3n2_ha_2y_cell_hi.fasta",
-		"seasonal-flu/auspice/flu_seasonal_h3n2_ha_2y.json",
+		"seasonal-flu-nextstrain/aligned.fasta",
+		"seasonal-flu/auspice/flu_seasonal_h3n2_ha_2y_tree.json",
 		touch("mytask.done")
 rule run_zika:
 	input:
@@ -37,9 +39,9 @@ rule run_zika:
 rule run_flu:
 	input:
 		"mytask.done",
-		"seasonal-flu/aligned_cdc_h3n2_ha_2y_cell_hi.fasta",
+		"seasonal-flu-nextstrain/aligned.fasta",
 		"notebooks/dropped_Strains_flu.txt",
-		"seasonal-flu/auspice/flu_seasonal_h3n2_ha_2y.json",
+		"seasonal-flu-nextstrain/auspice/flu_seasonal_h3n2_ha_2y_tree.json",
 		"notebooks/Data/clade_names.txt",
 		"notebooks/Data/name_of_disease_flu.txt"
 	output:

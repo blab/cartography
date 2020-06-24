@@ -1,17 +1,16 @@
 conda "envs.cartography.yml"
 rule all:
     input:
-        auspice_tree = "auspice/zika-cartography_tree.json",
-        auspice_meta = "auspice/zika-cartography_meta.json"
-
+        auspice_tree = "auspice/flu_seasonal_h3n2_ha_2y_tree.json",
+        auspice_meta = "auspice/flu_seasonal_h3n2_ha_2y_meta.json"
 rule files:
     params:
-        input_fasta = "data/zika.fasta",
-        dropped_strains = "config/dropped_strains.txt",
-        reference = "config/zika_outgroup.gb",
-        colors = "config/colors.tsv",
-        auspice_config = "config/auspice_config.json",
-        clades = "config/clades.tsv"
+        input_fasta = "data/ncbi-h3n2-ha.fa",
+        dropped_strains = "config/outliers_h3n2.txt",
+        reference = "config/reference_h3n2_ha.gb",
+        colors = "config/hi_titer_count_colors.tsv",
+        auspice_config = "config/auspice_config_h3n2.json",
+        clades = "config/clades_h3n2_ha.tsv"
 
 files = rules.files.params
 
@@ -23,9 +22,8 @@ rule parse:
         sequences = "results/sequences.fasta",
         metadata = "results/metadata.tsv"
     params:
-        fasta_fields = "strain virus accession date region country division city db segment authors url title journal paper_url"
+        fasta_fields = "strain date accession country region"
     shell:
-        """
         augur parse \
             --sequences {input.sequences} \
             --output-sequences {output.sequences} \
@@ -49,7 +47,7 @@ rule filter:
         sequences = "results/filtered.fasta"
     params:
         group_by = "country year month",
-        sequences_per_group = 500,
+        sequences_per_group = 90,
         min_date = 2013
     shell:
         """
@@ -62,7 +60,44 @@ rule filter:
             --sequences-per-group {params.sequences_per_group} \
             --min-date {params.min_date}
         """
-
+rule select_strains:
+    input:
+        sequences = expand("results/filtered_H3N2_ha.fasta", segment=segments),
+        metadata = expand("results/metadata_H3N2_ha.tsv", segment=segments),
+        titers = rules.download_titers.output.titers,
+        include = files.references
+    output:
+        strains = "results/strains_H3N2_Ha.txt",
+    params:
+        viruses_per_month = 90
+		resolution = '2y'
+		lineage = 'h3n2'
+    shell:
+        """
+        python3 scripts/select_strains.py \
+            --sequences {input.sequences} \
+            --metadata {input.metadata} \
+            --segments {segments} \
+            --include {input.include} \
+            --lineage {params.lineage} \
+            --resolution {params.resolution} \
+            --viruses-per-month {params.viruses_per_month} \
+            --output {output.strains}
+        """
+rule extract:
+    input:
+        sequences = rules.filter.output.sequences,
+        strains = rules.select_strains.output.strains
+    output:
+        sequences = 'results/extracted_{center}_{lineage}_{segment}_{resolution}_{passage}_{assay}.fasta'
+    shell:
+        """
+        python3 scripts/extract_sequences.py \
+            --sequences {input.sequences} \
+            --samples {input.strains} \
+            --output {output}
+        """
+		
 rule align:
     message:
         """
@@ -70,7 +105,7 @@ rule align:
           - filling gaps with N
         """
     input:
-        sequences = rules.filter.output.sequences,
+        sequences = rules.extract.output.sequences,
         reference = files.reference
     output:
         alignment = "results/aligned.fasta"
@@ -116,6 +151,8 @@ rule refine:
         coalescent = "opt",
         date_inference = "marginal",
         clock_filter_iqd = 4,
+        clock_rate = 0.00382,
+        clock_std_dev = 0.000764
     shell:
         """
         augur refine \
@@ -129,6 +166,8 @@ rule refine:
             --date-confidence \
             --date-inference {params.date_inference} \
             --clock-filter-iqd {params.clock_filter_iqd} \
+			--clock-rate {params.clock_rate} \
+			--clock-std-dev {params.clock_std_dev}
         """
 
 rule ancestral:
