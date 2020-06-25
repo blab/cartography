@@ -1,14 +1,14 @@
-conda "envs.cartography.yml"
+
 rule all:
     input:
         auspice_tree = "auspice/flu_seasonal_h3n2_ha_2y_tree.json",
         auspice_meta = "auspice/flu_seasonal_h3n2_ha_2y_meta.json"
+
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha.fa",
         dropped_strains = "config/outliers_h3n2.txt",
         reference = "config/reference_h3n2_ha.gb",
-        colors = "config/hi_titer_count_colors.tsv",
         auspice_config = "config/auspice_config_h3n2.json",
         clades = "config/clades_h3n2_ha.tsv"
 
@@ -23,7 +23,9 @@ rule parse:
         metadata = "results/metadata.tsv"
     params:
         fasta_fields = "strain date accession country region"
+    conda: "../cartography.yml"
     shell:
+        """
         augur parse \
             --sequences {input.sequences} \
             --output-sequences {output.sequences} \
@@ -60,36 +62,37 @@ rule filter:
             --sequences-per-group {params.sequences_per_group} \
             --min-date {params.min_date}
         """
+
 rule select_strains:
     input:
-        sequences = expand("results/filtered_H3N2_ha.fasta", segment=segments),
-        metadata = expand("results/metadata_H3N2_ha.tsv", segment=segments),
-        titers = rules.download_titers.output.titers,
-        include = files.references
+        sequences = rules.filter.output.sequences,
+        metadata = rules.parse.output.metadata,
+        include = files.reference
     output:
         strains = "results/strains_H3N2_Ha.txt",
     params:
-        viruses_per_month = 90
-		resolution = '2y'
-		lineage = 'h3n2'
+        viruses_per_month = 90,
+        resolution = '2y',
+        lineage = 'h3n2'
     shell:
         """
         python3 scripts/select_strains.py \
             --sequences {input.sequences} \
             --metadata {input.metadata} \
-            --segments {segments} \
+            --segments ha \
             --include {input.include} \
             --lineage {params.lineage} \
             --resolution {params.resolution} \
             --viruses-per-month {params.viruses_per_month} \
             --output {output.strains}
         """
+
 rule extract:
     input:
         sequences = rules.filter.output.sequences,
         strains = rules.select_strains.output.strains
     output:
-        sequences = 'results/extracted_{center}_{lineage}_{segment}_{resolution}_{passage}_{assay}.fasta'
+        sequences = 'results/extracted.fasta'
     shell:
         """
         python3 scripts/extract_sequences.py \
@@ -97,7 +100,7 @@ rule extract:
             --samples {input.strains} \
             --output {output}
         """
-		
+
 rule align:
     message:
         """
@@ -249,7 +252,6 @@ rule export:
         traits = rules.traits.output.node_data,
         nt_muts = rules.ancestral.output.node_data,
         aa_muts = rules.translate.output.node_data,
-        colors = files.colors,
         auspice_config = files.auspice_config,
         clades = rules.clades.output.clade_data
     output:
@@ -257,11 +259,10 @@ rule export:
         auspice_meta = rules.all.input.auspice_meta
     shell:
         """
-        augur export v1\
+        augur export v1 \
             --tree {input.tree} \
             --metadata {input.metadata} \
             --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} \
-            --colors {input.colors} \
             --auspice-config {input.auspice_config} \
             --output-tree {output.auspice_tree} \
             --output-meta {output.auspice_meta}
