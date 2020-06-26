@@ -25,7 +25,9 @@ conda activate cartography
 ```
 ### Creating a Local Repository of Cartography
 In order to work with this data and create the paper, you'll need to clone the data. 
-You'll first need github for your desktop. Go [Here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for instructions on how to install github on your computer. Once github has been installed, click on the "Clone" button on the top of this repository in green, and click the clipboard icon. This allows you to copy the github repository link to your computer. 
+You'll first need github for your desktop. Go [Here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for instructions on how to install github on your computer. Once github has been installed, click on the "Clone" button on the top of this repository in green, and click the clipboard icon. This allows you to copy the github repository link to your computer.
+
+![](github_cloning_info.png)
 
 Go back to your prompt, and navigate to a good repository to put your files (remember, "cd" allows you to type a path in, and "../" allows you to step back a directory). 
 
@@ -92,7 +94,7 @@ snakemake -p --cores 1 --use-conda
 ```
 and let the build run. The JSON tree will be in the created "auspice" directory named "zika-cartography_tree.json". 
 
-For H3N2 Ha influenza, naviate into the "seasonal-flu-nextstrain" directory in your shell, and type 
+For H3N2 Ha influenza, navigate into the "seasonal-flu-nextstrain" directory in your shell, and type 
 
 ```
 snakemake -p --cores 1 --use-conda

@@ -107,7 +107,6 @@ venv.bak/
 #files I don't want tracked
 seasonal-flu
 seasonal-flu-nextstrain/config
-seasonal-flu-nextstrain/data
 seasonal-flu-nextstrain/results
 chromedriver.exe
 tex2pdf.21972/

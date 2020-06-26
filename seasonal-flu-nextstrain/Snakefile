@@ -51,6 +51,7 @@ rule filter:
         group_by = "country year month",
         sequences_per_group = 90,
         min_date = 2013
+    conda: "../cartography.yml"
     shell:
         """
         augur filter \
@@ -74,6 +75,7 @@ rule select_strains:
         viruses_per_month = 90,
         resolution = '2y',
         lineage = 'h3n2'
+    conda: "../cartography.yml"
     shell:
         """
         python3 scripts/select_strains.py \
@@ -93,6 +95,7 @@ rule extract:
         strains = rules.select_strains.output.strains
     output:
         sequences = 'results/extracted.fasta'
+    conda: "../cartography.yml"
     shell:
         """
         python3 scripts/extract_sequences.py \
@@ -112,6 +115,7 @@ rule align:
         reference = files.reference
     output:
         alignment = "results/aligned.fasta"
+    conda: "../cartography.yml"
     shell:
         """
         augur align \
@@ -127,6 +131,7 @@ rule tree:
         alignment = rules.align.output.alignment
     output:
         tree = "results/tree_raw.nwk"
+    conda: "../cartography.yml"
     shell:
         """
         augur tree \
@@ -156,6 +161,7 @@ rule refine:
         clock_filter_iqd = 4,
         clock_rate = 0.00382,
         clock_std_dev = 0.000764
+    conda: "../cartography.yml"
     shell:
         """
         augur refine \
@@ -182,6 +188,7 @@ rule ancestral:
         node_data = "results/nt_muts.json"
     params:
         inference = "joint"
+    conda: "../cartography.yml"
     shell:
         """
         augur ancestral \
@@ -199,6 +206,7 @@ rule translate:
         reference = files.reference
     output:
         node_data = "results/aa_muts.json"
+    conda: "../cartography.yml"
     shell:
         """
         augur translate \
@@ -216,6 +224,7 @@ rule clades:
         clades = files.clades
     output:
         clade_data = "results/clades.json"
+    conda: "../cartography.yml"
     shell:
         """
         augur clades --tree {input.tree} \
@@ -233,6 +242,7 @@ rule traits:
         node_data = "results/traits.json",
     params:
         columns = "region country"
+    conda: "../cartography.yml"
     shell:
         """
         augur traits \
@@ -257,6 +267,7 @@ rule export:
     output:
         auspice_tree = rules.all.input.auspice_tree,
         auspice_meta = rules.all.input.auspice_meta
+    conda: "../cartography.yml"
     shell:
         """
         augur export v1 \
@@ -273,5 +284,6 @@ rule clean:
     params:
         "results ",
         "auspice"
+    conda: "../cartography.yml"
     shell:
         "rm -rfv {params}"
