@@ -7,7 +7,7 @@ rule all:
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha.fa",
-        dropped_strains = "config/outliers_h3n2.txt",
+        dropped_strains = "config/dropped_strains.txt",
         reference = "config/reference_h3n2_ha.gb",
         auspice_config = "config/auspice_config_h3n2.json",
         clades = "config/clades_h3n2_ha.tsv"
@@ -22,7 +22,7 @@ rule parse:
         sequences = "results/sequences.fasta",
         metadata = "results/metadata.tsv"
     params:
-        fasta_fields = "strain date accession country region"
+        fasta_fields = "strain year month day accession country region"
     conda: "../cartography.yml"
     shell:
         """
@@ -46,11 +46,11 @@ rule filter:
         metadata = rules.parse.output.metadata,
         exclude = files.dropped_strains
     output:
-        sequences = "results/filtered.fasta"
+        sequences = "data/filtered.fasta"
     params:
         group_by = "country year month",
         sequences_per_group = 90,
-        min_date = 2013
+        min_date = 2015
     conda: "../cartography.yml"
     shell:
         """
