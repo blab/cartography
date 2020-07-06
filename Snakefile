@@ -48,6 +48,7 @@ rule run_flu:
     conda: "cartography.yml"
     notebook:											   
         "notebooks/2019-08-08FinalNotebookFlu.ipynb"
+		
 def pandoc_options(wildcards):
     suffix = wildcards["suffix"]
     if suffix == "html":

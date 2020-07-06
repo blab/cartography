@@ -7,7 +7,7 @@ rule all:
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha.fa",
-        dropped_strains = "config/dropped_strains.txt",
+        dropped_strains = "config/exclude.txt",
         reference = "config/reference_h3n2_ha.gb",
         auspice_config = "config/auspice_config_h3n2.json",
         clades = "config/clades_h3n2_ha.tsv"
