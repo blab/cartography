@@ -1,13 +1,12 @@
 
 rule all:
     input:
-        auspice_tree = "auspice/flu_seasonal_h3n2_ha_2y_tree.json",
-        auspice_meta = "auspice/flu_seasonal_h3n2_ha_2y_meta.json"
+        auspice_tree = "auspice/flu_seasonal_h3n2_ha_2y.json"
 
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha.fa",
-        dropped_strains = "config/exclude.txt",
+        dropped_strains = "config/outliers_h3n2.txt",
         reference = "config/reference_h3n2_ha.gb",
         auspice_config = "config/auspice_config_h3n2.json",
         clades = "config/clades_h3n2_ha.tsv"
@@ -22,7 +21,7 @@ rule parse:
         sequences = "results/sequences.fasta",
         metadata = "results/metadata.tsv"
     params:
-        fasta_fields = "strain year month day accession country region"
+        fasta_fields = "strain date accession country region"
     conda: "../cartography.yml"
     shell:
         """
@@ -31,6 +30,23 @@ rule parse:
             --output-sequences {output.sequences} \
             --output-metadata {output.metadata} \
             --fields {params.fasta_fields}
+        """
+
+rule deduplicate_sequences:
+    message:
+        """
+        Deduplicating sequences
+        """
+    input:
+        sequences = rules.parse.output.sequences
+    output:
+        sequences = "results/deduplicated_sequences.fasta"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 scripts/deduplicate_sequences.py \
+            --sequences {input.sequences} \
+            --output {output.sequences}
         """
 
 rule filter:
@@ -42,15 +58,16 @@ rule filter:
           - excluding strains in {input.exclude}
         """
     input:
-        sequences = rules.parse.output.sequences,
+        sequences = rules.deduplicate_sequences.output.sequences,
         metadata = rules.parse.output.metadata,
         exclude = files.dropped_strains
     output:
         sequences = "data/filtered.fasta"
     params:
         group_by = "country year month",
-        sequences_per_group = 90,
-        min_date = 2015
+        sequences_per_group = 10,
+        min_date = 2017.75,
+        max_date = 2020.25
     conda: "../cartography.yml"
     shell:
         """
@@ -61,47 +78,8 @@ rule filter:
             --output {output.sequences} \
             --group-by {params.group_by} \
             --sequences-per-group {params.sequences_per_group} \
-            --min-date {params.min_date}
-        """
-
-rule select_strains:
-    input:
-        sequences = rules.filter.output.sequences,
-        metadata = rules.parse.output.metadata,
-        include = files.reference
-    output:
-        strains = "results/strains_H3N2_Ha.txt",
-    params:
-        viruses_per_month = 90,
-        resolution = '2y',
-        lineage = 'h3n2'
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 scripts/select_strains.py \
-            --sequences {input.sequences} \
-            --metadata {input.metadata} \
-            --segments ha \
-            --include {input.include} \
-            --lineage {params.lineage} \
-            --resolution {params.resolution} \
-            --viruses-per-month {params.viruses_per_month} \
-            --output {output.strains}
-        """
-
-rule extract:
-    input:
-        sequences = rules.filter.output.sequences,
-        strains = rules.select_strains.output.strains
-    output:
-        sequences = 'results/extracted.fasta'
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 scripts/extract_sequences.py \
-            --sequences {input.sequences} \
-            --samples {input.strains} \
-            --output {output}
+            --min-date {params.min_date} \
+            --max-date {params.max_date}
         """
 
 rule align:
@@ -111,18 +89,20 @@ rule align:
           - filling gaps with N
         """
     input:
-        sequences = rules.extract.output.sequences,
+        sequences = rules.filter.output.sequences,
         reference = files.reference
     output:
         alignment = "results/aligned.fasta"
     conda: "../cartography.yml"
+    threads: 4
     shell:
         """
         augur align \
             --sequences {input.sequences} \
             --reference-sequence {input.reference} \
             --output {output.alignment} \
-            --fill-gaps
+            --fill-gaps \
+            --nthreads {threads}
         """
 
 rule tree:
@@ -132,11 +112,13 @@ rule tree:
     output:
         tree = "results/tree_raw.nwk"
     conda: "../cartography.yml"
+    threads: 4
     shell:
         """
         augur tree \
             --alignment {input.alignment} \
-            --output {output.tree}
+            --output {output.tree} \
+            --nthreads {threads}
         """
 
 rule refine:
@@ -194,7 +176,7 @@ rule ancestral:
         augur ancestral \
             --tree {input.tree} \
             --alignment {input.alignment} \
-            --output {output.node_data} \
+            --output-node-data {output.node_data} \
             --inference {params.inference}
         """
 
@@ -265,18 +247,16 @@ rule export:
         auspice_config = files.auspice_config,
         clades = rules.clades.output.clade_data
     output:
-        auspice_tree = rules.all.input.auspice_tree,
-        auspice_meta = rules.all.input.auspice_meta
+        auspice_tree = rules.all.input.auspice_tree
     conda: "../cartography.yml"
     shell:
         """
-        augur export v1 \
+        augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
             --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} \
             --auspice-config {input.auspice_config} \
-            --output-tree {output.auspice_tree} \
-            --output-meta {output.auspice_meta}
+            --output {output.auspice_tree}
         """
 
 rule clean:
