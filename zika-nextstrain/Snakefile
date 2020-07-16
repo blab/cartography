@@ -1,7 +1,6 @@
 rule all:
     input:
-        auspice_tree = "auspice/zika-cartography_tree.json",
-        auspice_meta = "auspice/zika-cartography_meta.json"
+        auspice_tree = "auspice/zika-cartography_tree.json"
 
 rule files:
     params:
@@ -31,7 +30,23 @@ rule parse:
             --output-metadata {output.metadata} \
             --fields {params.fasta_fields}
         """
-
+rule deduplicate_sequences:
+    message:
+        """
+        Deduplicating sequences
+        """
+    input:
+        sequences = rules.parse.output.sequences
+    output:
+        sequences = "results/deduplicated_sequences.fasta"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 scripts/deduplicate_sequences.py \
+            --sequences {input.sequences} \
+            --output {output.sequences}
+        """
+		
 rule filter:
     message:
         """
@@ -41,7 +56,7 @@ rule filter:
           - excluding strains in {input.exclude}
         """
     input:
-        sequences = rules.parse.output.sequences,
+        sequences = rules.deduplicate_sequences.output.sequences,
         metadata = rules.parse.output.metadata,
         exclude = files.dropped_strains
     output:
@@ -149,7 +164,7 @@ rule ancestral:
         augur ancestral \
             --tree {input.tree} \
             --alignment {input.alignment} \
-            --output {output.node_data} \
+            --output-node-data {output.node_data} \
             --inference {params.inference}
         """
 
@@ -222,18 +237,15 @@ rule export:
         clades = rules.clades.output.clade_data
     output:
         auspice_tree = rules.all.input.auspice_tree,
-        auspice_meta = rules.all.input.auspice_meta
     conda: "../cartography.yml"
     shell:
         """
-        augur export v1\
+        augur export v2\
             --tree {input.tree} \
             --metadata {input.metadata} \
             --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} \
-            --colors {input.colors} \
             --auspice-config {input.auspice_config} \
-            --output-tree {output.auspice_tree} \
-            --output-meta {output.auspice_meta}
+            --output {output.auspice_tree} \
         """
 
 rule clean:
@@ -244,3 +256,6 @@ rule clean:
     conda: "../cartography.yml"
     shell:
         "rm -rfv {params}"
+
+
+

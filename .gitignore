@@ -112,3 +112,6 @@ seasonal-flu-nextstrain/mafft_7.467-1_amd64.deb
 chromedriver.exe
 tex2pdf.21972/
 fauna/
+zika-nextstrain/.snakemake
+zika-nextstrain/.snakemake/metadata/
+seasonal-flu-nextstrain/.snakemake/
