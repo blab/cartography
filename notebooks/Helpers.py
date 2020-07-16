@@ -66,6 +66,47 @@ def get_hamming_distances(genomes):
     return hamming_distances
 
 
+def get_y_positions(tree):
+    """Create a mapping of each clade to its vertical position. Dict of {clade:
+    y-coord}. Coordinates are negative, and integers for tips.
+
+    We use the y position layout function from BioPython [1]. This function is
+    hidden inside the top-level draw function, so we cannot reuse it.
+
+    [1] https://github.com/biopython/biopython/blob/d1d3c0d6ab33de12057201e09eb48bdb1964521a/Bio/Phylo/_utils.py#L471-L495
+
+    Parameters
+    ----------
+    tree : Bio.Phylo.BaseTree
+        a tree from BioPython
+
+    Returns
+    -------
+    dict
+        mapping of BioPython Clade instances to y-axis coordinates
+
+    """
+    maxheight = tree.count_terminals()
+    # Rows are defined by the tips
+    heights = {
+        tip: maxheight - i for i, tip in enumerate(reversed(tree.get_terminals()))
+    }
+
+    # Internal nodes: place at midpoint of children
+    def calc_row(clade):
+        for subclade in clade:
+            if subclade not in heights:
+                calc_row(subclade)
+        # Closure over heights
+        heights[clade] = (
+            heights[clade.clades[0]] + heights[clade.clades[-1]]
+        ) / 2.0
+
+    if tree.root.clades:
+        calc_row(tree.root)
+    return heights
+
+
 def concatenate_results_with_strain_data(principal_Df, result_metadata, fields):
     """Takes the data from data reductions (T-SNE, MDS, etc) and pairs up each strain's euclidean plotpoints with its metadata
     
