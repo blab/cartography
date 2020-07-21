@@ -19,10 +19,13 @@ dependencies:
   - jupyterlab
   - matplotlib
   - pandoc
+  - selenium
+  - python-chromedriver-binary
   - pip:
     - pathlib
     - statsmodels
     - statistics
     - snakemake
+    - svglib
     - nextstrain-augur==9.0.0
     - rethinkdb==2.3.0.post6
