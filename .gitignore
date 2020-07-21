@@ -105,6 +105,7 @@ venv.bak/
 .mypy_cache/
 
 #files I don't want tracked
+*.snakemake*
 seasonal-flu
 seasonal-flu-nextstrain/config
 seasonal-flu-nextstrain/results
