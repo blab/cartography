@@ -15,13 +15,13 @@ rule run_json:
         fluWorkFlow("auspice/flu_seasonal_h3n2_ha_2y_tree.json"), 
         zikaWorkFlow("auspice/zika-cartography_tree.json")
     output:
-        "zika-nextstrain/aligned.fasta",
+        "zika-nextstrain/results/aligned.fasta",
         "zika-nextstrain/auspice/zika-cartography_tree.json",
-        "seasonal-flu-nextstrain/aligned.fasta",
+        "seasonal-flu-nextstrain/results/aligned.fasta",
         "seasonal-flu/auspice/flu_seasonal_h3n2_ha_2y_tree.json",
 rule run_zika:
     input:
-        "zika-nextstrain/aligned.fasta",
+        "zika-nextstrain/results/aligned.fasta",
         "notebooks/dropped_Strains_zika.txt",
         "zika-nextstrain/auspice/zika-cartography_tree.json",
         "notebooks/Data/name_of_disease_zika.txt"
@@ -35,7 +35,7 @@ rule run_zika:
         "notebooks/2019-08-08FinalNotebookFlu.ipynb"
 rule run_flu:
     input:
-        "seasonal-flu-nextstrain/aligned.fasta",
+        "seasonal-flu-nextstrain/results/aligned.fasta",
         "notebooks/dropped_Strains_flu.txt",
         "seasonal-flu-nextstrain/auspice/flu_seasonal_h3n2_ha_2y_tree.json",
         "notebooks/Data/clade_names.txt",
