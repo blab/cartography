@@ -1,0 +1,1 @@
+similarity_matrix = pd.read_csv(distance_matrix_file, index_col=0)

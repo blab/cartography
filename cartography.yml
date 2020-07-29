@@ -20,6 +20,7 @@ dependencies:
   - matplotlib
   - pandoc
   - selenium
+  - snp-sites
   - python-chromedriver-binary
   - pip:
     - pathlib
