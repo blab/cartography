@@ -7,10 +7,8 @@ from augur.utils import json_to_tree
 import json
 from pathlib import Path
 from Helpers import get_y_positions
-%matplotlib inline
+import argparse
 
-
-similarity_matrix = pd.read_csv('notebooks/Dataframes/distance_matrix_' + virus_name)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--tree_path", required=True, help="tree to convert for altair purposes")
@@ -18,8 +16,11 @@ parser.add_argument("--disease_name", required=True, help="name of disease")
 	
 args = parser.parse_args()
 
-with open(arg.tree_path) as fh:
+similarity_matrix = pd.read_csv('../Dataframes/distance_matrix_' + args.disease_name)
+
+with open(args.tree_path) as fh:
     json_tree_handle = json.load(fh)
+
 tree = json_to_tree(json_tree_handle)
 
 heights = get_y_positions(tree)
@@ -56,7 +57,7 @@ indices_to_drop = similarity_matrix[~similarity_matrix.index.isin(node_df["strai
 similarity_matrix = similarity_matrix[similarity_matrix.index.isin(node_df["strain"])].dropna(how = 'all')
 similarity_matrix = similarity_matrix.drop(indices_to_drop.index, axis=1)
 
-similarity_matrix.to_csv('notebooks/Dataframes/distance_matrix_' + virus_name + ".csv")
+similarity_matrix.to_csv('../Dataframes/distance_matrix_' + args.disease_name + ".csv")
 
-node_df.to_csv('notebooks/Dataframes/node_dataframe' + virus_name + '.csv')
+node_df.to_csv('../Dataframes/node_dataframe' + args.disease_name + '.csv')
 	

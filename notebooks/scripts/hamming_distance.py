@@ -6,19 +6,21 @@ import numpy as np
 from pathlib import Path
 from scipy.spatial.distance import squareform, pdist
 from Helpers import get_hamming_distances
+import argparse
 
+parser = argparse.ArgumentParser()
 
-f = open(snakemake.input.disease_name, "r")
-virus_name = f.read()
+parser.add_argument("--disease_name", required=True, help="name of disease")
 
-strains_df = pd.read_csv('notebooks/Dataframes/strains_dataframe.csv')  
-genomes_df = pd.read_csv('notebooks/Dataframes/genomes_dataframe.csv')
+args = parser.parse_args()
+
+strains_df = pd.read_csv('../Dataframes/strains_dataframe' + args.disease_name + '.csv')  
+genomes_df = pd.read_csv('../Dataframes/genomes_dataframe' + args.disease_name + '.csv')
 
 genomes = genomes_df["strain"].values.tolist()
 
 strains = strains_df["strain"].values.tolist()
 
-%%time
 
 # Calculate Hamming distances.
 hamming_distances = get_hamming_distances(genomes)
@@ -35,4 +37,4 @@ similarity_matrix = pd.DataFrame(
 
 # Write out the resulting data frame to cache distance calculations.
 # Keep the index in the output file, so it is immediately available on read.
-similarity_matrix.to_csv('notebooks/Dataframes/distance_matrix_' + virus_name + '.csv')
+similarity_matrix.to_csv('../Dataframes/distance_matrix_' + args.disease_name + '.csv')

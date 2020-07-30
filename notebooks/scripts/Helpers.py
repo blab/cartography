@@ -7,6 +7,7 @@ import pandas as pd
 from scipy.spatial.distance import squareform, pdist
 from scipy.stats import linregress
 import statsmodels
+import argparse
 
 def get_hamming_distances(genomes):
     """Calculate pairwise Hamming distances between the given list of genomes

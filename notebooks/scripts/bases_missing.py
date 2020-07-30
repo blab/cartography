@@ -12,7 +12,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--sequences", required=True, help="FASTA file of sequences")
-parser.add_argument("--dropped_strains", required=True, type=list, help="strains to drop")
+parser.add_argument("--dropped_strains", required=True, help="strains to drop")
 parser.add_argument("--disease_name", required=True, help="name of disease")
 	
 args = parser.parse_args()
@@ -47,7 +47,7 @@ genomes_missing_bases_df.columns = ["bases missing", "strain"]
 
 #outputs a dataframe that can be visualized in the jupyter notebook - a histogram detailing amount of missing bases.
 
-genomes_missing_bases_df.to_csv('notebooks/Dataframes/missing_bases' + virus_name + '.csv',index = False)
+genomes_missing_bases_df.to_csv('../Dataframes/missing_bases' + virus_name + '.csv',index = False)
 
 dropped_strains.extend(list(genomes_missing_bases_df[genomes_missing_bases_df["bases missing"]>1000]["strain"]))
 dropped_strains = pd.Series(dropped_strains) 
@@ -58,9 +58,9 @@ indexNames = dropped_strains.isin(['strain']).index
 
 strains_df.drop(indexNames , inplace=True)
 strains_df.reset_index(drop = True)
-strains_df.to_csv('notebooks/Dataframes/strains_dataframe' + virus_name + '.csv', index = False)
+strains_df.to_csv('../Dataframes/strains_dataframe' + virus_name + '.csv', index = False)
 
 genomes_df.drop(indexNames , inplace=True)
 genomes_df.columns = ["strain"]
 genomes_df.reset_index(drop = True)
-genomes_df.to_csv('notebooks/Dataframes/genomes_dataframe' + virus_name + '.csv', index = False)
+genomes_df.to_csv('../Dataframes/genomes_dataframe' + virus_name + '.csv', index = False)

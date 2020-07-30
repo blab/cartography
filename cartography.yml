@@ -21,6 +21,7 @@ dependencies:
   - pandoc
   - selenium
   - snp-sites
+  - argparse
   - python-chromedriver-binary
   - pip:
     - pathlib
