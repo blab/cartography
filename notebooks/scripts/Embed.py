@@ -5,13 +5,8 @@ import pandas as pd
 import altair as alt
 import numpy as np
 from scipy.spatial.distance import squareform, pdist
-from Bio import SeqIO
-import seaborn as sns
 import re
-import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
-from augur.utils import json_to_tree
-import json
 from sklearn.manifold import MDS
 from sklearn.manifold import TSNE
 import umap
@@ -19,19 +14,14 @@ from scipy.stats import linregress
 from pathlib import Path
 import statsmodels
 import statistics
-import matplotlib.pyplot as plt
 from Helpers import get_euclidean_data_frame, get_hamming_distances, linking_tree_with_plots_brush
 from Helpers import linking_tree_with_plots_clickable
 from Helpers import scatterplot_xyvalues, scatterplot_tooltips, scatterplot_with_tooltip_interactive
-from selenium.webdriver import Chrome 
-from svglib.svglib import svg2rlg
-from reportlab.graphics import renderPDF
-from Helpers import get_y_positions
 import argparse
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--method", required=True, help="FASTA file of sequences")
+parser.add_argument("--method", required=True, help="PCA, MDS, TSNE, UMAP, all")
 parser.add_argument("--parameters", required=False, help="parameter options: perplexity, learning rate, nearest neighbors, min_dist")
 parser.add_argument("--disease_name", required=True, help="name of disease")
 parser.add_argument("--output-node-data", required=True, help="output formats: json or node js for auspice")
@@ -51,6 +41,21 @@ genomes = genomes_df["strain"].values.tolist()
 
 strains = strains_df["strain"].values.tolist()
 
+
+# main body of the embed.py - takes into account args and returns the output asked for
+if args.method == "PCA":
+	PCA()
+elif args.method == "MDS":
+	MDS()
+elif args.method == "TSNE":
+	TSNE()
+elif args.method == "UMAP":
+	UMAP()
+elif args.method == "all":
+	PCA()
+	MDS()
+	TSNE()
+	UMAP()
 
 
 def PCA():
