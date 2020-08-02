@@ -4,16 +4,30 @@ channels:
   - bioconda
   - conda-forge
 dependencies:
+  - mafft=7.467
+  - iqtree=1.6.12
   - pip
   - seaborn
   - altair
   - pandas
   - numpy
   - biopython
-  - python=3.6
+  - python=3.6*
   - scikit-learn
   - umap-learn
   - jsonschema
   - jupyterlab
+  - matplotlib
+  - pandoc
+  - selenium
+  - snp-sites
+  - argparse
+  - python-chromedriver-binary
   - pip:
-    - nextstrain-augur
+    - pathlib
+    - statsmodels
+    - statistics
+    - snakemake
+    - svglib
+    - nextstrain-augur==9.0.0
+    - rethinkdb==2.3.0.post6

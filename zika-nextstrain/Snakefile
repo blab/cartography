@@ -1,7 +1,6 @@
 rule all:
     input:
-        auspice_tree = "auspice/zika-cartography_tree.json",
-        auspice_meta = "auspice/zika-cartography_meta.json"
+        auspice_tree = "auspice/zika-cartography_tree.json"
 
 rule files:
     params:
@@ -11,7 +10,6 @@ rule files:
         colors = "config/colors.tsv",
         auspice_config = "config/auspice_config.json",
         clades = "config/clades.tsv"
-
 files = rules.files.params
 
 rule parse:
@@ -23,6 +21,7 @@ rule parse:
         metadata = "results/metadata.tsv"
     params:
         fasta_fields = "strain virus accession date region country division city db segment authors url title journal paper_url"
+    conda: "../cartography.yml"
     shell:
         """
         augur parse \
@@ -31,7 +30,23 @@ rule parse:
             --output-metadata {output.metadata} \
             --fields {params.fasta_fields}
         """
-
+rule deduplicate_sequences:
+    message:
+        """
+        Deduplicating sequences
+        """
+    input:
+        sequences = rules.parse.output.sequences
+    output:
+        sequences = "results/deduplicated_sequences.fasta"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 scripts/deduplicate_sequences.py \
+            --sequences {input.sequences} \
+            --output {output.sequences}
+        """
+		
 rule filter:
     message:
         """
@@ -41,7 +56,7 @@ rule filter:
           - excluding strains in {input.exclude}
         """
     input:
-        sequences = rules.parse.output.sequences,
+        sequences = rules.deduplicate_sequences.output.sequences,
         metadata = rules.parse.output.metadata,
         exclude = files.dropped_strains
     output:
@@ -50,6 +65,7 @@ rule filter:
         group_by = "country year month",
         sequences_per_group = 500,
         min_date = 2013
+    conda: "../cartography.yml"
     shell:
         """
         augur filter \
@@ -73,6 +89,7 @@ rule align:
         reference = files.reference
     output:
         alignment = "results/aligned.fasta"
+    conda: "../cartography.yml"
     shell:
         """
         augur align \
@@ -88,6 +105,7 @@ rule tree:
         alignment = rules.align.output.alignment
     output:
         tree = "results/tree_raw.nwk"
+    conda: "../cartography.yml"
     shell:
         """
         augur tree \
@@ -114,7 +132,8 @@ rule refine:
     params:
         coalescent = "opt",
         date_inference = "marginal",
-        clock_filter_iqd = 4,
+        clock_filter_iqd = 4
+    conda: "../cartography.yml"
     shell:
         """
         augur refine \
@@ -139,12 +158,13 @@ rule ancestral:
         node_data = "results/nt_muts.json"
     params:
         inference = "joint"
+    conda: "../cartography.yml"
     shell:
         """
         augur ancestral \
             --tree {input.tree} \
             --alignment {input.alignment} \
-            --output {output.node_data} \
+            --output-node-data {output.node_data} \
             --inference {params.inference}
         """
 
@@ -156,6 +176,7 @@ rule translate:
         reference = files.reference
     output:
         node_data = "results/aa_muts.json"
+    conda: "../cartography.yml"
     shell:
         """
         augur translate \
@@ -173,6 +194,7 @@ rule clades:
         clades = files.clades
     output:
         clade_data = "results/clades.json"
+    conda: "../cartography.yml"
     shell:
         """
         augur clades --tree {input.tree} \
@@ -190,6 +212,7 @@ rule traits:
         node_data = "results/traits.json",
     params:
         columns = "region country"
+    conda: "../cartography.yml"
     shell:
         """
         augur traits \
@@ -214,17 +237,15 @@ rule export:
         clades = rules.clades.output.clade_data
     output:
         auspice_tree = rules.all.input.auspice_tree,
-        auspice_meta = rules.all.input.auspice_meta
+    conda: "../cartography.yml"
     shell:
         """
-        augur export \
+        augur export v2\
             --tree {input.tree} \
             --metadata {input.metadata} \
             --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} \
-            --colors {input.colors} \
             --auspice-config {input.auspice_config} \
-            --output-tree {output.auspice_tree} \
-            --output-meta {output.auspice_meta}
+            --output {output.auspice_tree} \
         """
 
 rule clean:
@@ -232,5 +253,9 @@ rule clean:
     params:
         "results ",
         "auspice"
+    conda: "../cartography.yml"
     shell:
         "rm -rfv {params}"
+
+
+

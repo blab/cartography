@@ -1,0 +1,176 @@
+I've written these like augur commands, but it's analogous to """ python3 scripts/embed_tsne/py""" etc. These are the methods I thought would be useful. 
+
+Should all of these augur commands be under the "embed" command? (eg. all of these methods are subcommmands of embed)
+
+NOTE: the user must give either metadata-json OR metadata-tsv.
+
+metadata and aligned fasta files are required in every rule.
+
+augur embed tsne
+	-- strains aligned.fasta (aligned fasta, required)
+	-- metadata-json (tree json from auspice)
+	-- metadata-tsv(tsv file of clade information with the strain name)
+	-- distance-matrix distancematrix.csv (not required)
+	-- perplexity 30
+	-- learning-rate 200
+	-- cluster (DBscan) if cluster not selected, then expect clade names as metadata
+	-- output-node-data (options: node.js or dataframe - can color by clade or DBSCAN if --cluster is used) (if there is no region, country, date, etc, it will not be added to the dataframe or node.js)
+	-- [experimental] metric (a feature map instead of a distance matrix) 
+
+augur embed pca
+	-- strains aligned.fasta (required)
+	-- metadata-json (tree json from auspice)
+	-- metadata-tsv(tsv file of clade information with the strain name)
+	-- genomic-matrix.csv (a feature map instead of a distance matrix) (not required)
+	-- components (not required, default 10)
+	-- cluster (DBscan) 
+	-- output-node-data (options: node.js or dataframe)  (if there is no region, country, date, etc, it will not be added to the dataframe or node.js)
+
+augur embed mds
+	-- strains aligned.fasta (aligned fasta, required)
+	-- metadata-json (tree json from auspice)
+	-- metadata-tsv(tsv file of clade information with the strain name)
+	-- distance-matrix distancematrix.csv (not required)
+	-- components (not required, default 10)
+	-- cluster (DBscan) if cluster not selected, then expect clade names as metadata
+	-- output-node-data (options: node.js or dataframe)  (if there is no region, country, date, etc, it will not be added to the dataframe or node.js)
+	-- [experimental] metric (a feature map instead of a distance matrix) 
+
+augur embed umap
+	-- strains aligned.fasta (aligned fasta, required)
+	-- metadata-json (tree json from auspice)
+	-- metadata-tsv(tsv file of clade information with the strain name)
+	-- distance-matrix distancematrix.csv (not required)
+	-- nearest-neighbors 200
+	-- min-dist .05
+	-- cluster (DBscan) if cluster not selected, then expect clade names as metadata
+	-- output-node-data (options: node.js or dataframe)  (if there is no region, country, date, etc, it will not be added to the dataframe or node.js)
+	-- [experimental] metric (a feature map instead of a distance matrix) 
+
+augur violinplot
+	-- input-csv dataframe.csv 
+	-- output (options: figure (PNG) or dataframe (as a csv) ) - dataframe is for if you want to visualize and save the full violinplot in jupyter
+	-- cluster (use clusters as the measure of within vs between)
+	-- method (mds, tsne, umap, pca)
+
+
+augur scatterplot
+	-- input-csv dataframe.csv 
+	-- output (options: figure (PNG) or dataframe) - dataframe is for if you want to visualize and save the full scatterplot in jupyter
+	-- method (mds, tsne, umap, pca)
+
+augur crossvalidate 
+	-- strains-training aligned.fasta (required)
+	-- strains-testing aligned.fasta (required)
+	-- metadata-training (clade annotations) (required) (tsv or dataframe)
+	-- metadata-testing (clade annotations) (required) (tsv or dataframe)
+	-- output (options: figure (confusion matrix, ROC curve with matthews correlation coefficient in the title), csv (for visualization in the jupyter notebook)
+
+augur outlier
+	-- strains aligned.fasta (aligned fasta, required)
+	-- distance-matrix distancematrix.csv (not required)
+	-- [experimental] metric (a feature map instead of a distance matrix) 
+	-- method (default: t-SNE, options mds, pca, umap, tsne)
+	-- output (gives strain names to drop as a csv file)
+	
+	
+	
+Mocking up input: 
+
+NOTE: for all input, the columns must be named the same way as is outputted through augur (for metadata, tree jsons, etc)
+
+Aligned.fasta
+>strain_name/other_information
+
+metadata.tsv (set up the way metadata files are in nextstrain)
+strain     region      country        clade 
+
+auspice.json (from tree build through augur)
+
+distancematrix.csv MUST be labeled both column and index, and must be the same strains in the aligned.fasta file
+index: strain_name (first column)
+column names (strain_name)
+
+input-csv for scatterplot (must have name_of_embedding_x and name_of_embedding_y, and strain) - formatted like tsv here for clarity
+name_of_embedding_x(required)        name_of_embedding_y(required)          strain(required)             clade_membership          cluster_membership             region                     country                      date
+
+input-csv for violinplot (must have column strain and clade_membership. If tag --cluster, then cluster_membership is needed as well) Other columns do not matter for violinplot - they will not be used.
+name_of_embedding_x        name_of_embedding_y          strain(required)             clade_membership(required)           cluster_membership             region                     country                      date
+
+
+
+
+
+Mocking up output: 
+
+NOTE: region, country, and date are descriptors and not used for coloring or description (unless it's selected). The aligned fasta given should not have to contain region country and data data in the strain description (but is reccomended)
+node.js
+{
+  "meta": {
+    "build_url": "",
+    "colorings": [
+      {
+        "key": "num_date",
+        "title": "Date",
+        "type": "continuous"
+      },
+      {
+        "key": "clade_membership",
+        "title": "Clade",
+        "type": "categorical"
+      },
+	  {
+        "key": "cluster_membership",
+        "title": "Cluster DBSCAN",
+        "type": "categorical"
+      },
+      {
+        "key": "region",
+        "title": "Region",
+        "type": "categorical"
+      },
+      {
+        "key": "country",
+        "title": "Country",
+        "type": "categorical"
+      }
+	],
+    "display_defaults": {
+      "color_by": "cluster_membership",
+      "map_triplicate": true
+    },
+    "filters": [
+      "cluster_membership",
+	  "clade_membership",
+      "region",
+      "country"
+   ],
+	"name": strain_name (string),
+		  "node_attrs" : {
+			"name_of_embedding_x": (float),
+			"name_of_embedding_y": (float),
+			"clade_assignment": { value: (string) clade_name} ,
+			"cluster assignment" (optional): { value: (string) cluster_name},
+			"num_date" : (for the description) {value: (float) },
+			"region": { value: (string) },
+			"country": { value: (string) },
+		  }, ... (for each strain)
+      
+	}
+}
+
+
+dataframe (csv) for scatterplot and embed (NOTE: for PCA and MDS, there will be more than 2 columns. The first two columns will be named PCA_x, etc. and only they will be used for plotting.)
+name_of_embedding_x        name_of_embedding_y          strain             clade_membership           cluster_membership             region                     country                      date
+
+
+dataframe (csv) for violinplot (if --cluster, then add "cluster_status" as an option)
+name_of_embedding_x        name_of_embedding_y          strain             clade_status                cluster_status     clade_membership           cluster_membership             region                     country                      date
+
+
+csv for outlier:
+
+strain_1,strain_2,strain_3 (to be read using pandas.read_csv and to to_list())
+
+
+
