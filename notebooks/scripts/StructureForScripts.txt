@@ -89,8 +89,9 @@ column names (strain_name)
 input-csv for scatterplot (must have name_of_embedding_x and name_of_embedding_y, and strain) - formatted like tsv here for clarity
 name_of_embedding_x(required)        name_of_embedding_y(required)          strain(required)             clade_membership          cluster_membership             region                     country                      date
 
-input-csv for violinplot (must have column strain and clade_membership. If tag --cluster, then cluster_membership is needed as well) Other columns do not matter for violinplot - they will not be used.
-name_of_embedding_x        name_of_embedding_y          strain(required)             clade_membership(required)           cluster_membership             region                     country                      date
+input-csv for KDE graph (must have column strain and clade_membership. If tag --cluster, then cluster_membership is needed as well) Other columns do not matter - they will not be used.
+
+name_of_embedding_x        name_of_embedding_y          strain(required)             clade_membership(required)           cluster_membership           
 
 
 
@@ -101,66 +102,28 @@ Mocking up output:
 NOTE: region, country, and date are descriptors and not used for coloring or description (unless it's selected). The aligned fasta given should not have to contain region country and data data in the strain description (but is reccomended)
 node.js
 {
-  "meta": {
-    "build_url": "",
-    "colorings": [
-      {
-        "key": "num_date",
-        "title": "Date",
-        "type": "continuous"
-      },
-      {
-        "key": "clade_membership",
-        "title": "Clade",
-        "type": "categorical"
-      },
-	  {
-        "key": "cluster_membership",
-        "title": "Cluster DBSCAN",
-        "type": "categorical"
-      },
-      {
-        "key": "region",
-        "title": "Region",
-        "type": "categorical"
-      },
-      {
-        "key": "country",
-        "title": "Country",
-        "type": "categorical"
-      }
-	],
-    "display_defaults": {
-      "color_by": "cluster_membership",
-      "map_triplicate": true
-    },
-    "filters": [
-      "cluster_membership",
-	  "clade_membership",
-      "region",
-      "country"
-   ],
-	"name": strain_name (string),
-		  "node_attrs" : {
-			"name_of_embedding_x": (float),
-			"name_of_embedding_y": (float),
-			"clade_assignment": { value: (string) clade_name} ,
-			"cluster assignment" (optional): { value: (string) cluster_name},
-			"num_date" : (for the description) {value: (float) },
-			"region": { value: (string) },
-			"country": { value: (string) },
-		  }, ... (for each strain)
-      
+  "generated_by": {
+    "program": "augur",
+    "version": "9.0.0"
+  },
+ "nodes": {
+	"strain_name": 
+		"name_of_embedding_x": (float),
+		"name_of_embedding_y": (float),
+		"cluster_membership": "(string)"
+		"country" : (optional) (region, date also optional)
+		},
+		... (more strains) ...
 	}
-}
+ }
 
 
 dataframe (csv) for scatterplot and embed (NOTE: for PCA and MDS, there will be more than 2 columns. The first two columns will be named PCA_x, etc. and only they will be used for plotting.)
 name_of_embedding_x        name_of_embedding_y          strain             clade_membership           cluster_membership             region                     country                      date
 
 
-dataframe (csv) for violinplot (if --cluster, then add "cluster_status" as an option)
-name_of_embedding_x        name_of_embedding_y          strain             clade_status                cluster_status     clade_membership           cluster_membership             region                     country                      date
+dataframe (csv) for KDE density graphs (if --cluster, then add "cluster_status" as an option)
+name_of_embedding_x        name_of_embedding_y          strain             clade_status                cluster_status     clade_membership           cluster_membership             
 
 
 csv for outlier:

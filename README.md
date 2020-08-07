@@ -63,7 +63,7 @@ Thats it! All the data has been downloaded. Now it's time for the snakemake file
 Navigate to your cartography repository in your shell prompt, and type 
 
 ```
-snakemake -p --cores 1 --use-conda
+snakemake --use-conda -p -j 4
 ```
 
 Let the snakemake file run! It is pretty memory intensive and takes a bit of time, so give the script time to completely run. Once it's done, navigate into the "docs" folder, and all the graphs, charts, and papers should all be created in the folder. You're done!
