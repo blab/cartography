@@ -6,48 +6,44 @@ NOTE: the user must give either metadata-json OR metadata-tsv.
 
 metadata and aligned fasta files are required in every rule.
 
-augur embed tsne
-	-- strains aligned.fasta (aligned fasta, required)
-	-- metadata-json (tree json from auspice)
-	-- metadata-tsv(tsv file of clade information with the strain name)
-	-- distance-matrix distancematrix.csv (not required)
+python3 embed.py --cluster \
+	t-sne \
+	-- alignment aligned.fasta
 	-- perplexity 30
 	-- learning-rate 200
 	-- cluster (DBscan) if cluster not selected, then expect clade names as metadata
-	-- output-node-data (options: node.js or dataframe - can color by clade or DBSCAN if --cluster is used) (if there is no region, country, date, etc, it will not be added to the dataframe or node.js)
+	-- output-node-data (options: node.js or dataframe - can color by clade or DBSCAN if --cluster is used) 
+	-- output-data-frame (if there is no region, country, date, etc, it will not be added to the dataframe or node.js)
 	-- [experimental] metric (a feature map instead of a distance matrix) 
 
-augur embed pca
-	-- strains aligned.fasta (required)
-	-- metadata-json (tree json from auspice)
-	-- metadata-tsv(tsv file of clade information with the strain name)
-	-- genomic-matrix.csv (a feature map instead of a distance matrix) (not required)
+python3 embed.py --cluster \
+	pca \
+	-- alignment aligned.fasta (required)
 	-- components (not required, default 10)
 	-- cluster (DBscan) 
-	-- output-node-data (options: node.js or dataframe)  (if there is no region, country, date, etc, it will not be added to the dataframe or node.js)
-
-augur embed mds
-	-- strains aligned.fasta (aligned fasta, required)
-	-- metadata-json (tree json from auspice)
-	-- metadata-tsv(tsv file of clade information with the strain name)
-	-- distance-matrix distancematrix.csv (not required)
+	-- output-node-data (options: node.js or dataframe)  
+	-- output-data-frame (if there is no region, country, date, etc, it will not be added to the dataframe or node.js)
+	
+python3 embed.py --cluster \
+	mds \
+	-- alignment aligned.fasta (aligned fasta, required)
 	-- components (not required, default 10)
 	-- cluster (DBscan) if cluster not selected, then expect clade names as metadata
-	-- output-node-data (options: node.js or dataframe)  (if there is no region, country, date, etc, it will not be added to the dataframe or node.js)
+	-- output-node-data (options: node.js or dataframe)  
+	-- output-data-frame (if there is no region, country, date, etc, it will not be added to the dataframe or node.js)
 	-- [experimental] metric (a feature map instead of a distance matrix) 
 
-augur embed umap
-	-- strains aligned.fasta (aligned fasta, required)
-	-- metadata-json (tree json from auspice)
-	-- metadata-tsv(tsv file of clade information with the strain name)
-	-- distance-matrix distancematrix.csv (not required)
+python3 embed.py --cluster \
+	umap \
+	-- alignment aligned.fasta (aligned fasta, required)
 	-- nearest-neighbors 200
 	-- min-dist .05
 	-- cluster (DBscan) if cluster not selected, then expect clade names as metadata
-	-- output-node-data (options: node.js or dataframe)  (if there is no region, country, date, etc, it will not be added to the dataframe or node.js)
+	-- output-node-data (options: node.js or dataframe)  
+	-- output-data-frame (if there is no region, country, date, etc, it will not be added to the dataframe or node.js)
 	-- [experimental] metric (a feature map instead of a distance matrix) 
 
-augur violinplot
+python3 between_vs_within_clade_relaionship.py
 	-- input-csv dataframe.csv 
 	-- output (options: figure (PNG) or dataframe (as a csv) ) - dataframe is for if you want to visualize and save the full violinplot in jupyter
 	-- cluster (use clusters as the measure of within vs between)
@@ -59,11 +55,10 @@ augur scatterplot
 	-- output (options: figure (PNG) or dataframe) - dataframe is for if you want to visualize and save the full scatterplot in jupyter
 	-- method (mds, tsne, umap, pca)
 
-augur crossvalidate 
-	-- strains-training aligned.fasta (required)
-	-- strains-testing aligned.fasta (required)
-	-- metadata-training (clade annotations) (required) (tsv or dataframe)
-	-- metadata-testing (clade annotations) (required) (tsv or dataframe)
+python3 crossvalidate.py 
+	-- alignment aligned.fasta (required)
+	-- metadata (clade annotations) (required) (node data JSON)
+	--kfolds 5 (default)
 	-- output (options: figure (confusion matrix, ROC curve with matthews correlation coefficient in the title), csv (for visualization in the jupyter notebook)
 
 augur outlier
