@@ -165,7 +165,7 @@ rule ancestral:
     message: "Reconstructing ancestral sequences and mutations"
     input:
         tree = rules.refine.output.tree,
-        alignment = rules.align.output
+        alignment = rules.align.output.alignment
     output:
         node_data = "results/nt_muts.json"
     params:
@@ -258,6 +258,28 @@ rule export:
             --auspice-config {input.auspice_config} \
             --output {output.auspice_tree}
         """
+
+rule embed_tsne:
+    message: "Creating the embedding (dataframe, node JSON) for t-SNE"
+    input:
+        alignment = rules.align.output.alignment
+    output:
+        node_data = "results/embed_tsne.json",
+        dataframe = "results/embed_tsne.csv"
+    params:
+        perplexity = 30,
+        learning_rate = 200
+    shell:
+        """
+        python3 ../notebooks/scripts/embed.py \
+            t-sne \
+            --alignment {input.alignment} \
+	        --perplexity {params.perplexity} \
+	        --learning-rate {params.learning_rate} \
+	        --output-node-data {output.node_data} \
+	        --output-dataframe {output.dataframe} 
+        """
+		
 
 rule clean:
     message: "Removing directories: {params}"
