@@ -279,7 +279,46 @@ rule embed_tsne:
 	        --output-node-data {output.node_data} \
 	        --output-dataframe {output.dataframe} 
         """
-		
+
+rule embed_umap:
+    message: "Creating the embedding (dataframe, node JSON) for UMAP"
+    input:
+        alignment = rules.align.output.alignment
+    output:
+        node_data = "results/embed_umap.json",
+        dataframe = "results/embed_umap.csv"
+    params:
+        nearest_neighbors = 200,
+        min_dist = .5
+    shell:
+        """
+        python3 ../notebooks/scripts/embed.py \
+            umap \
+            --alignment {input.alignment} \
+	        --nearest-neighbors {params.nearest_neighbors} \
+	        --min-dist {params.min_dist} \
+	        --output-node-data {output.node_data} \
+	        --output-dataframe {output.dataframe} 
+        """
+rule embed_mds:
+    message: "Creating the embedding (dataframe, node JSON) for MDS"
+    input:
+        alignment = rules.align.output.alignment
+    output:
+        node_data = "results/embed_mds.json",
+        dataframe = "results/embed_mds.csv"
+    params:
+        components = 10
+    shell:
+        """
+        python3 ../notebooks/scripts/embed.py \
+            mds \
+            --alignment {input.alignment} \
+	        --components {params.components} \
+	        --output-node-data {output.node_data} \
+	        --output-dataframe {output.dataframe} 
+        """
+			
 
 rule clean:
     message: "Removing directories: {params}"
