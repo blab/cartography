@@ -285,7 +285,7 @@ def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, c
         return list_of_chart
 
 
-def scatterplot_xyvalues(strains, similarity_matrix, df_merged, column1, column2, type_of_embedding):
+def scatterplot_xyvalues(strains, similarity_matrix, embedding_df, column1, column2, type_of_embedding):
     """Returns a unraveled similarity matrix Pandas dataframe of pairwise and euclidean distances for each strain pair 
      Parameters
     -----------
@@ -294,25 +294,22 @@ def scatterplot_xyvalues(strains, similarity_matrix, df_merged, column1, column2
     similarity_matrix: Pandas Dataframe
         a similarity matrix using hamming distance to compare pairwise distance between each strain
     df_merged: Pandas Dataframe
-        dataframe containing the clade information and euclidean coordinates of each strain in an embedding (PCA, MDS, t-SNE, UMAP)
+        dataframe containing the euclidean coordinates of each strain in an embedding (PCA, MDS, t-SNE, UMAP)
     column1: string
         the name of the first column in df_merged to compare distance between
     column2: string
         the name of the second column in df_merged to compare distance between
     type_of_embedding: string
         "MDS", "PCA", "TSNE", or "UMAP"
-    n_sample:
-        how many strains to sample (altair cannot currently run with that many strains, sample around 1000 - 2000)
         
     Returns 
     ---------
     A Pandas Dataframe of pairwise and euclidean distances for every strain pair
     """
-    embedding_df = df_merged[[column1, column2, 'strain']]
     pairwise_distance_array = np.array(similarity_matrix)[
-        np.triu_indices(len(df_merged), k=0)]
+        np.triu_indices(len(embedding_df), k=0)]
 
-    indexes_tuple = np.triu_indices(len(df_merged), k=0)
+    indexes_tuple = np.triu_indices(len(embedding_df), k=0)
     row_number = indexes_tuple[0]
     column_number = indexes_tuple[1]
     row_strain = pd.DataFrame([strains[x] for x in row_number])
@@ -323,19 +320,20 @@ def scatterplot_xyvalues(strains, similarity_matrix, df_merged, column1, column2
         column_strain, how='outer', left_index=True, right_index=True)
     row_column.columns = ["row", "column"]
 
-    euclidean_df = get_euclidean_data_frame(
-        df_merged, column1, column2, type_of_embedding).dropna()
-    euclidean_df.columns = ["euclidean", "clade_status", "embedding"]
-
+    distances = pdist(embedding_df[[column1, column2]])
+    euclidean_df = pd.DataFrame({"distance": distances})
+    euclidean_df["embedding"] = type_of_embedding
+    euclidean_df.columns = ["euclidean", "embedding"]
+    
     row_column_pairwise = row_column.merge(
         pairwise_df, how='outer', left_index=True, right_index=True)
     row_column_pairwise = row_column_pairwise.where(
         row_column_pairwise["row"] != row_column_pairwise["column"]).dropna().set_index(euclidean_df.index)
-
+    
     total_df = row_column_pairwise.merge(
         euclidean_df, how='inner', left_index=True, right_index=True).dropna()
     total_df.columns = ["row", "column", "genetic",
-                        "euclidean", "clade_status", "embedding"]
+                        "euclidean", "embedding"]
 
     return total_df
 

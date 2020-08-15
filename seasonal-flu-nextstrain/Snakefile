@@ -258,16 +258,33 @@ rule export:
             --auspice-config {input.auspice_config} \
             --output {output.auspice_tree}
         """
-
+rule embed_pca:
+    message: "Creating the embedding (dataframe, node JSON) for MDS"
+    input:
+        alignment = "results-20182020/variable_sites.fasta"
+    output:
+        node_data = "results/embed_pca.json",
+        dataframe = "results/embed_pca.csv"
+    params:
+        components = 10
+    shell:
+        """
+        python3 ../notebooks/scripts/embed.py \
+            pca \
+            --alignment {input.alignment} \
+	        --components {params.components} \
+	        --output-node-data {output.node_data} \
+	        --output-dataframe {output.dataframe} 
+        """
 rule embed_tsne:
     message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
-        alignment = rules.align.output.alignment
+        alignment = "results-20182020/variable_sites.fasta"
     output:
         node_data = "results/embed_tsne.json",
         dataframe = "results/embed_tsne.csv"
     params:
-        perplexity = 30,
+        perplexity = 25.95,
         learning_rate = 200
     shell:
         """
@@ -318,8 +335,75 @@ rule embed_mds:
 	        --output-node-data {output.node_data} \
 	        --output-dataframe {output.dataframe} 
         """
-			
-
+        
+rule scatterplot_tsne:
+    message: "Creating the scatterplot (PNG, dataframe) for t-SNE"
+    input: 
+        distance_matrix = "results/distance_matrix.csv",
+        embedding = rules.embed_tsne.output.dataframe
+    output:
+        png = "results/scatterplot_tsne.png",
+        dataframe = "results/scatterplot_tsne.csv"
+    shell:
+        """
+        python3 ../notebooks/scripts/scatterplot.py \
+            --distance-csv {input.distance_matrix} \
+	        --embedding {input.embedding} \
+            --method t-sne \
+	        --output-PNG {output.png} \
+	        --output-dataframe {output.dataframe} 
+        """
+rule scatterplot_umap:
+    message: "Creating the scatterplot (PNG, dataframe) for UMAP"
+    input: 
+        distance_matrix = "results/distance_matrix.csv",
+        embedding = rules.embed_umap.output.dataframe
+    output:
+        png = "results/scatterplot_umap.png",
+        dataframe = "results/scatterplot_umap.csv"
+    shell:
+        """
+        python3 ../notebooks/scripts/scatterplot.py \
+            --distance-csv {input.distance_matrix} \
+	        --embedding {input.embedding} \
+            --method umap \
+	        --output-PNG {output.png} \
+	        --output-dataframe {output.dataframe} 
+        """
+rule scatterplot_mds:
+    message: "Creating the scatterplot (PNG, dataframe) for MDS"
+    input: 
+        distance_matrix = "results/distance_matrix_mds.csv",
+        embedding = rules.embed_mds.output.dataframe
+    output:
+        png = "results/scatterplot_mds.png",
+        dataframe = "results/scatterplot_mds.csv"
+    shell:
+        """
+        python3 ../notebooks/scripts/scatterplot.py \
+            --distance-csv {input.distance_matrix} \
+	        --embedding {input.embedding} \
+            --method mds \
+	        --output-PNG {output.png} \
+	        --output-dataframe {output.dataframe} 
+        """
+rule scatterplot_pca:
+    message: "Creating the scatterplot (PNG, dataframe) for PCA"
+    input: 
+        distance_matrix = "results/distance_matrix_pca.csv",
+        embedding = rules.embed_pca.output.dataframe
+    output:
+        png = "results/scatterplot_pca.png",
+        dataframe = "results/scatterplot_pca.csv"
+    shell:
+        """
+        python3 ../notebooks/scripts/scatterplot.py \
+            --distance-csv {input.distance_matrix} \
+	        --embedding {input.embedding} \
+            --method pca \
+	        --output-PNG {output.png} \
+	        --output-dataframe {output.dataframe} 
+        """
 rule clean:
     message: "Removing directories: {params}"
     params:

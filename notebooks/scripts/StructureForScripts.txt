@@ -43,7 +43,7 @@ python3 embed.py --cluster \
 	-- output-data-frame (if there is no region, country, date, etc, it will not be added to the dataframe or node.js)
 	-- [experimental] metric (a feature map instead of a distance matrix) 
 
-python3 between_vs_within_clade_relaionship.py
+python3 between_vs_within_clade_relationship.py
 	-- input-csv dataframe.csv 
 	-- output (options: figure (PNG) or dataframe (as a csv) ) - dataframe is for if you want to visualize and save the full violinplot in jupyter
 	-- cluster (use clusters as the measure of within vs between)
@@ -56,6 +56,7 @@ augur scatterplot
 	-- method (mds, tsne, umap, pca)
 
 python3 crossvalidate.py 
+	-- method
 	-- alignment aligned.fasta (required)
 	-- metadata (clade annotations) (required) (node data JSON)
 	--kfolds 5 (default)

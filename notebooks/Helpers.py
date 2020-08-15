@@ -60,7 +60,6 @@ def get_hamming_distances(genomes):
 
     return hamming_distances
 
-
 def get_y_positions(tree):
     """Create a mapping of each clade to its vertical position. Dict of {clade:
     y-coord}. Coordinates are negative, and integers for tips.
@@ -294,15 +293,13 @@ def scatterplot_xyvalues(strains, similarity_matrix, df_merged, column1, column2
     similarity_matrix: Pandas Dataframe
         a similarity matrix using hamming distance to compare pairwise distance between each strain
     df_merged: Pandas Dataframe
-        dataframe containing the clade information and euclidean coordinates of each strain in an embedding (PCA, MDS, t-SNE, UMAP)
+        dataframe containing the euclidean coordinates of each strain in an embedding (PCA, MDS, t-SNE, UMAP)
     column1: string
         the name of the first column in df_merged to compare distance between
     column2: string
         the name of the second column in df_merged to compare distance between
     type_of_embedding: string
         "MDS", "PCA", "TSNE", or "UMAP"
-    n_sample:
-        how many strains to sample (altair cannot currently run with that many strains, sample around 1000 - 2000)
         
     Returns 
     ---------
@@ -323,9 +320,10 @@ def scatterplot_xyvalues(strains, similarity_matrix, df_merged, column1, column2
         column_strain, how='outer', left_index=True, right_index=True)
     row_column.columns = ["row", "column"]
 
-    euclidean_df = get_euclidean_data_frame(
-        df_merged, column1, column2, type_of_embedding).dropna()
-    euclidean_df.columns = ["euclidean", "clade_status", "embedding"]
+    distances = pdist(df_merged[[column1, column2]])
+    euclidean_df = pd.DataFrame({"distance": distances})
+    euclidean_df["embedding"] = type_of_embedding
+    euclidean_df.columns = ["euclidean", "embedding"]
 
     row_column_pairwise = row_column.merge(
         pairwise_df, how='outer', left_index=True, right_index=True)
@@ -335,7 +333,7 @@ def scatterplot_xyvalues(strains, similarity_matrix, df_merged, column1, column2
     total_df = row_column_pairwise.merge(
         euclidean_df, how='inner', left_index=True, right_index=True).dropna()
     total_df.columns = ["row", "column", "genetic",
-                        "euclidean", "clade_status", "embedding"]
+                        "euclidean", "embedding"]
 
     return total_df
 
