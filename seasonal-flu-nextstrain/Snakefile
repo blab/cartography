@@ -300,7 +300,7 @@ rule embed_tsne:
 rule embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
-        alignment = rules.align.output.alignment
+        alignment = "results-20182020/variable_sites.fasta"
     output:
         node_data = "results/embed_umap.json",
         dataframe = "results/embed_umap.csv"
@@ -320,7 +320,7 @@ rule embed_umap:
 rule embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
-        alignment = rules.align.output.alignment
+        alignment = "results-20182020/variable_sites.fasta"
     output:
         node_data = "results/embed_mds.json",
         dataframe = "results/embed_mds.csv"
@@ -373,7 +373,7 @@ rule scatterplot_umap:
 rule scatterplot_mds:
     message: "Creating the scatterplot (PNG, dataframe) for MDS"
     input: 
-        distance_matrix = "results/distance_matrix_mds.csv",
+        distance_matrix = "results/distance_matrix.csv",
         embedding = rules.embed_mds.output.dataframe
     output:
         png = "results/scatterplot_mds.png",

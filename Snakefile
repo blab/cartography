@@ -13,10 +13,12 @@ rule all:
 		
 rule run_zika:
     input:
-		strains = zikaWorkFlow("results/aligned.fasta"),
         tree = zikaWorkFlow("auspice/zika-cartography_tree.json"),
-		dropped_strains = "notebooks/dropped_Strains_zika.txt",
-        disease_name = "notebooks/Data/name_of_disease_zika.txt"
+        disease_name = "notebooks/Data/name_of_disease_zika.txt",
+        pca = zikaWorkFlow("results/embed_pca.csv"),
+        mds = zikaWorkFlow("results/embed_mds.csv"),
+        tsne = zikaWorkFlow("results/embed_tsne.csv"),
+        umap = zikaWorkFlow("results/embed_umap.csv"),
     output:
         "docs/FullViolinPlotZika.png",
         "docs/FullScatterplotZika.png",
@@ -25,17 +27,10 @@ rule run_zika:
     conda: "cartography.yml"
     notebook:											   
         "notebooks/2019-08-08FinalNotebookFlu.ipynb"
-	shell:
-	"""
-		snp-sites -o zika-nextstrain/results-20182020/variable_sites.fasta zika-nextstrain/results-20182020/aligned.fasta \
-		snp-sites -o zika-nextstrain/results/variable_sites.fasta zika-nextstrain/results/aligned.fasta
-	"""
 		
 rule run_flu:
     input:
 		tree = fluWorkFlow("auspice/flu_seasonal_h3n2_ha_2y_tree.json"),
-		strains = fluWorkFlow("results/aligned.fasta")
-        dropped_strains = "notebooks/dropped_Strains_flu.txt",
         clade_names = "notebooks/Data/clade_names.txt",
         disease_name = "notebooks/Data/name_of_disease_flu.txt"
     output:

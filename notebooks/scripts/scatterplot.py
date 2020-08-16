@@ -75,6 +75,6 @@ if __name__ == "__main__":
         plt.savefig(args.output_PNG)
         
     if args.output_dataframe is not None:
-        pd.concat([total_df, PD_Y_values], axis=1)
+        total_df = pd.concat([total_df, PD_Y_values], axis=1)
         total_df["pearson_coef"]=r_value ** 2
         total_df.to_csv(args.output_dataframe)

@@ -66,15 +66,15 @@ if __name__ == "__main__":
         sequences_by_name[sequence.id] = str(sequence.seq)
     
     sequence_names = list(sequences_by_name.keys())
+    if args.command != "pca":
+        # Calculate Distance Matrix
+        hamming_distances = get_hamming_distances(
+            sequences_by_name.values()
+        )
+        distance_matrix = squareform(hamming_distances)
     
-    # Calculate Distance Matrix
-    hamming_distances = get_hamming_distances(
-        sequences_by_name.values()
-    )
-    distance_matrix = squareform(hamming_distances)
-    
-    #secret output - for use in the scatterplot code. We will eventually create a separate distance matrix script so this will become unnecessary
-    pd.DataFrame(distance_matrix).to_csv("results/distance_matrix.csv", index=True)
+        #secret output - for use in the scatterplot code. We will eventually create a separate distance matrix script so this will become unnecessary
+        pd.DataFrame(distance_matrix).to_csv("results/distance_matrix.csv", index=True)
     
     # Calculate Embedding
     if args.command == "pca":
@@ -89,6 +89,7 @@ if __name__ == "__main__":
         #performing PCA on my pandas dataframe 
         pca = PCA(n_components=args.components,svd_solver='full') #can specify n, since with no prior knowledge, I use None
         principalComponents = pca.fit_transform(genomes_df)
+        
         # Create a data frame from the PCA embedding.
         embedding_df = pd.DataFrame(principalComponents)
         
@@ -131,6 +132,13 @@ if __name__ == "__main__":
         embedding_df.columns = [args.command.replace('-', '') + "_x" , args.command.replace('-', '') + "_y"]
         
     embedding_df.index = sequence_names
+    if args.command == "pca":
+    
+        #add explained variance as the first row of the dataframe
+        explained_variance = pd.DataFrame([round(pca.explained_variance_ratio_[i],4) for i in range(0,len(pca.explained_variance_ratio_))], columns=["explained variance"])
+        explained_variance["principal components"] = [i for i in range(0, args.components)] 
+        explained_variance.to_csv("results/explained_variance_pca.csv", index=False)
+        
     if args.output_node_data is not None:
         embedding_dict = embedding_df.transpose().to_dict()
         write_json(embedding_dict,args.output_node_data)
