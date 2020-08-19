@@ -404,6 +404,25 @@ rule scatterplot_pca:
 	        --output-PNG {output.png} \
 	        --output-dataframe {output.dataframe} 
         """
+rule KDE_density_tsne:
+    message: "creating the KDE density plot for TSNE"
+    input:
+        embedding = rules.embed_tsne.output.dataframe,
+        node_data = "results-20182020/clades.json",
+    output:
+        png = "results/KDEDensity.png",
+        dataframe = "results/KDEDensity.csv"
+    params:
+        method = "t-sne"
+    shell:
+        """
+        python3 ../notebooks/scripts/within_vs_between_status.py \
+	        --embedding-csv {input.embedding} \
+            --node-data {input.node_data} \ 
+            --method {params.method} \
+	        --output-PNG {output.png} \
+	        --output-dataframe {output.dataframe} 
+        """
 rule clean:
     message: "Removing directories: {params}"
     params:
