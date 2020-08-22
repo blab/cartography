@@ -118,3 +118,4 @@ zika-nextstrain/.snakemake/metadata/
 seasonal-flu-nextstrain/.snakemake/
 zika-nextstrain/results-20182020/
 zika-nextstrain/auspice/
+.vscode/

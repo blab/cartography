@@ -157,8 +157,8 @@ rule refine:
             --date-confidence \
             --date-inference {params.date_inference} \
             --clock-filter-iqd {params.clock_filter_iqd} \
-			--clock-rate {params.clock_rate} \
-			--clock-std-dev {params.clock_std_dev}
+            --clock-rate {params.clock_rate} \
+            --clock-std-dev {params.clock_std_dev}
         """
 
 rule ancestral:
@@ -258,82 +258,102 @@ rule export:
             --auspice-config {input.auspice_config} \
             --output {output.auspice_tree}
         """
+
+rule create_distance_matrix:
+    message: "creating the distance matrix to be used in the rest of the analysis"
+    input:
+        alignment = "results-20182020/variable_sites.fasta"
+    output:
+        output = "results/distance_matrix.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/hamming_distance_from_fasta.py \
+            --alignment {input.alignment} \
+            --output {output.output}
+        """
+
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
-        alignment = "results-20182020/variable_sites.fasta"
+        distance_matrix = rules.create_distance_matrix.output.output
     output:
         node_data = "results/embed_pca.json",
         dataframe = "results/embed_pca.csv"
     params:
         components = 10
+    conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/embed.py \
             pca \
-            --alignment {input.alignment} \
-	        --components {params.components} \
-	        --output-node-data {output.node_data} \
-	        --output-dataframe {output.dataframe} 
+            --distance-matrix {input.distance_matrix} \
+            --components {params.components} \
+            --output-node-data {output.node_data} \
+            --output-dataframe {output.dataframe} 
         """
+
 rule embed_tsne:
     message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
-        alignment = "results-20182020/variable_sites.fasta"
+        distance_matrix = rules.create_distance_matrix.output.output
     output:
         node_data = "results/embed_tsne.json",
         dataframe = "results/embed_tsne.csv"
     params:
         perplexity = 25.95,
         learning_rate = 200
+    conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/embed.py \
             t-sne \
-            --alignment {input.alignment} \
-	        --perplexity {params.perplexity} \
-	        --learning-rate {params.learning_rate} \
-	        --output-node-data {output.node_data} \
-	        --output-dataframe {output.dataframe} 
+            --distance-matrix {input.distance_matrix} \
+            --perplexity {params.perplexity} \
+            --learning-rate {params.learning_rate} \
+            --output-node-data {output.node_data} \
+            --output-dataframe {output.dataframe} 
         """
 
 rule embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
-        alignment = "results-20182020/variable_sites.fasta"
+        distance_matrix = rules.create_distance_matrix.output.output
     output:
         node_data = "results/embed_umap.json",
         dataframe = "results/embed_umap.csv"
     params:
         nearest_neighbors = 200,
         min_dist = .5
+    conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/embed.py \
             umap \
-            --alignment {input.alignment} \
-	        --nearest-neighbors {params.nearest_neighbors} \
-	        --min-dist {params.min_dist} \
-	        --output-node-data {output.node_data} \
-	        --output-dataframe {output.dataframe} 
+            --distance-matrix {input.distance_matrix} \
+            --nearest-neighbors {params.nearest_neighbors} \
+            --min-dist {params.min_dist} \
+            --output-node-data {output.node_data} \
+            --output-dataframe {output.dataframe} 
         """
 rule embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
-        alignment = "results-20182020/variable_sites.fasta"
+        distance_matrix = rules.create_distance_matrix.output.output
     output:
         node_data = "results/embed_mds.json",
         dataframe = "results/embed_mds.csv"
     params:
         components = 10
+    conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/embed.py \
             mds \
-            --alignment {input.alignment} \
-	        --components {params.components} \
-	        --output-node-data {output.node_data} \
-	        --output-dataframe {output.dataframe} 
+            --distance-matrix {input.distance_matrix} \
+            --components {params.components} \
+            --output-node-data {output.node_data} \
+            --output-dataframe {output.dataframe} 
         """
         
 rule scatterplot_tsne:
@@ -344,15 +364,17 @@ rule scatterplot_tsne:
     output:
         png = "results/scatterplot_tsne.png",
         dataframe = "results/scatterplot_tsne.csv"
+    conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/scatterplot.py \
-            --distance-csv {input.distance_matrix} \
-	        --embedding {input.embedding} \
+            --distance {input.distance_matrix} \
+            --embedding {input.embedding} \
             --method t-sne \
-	        --output-PNG {output.png} \
-	        --output-dataframe {output.dataframe} 
+            --output-PNG {output.png} \
+            --output-dataframe {output.dataframe} 
         """
+
 rule scatterplot_umap:
     message: "Creating the scatterplot (PNG, dataframe) for UMAP"
     input: 
@@ -361,15 +383,17 @@ rule scatterplot_umap:
     output:
         png = "results/scatterplot_umap.png",
         dataframe = "results/scatterplot_umap.csv"
+    conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/scatterplot.py \
-            --distance-csv {input.distance_matrix} \
-	        --embedding {input.embedding} \
+            --distance {input.distance_matrix} \
+            --embedding {input.embedding} \
             --method umap \
-	        --output-PNG {output.png} \
-	        --output-dataframe {output.dataframe} 
+            --output-PNG {output.png} \
+            --output-dataframe {output.dataframe} 
         """
+
 rule scatterplot_mds:
     message: "Creating the scatterplot (PNG, dataframe) for MDS"
     input: 
@@ -378,15 +402,17 @@ rule scatterplot_mds:
     output:
         png = "results/scatterplot_mds.png",
         dataframe = "results/scatterplot_mds.csv"
+    conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/scatterplot.py \
-            --distance-csv {input.distance_matrix} \
-	        --embedding {input.embedding} \
+            --distance {input.distance_matrix} \
+            --embedding {input.embedding} \
             --method mds \
-	        --output-PNG {output.png} \
-	        --output-dataframe {output.dataframe} 
+            --output-PNG {output.png} \
+            --output-dataframe {output.dataframe} 
         """
+
 rule scatterplot_pca:
     message: "Creating the scatterplot (PNG, dataframe) for PCA"
     input: 
@@ -395,34 +421,96 @@ rule scatterplot_pca:
     output:
         png = "results/scatterplot_pca.png",
         dataframe = "results/scatterplot_pca.csv"
+    conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/scatterplot.py \
-            --distance-csv {input.distance_matrix} \
-	        --embedding {input.embedding} \
+            --distance {input.distance_matrix} \
+            --embedding {input.embedding} \
             --method pca \
-	        --output-PNG {output.png} \
-	        --output-dataframe {output.dataframe} 
+            --output-PNG {output.png} \
+            --output-dataframe {output.dataframe} 
         """
+
+rule distances_between_coordinates_pca:
+    message: "creating a distance embedding containing the distance between every coordinate in the embedding dataframe for PCA"
+    input:
+        embedding = rules.embed_pca.output.dataframe
+    output:
+        output = "results/pdist_df_pca.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/pdist_of_embedding_coordinates.py \
+            --embedding {input.embedding} \
+            --output {output.output} \
+        """
+
+rule distances_between_coordinates_tsne:
+    message: "creating a distance embedding containing the distance between every coordinate in the embedding dataframe for tsne"
+    input:
+        embedding = rules.embed_tsne.output.dataframe
+    output:
+        output = "results/pdist_df_tsne.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/pdist_of_embedding_coordinates.py \
+            --embedding {input.embedding} \
+            --output {output.output} \
+        """
+
+rule distances_between_coordinates_mds:
+    message: "creating a distance embedding containing the distance between every coordinate in the embedding dataframe for MDS"
+    input:
+        embedding = rules.embed_mds.output.dataframe
+    output:
+        output = "results/pdist_df_mds.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/pdist_of_embedding_coordinates.py \
+            --embedding {input.embedding} \
+            --output {output.output} \
+        """
+
+rule distances_between_coordinates_umap:
+    message: "creating a distance embedding containing the distance between every coordinate in the embedding dataframe for UMAP"
+    input:
+        embedding = rules.embed_umap.output.dataframe
+    output:
+        output = "results/pdist_df_umap.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/pdist_of_embedding_coordinates.py \
+            --embedding {input.embedding} \
+            --output {output.output} \
+        """
+
 rule KDE_density_tsne:
     message: "creating the KDE density plot for TSNE"
     input:
         embedding = rules.embed_tsne.output.dataframe,
-        node_data = "results-20182020/clades.json",
+        clades = "results-20182020/clades.json",
+        scaled_distance = rules.distances_between_coordinates_tsne.output.output
     output:
-        png = "results/KDEDensity.png",
+        figure = "results/KDEDensity.png",
         dataframe = "results/KDEDensity.csv"
     params:
         method = "t-sne"
+    conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/within_vs_between_status.py \
-	        --embedding-csv {input.embedding} \
-            --node-data {input.node_data} \ 
+            --embedding {input.embedding} \
+            --clades {input.clades} \
             --method {params.method} \
-	        --output-PNG {output.png} \
-	        --output-dataframe {output.dataframe} 
+            --scaled-distance {input.scaled_distance} \
+            --output-figure {output.figure} \
+            --output-dataframe {output.dataframe} 
         """
+
 rule clean:
     message: "Removing directories: {params}"
     params:

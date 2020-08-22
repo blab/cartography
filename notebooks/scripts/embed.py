@@ -1,7 +1,5 @@
 import argparse
 from augur.utils import write_json
-import Bio.SeqIO
-from collections import OrderedDict
 import numpy as np
 import pandas as pd
 import re
@@ -13,7 +11,7 @@ from umap import UMAP
 
 from Helpers import get_hamming_distances
 
-	
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description = "creates embeddings", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -21,27 +19,27 @@ if __name__ == "__main__":
     subparsers = parser.add_subparsers(dest="command")
     
     pca = subparsers.add_parser("pca")
-    pca.add_argument("--alignment", required=True, help="an aligned FASTA file from a multiple sequence alignment")
+    pca.add_argument("--distance-matrix", required=True, help="a csv distance matrix that can be read in by pandas, index column as row 0")
     pca.add_argument("--components", default=10, type=int, help="the number of components for PCA")
     pca.add_argument("--output-node-data", help="outputting a node data JSON file")
     pca.add_argument("--output-dataframe", help="outputting a csv file")
     
     tsne = subparsers.add_parser("t-sne")
-    tsne.add_argument("--alignment", required=True, help="an aligned FASTA file from a multiple sequence alignment")
+    tsne.add_argument("--distance-matrix", required=True, help="a csv distance matrix that can be read in by pandas, index column as row 0")
     tsne.add_argument("--perplexity", default=30.0, type=float, help="the perplexity value for the tsne embedding")
     tsne.add_argument("--learning-rate", default=200.0, type=float, help="the learning rate value for the tsne embedding")
     tsne.add_argument("--output-node-data", help="outputting a node data JSON file")
     tsne.add_argument("--output-dataframe", help="outputting a csv file")
     
     umap = subparsers.add_parser("umap")
-    umap.add_argument("--alignment", required=True, help="an aligned FASTA file from a multiple sequence alignment")
+    umap.add_argument("--distance-matrix", required=True, help="a csv distance matrix that can be read in by pandas, index column as row 0")
     umap.add_argument("--nearest-neighbors", default=200, type=int, help="the nearest neighbors value for the umap embedding")
     umap.add_argument("--min-dist", default=.5, type=float, help="the minimum distance value for the umap embedding")
     umap.add_argument("--output-node-data", help="outputting a node data JSON file")
     umap.add_argument("--output-dataframe", help="outputting a csv file")
     
     mds = subparsers.add_parser("mds")
-    mds.add_argument("--alignment", required=True, help="an aligned FASTA file from a multiple sequence alignment")
+    mds.add_argument("--distance-matrix", required=True, help="a csv distance matrix that can be read in by pandas, index column as row 0")
     mds.add_argument("--components", default=10, type=int, help="the number of components for MDS")
     mds.add_argument("--output-node-data", help="outputting a node data JSON file")
     mds.add_argument("--output-dataframe", help="outputting a csv file")
@@ -59,22 +57,7 @@ if __name__ == "__main__":
         sys.exit(1)
         
         
-    # Load alignment
-    sequences_by_name = OrderedDict()
-
-    for sequence in Bio.SeqIO.parse(args.alignment, "fasta"):
-        sequences_by_name[sequence.id] = str(sequence.seq)
-    
-    sequence_names = list(sequences_by_name.keys())
-    if args.command != "pca":
-        # Calculate Distance Matrix
-        hamming_distances = get_hamming_distances(
-            sequences_by_name.values()
-        )
-        distance_matrix = squareform(hamming_distances)
-    
-        #secret output - for use in the scatterplot code. We will eventually create a separate distance matrix script so this will become unnecessary
-        pd.DataFrame(distance_matrix).to_csv("results/distance_matrix.csv", index=True)
+    distance_matrix  = pd.read_csv(args.distance_matrix, index_col=0)
     
     # Calculate Embedding
     if args.command == "pca":
@@ -131,7 +114,7 @@ if __name__ == "__main__":
     else:
         embedding_df.columns = [args.command.replace('-', '') + "_x" , args.command.replace('-', '') + "_y"]
         
-    embedding_df.index = sequence_names
+    embedding_df.index = list(distance_matrix.index)
     if args.command == "pca":
     
         #add explained variance as the first row of the dataframe
