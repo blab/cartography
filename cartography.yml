@@ -1,18 +1,18 @@
 name: cartography
 channels:
-  - defaults
-  - bioconda
   - conda-forge
+  - bioconda
+  - defaults
 dependencies:
-  - mafft=7.467
-  - iqtree=1.6.12
+  - mafft
+  - iqtree
   - pip
   - seaborn
   - altair
   - pandas
   - numpy
   - biopython
-  - python=3.6*
+  - python=3.7*
   - scikit-learn
   - umap-learn
   - jsonschema
@@ -21,13 +21,11 @@ dependencies:
   - pandoc
   - selenium
   - snp-sites
-  - argparse
   - python-chromedriver-binary
   - pip:
-    - pathlib
     - statsmodels
     - statistics
     - snakemake
     - svglib
-    - nextstrain-augur==9.0.0
+    - nextstrain-augur==10.0.0
     - rethinkdb==2.3.0.post6
