@@ -290,7 +290,7 @@ rule embed_pca:
             --distance-matrix {input.distance_matrix} \
             --components {params.components} \
             --output-node-data {output.node_data} \
-            --output-dataframe {output.dataframe} 
+            --output-dataframe {output.dataframe}
         """
 
 rule embed_tsne:
@@ -359,7 +359,7 @@ rule embed_mds:
 
 rule scatterplot_tsne:
     message: "Creating the scatterplot (PNG, dataframe) for t-SNE"
-    input: 
+    input:
         distance_matrix = "results/distance_matrix.csv",
         embedding = rules.embed_tsne.output.dataframe
     output:
@@ -378,7 +378,7 @@ rule scatterplot_tsne:
 
 rule scatterplot_umap:
     message: "Creating the scatterplot (PNG, dataframe) for UMAP"
-    input: 
+    input:
         distance_matrix = "results/distance_matrix.csv",
         embedding = rules.embed_umap.output.dataframe
     output:
@@ -397,7 +397,7 @@ rule scatterplot_umap:
 
 rule scatterplot_mds:
     message: "Creating the scatterplot (PNG, dataframe) for MDS"
-    input: 
+    input:
         distance_matrix = "results/distance_matrix.csv",
         embedding = rules.embed_mds.output.dataframe
     output:
@@ -416,7 +416,7 @@ rule scatterplot_mds:
 
 rule scatterplot_pca:
     message: "Creating the scatterplot (PNG, dataframe) for PCA"
-    input: 
+    input:
         distance_matrix = "results/distance_matrix_pca.csv",
         embedding = rules.embed_pca.output.dataframe
     output:
@@ -510,7 +510,7 @@ rule KDE_density_tsne:
             --method {params.method} \
             --scaled-distance {input.scaled_distance} \
             --output-figure {output.figure} \
-            --output-dataframe {output.dataframe} 
+            --output-dataframe {output.dataframe}
         """
 
 rule KDE_density_pca:
@@ -533,7 +533,7 @@ rule KDE_density_pca:
             --method {params.method} \
             --scaled-distance {input.scaled_distance} \
             --output-figure {output.figure} \
-            --output-dataframe {output.dataframe} 
+            --output-dataframe {output.dataframe}
         """
 
 rule KDE_density_mds:
@@ -556,7 +556,7 @@ rule KDE_density_mds:
             --method {params.method} \
             --scaled-distance {input.scaled_distance} \
             --output-figure {output.figure} \
-            --output-dataframe {output.dataframe} 
+            --output-dataframe {output.dataframe}
         """
 
 rule KDE_density_umap:
@@ -579,7 +579,7 @@ rule KDE_density_umap:
             --method {params.method} \
             --scaled-distance {input.scaled_distance} \
             --output-figure {output.figure} \
-            --output-dataframe {output.dataframe} 
+            --output-dataframe {output.dataframe}
         """
 
 
@@ -591,4 +591,3 @@ rule clean:
     conda: "../cartography.yml"
     shell:
         "rm -rfv {params}"
-
