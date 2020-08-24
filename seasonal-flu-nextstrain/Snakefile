@@ -363,7 +363,7 @@ rule scatterplot_tsne:
         distance_matrix = "results/distance_matrix.csv",
         embedding = rules.embed_tsne.output.dataframe
     output:
-        png = "results/scatterplot_tsne.png",
+        figure = "results/scatterplot_tsne.png",
         dataframe = "results/scatterplot_tsne.csv"
     conda: "../cartography.yml"
     shell:
@@ -372,8 +372,8 @@ rule scatterplot_tsne:
             --distance {input.distance_matrix} \
             --embedding {input.embedding} \
             --method t-sne \
-            --output-PNG {output.png} \
-            --output-dataframe {output.dataframe} 
+            --output-figure {output.figure} \
+            --output-dataframe {output.dataframe}
         """
 
 rule scatterplot_umap:
@@ -382,7 +382,7 @@ rule scatterplot_umap:
         distance_matrix = "results/distance_matrix.csv",
         embedding = rules.embed_umap.output.dataframe
     output:
-        png = "results/scatterplot_umap.png",
+        figure = "results/scatterplot_umap.png",
         dataframe = "results/scatterplot_umap.csv"
     conda: "../cartography.yml"
     shell:
@@ -391,8 +391,8 @@ rule scatterplot_umap:
             --distance {input.distance_matrix} \
             --embedding {input.embedding} \
             --method umap \
-            --output-PNG {output.png} \
-            --output-dataframe {output.dataframe} 
+            --output-figure {output.figure} \
+            --output-dataframe {output.dataframe}
         """
 
 rule scatterplot_mds:
@@ -401,7 +401,7 @@ rule scatterplot_mds:
         distance_matrix = "results/distance_matrix.csv",
         embedding = rules.embed_mds.output.dataframe
     output:
-        png = "results/scatterplot_mds.png",
+        figure = "results/scatterplot_mds.png",
         dataframe = "results/scatterplot_mds.csv"
     conda: "../cartography.yml"
     shell:
@@ -410,8 +410,8 @@ rule scatterplot_mds:
             --distance {input.distance_matrix} \
             --embedding {input.embedding} \
             --method mds \
-            --output-PNG {output.png} \
-            --output-dataframe {output.dataframe} 
+            --output-figure {output.figure} \
+            --output-dataframe {output.dataframe}
         """
 
 rule scatterplot_pca:
@@ -420,7 +420,7 @@ rule scatterplot_pca:
         distance_matrix = "results/distance_matrix_pca.csv",
         embedding = rules.embed_pca.output.dataframe
     output:
-        png = "results/scatterplot_pca.png",
+        figure = "results/scatterplot_pca.png",
         dataframe = "results/scatterplot_pca.csv"
     conda: "../cartography.yml"
     shell:
@@ -429,8 +429,8 @@ rule scatterplot_pca:
             --distance {input.distance_matrix} \
             --embedding {input.embedding} \
             --method pca \
-            --output-PNG {output.png} \
-            --output-dataframe {output.dataframe} 
+            --output-figure {output.figure} \
+            --output-dataframe {output.dataframe}
         """
 
 rule distances_between_coordinates_pca:
