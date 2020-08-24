@@ -113,7 +113,7 @@ if __name__ == "__main__":
         
     if args.output_node_data is not None:
         embedding_dict = embedding_df.transpose().to_dict()
-        write_json(embedding_dict,args.output_node_data)
+        write_json({"nodes": embedding_dict}, args.output_node_data)
+
     if args.output_dataframe is not None:
-        embedding_df.to_csv(args.output_dataframe)
-    
+        embedding_df.to_csv(args.output_dataframe, index_label="strain")
