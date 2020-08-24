@@ -62,7 +62,7 @@ rule filter:
         metadata = rules.parse.output.metadata,
         exclude = files.dropped_strains
     output:
-        sequences = "data/filtered.fasta"
+        sequences = "results/filtered.fasta"
     params:
         group_by = "country year month",
         sequences_per_group = 10,
