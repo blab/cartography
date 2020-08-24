@@ -307,12 +307,12 @@ rule embed_tsne:
     shell:
         """
         python3 ../notebooks/scripts/embed.py \
-            t-sne \
             --distance-matrix {input.distance_matrix} \
-            --perplexity {params.perplexity} \
-            --learning-rate {params.learning_rate} \
             --output-node-data {output.node_data} \
-            --output-dataframe {output.dataframe} 
+            --output-dataframe {output.dataframe} \
+            t-sne \
+            --perplexity {params.perplexity} \
+            --learning-rate {params.learning_rate}
         """
 
 rule embed_umap:
@@ -329,13 +329,14 @@ rule embed_umap:
     shell:
         """
         python3 ../notebooks/scripts/embed.py \
-            umap \
             --distance-matrix {input.distance_matrix} \
-            --nearest-neighbors {params.nearest_neighbors} \
-            --min-dist {params.min_dist} \
             --output-node-data {output.node_data} \
-            --output-dataframe {output.dataframe} 
+            --output-dataframe {output.dataframe} \
+            umap \
+            --nearest-neighbors {params.nearest_neighbors} \
+            --min-dist {params.min_dist}
         """
+
 rule embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
@@ -349,13 +350,13 @@ rule embed_mds:
     shell:
         """
         python3 ../notebooks/scripts/embed.py \
-            mds \
             --distance-matrix {input.distance_matrix} \
-            --components {params.components} \
             --output-node-data {output.node_data} \
-            --output-dataframe {output.dataframe} 
+            --output-dataframe {output.dataframe} \
+            mds \
+            --components {params.components} \
         """
-        
+
 rule scatterplot_tsne:
     message: "Creating the scatterplot (PNG, dataframe) for t-SNE"
     input: 

@@ -15,50 +15,39 @@ from Helpers import get_hamming_distances
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description = "creates embeddings", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    
-    subparsers = parser.add_subparsers(dest="command")
-    
+
+    parser.add_argument("--distance-matrix", required=True, help="a csv distance matrix that can be read in by pandas, index column as row 0")
+    parser.add_argument("--output-node-data", help="outputting a node data JSON file")
+    parser.add_argument("--output-dataframe", help="outputting a csv file")
+
+    subparsers = parser.add_subparsers(
+        dest="command",
+        required=True
+    )
+
     pca = subparsers.add_parser("pca")
-    pca.add_argument("--distance-matrix", required=True, help="a csv distance matrix that can be read in by pandas, index column as row 0")
     pca.add_argument("--components", default=10, type=int, help="the number of components for PCA")
-    pca.add_argument("--output-node-data", help="outputting a node data JSON file")
-    pca.add_argument("--output-dataframe", help="outputting a csv file")
-    
+
     tsne = subparsers.add_parser("t-sne")
-    tsne.add_argument("--distance-matrix", required=True, help="a csv distance matrix that can be read in by pandas, index column as row 0")
     tsne.add_argument("--perplexity", default=30.0, type=float, help="the perplexity value for the tsne embedding")
     tsne.add_argument("--learning-rate", default=200.0, type=float, help="the learning rate value for the tsne embedding")
-    tsne.add_argument("--output-node-data", help="outputting a node data JSON file")
-    tsne.add_argument("--output-dataframe", help="outputting a csv file")
-    
+
     umap = subparsers.add_parser("umap")
-    umap.add_argument("--distance-matrix", required=True, help="a csv distance matrix that can be read in by pandas, index column as row 0")
     umap.add_argument("--nearest-neighbors", default=200, type=int, help="the nearest neighbors value for the umap embedding")
     umap.add_argument("--min-dist", default=.5, type=float, help="the minimum distance value for the umap embedding")
-    umap.add_argument("--output-node-data", help="outputting a node data JSON file")
-    umap.add_argument("--output-dataframe", help="outputting a csv file")
-    
+
     mds = subparsers.add_parser("mds")
-    mds.add_argument("--distance-matrix", required=True, help="a csv distance matrix that can be read in by pandas, index column as row 0")
     mds.add_argument("--components", default=10, type=int, help="the number of components for MDS")
-    mds.add_argument("--output-node-data", help="outputting a node data JSON file")
-    mds.add_argument("--output-dataframe", help="outputting a csv file")
-    
+
     args = parser.parse_args()
     # Checking that the input fits the restrictions
 
     if args.output_node_data is None and args.output_dataframe is None:
         print("You must specify one of the outputs", file=sys.stderr)
         sys.exit(1)
-        
-    options = ["pca", "mds", "t-sne", "umap"]
-    if args.command not in options:
-        print("You must specify one of the options allowed:" + str(options[i] for i in options), file=sys.stderr)
-        sys.exit(1)
-        
-        
+
     distance_matrix  = pd.read_csv(args.distance_matrix, index_col=0)
-    
+
     # Calculate Embedding
     if args.command == "pca":
         numbers = list(sequences_by_name.values())[:]
