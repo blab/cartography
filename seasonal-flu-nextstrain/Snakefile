@@ -488,6 +488,7 @@ rule distances_between_coordinates_umap:
             --output {output.output} \
         """
 
+
 rule KDE_density_tsne:
     message: "creating the KDE density plot for TSNE"
     input:
@@ -495,8 +496,8 @@ rule KDE_density_tsne:
         clades = "results-20182020/clades.json",
         scaled_distance = rules.distances_between_coordinates_tsne.output.output
     output:
-        figure = "results/KDEDensity.png",
-        dataframe = "results/KDEDensity.csv"
+        figure = "results/KDEDensity_tsne.png",
+        dataframe = "results/KDEDensity_tsne.csv"
     params:
         method = "t-sne"
     conda: "../cartography.yml"
@@ -511,6 +512,76 @@ rule KDE_density_tsne:
             --output-dataframe {output.dataframe} 
         """
 
+rule KDE_density_pca:
+    message: "creating the KDE density plot for pca"
+    input:
+        embedding = rules.embed_pca.output.dataframe,
+        clades = "results-20182020/clades.json",
+        scaled_distance = rules.distances_between_coordinates_tsne.output.output
+    output:
+        figure = "results/KDEDensity_pca.png",
+        dataframe = "results/KDEDensity_pca.csv"
+    params:
+        method = "pca"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/within_vs_between_status.py \
+            --embedding {input.embedding} \
+            --clades {input.clades} \
+            --method {params.method} \
+            --scaled-distance {input.scaled_distance} \
+            --output-figure {output.figure} \
+            --output-dataframe {output.dataframe} 
+        """
+
+rule KDE_density_mds:
+    message: "creating the KDE density plot for MDS"
+    input:
+        embedding = rules.embed_pca.output.dataframe,
+        clades = "results-20182020/clades.json",
+        scaled_distance = rules.distances_between_coordinates_tsne.output.output
+    output:
+        figure = "results/KDEDensity_mds.png",
+        dataframe = "results/KDEDensity_mds.csv"
+    params:
+        method = "mds"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/within_vs_between_status.py \
+            --embedding {input.embedding} \
+            --clades {input.clades} \
+            --method {params.method} \
+            --scaled-distance {input.scaled_distance} \
+            --output-figure {output.figure} \
+            --output-dataframe {output.dataframe} 
+        """
+
+rule KDE_density_umap:
+    message: "creating the KDE density plot for UMAP"
+    input:
+        embedding = rules.embed_pca.output.dataframe,
+        clades = "results-20182020/clades.json",
+        scaled_distance = rules.distances_between_coordinates_tsne.output.output
+    output:
+        figure = "results/KDEDensity_umap.png",
+        dataframe = "results/KDEDensity_umap.csv"
+    params:
+        method = "umap"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/within_vs_between_status.py \
+            --embedding {input.embedding} \
+            --clades {input.clades} \
+            --method {params.method} \
+            --scaled-distance {input.scaled_distance} \
+            --output-figure {output.figure} \
+            --output-dataframe {output.dataframe} 
+        """
+
+
 rule clean:
     message: "Removing directories: {params}"
     params:
@@ -519,3 +590,4 @@ rule clean:
     conda: "../cartography.yml"
     shell:
         "rm -rfv {params}"
+

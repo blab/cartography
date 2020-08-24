@@ -37,38 +37,39 @@ if __name__ == "__main__":
     
     column_names = list(embedding_df.columns.values)
 
-    total_df = scatterplot_xyvalues(embedding_df.index, distance_matrix, embedding_df, column_names[0], column_names[1], args.method)
+    total_df = scatterplot_xyvalues(list(embedding_df.index), distance_matrix, embedding_df, column_names[0], column_names[1], args.method)
         
-    y_values = statsmodels.nonparametric.smoothers_lowess.lowess(
-    total_df["euclidean"],
-    total_df["genetic"],
-    frac=0.6666666666666666,
-    it=3,
-    delta=0.0,
-    is_sorted=False,
-    missing='drop',
-    return_sorted=True
-    )
-
-    PD_Y_values = pd.DataFrame(y_values)
-    PD_Y_values.columns = ["LOWESS_x", "LOWESS_y"]
-    regression = linregress(total_df["genetic"], total_df["euclidean"])
-    slope, intercept, r_value, p_value, std_err = regression
-    
     if args.output_figure is not None:
-        fig, ax = plt.subplots(1, 1, figsize=(6, 6))
+        y_values = statsmodels.nonparametric.smoothers_lowess.lowess(
+        total_df["euclidean"],
+        total_df["genetic"],
+        frac=0.6666666666666666,
+        it=3,
+        delta=0.0,
+        is_sorted=False,
+        missing='drop',
+        return_sorted=True
+        )
 
-        ax.plot(total_df["genetic"], total_df["euclidean"], "o", alpha=0.25)
-        ax.plot(PD_Y_values["LOWESS_x"], PD_Y_values["LOWESS_y"], label="LOESS")
-
-        ax.set_xlabel("Genetic distance")
-        ax.set_ylabel("Euclidean distance (PCA)")
-        ax.set_title(args.method + "Euclidean distance vs. genetic distance ($R^2=%.3f$)" % (r_value ** 2))
-
-        sns.despine()
+        PD_Y_values = pd.DataFrame(y_values)
+        PD_Y_values.columns = ["LOWESS_x", "LOWESS_y"]
+        regression = linregress(total_df["genetic"], total_df["euclidean"])
+        slope, intercept, r_value, p_value, std_err = regression
         
-        plt.savefig(args.output_figure)
-        
+        if args.output_figure is not None:
+            fig, ax = plt.subplots(1, 1, figsize=(6, 6))
+
+            ax.plot(total_df["genetic"], total_df["euclidean"], "o", alpha=0.25)
+            ax.plot(PD_Y_values["LOWESS_x"], PD_Y_values["LOWESS_y"], label="LOESS")
+
+            ax.set_xlabel("Genetic distance")
+            ax.set_ylabel("Euclidean distance (PCA)")
+            ax.set_title(args.method + "Euclidean distance vs. genetic distance ($R^2=%.3f$)" % (r_value ** 2))
+
+            sns.despine()
+            
+            plt.savefig(args.output_figure)
+            
     if args.output_dataframe is not None:
         total_df = pd.concat([total_df, PD_Y_values], axis=1)
         total_df["pearson_coef"]=r_value ** 2
