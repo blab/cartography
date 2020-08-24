@@ -262,7 +262,7 @@ rule export:
 rule create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
-        alignment = "results-20182020/variable_sites.fasta"
+        alignment = "results/aligned.fasta"
     output:
         output = "results/distance_matrix.csv"
     conda: "../cartography.yml"
@@ -494,7 +494,7 @@ rule KDE_density_tsne:
     message: "creating the KDE density plot for TSNE"
     input:
         embedding = rules.embed_tsne.output.dataframe,
-        clades = "results-20182020/clades.json",
+        clades = "results/clades.json",
         scaled_distance = rules.distances_between_coordinates_tsne.output.output
     output:
         figure = "results/KDEDensity_tsne.png",
@@ -517,7 +517,7 @@ rule KDE_density_pca:
     message: "creating the KDE density plot for pca"
     input:
         embedding = rules.embed_pca.output.dataframe,
-        clades = "results-20182020/clades.json",
+        clades = "results/clades.json",
         scaled_distance = rules.distances_between_coordinates_tsne.output.output
     output:
         figure = "results/KDEDensity_pca.png",
@@ -540,7 +540,7 @@ rule KDE_density_mds:
     message: "creating the KDE density plot for MDS"
     input:
         embedding = rules.embed_pca.output.dataframe,
-        clades = "results-20182020/clades.json",
+        clades = "results/clades.json",
         scaled_distance = rules.distances_between_coordinates_tsne.output.output
     output:
         figure = "results/KDEDensity_mds.png",
@@ -563,7 +563,7 @@ rule KDE_density_umap:
     message: "creating the KDE density plot for UMAP"
     input:
         embedding = rules.embed_pca.output.dataframe,
-        clades = "results-20182020/clades.json",
+        clades = "results/clades.json",
         scaled_distance = rules.distances_between_coordinates_tsne.output.output
     output:
         figure = "results/KDEDensity_umap.png",
