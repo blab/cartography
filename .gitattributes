@@ -1,0 +1,6 @@
+# Set most line endings to UNIX-style (LF).
+* text=auto eol=lf
+
+# Set line endings for Windows-related files to Windows-style endings (CRLF).
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf
