@@ -1,5 +1,7 @@
 import argparse
 from augur.utils import write_json
+import Bio.SeqIO
+from collections import OrderedDict
 import numpy as np
 import pandas as pd
 import re
@@ -15,8 +17,9 @@ from Helpers import get_hamming_distances
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description = "creates embeddings", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-
-    parser.add_argument("--distance-matrix", required=True, help="a csv distance matrix that can be read in by pandas, index column as row 0")
+    
+    parser.add_argument("--distance-matrix", help="a csv distance matrix that can be read in by pandas, index column as row 0")
+    parser.add_argument("--alignment", help="an aligned FASTA file to create a distance matrix with")
     parser.add_argument("--output-node-data", help="outputting a node data JSON file")
     parser.add_argument("--output-dataframe", help="outputting a csv file")
 
@@ -46,10 +49,41 @@ if __name__ == "__main__":
         print("You must specify one of the outputs", file=sys.stderr)
         sys.exit(1)
 
-    distance_matrix  = pd.read_csv(args.distance_matrix, index_col=0)
+    if args.alignment is None and args.command == "pca":
+        print("You must specify an alignment for pca, not a distance matrix", file=sys.stderr) 
+        sys.exit(1)
+
+    # getting or creating the distance matrix
+
+    if args.distance_matrix is not None:
+        distance_matrix  = pd.read_csv(args.distance_matrix, index_col=0)
+
+    elif args.alignment is not None:
+        sequences_by_name = OrderedDict()
+
+        for sequence in Bio.SeqIO.parse(args.alignment, "fasta"):
+            sequences_by_name[sequence.id] = str(sequence.seq)
+        
+        sequence_names = list(sequences_by_name.keys())
+        if args.command != "pca":
+            # Calculate Distance Matrix
+
+            hamming_distances = get_hamming_distances(
+                sequences_by_name.values()
+            )
+            distance_matrix = squareform(hamming_distances)
+
 
     # Calculate Embedding
+
     if args.command == "pca":
+        sequences_by_name = OrderedDict()
+
+        for sequence in Bio.SeqIO.parse(args.alignment, "fasta"):
+            sequences_by_name[sequence.id] = str(sequence.seq)
+
+        sequence_names = list(sequences_by_name.keys())
+
         numbers = list(sequences_by_name.values())[:]
         for i in range(0,len(list(sequences_by_name.values()))):
             numbers[i] = re.sub(r'[^AGCT]', '5', numbers[i])
@@ -59,10 +93,12 @@ if __name__ == "__main__":
         genomes_df = pd.DataFrame(numbers)
         genomes_df.columns = ["Site " + str(k) for k in range(0,len(numbers[i]))]
         #performing PCA on my pandas dataframe 
+
         pca = PCA(n_components=args.components,svd_solver='full') #can specify n, since with no prior knowledge, I use None
         principalComponents = pca.fit_transform(genomes_df)
         
         # Create a data frame from the PCA embedding.
+        
         embedding_df = pd.DataFrame(principalComponents)
         
     if args.command == "t-sne":
