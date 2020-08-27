@@ -1,5 +1,6 @@
 import argparse
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 from scipy.stats import linregress
 import seaborn as sns
@@ -14,7 +15,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = "creates embeddings", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     
     parser.add_argument("--distance", required=True, help="a distance matrix of pairwise distances with the strain name as the index")
-    parser.add_argument("--embedding-csv", required=True, help="an embedding csv matrix - the order of distances per strain MUST be the same as the distance matrix")
+    parser.add_argument("--embedding", required=True, help="an embedding csv matrix - the order of distances per strain MUST be the same as the distance matrix")
     parser.add_argument("--method", required=True, choices = ["pca", "mds", "t-sne", "umap"], help="the embedding used")
     parser.add_argument("--output-figure", help="path for outputting as a PNG")
     parser.add_argument("--output-dataframe", help="path for outputting as a dataframe")
@@ -30,11 +31,11 @@ if __name__ == "__main__":
     # reading in the distance matrix and embedding csv files, checking to make sure the format is correct
     
     distance_matrix = pd.read_csv(args.distance, index_col=0)
-    
-    embedding_df = pd.read_csv(args.embedding_csv, index_col=0)
-    
-    #calling Helpers.py scatterplot_xyvalues on the data 
-    
+    embedding_df = pd.read_csv(args.embedding, index_col=0)
+    assert np.array_equal(distance_matrix.index, embedding_df.index)
+
+    #calling Helpers.py scatterplot_xyvalues on the data
+
     column_names = list(embedding_df.columns.values)
 
     total_df = scatterplot_xyvalues(list(embedding_df.index), distance_matrix, embedding_df, column_names[0], column_names[1], args.method)
