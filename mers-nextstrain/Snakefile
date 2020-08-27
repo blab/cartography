@@ -1,0 +1,86 @@
+
+rule all:
+    input:
+        "results/tree.nwk",
+        "results/aligned.fasta"
+
+rule download:
+    output:
+        mers_data = "data/elife-31257-fig1-data5-v3.zip"
+    params:
+        mers_url = "https://elifesciences.org/download/aHR0cHM6Ly9jZG4uZWxpZmVzY2llbmNlcy5vcmcvYXJ0aWNsZXMvMzEyNTcvZWxpZmUtMzEyNTctZmlnMS1kYXRhNS12My56aXA-/elife-31257-fig1-data5-v3.zip?_hash=YhuQfm%2BGO%2BY6MsWLZB4WrPQvYtSlHOhLnzwnvTaesws%3D"
+    conda: "../cartography.yml"
+    shell:
+        """
+        wget "{params.mers_url}" -O {output.mers_data}
+        """
+
+rule unzip:
+    input:
+        mers_data = "data/elife-31257-fig1-data5-v3.zip"
+    output:
+        mers_tree = "data/MERS_CoV_274.nex"
+    conda: "../cartography.yml"
+    shell:
+        """
+        unzip -j -d data/ {input.mers_data}
+        """
+
+rule extract_sequences:
+    input:
+        mers_tree = "data/MERS_CoV_274.nex"
+    output:
+        sequences = "results/sequences.fasta"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 scripts/nexus_to_fasta.py \
+            {input.mers_tree} \
+            {output.sequences}
+        """
+
+rule extract_tree:
+    input:
+        mers_tree = "data/MERS_CoV_274.nex"
+    output:
+        tree = "results/tree.nwk"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 scripts/nexus_to_newick.py \
+            {input.mers_tree} \
+            {output.tree}
+        """
+
+# rule import_tree:
+#     input:
+#         mers_tree = "data/MERS_CoV_274.nex"
+#     output:
+#         tree = "results/tree.nwk",
+#         node_data = "results/node_data.json"
+#     conda: "../cartography.yml"
+#     shell:
+#         """
+#         augur import beast \
+#             --mcc {input.mers_tree} \
+#             --output-tree {output.tree} \
+#             --output-node-data {output.node_data}
+#         """
+
+rule parse:
+    input:
+        sequences = "results/sequences.fasta"
+    output:
+        alignment = "results/aligned.fasta",
+        metadata = "results/metadata.tsv"
+    params:
+        fields = "strain accession host date"
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur parse \
+            --sequences {input.sequences} \
+            --fields {params.fields} \
+            --output-sequences {output.alignment} \
+            --output-metadata {output.metadata}
+        """
