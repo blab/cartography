@@ -100,8 +100,9 @@ if __name__ == "__main__":
         principalComponents = pca.fit_transform(genomes_df)
 
         # Create a data frame from the PCA embedding.
-
+        embedding = principalComponents
         embedding_df = pd.DataFrame(principalComponents)
+        embedding_df.index = sequence_names
 
     if args.command == "t-sne":
         embedding_class = TSNE
@@ -135,13 +136,13 @@ if __name__ == "__main__":
             # create dictionary to be "wrapped" by write_json
 
         embedding_df = pd.DataFrame(embedding)
+        embedding_df.index = list(distance_matrix.index)
 
     if args.command == "mds" or args.command == "pca":
         embedding_df.columns=[args.command + str(i) for i in range(1,args.components + 1)]
     else:
         embedding_df.columns = [args.command.replace('-', '') + "_x" , args.command.replace('-', '') + "_y"]
 
-    embedding_df.index = list(distance_matrix.index)
     if args.command == "pca":
 
         #add explained variance as the first row of the dataframe

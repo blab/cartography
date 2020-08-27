@@ -284,7 +284,7 @@ rule create_distance_matrix:
         """
 
 rule embed_pca:
-    message: "Creating the embedding (dataframe, node JSON) for MDS"
+    message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
         alignment = "results/aligned.fasta"
     output:
