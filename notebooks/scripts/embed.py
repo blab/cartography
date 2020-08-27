@@ -2,6 +2,7 @@ import argparse
 from augur.utils import write_json
 import Bio.SeqIO
 from collections import OrderedDict
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import re
@@ -22,6 +23,7 @@ if __name__ == "__main__":
     parser.add_argument("--alignment", help="an aligned FASTA file to create a distance matrix with")
     parser.add_argument("--output-node-data", help="outputting a node data JSON file")
     parser.add_argument("--output-dataframe", help="outputting a csv file")
+    parser.add_argument("--output-figure", help="plot of the embedding, for debugging purposes")
 
     subparsers = parser.add_subparsers(
         dest="command",
@@ -153,3 +155,13 @@ if __name__ == "__main__":
 
     if args.output_dataframe is not None:
         embedding_df.to_csv(args.output_dataframe, index_label="strain")
+
+    if args.output_figure:
+        fig, ax = plt.subplots(1, 1, figsize=(6, 6))
+        ax.plot(
+            embedding[:, 0],
+            embedding[:, 1],
+            "o",
+            alpha=0.5
+        )
+        plt.savefig(args.output_figure)

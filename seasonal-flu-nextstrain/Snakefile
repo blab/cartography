@@ -289,7 +289,8 @@ rule embed_pca:
         alignment = "results/aligned.fasta"
     output:
         node_data = "results/embed_pca.json",
-        dataframe = "results/embed_pca.csv"
+        dataframe = "results/embed_pca.csv",
+        figure = "results/embed_pca.pdf"
     params:
         components = 10
     conda: "../cartography.yml"
@@ -299,6 +300,7 @@ rule embed_pca:
             --alignment {input.alignment} \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
             pca \
             --components {params.components}
         """
@@ -308,8 +310,9 @@ rule embed_tsne:
     input:
         distance_matrix = rules.create_distance_matrix.output.output
     output:
-        node_data = "results/embed_tsne.json",
-        dataframe = "results/embed_tsne.csv"
+        node_data = "results/embed_t-sne.json",
+        dataframe = "results/embed_t-sne.csv",
+        figure = "results/embed_t-sne.pdf"
     params:
         perplexity = 25.95,
         learning_rate = 200
@@ -320,6 +323,7 @@ rule embed_tsne:
             --distance-matrix {input.distance_matrix} \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
             t-sne \
             --perplexity {params.perplexity} \
             --learning-rate {params.learning_rate}
@@ -331,7 +335,8 @@ rule embed_umap:
         distance_matrix = rules.create_distance_matrix.output.output
     output:
         node_data = "results/embed_umap.json",
-        dataframe = "results/embed_umap.csv"
+        dataframe = "results/embed_umap.csv",
+        figure = "results/embed_umap.pdf"
     params:
         nearest_neighbors = 200,
         min_dist = .5
@@ -342,6 +347,7 @@ rule embed_umap:
             --distance-matrix {input.distance_matrix} \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
             umap \
             --nearest-neighbors {params.nearest_neighbors} \
             --min-dist {params.min_dist}
@@ -353,7 +359,8 @@ rule embed_mds:
         distance_matrix = rules.create_distance_matrix.output.output
     output:
         node_data = "results/embed_mds.json",
-        dataframe = "results/embed_mds.csv"
+        dataframe = "results/embed_mds.csv",
+        figure = "results/embed_mds.pdf"
     params:
         components = 10
     conda: "../cartography.yml"
@@ -363,6 +370,7 @@ rule embed_mds:
             --distance-matrix {input.distance_matrix} \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
             mds \
             --components {params.components} \
         """
