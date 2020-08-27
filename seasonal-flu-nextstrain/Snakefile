@@ -1,7 +1,16 @@
+EMBEDDING_METHODS = [
+    "pca",
+    "mds",
+    "t-sne",
+    "umap"
+]
+
 
 rule all:
     input:
-        auspice_tree = "auspice/flu_seasonal_h3n2_ha_2y.json"
+        expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
+        expand("results/KDEDensity_{method}.png", method=EMBEDDING_METHODS),
+        "auspice/flu_seasonal_h3n2_ha_2y.json"
 
 rule files:
     params:
@@ -286,11 +295,11 @@ rule embed_pca:
     shell:
         """
         python3 ../notebooks/scripts/embed.py \
-            pca \
-            --distance-matrix {input.distance_matrix} \
-            --components {params.components} \
+            --alignment {input.alignment} \
             --output-node-data {output.node_data} \
-            --output-dataframe {output.dataframe}
+            --output-dataframe {output.dataframe} \
+            pca \
+            --components {params.components}
         """
 
 rule embed_tsne:
@@ -357,88 +366,31 @@ rule embed_mds:
             --components {params.components} \
         """
 
-rule scatterplot_tsne:
-    message: "Creating the scatterplot (PNG, dataframe) for t-SNE"
+rule scatterplot:
+    message: "Creating the scatterplot (PNG, dataframe)"
     input:
         distance_matrix = "results/distance_matrix.csv",
-        embedding = rules.embed_tsne.output.dataframe
+        embedding = "results/embed_{method}.csv"
     output:
-        figure = "results/scatterplot_tsne.png",
-        dataframe = "results/scatterplot_tsne.csv"
+        figure = "results/scatterplot_{method}.png",
+        dataframe = "results/scatterplot_{method}.csv"
     conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/scatterplot.py \
             --distance {input.distance_matrix} \
             --embedding {input.embedding} \
-            --method t-sne \
+            --method {wildcards.method} \
             --output-figure {output.figure} \
             --output-dataframe {output.dataframe}
         """
 
-rule scatterplot_umap:
-    message: "Creating the scatterplot (PNG, dataframe) for UMAP"
+rule distances_between_coordinates:
+    message: "creating a distance embedding containing the distance between every coordinate in the embedding dataframe"
     input:
-        distance_matrix = "results/distance_matrix.csv",
-        embedding = rules.embed_umap.output.dataframe
+        embedding = "results/embed_{method}.csv"
     output:
-        figure = "results/scatterplot_umap.png",
-        dataframe = "results/scatterplot_umap.csv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/scatterplot.py \
-            --distance {input.distance_matrix} \
-            --embedding {input.embedding} \
-            --method umap \
-            --output-figure {output.figure} \
-            --output-dataframe {output.dataframe}
-        """
-
-rule scatterplot_mds:
-    message: "Creating the scatterplot (PNG, dataframe) for MDS"
-    input:
-        distance_matrix = "results/distance_matrix.csv",
-        embedding = rules.embed_mds.output.dataframe
-    output:
-        figure = "results/scatterplot_mds.png",
-        dataframe = "results/scatterplot_mds.csv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/scatterplot.py \
-            --distance {input.distance_matrix} \
-            --embedding {input.embedding} \
-            --method mds \
-            --output-figure {output.figure} \
-            --output-dataframe {output.dataframe}
-        """
-
-rule scatterplot_pca:
-    message: "Creating the scatterplot (PNG, dataframe) for PCA"
-    input:
-        distance_matrix = "results/distance_matrix_pca.csv",
-        embedding = rules.embed_pca.output.dataframe
-    output:
-        figure = "results/scatterplot_pca.png",
-        dataframe = "results/scatterplot_pca.csv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/scatterplot.py \
-            --distance {input.distance_matrix} \
-            --embedding {input.embedding} \
-            --method pca \
-            --output-figure {output.figure} \
-            --output-dataframe {output.dataframe}
-        """
-
-rule distances_between_coordinates_pca:
-    message: "creating a distance embedding containing the distance between every coordinate in the embedding dataframe for PCA"
-    input:
-        embedding = rules.embed_pca.output.dataframe
-    output:
-        output = "results/pdist_df_pca.csv"
+        output = "results/pdist_df_{method}.csv"
     conda: "../cartography.yml"
     shell:
         """
@@ -447,141 +399,37 @@ rule distances_between_coordinates_pca:
             --output {output.output} \
         """
 
-rule distances_between_coordinates_tsne:
-    message: "creating a distance embedding containing the distance between every coordinate in the embedding dataframe for tsne"
-    input:
-        embedding = rules.embed_tsne.output.dataframe
-    output:
-        output = "results/pdist_df_tsne.csv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/pdist_of_embedding_coordinates.py \
-            --embedding {input.embedding} \
-            --output {output.output} \
-        """
+def _get_embedding_columns_by_wildcards(wildcards):
+    method = wildcards.method.replace("-", "")
 
-rule distances_between_coordinates_mds:
-    message: "creating a distance embedding containing the distance between every coordinate in the embedding dataframe for MDS"
-    input:
-        embedding = rules.embed_mds.output.dataframe
-    output:
-        output = "results/pdist_df_mds.csv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/pdist_of_embedding_coordinates.py \
-            --embedding {input.embedding} \
-            --output {output.output} \
-        """
+    if method in ("pca", "mds"):
+        return f"{method}1 {method}2"
+    else:
+        return f"{method}_x {method}_y"
 
-rule distances_between_coordinates_umap:
-    message: "creating a distance embedding containing the distance between every coordinate in the embedding dataframe for UMAP"
+rule KDE_density:
+    message: "creating the KDE density plot"
     input:
-        embedding = rules.embed_umap.output.dataframe
-    output:
-        output = "results/pdist_df_umap.csv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/pdist_of_embedding_coordinates.py \
-            --embedding {input.embedding} \
-            --output {output.output} \
-        """
-
-
-rule KDE_density_tsne:
-    message: "creating the KDE density plot for TSNE"
-    input:
-        embedding = rules.embed_tsne.output.dataframe,
+        embedding = "results/embed_{method}.csv",
         clades = "results/clades.json",
-        scaled_distance = rules.distances_between_coordinates_tsne.output.output
+        scaled_distance = "results/pdist_df_{method}.csv"
     output:
-        figure = "results/KDEDensity_tsne.png",
-        dataframe = "results/KDEDensity_tsne.csv"
+        figure = "results/KDEDensity_{method}.png",
+        dataframe = "results/KDEDensity_{method}.csv"
     params:
-        method = "t-sne"
+        embedding_columns = _get_embedding_columns_by_wildcards
     conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/within_vs_between_status.py \
             --embedding {input.embedding} \
+            --embedding-columns {params.embedding_columns} \
             --clades {input.clades} \
-            --method {params.method} \
+            --method {wildcards.method} \
             --scaled-distance {input.scaled_distance} \
             --output-figure {output.figure} \
             --output-dataframe {output.dataframe}
         """
-
-rule KDE_density_pca:
-    message: "creating the KDE density plot for pca"
-    input:
-        embedding = rules.embed_pca.output.dataframe,
-        clades = "results/clades.json",
-        scaled_distance = rules.distances_between_coordinates_tsne.output.output
-    output:
-        figure = "results/KDEDensity_pca.png",
-        dataframe = "results/KDEDensity_pca.csv"
-    params:
-        method = "pca"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/within_vs_between_status.py \
-            --embedding {input.embedding} \
-            --clades {input.clades} \
-            --method {params.method} \
-            --scaled-distance {input.scaled_distance} \
-            --output-figure {output.figure} \
-            --output-dataframe {output.dataframe}
-        """
-
-rule KDE_density_mds:
-    message: "creating the KDE density plot for MDS"
-    input:
-        embedding = rules.embed_pca.output.dataframe,
-        clades = "results/clades.json",
-        scaled_distance = rules.distances_between_coordinates_tsne.output.output
-    output:
-        figure = "results/KDEDensity_mds.png",
-        dataframe = "results/KDEDensity_mds.csv"
-    params:
-        method = "mds"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/within_vs_between_status.py \
-            --embedding {input.embedding} \
-            --clades {input.clades} \
-            --method {params.method} \
-            --scaled-distance {input.scaled_distance} \
-            --output-figure {output.figure} \
-            --output-dataframe {output.dataframe}
-        """
-
-rule KDE_density_umap:
-    message: "creating the KDE density plot for UMAP"
-    input:
-        embedding = rules.embed_pca.output.dataframe,
-        clades = "results/clades.json",
-        scaled_distance = rules.distances_between_coordinates_tsne.output.output
-    output:
-        figure = "results/KDEDensity_umap.png",
-        dataframe = "results/KDEDensity_umap.csv"
-    params:
-        method = "umap"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/within_vs_between_status.py \
-            --embedding {input.embedding} \
-            --clades {input.clades} \
-            --method {params.method} \
-            --scaled-distance {input.scaled_distance} \
-            --output-figure {output.figure} \
-            --output-dataframe {output.dataframe}
-        """
-
 
 rule clean:
     message: "Removing directories: {params}"
