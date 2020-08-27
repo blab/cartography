@@ -18,7 +18,7 @@ from Helpers import get_hamming_distances
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description = "creates embeddings", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    
+
     parser.add_argument("--distance-matrix", help="a csv distance matrix that can be read in by pandas, index column as row 0")
     parser.add_argument("--alignment", help="an aligned FASTA file to create a distance matrix with")
     parser.add_argument("--output-node-data", help="outputting a node data JSON file")
@@ -52,7 +52,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if args.alignment is None and args.command == "pca":
-        print("You must specify an alignment for pca, not a distance matrix", file=sys.stderr) 
+        print("You must specify an alignment for pca, not a distance matrix", file=sys.stderr)
         sys.exit(1)
 
     # getting or creating the distance matrix
@@ -65,7 +65,7 @@ if __name__ == "__main__":
 
         for sequence in Bio.SeqIO.parse(args.alignment, "fasta"):
             sequences_by_name[sequence.id] = str(sequence.seq)
-        
+
         sequence_names = list(sequences_by_name.keys())
         if args.command != "pca":
             # Calculate Distance Matrix
@@ -91,20 +91,20 @@ if __name__ == "__main__":
             numbers[i] = re.sub(r'[^AGCT]', '5', numbers[i])
             numbers[i] = list(numbers[i].replace('A','1').replace('G','2').replace('C', '3').replace('T','4'))
             numbers[i] = [int(j) for j in numbers[i]]
-            
+
         genomes_df = pd.DataFrame(numbers)
         genomes_df.columns = ["Site " + str(k) for k in range(0,len(numbers[i]))]
-        #performing PCA on my pandas dataframe 
+        #performing PCA on my pandas dataframe
 
         pca = PCA(n_components=args.components,svd_solver='full') #can specify n, since with no prior knowledge, I use None
         principalComponents = pca.fit_transform(genomes_df)
-        
+
         # Create a data frame from the PCA embedding.
-        
+
         embedding_df = pd.DataFrame(principalComponents)
-        
+
     if args.command == "t-sne":
-        embedding_class = TSNE  
+        embedding_class = TSNE
         embedding_parameters = {
             "metric": "precomputed",
             "perplexity": args.perplexity,
@@ -125,30 +125,30 @@ if __name__ == "__main__":
             "n_components": args.components
         }
 
-    if args.command != "pca":  
+    if args.command != "pca":
         embedder = embedding_class(**embedding_parameters)
         embedding = embedder.fit_transform(distance_matrix)
-        
+
         print(embedding)
-        
+
         # Output Embedding
             # create dictionary to be "wrapped" by write_json
-          
+
         embedding_df = pd.DataFrame(embedding)
-    
+
     if args.command == "mds" or args.command == "pca":
         embedding_df.columns=[args.command + str(i) for i in range(1,args.components + 1)]
     else:
         embedding_df.columns = [args.command.replace('-', '') + "_x" , args.command.replace('-', '') + "_y"]
-        
+
     embedding_df.index = list(distance_matrix.index)
     if args.command == "pca":
-    
+
         #add explained variance as the first row of the dataframe
         explained_variance = pd.DataFrame([round(pca.explained_variance_ratio_[i],4) for i in range(0,len(pca.explained_variance_ratio_))], columns=["explained variance"])
-        explained_variance["principal components"] = [i for i in range(0, args.components)] 
+        explained_variance["principal components"] = [i for i in range(0, args.components)]
         explained_variance.to_csv("results/explained_variance_pca.csv", index=False)
-        
+
     if args.output_node_data is not None:
         embedding_dict = embedding_df.transpose().to_dict()
         write_json({"nodes": embedding_dict}, args.output_node_data)
