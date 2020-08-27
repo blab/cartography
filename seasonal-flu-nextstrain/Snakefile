@@ -256,7 +256,7 @@ rule export:
         auspice_config = files.auspice_config,
         clades = rules.clades.output.clade_data
     output:
-        auspice_tree = rules.all.input.auspice_tree
+        auspice_tree = "auspice/flu_seasonal_h3n2_ha_2y.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -285,7 +285,7 @@ rule create_distance_matrix:
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output
+        alignment = "results/aligned.fasta"
     output:
         node_data = "results/embed_pca.json",
         dataframe = "results/embed_pca.csv"
