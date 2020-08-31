@@ -2,6 +2,7 @@ import argparse
 from augur.utils import write_json
 import Bio.SeqIO
 from collections import OrderedDict
+import hdbscan
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -21,6 +22,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--distance-matrix", help="a csv distance matrix that can be read in by pandas, index column as row 0")
     parser.add_argument("--alignment", help="an aligned FASTA file to create a distance matrix with")
+    parser.add_argument("--cluster", help="clustering labels given via DBSCAN")
     parser.add_argument("--output-node-data", help="outputting a node data JSON file")
     parser.add_argument("--output-dataframe", help="outputting a csv file")
     parser.add_argument("--output-figure", help="plot of the embedding, for debugging purposes")
@@ -149,6 +151,11 @@ if __name__ == "__main__":
         explained_variance = pd.DataFrame([round(pca.explained_variance_ratio_[i],4) for i in range(0,len(pca.explained_variance_ratio_))], columns=["explained variance"])
         explained_variance["principal components"] = [i for i in range(0, args.components)]
         explained_variance.to_csv("results/explained_variance_pca.csv", index=False)
+
+    if(args.cluster is not None):
+        clusterer = hdbscan.HDBSCAN(min_cluster_size=15)
+        clusterer.fit(embedding)
+        embedding_df["label"] = clusterer.labels_
 
     if args.output_node_data is not None:
         embedding_dict = embedding_df.transpose().to_dict()

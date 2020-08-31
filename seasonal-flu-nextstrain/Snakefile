@@ -298,6 +298,7 @@ rule embed_pca:
         """
         python3 ../notebooks/scripts/embed.py \
             --alignment {input.alignment} \
+            --cluster True \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -321,6 +322,7 @@ rule embed_tsne:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
+            --cluster True \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -345,6 +347,7 @@ rule embed_umap:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
+            --cluster True \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -368,6 +371,7 @@ rule embed_mds:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
+            --cluster True \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -394,20 +398,6 @@ rule scatterplot:
             --output-dataframe {output.dataframe}
         """
 
-rule distances_between_coordinates:
-    message: "creating a distance embedding containing the distance between every coordinate in the embedding dataframe"
-    input:
-        embedding = "results/embed_{method}.csv"
-    output:
-        output = "results/pdist_df_{method}.csv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/pdist_of_embedding_coordinates.py \
-            --embedding {input.embedding} \
-            --output {output.output} \
-        """
-
 def _get_embedding_columns_by_wildcards(wildcards):
     method = wildcards.method.replace("-", "")
 
@@ -421,7 +411,6 @@ rule KDE_density:
     input:
         embedding = "results/embed_{method}.csv",
         clades = "results/clades.json",
-        scaled_distance = "results/pdist_df_{method}.csv"
     output:
         figure = "results/KDEDensity_{method}.png",
         dataframe = "results/KDEDensity_{method}.csv"
@@ -432,10 +421,9 @@ rule KDE_density:
         """
         python3 ../notebooks/scripts/within_vs_between_status.py \
             --embedding {input.embedding} \
-            --embedding-columns {params.embedding_columns} \
             --clades {input.clades} \
             --method {wildcards.method} \
-            --scaled-distance {input.scaled_distance} \
+            --embedding-columns {params.embedding_columns} \
             --output-figure {output.figure} \
             --output-dataframe {output.dataframe}
         """
