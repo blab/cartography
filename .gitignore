@@ -110,7 +110,6 @@ venv.bak/
 *.snakemake*
 seasonal-flu
 seasonal-flu-nextstrain/config
-seasonal-flu-nextstrain/results
 seasonal-flu-nextstrain/mafft_7.467-1_amd64.deb
 chromedriver.exe
 tex2pdf.21972/
