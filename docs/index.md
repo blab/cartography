@@ -54,14 +54,14 @@ The analysis environment can be recreated using conda and all installation instr
 
 The genome data we used for h3n2 HA influenza is from the NCBI Influenza database. 
 We used [this search](https://www.ncbi.nlm.nih.gov/genomes/FLU/Database/nph-select.cgi?cdate_has_day=true&cdate_has_month=true&cmd=show_query&collapse=on&country=any&defline_saved=%3E%7Baccession%7D%20%7Bstrain%7D%20%7Byear%7D/%7Bmonth%7D/%7Bday%7D%20%7Bsegname%7D&fyear=2015&go=database&host=Human&lab=exclude&lineage=include&niaid=include&qcollapse=on&searchin=strain&segment=4&sequence=N&showfilters=true&sonly=on&subtype_h=3&subtype_mix=include&subtype_n=2&swine=include&tyear=2020&type=a&vac_strain=include). Clades were defined by reasonable phylogenetic signal. 
-The Zika data was curated by Allison Black, with sequences from Genbank and the Bedford Lab. Clades were defined by regionally important introductions as well as by reasonable phylogenetic signal in terms of mutations on branches.  
-We analyzed Influenza A/h3n2, Zika, and MERS genomes and created a FASTA file of multiple sequence alignments with MAFFT v7.407 [@Katoh2002] via augur align [@Hadfield2018] and phylogenies with IQ-TREE v1.6.10 [@Nguyen2014] via augur tree version 5.4.1.
+The Zika data was curated by Allison Black, with sequences from Genbank and the Bedford Lab. Clades were defined by regionally important introductions as well as by reasonable phylogenetic signal in terms of mutations on branches. 
+The MERS data was downloaded from [this link](https://elifesciences.org/download/aHR0cHM6Ly9jZG4uZWxpZmVzY2llbmNlcy5vcmcvYXJ0aWNsZXMvMzEyNTcvZWxpZmUtMzEyNTctZmlnMS1kYXRhNS12My56aXA-/elife-31257-fig1-data5-v3.zip?_hash=YhuQfm%2BGO%2BY6MsWLZB4WrPQvYtSlHOhLnzwnvTaesws%3D), which was split into a Newick tree and Aligned FASTA file. [@dudas_carvalho_rambaut_bedford_2018] 
+Clades were not used in this analysis, as the host of camel and human was more scientifically useful and phylogenetically accurate to the Newick tree.
+We analyzed Influenza A/h3n2 and Zika by creating a FASTA file of multiple sequence alignments with MAFFT v7.407 [@Katoh2002] via augur align [@Hadfield2018] and phylogenies with IQ-TREE v1.6.10 [@Nguyen2014] via augur tree version 9.0.0.
 
 We used two different methods of transforming the data; Scaling and centering the data, and a Hamming distance similarity matrix.
 For Scaling and Centering the data, we performed PCA on the matrix of nucleotides from the multiple sequence alignment using scikit-learn [@jolliffe_cadima_2016]. 
 An explained variance plot was created to determine the amount of PCs created, which is in the supplementary figures section.
-We also ran UMAP on the first 10 leading PCs to see if patterns not fully captured by the embedding were seen through UMAP clustering. 
-The plots and analysis for UMAP on the first 10 PCs is available in the supplemental figures section.
 
 For Hamming distance, we created a similarity matrix. 
 By comparing every genome with every other genome and clustering based on their Hamming distance, distance-based methods take the overall structure of the multidimensional data and groups together genomes that have similar differences.
@@ -69,9 +69,10 @@ This means the data is clustered by genetic diversity (in a phylogenetic tree ge
 Each genome was split into separate nucleotides and compared with other nucleotides in the same site on other genomes.
 We only counted a difference between the main nucleotide pairs (AGCT) -- gaps (N) were not.
 This is because some sequences were significantly shorter than others, and a shorter strain does not necessarily mean complete genetic dissimilarity, which is what counting gaps implied. 
+Using SNP-sites [@page_taylor_delaney_soares_seemann_keane_harris_2016], we found SNP sites from the multi-FASTA alignment files for each disease and calculated the distance matrix from this for computational efficiency.
 
 We reduced the similarity distance matrix through MDS, t-SNE, and UMAP, plotted using [Altair](https://altair-viz.github.io/) ,and colored by clade assignment.
-Clade membership metadata was provided by a .json build of the influenza h3n2 tree (the build can be found at https://github.com/blab/cartography/tree/master/notebooks/Data).
+Clade membership metadata was provided by a .json build of the influenza h3n2 tree and zika trees. For MERS, the host data was given via the Newick tree. 
 The 3 different dimensionality reduction techniques are ordered below by publication date: 
 - [MDS](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.MDS.html)
 - [t-SNE](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html)
@@ -79,16 +80,17 @@ The 3 different dimensionality reduction techniques are ordered below by publica
 
 The plots of the full 10 PCs for PCA and the first 6 components for MDS are available in the supplemental figures section.
 
-We tested different learning rates and perplexity values for t-SNE and UMAP by plugging in a variety of permutations of parameters to determine the best embedding. 
-These plots are in the supplemental figures section. 
-The default value of a 200.0 learning rate and a 30 perplexity provided good results, but we ended up going with a 25.95 perplexity due to various computational advantages. 
-Similarly, we tested different parameter choices for UMAP, with the clearest results generated by specifying 200 nearest neighbours and a “minimum distance” between points in low dimensions of 0.05. 
-While tuning these parameters will not change qualitative results, it can help make patterns easier to identify. For example, the more nearest neighbors, the higher the computational load, and while smaller minimum distances can break connectivity between clusters, they will not change the groupings of individuals.
+We tuned hyperparameters for t-SNE and UMAP through an exhaustive grid search, which picked the best values by maximizing Matthews Correlation Coefficient for the confusion matrix created from a Supported Vector Machine splitting the between vs within clade KDE density plots.
+UMAP's minimum distance and nearest neighbors were tuned, and t-SNEs perplexity and learning rate were tuned as well.
+As nearest neighbors fluctuates depending on the amount of samples, we took the best nearest neighbor value from the cross validation and the total number of samples given per fold. 
+The proportion value was used to determine the nearest neighbors value for the UMAP plots per disease. 
+t-SNE performed best with a perplexity of 15.0 and a learning rate of 100.0.
+UMAP performed best with a minimum distance of .05 between clusters.
+While tuning these parameters will not change qualitative results, it can help make patterns easier to identify. 
+For example, the more nearest neighbors, the higher the computational load, and while smaller minimum distances can break connectivity between clusters, they will not change the groupings of individuals.
 
-# Tuning of UMAP: goes here once done
 
-
-To further analyze these embeddings’ ability to accurately capture the multidimensional data, we made two separate plots: hamming vs euclidean distance scatterplots with a LOESS best fit line, and within vs between clade violin plots per embedding.
+To further analyze these embeddings’ ability to accurately capture the multidimensional data, we made two separate plots: hamming vs euclidean distance scatterplots with a LOESS best fit line, and within vs between clade KDE density plots per embedding.
 
 Hamming distance vs euclidean distance scatterplots:
  
@@ -100,26 +102,39 @@ In this way, constant correlation in a plot reveals that the embedding tends to 
 Therefore, the closer the Pearson Coefficient is to 1, the better the embedding is at preserving genetic dissimilarity in euclidean space.
 The LOESS line drawn through the plot assesses the best fit function for the embedding.
 
-To quantify the patters seen in the scatterplot further, we bootstrapped our scatterplot _________________________________
+To quantify the patters seen in the scatterplot further, we bootstrapped our scatterplot. 
+This would allow us to understand the variation within the dataset, and give a larger picture quantitatively of the plot beyond one number.
+The scatterplot would look best if the standard deviation was small, as there's little variation in the data if picked randomly.
+We bootstrapped the strain data via a K-fold cross validation generator, where the indices from each validation fold were used to create a scatterplot and find the Pearson Coefficient. 
+These values were then plotted as a distrbution using [seaborn](https://seaborn.pydata.org/).
 
 
-Between vs Within clade Violin plots:
+Between vs Within clade KDE Density Plots:
 
-The Between vs Within clade Violin plots visually represent how well Euclidean distances can distinguish virus genomes from different clades.
+The Between vs Within clade KDE Density Plots visually represent how well Euclidean distances can distinguish virus genomes from different clades.
 In other words, it describes the probability that a certain Euclidean distance can be used to classify a given pair of genomes as within vs between clades. 
-The density of the violin plot at a specific distance gives the relative probability of two strains with that distance being in same or different clades.
-The median to median ratio is an indicator of how well the embedding clusters the data.
-The larger the ratio between the medians of between vs within clade violin plots, the better the embedding is at clustering and compartmentalizing data into their clades.
+The smaller the overlap between the two curves presented per clade relationship, the higher the relative probability that the embedding will accurately predict if two strains with any specific distance is a between or within clade relationship.
 To create this plot, the matrix of euclidean distances for each embedding was flattened, and each comparison was labeled as a “within clade” or “between clade” comparison using the clade assignments from the .json build of the tree.
-Violin plots were made using [seaborn](https://seaborn.pydata.org/) , separated by clade status and euclidean distance on the y axis. 
+KDE plots were made using [seaborn](https://seaborn.pydata.org/) , separated by clade status and euclidean distance on the y axis. 
 
- To quantify the patterns seen in the plot beyond a median ratio, we ran a classification test to test the significance of differences in median for between and within clusters. ________________
- This test would answer if viral genomes from the same clades have smaller Euclidean distances in a given embedding than viral genomes from different clades. 
- It also answers if any of these embeddings classify pairs of viral genomes better than genetic Hamming distance, which helps us decide if creating the computationally intensive embeddings is worthwhile. 
+
+Cross Validation: 
+
+To quantify the patterns seen in the plots and further understand the benefits and drawbacks to each embedding method, we ran a cross validation analysis using the h3n2 data from 2016-2020. 
+This test would answer if viral genomes from the same clades have smaller Euclidean distances in a given embedding than viral genomes from different clades. 
+It also answers if any of these embeddings classify pairs of viral genomes better than genetic Hamming distance, which would help decide if creating the computationally intensive embeddings is worthwhile. 
+We constructed the time-series cross validation test by creating a K-fold cross-validation generator, with 5 folds containing both training and validation strains for data from 2016 to 2018. 
+A KDE Density plot was created per training fold.
+A Support Vector Machine optimized a distance threshold that most accurately predicted clade relationships for that given fold, and a confusion matrix was created per fold on the validation data.
+The distance threshold values given by the SVM were pooled via an average, and one final confusion matrix was created on the 2018-2020 h3n2 data to not counfound the results. 
  
- We constructed a classification test by ________________________________
- 
- 
+Classification Accuracy Test
+
+For MERS, a classification accuracy test was run to determine the accuracy of using just the embeddings to determine the clade the strain is from in the Newick tree. 
+This would allow us to further understand how the embeddings could be used in recombinant diseases, where the host would not matter as much as the genetic simmilarity and different between strains.
+Hierarchical Density-based Spatial Clustering of Applications with Noise (HDBSCAN) was used to find clusters in the embeddings without any set number of clusters. 
+The Newick Tree clades were used as the "Truth", and the labels assigned by HDBSCAN were compared against these values. 
+The accuracy value was determined by the proportion of correct relationships retained to total relationships. 
 
 # RESULTS:
 
