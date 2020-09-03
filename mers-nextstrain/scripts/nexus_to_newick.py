@@ -15,6 +15,8 @@ if __name__ == "__main__":
 
     for node in tree.find_clades():
         if node.name:
-            node.name = node.name.strip("'").split("|")[0]
+            # For a tree id formatted like "strain_name|accession|host|date"
+            # keep the accession as a unique id.
+            node.name = node.name.strip("'").split("|")[1]
 
     Bio.Phylo.write(tree, args.output, "newick")
