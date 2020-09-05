@@ -10,7 +10,7 @@ rule all:
         "results/tree.nwk",
         "results/aligned.fasta",
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        #expand("results/KDEDensity_{method}.png", method=EMBEDDING_METHODS)
+        expand("results/KDEDensity_{method}.png", method=EMBEDDING_METHODS)
 
 rule files:
     params:
@@ -236,27 +236,29 @@ def _get_embedding_columns_by_wildcards(wildcards):
 
 #Figure out how to get clades from Nexus tree
 
-#rule KDE_density:
-#    message: "creating the KDE density plot"
-#    input:
-#        embedding = "results/embed_{method}.csv",
-#        clades = "results/clades.json",
-#    output:
-#        figure = "results/KDEDensity_{method}.png",
-#        dataframe = "results/KDEDensity_{method}.csv"
-#    params:
-#        embedding_columns = _get_embedding_columns_by_wildcards
-#    conda: "../cartography.yml"
-#    shell:
-#        """
-#        python3 ../notebooks/scripts/within_vs_between_status.py \
-#            --embedding {input.embedding} \
-#            --clades {input.clades} \
-#            --method {wildcards.method} \
-#            --embedding-columns {params.embedding_columns} \
-#            --output-figure {output.figure} \
-#            --output-dataframe {output.dataframe}
-#        """
+rule KDE_density:
+    message: "creating the KDE density plot"
+    input:
+        embedding = "results/embed_{method}.csv",
+        metadata = rules.parse.output.metadata
+    output:
+        figure = "results/KDEDensity_{method}.png",
+        dataframe = "results/KDEDensity_{method}.csv"
+    params:
+        embedding_columns = _get_embedding_columns_by_wildcards,
+        differentiator_column = "host"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/within_vs_between_status.py \
+            --embedding {input.embedding} \
+            --metadata {input.metadata} \
+            --method {wildcards.method} \
+            --embedding-columns {params.embedding_columns} \
+            --differentiator-column {params.differentiator_column} \
+            --output-figure {output.figure} \
+            --output-dataframe {output.dataframe}
+        """
 
 rule clean:
     message: "Removing directories: {params}"

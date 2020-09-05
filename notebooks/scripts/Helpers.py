@@ -376,7 +376,7 @@ def scatterplot_tooltips(strains, similarity_matrix, df_merged, column1, column2
     ).properties(title="Genetic vs. Euclidean scatterplot: " + type_of_embedding + "  (R^2 = " + str((r_value ** 2).round(3)) + ")", height=200, width=300)
     return chart
 
-def get_euclidean_data_frame(sampled_df, column1, column2, embedding):
+def get_euclidean_data_frame(sampled_df, column1, column2, column_for_analysis, embedding):
     """Gives a dataframe of euclidean distances for embedding columns to use in plotting and analysis
     Parameters
     -----------
@@ -386,6 +386,8 @@ def get_euclidean_data_frame(sampled_df, column1, column2, embedding):
         the name of the first column in sampled_df
     column2: string
         the name of the second column in sampled_df
+    column_for_analysis: string
+        the name of the column which the dataframe will construct "between" and "within" from (ex. Host, Clade_membership, etc)
     Returns
     ----------
     A data frame of Euclidean distances for the requested embedding columns.
@@ -397,7 +399,7 @@ def get_euclidean_data_frame(sampled_df, column1, column2, embedding):
     # the clade status of each pair as either within- or between-clades.
     # This traversal excludes self-self comparisons along the diagonal.
     clade_status = []
-    clade_memberships = sampled_df["clade_membership"].values
+    clade_memberships = sampled_df[column_for_analysis].values
     for i in range(sampled_df.shape[0] - 1):
         for j in range(i + 1, sampled_df.shape[0]):
             if clade_memberships[i] != clade_memberships[j]:
