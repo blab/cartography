@@ -55,7 +55,10 @@ The analysis environment can be recreated using conda and all installation instr
 The genome data we used for h3n2 HA influenza is from the NCBI Influenza database. 
 We used [this search](https://www.ncbi.nlm.nih.gov/genomes/FLU/Database/nph-select.cgi?cdate_has_day=true&cdate_has_month=true&cmd=show_query&collapse=on&country=any&defline_saved=%3E%7Baccession%7D%20%7Bstrain%7D%20%7Byear%7D/%7Bmonth%7D/%7Bday%7D%20%7Bsegname%7D&fyear=2015&go=database&host=Human&lab=exclude&lineage=include&niaid=include&qcollapse=on&searchin=strain&segment=4&sequence=N&showfilters=true&sonly=on&subtype_h=3&subtype_mix=include&subtype_n=2&swine=include&tyear=2020&type=a&vac_strain=include). Clades were defined by reasonable phylogenetic signal. 
 The Zika data was curated by Allison Black, with sequences from Genbank and the Bedford Lab. Clades were defined by regionally important introductions as well as by reasonable phylogenetic signal in terms of mutations on branches. 
-The MERS data was downloaded from [this link](https://elifesciences.org/download/aHR0cHM6Ly9jZG4uZWxpZmVzY2llbmNlcy5vcmcvYXJ0aWNsZXMvMzEyNTcvZWxpZmUtMzEyNTctZmlnMS1kYXRhNS12My56aXA-/elife-31257-fig1-data5-v3.zip?_hash=YhuQfm%2BGO%2BY6MsWLZB4WrPQvYtSlHOhLnzwnvTaesws%3D), which was split into a Newick tree and Aligned FASTA file. [@dudas_carvalho_rambaut_bedford_2018] 
+The MERS data was downloaded from [e-life](https://elifesciences.org/download/aHR0cHM6Ly9jZG4uZWxpZmVzY2llbmNlcy5vcmcvYXJ0aWNsZXMvMzEyNTcvZWxpZmUtMzEyNTctZmlnMS1kYXRhNS12My56aXA-/elife-31257-fig1-data5-v3.zip?_hash=YhuQfm%2BGO%2BY6MsWLZB4WrPQvYtSlHOhLnzwnvTaesws%3D), which was split into a Newick tree and Aligned FASTA file. [@dudas_carvalho_rambaut_bedford_2018] 
+
+# Fix this based on meeting tomorrow
+
 Clades were not used in this analysis, as the host of camel and human was more scientifically useful and phylogenetically accurate to the Newick tree.
 We analyzed Influenza A/h3n2 and Zika by creating a FASTA file of multiple sequence alignments with MAFFT v7.407 [@Katoh2002] via augur align [@Hadfield2018] and phylogenies with IQ-TREE v1.6.10 [@Nguyen2014] via augur tree version 9.0.0.
 
@@ -161,7 +164,6 @@ The end result is a patchwork of low-dimensional representations of neighbourhoo
 Some limitations include its lack of maturity - this novel technique does not have firmly established or robust practices and libraries to use UMAP best.
 In the context of this paper, UMAP will reveal a tightly clustered set of data that retains both the global structure of the data and the clusters and similarities present at the local level. 
 
-# EXPECTATIONS FOR VIRUSES:
 
 ## Influenza:
 
@@ -172,23 +174,26 @@ Therefore, it can be assumed that h3n2 HA influenza is a good test case for Cart
 
 ## SUMMARY OF RESULTS FOR INFLUENZA 
 
-PCA: There were visually identifiable clusters within the data (Figure 1B), with clades A1b/135K and A3 being overlapped by “other” clades. 
-Overall, the graph segmented pretty well with some clades being broken into more than one cluster, such as A1b/131K and A1b/135K.
-In the euclidean and Hamming distance scatter plot for PCA (Figure 2A), the points are at a constant distance from the LOESS line as genetic distance increases. 
-This correlation’s fit can be expressed through the scatterplot's Pearson Coefficient of .739. 
+PCA: There were visually identifiable clusters within the data (Figure 1B), with the PCA output largely recapitulating patterns already seen in the phylogenetic tree. 
+Overall, the graph segmented well with the most divergent clades, such as 3c3.A, being most distant in the PCA plot from clades more related, such as clade 3c2.A, A1, A1a, and A1b.
+In the euclidean and Hamming distance scatter plot for PCA (Figure 2A), the points are at a constant distance from the LOESS line as genetic distance increases.
+This correlation’s fit can be expressed through the scatterplot's Pearson Coefficient of .695. 
 The LOESS line was fairly linear, which, given that PCA retains global patterns and therefore translates genetic distance as accurately to euclidean distance as possible, upholds preexisting beliefs about the algorithm.
+The Pearson Coefficient distribution from PCA had a mean of _____ and a standard deviation of ____, which _____. 
 Euclidean distance can be used with some confidence to distinguish strains from similar and different clades (Figure 3A). 
-In Figure 3A, the within density in the violin plot is in lower distances than the density of the between clade violin plot, their medians have a large difference between them, and the plot resembles the same shape as the genetic violin plot. 
-These observations reveal that the embedding did not change the structure of the data, but instead exaggerated distances on a global scale to make the data more visually useful. 
-However, the data did not seem to show any new patterns of information and clustered the data points almost identically to the .json rendering of the tree; similar distance and placement of clade clusters corroborates this hypothesis. _______________
+In Figure 3A, the majority of the within clade relationships displayed in the KDE density curve is at lower distances than the density of the between clade relationships.
+The overlap between the two curves is similar to the overlap between the genetic curves, meaning the PCA embedding euclidean distance can be used as an indicator of strain relationship status with as much confidence as the raw similarity matrix. 
+These observations reveal that the embedding did not change the structure of the data, but instead exaggerated distances on a global scale to make the data more visually useful.
+However, the data did not seem to show any new patterns of information and clustered the data points almost identically to the tree; similar distance and placement of clade clusters corroborates this hypothesis. 
+The threshold distance value calculated using the SVM run on PCA gave a confusion matrix with a Matthews Correlation Coefficient of _______, which ________. 
 
 
-
-MDS: MDS, while there are visually identifiable clusters in the embedding, has most of its points and clusters overlapping each other in a single mass in the middle of the graph (Figure 1C). 
-In particular, the clusters of clades A2/re, A3, A2, A1b/135K, and A1b/131K all overlapped, as they are the most genetically similar clades according to the tree. 
-In the Euclidean and Hamming distance scatterplot (Figure 2B), the points stay relatively close to the LOESS curve, and the points correlation according to the LOESS line is corroborated by the Pearson Coefficient of .616 for the plot. 
-This linear pattern in the data points is typical of an algorithm that preserves mostly global relationships while still segmenting and compartmentalizing the data better than the distance matrix does on its own. 
-Euclidean distance does not do an accurate job distinguishing viruses from similar and different clades (Figure 3B). 
+MDS: MDS, while there are visually identifiable clusters in the embedding, has most of the strains and clusters overlapping each other in a single mass in the middle of the graph (Figure 1C). 
+In particular, the clusters of clades A2/re, A1, A2, A1b/135N, and A1b/135K all overlapped, as they are the most genetically similar clades based on when they diverged from eachother according to the tree. 
+In the Euclidean and Hamming distance scatterplot (Figure 2B), the points stay relatively close to the LOESS curve, and the points correlation according to the LOESS line is corroborated by the Pearson Coefficient of .633 for the plot. 
+The LOESS line of the plot is fairly linear, with a steeper slop at a genetic distance of 30.
+This overall structure of the data points of splaying until a genetic distance of 35 and following a linear pattern at higher genetic distances means MDS tries to preserve genetic distances between clades, and puts strains at lower genetic distances from each other at closer together, augmenting local patterns while stil preserving global structure.  
+Euclidean distance is fairly accurate at distinguishing viruses from similar and different clades (Figure 3B). 
 In Figure 3B, the within density in the violin plot is concentrated in lower distances, and this is also seen in the density of the between clade violin plot. 
 Because the MDS embedding put all the data points in a central mass in the middle of the embedding, this finding is not surprising. 
 Quantitatively, this inaccuracy can be described by the P-value of ___________
@@ -243,7 +248,7 @@ The density of the within violin plot was almost completely concentrated at eucl
 
 Zika: Zika in this project is used as a test case. 
 While h3n2 Influenza is a globally distributed virus that has caused infections seasonally for decades, Zika is a fairly new human pathogenic virus that has a restricted geographic distribution that recapitulates the patterns of viral transmission. 
-Therefore, Zika is better compartamentalized by region than by clade. 
+Therefore, Zika is better compartamentalized by region than by clade - this is why the clades determined in the analysis for Zika were lagely based on important geographical introductions. 
 It can be reasonably assumed that zika is a good test case for Cartography.
 
 ## SUMMARY OF RESULTS FOR ZIKA: 
@@ -301,6 +306,15 @@ The permutation test corroborates this, __________________
 ## Figure Six
 
 ![](FullViolinPlotZika.png)
+
+## MERS:
+
+MERS: MERS in this project is used as a extreme test case. 
+MERS is an incredibly recombinant virus, making it incredibly difficult to construct a phylogenetic tree explaining the relationships between strains and locations. 
+It can be reasonably assumed that MERS is a good case to test and challenge Cartography.
+
+## SUMMARY OF RESULTS FOR MERS:
+
 
 
 ## SUMMARY OF RESULTS ACROSS VIRUSES
