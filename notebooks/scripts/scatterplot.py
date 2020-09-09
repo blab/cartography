@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import linregress
 import seaborn as sns
-import statsmodels
+import statsmodels.api
 import statistics
 import sys
 

@@ -89,7 +89,12 @@ if __name__ == "__main__":
         ax.set_xlabel("Scaled Euclidean distance from embedding")
         ax.set_ylabel("KDE density")
 
-        fig.suptitle(args.method + ' KDE Plot', fontsize=16)
+        median_within = np.median(KDE_df.query("clade_status == 'within'")["scaled_distance"])
+        median_between = np.median(KDE_df.query("clade_status == 'between'")["scaled_distance"])
+
+        ratio_within_between = abs(int((median_within)/(median_between)))
+        
+        fig.suptitle(args.method + ' KDE Plot - ' + str(1) + ":" + str(ratio_within_between), fontsize=16)
         sns.despine()
 
         plt.savefig(args.output_figure)

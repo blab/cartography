@@ -105,10 +105,10 @@ In this way, constant correlation in a plot reveals that the embedding tends to 
 Therefore, the closer the Pearson Coefficient is to 1, the better the embedding is at preserving genetic dissimilarity in euclidean space.
 The LOESS line drawn through the plot assesses the best fit function for the embedding.
 
-To quantify the patters seen in the scatterplot further, we bootstrapped our scatterplot. 
+To quantify the patterns seen in the scatterplot further, we bootstrapped our scatterplot. 
 This would allow us to understand the variation within the dataset, and give a larger picture quantitatively of the plot beyond one number.
 The scatterplot would look best if the standard deviation was small, as there's little variation in the data if picked randomly.
-We bootstrapped the strain data via a K-fold cross validation generator, where the indices from each validation fold were used to create a scatterplot and find the Pearson Coefficient. 
+We bootstrapped the strain data ******************************used to create a scatterplot and find the Pearson Coefficient. 
 These values were then plotted as a distrbution using [seaborn](https://seaborn.pydata.org/).
 
 
@@ -116,7 +116,7 @@ Between vs Within clade KDE Density Plots:
 
 The Between vs Within clade KDE Density Plots visually represent how well Euclidean distances can distinguish virus genomes from different clades.
 In other words, it describes the probability that a certain Euclidean distance can be used to classify a given pair of genomes as within vs between clades. 
-The smaller the overlap between the two curves presented per clade relationship, the higher the relative probability that the embedding will accurately predict if two strains with any specific distance is a between or within clade relationship.
+The larger the median ratio between the two curves presented per clade relationship, the higher the relative probability that the embedding will accurately predict if two strains with any specific distance is a between or within clade relationship.
 To create this plot, the matrix of euclidean distances for each embedding was flattened, and each comparison was labeled as a “within clade” or “between clade” comparison using the clade assignments from the .json build of the tree.
 KDE plots were made using [seaborn](https://seaborn.pydata.org/) , separated by clade status and euclidean distance on the y axis. 
 
@@ -136,7 +136,7 @@ Classification Accuracy Test
 For MERS, a classification accuracy test was run to determine the accuracy of using just the embeddings to determine the clade the strain is from in the Newick tree. 
 This would allow us to further understand how the embeddings could be used in recombinant diseases, where the host would not matter as much as the genetic simmilarity and different between strains.
 Hierarchical Density-based Spatial Clustering of Applications with Noise (HDBSCAN) was used to find clusters in the embeddings without any set number of clusters. 
-The Newick Tree clades were used as the "Truth", and the labels assigned by HDBSCAN were compared against these values. 
+The Newick Tree predefined clades were used as the "Truth", and the labels assigned by HDBSCAN were compared against these values. 
 The accuracy value was determined by the proportion of correct relationships retained to total relationships. 
 
 # RESULTS:
@@ -176,50 +176,55 @@ Therefore, it can be assumed that h3n2 HA influenza is a good test case for Cart
 
 PCA: There were visually identifiable clusters within the data (Figure 1B), with the PCA output largely recapitulating patterns already seen in the phylogenetic tree. 
 Overall, the graph segmented well with the most divergent clades, such as 3c3.A, being most distant in the PCA plot from clades more related, such as clade 3c2.A, A1, A1a, and A1b.
-In the euclidean and Hamming distance scatter plot for PCA (Figure 2A), the points are at a constant distance from the LOESS line as genetic distance increases.
-This correlation’s fit can be expressed through the scatterplot's Pearson Coefficient of .695. 
+In the Euclidean and Hamming distance scatterplot for PCA (Figure 2A), the points are at a constant distance from the LOESS line as genetic distance increases.
+This correlation’s fit can be expressed through the scatterplot's Pearson Coefficient of .693. 
 The LOESS line was fairly linear, which, given that PCA retains global patterns and therefore translates genetic distance as accurately to euclidean distance as possible, upholds preexisting beliefs about the algorithm.
 The Pearson Coefficient distribution from PCA had a mean of _____ and a standard deviation of ____, which _____. 
 Euclidean distance can be used with some confidence to distinguish strains from similar and different clades (Figure 3A). 
 In Figure 3A, the majority of the within clade relationships displayed in the KDE density curve is at lower distances than the density of the between clade relationships.
-The overlap between the two curves is similar to the overlap between the genetic curves, meaning the PCA embedding euclidean distance can be used as an indicator of strain relationship status with as much confidence as the raw similarity matrix. 
+The median to median ratio between the within and between curves is 1:26, meaning the PCA is good at compartementalizing the data based on genetic distance. 
 These observations reveal that the embedding did not change the structure of the data, but instead exaggerated distances on a global scale to make the data more visually useful.
 However, the data did not seem to show any new patterns of information and clustered the data points almost identically to the tree; similar distance and placement of clade clusters corroborates this hypothesis. 
 The threshold distance value calculated using the SVM run on PCA gave a confusion matrix with a Matthews Correlation Coefficient of _______, which ________. 
 
 
 MDS: MDS, while there are visually identifiable clusters in the embedding, has most of the strains and clusters overlapping each other in a single mass in the middle of the graph (Figure 1C). 
-In particular, the clusters of clades A2/re, A1, A2, A1b/135N, and A1b/135K all overlapped, as they are the most genetically similar clades based on when they diverged from eachother according to the tree. 
-In the Euclidean and Hamming distance scatterplot (Figure 2B), the points stay relatively close to the LOESS curve, and the points correlation according to the LOESS line is corroborated by the Pearson Coefficient of .633 for the plot. 
-The LOESS line of the plot is fairly linear, with a steeper slop at a genetic distance of 30.
-This overall structure of the data points of splaying until a genetic distance of 35 and following a linear pattern at higher genetic distances means MDS tries to preserve genetic distances between clades, and puts strains at lower genetic distances from each other at closer together, augmenting local patterns while stil preserving global structure.  
+In particular, the clusters of clades A2/re, A1, A2, A1b/135N, and A1b/135K all overlapped, as they are the most genetically similar clades based on when they diverged from each other in the tree. 
+In the Euclidean and Hamming distance scatterplot (Figure 2B), the points stay relatively close to the LOESS curve, and the points' correlation according to the LOESS line is corroborated by the Pearson Coefficient of .468 for the plot. 
+The LOESS line of the plot is fairly linear, with a steeper slope starting from a genetic distance of 30.
+This overall structure of the data points of splaying from the best fit line until a genetic distance of 35 and following a linear pattern at higher genetic distances means MDS tries to preserve genetic distances between clades, and puts strains at lower genetic distances closer together, augmenting local patterns while stil preserving global structure.
 Euclidean distance is fairly accurate at distinguishing viruses from similar and different clades (Figure 3B). 
-In Figure 3B, the within density in the violin plot is concentrated in lower distances, and this is also seen in the density of the between clade violin plot. 
-Because the MDS embedding put all the data points in a central mass in the middle of the embedding, this finding is not surprising. 
-Quantitatively, this inaccuracy can be described by the P-value of ___________
+In Figure 3B, the bulk of within clade relationships are defined from -2 to 0, and between clade at 0 and above. 
+The median ratio of 1:12 corroborates this finding, with MDS doing a fairly good job of compartementalizing the clade statuses by Euclidean distance.
+Because the MDS embedding concentrates all data points in a central mass, MDS tends to maintain global patterns, meaning Euclidean distance isn't as strong an indicator of clade status as other algorithms. 
+The threshold distance value calculated using the SVM run on MDS gave a confusion matrix with with a Matthews Correlation Coefficient of 0.761 and an accuracy of 0.929, which reveals an embedding where the inferred clade statuses are fairly accurate given no other information. 
+
 
 
 
 t-SNE: The t-SNE embedding was very accurate at clustering the data by genetic diversity. 
-t-SNE also found a clade breakpoint previously unseen; one of the clades (A1b/131K) was split into three clusters that, when looking at NextStrain’s updated Ha phylogeny, slices the clade in three clean pieces. 
-Looking at newly defined branches in Nextstrain, the “slicing” in the embedding revealed patterns in the tree that were not seen, and this foreshadows Cartography’s possible competency with pinpointing future clade break points.
-In the euclidean and Hamming distance scatterplot for t-SNE (Figure 2C), the points splay out from the LOESS line as genetic distance increases. 
-The data’s correlation to the LOESS line can be expressed through the scatterplot's Pearson Coefficient of .427. 
+t-SNE went beyond compartementalizing by clade, and actually revealed a stronger understanding of hierarchical structure and resemblance to the tree produced for the data.
+In particular, t-SNE split A1b into three clusters, which were lineages directly or incredibly related to each other, revealing a tuning to local patterns not seen in PCA and MDS. 
+In the Euclidean and Hamming distance scatterplot for t-SNE (Figure 2C), the points splay out from the LOESS line as genetic distance increases. 
+The data’s correlation to the LOESS line can be expressed through the scatterplot's Pearson Coefficient of .269. 
 This increasing divergence between genetic and euclidean distance is characteristic of an embedding that exposes local patterns in the data over global structure.
 Euclidean distance is a fairly strong measure for distinguishing strains as between or within clades. 
-The density of the within violin plot was mostly concentrated at lower euclidean distances while the between clade violin plot’s density was at higher euclidean distances (Figure 3C). 
-The medians given by the within vs between plots were also fairly distant from each other. 
-The P-value corroborates this accuracy, ____________
-
+The KDE density plot for t-SNE's within vs between clade statuses had a strong correlation to each other, with a median ratio of 1:9, reveals this understanding (Figure 3C). 
+While the value is smaller than PCA and MDS, the KDE plots for those embeddings were skewed by the "outlier" clades, which PCA placed very far away from the other clades.
+The threshold distance value calculated using the SVM run on MDS gave a confusion matrix with with a Matthews Correlation Coefficient of 0.636 and an accuracy of 0.791, which reveals an embedding where the inferred clade statuses are fairly accurate given no other information. 
+t-SNE, in it's ability to reveal broader patterns about the data, places points from the same clade farther from each other in some instances, and this also skews the results from the SVM. 
 
 
 UMAP: The UMAP embedding did a very accurate job clustering the data by genetic diversity. 
-There was some overlap between A2/re and A2, and a few data points in the wrong cluster, but overall the UMAP projection densely packed together strains within a clade and put lots of distance for strains between clades. 
-The data points did splay out from the LOESS line in the beginning, but far less so compared to t-SNE - the more distinguishing characteristics were the clusters shown in the scatter plot itself, revealing UMAP’s approach to visualizing local and global patterns equally (Figure 2D). 
-The correlation of the data points to the LOESS line is described by UMAP’s Pearson Coefficient of .369. 
-The LOESS line plateaus at a genetic distance of 30, revealing that UMAP sets a threshold for genetic diversity and keeps all points above that threshold the same distance apart in euclidean space.
+UMAP places similar datapoints incredibly close together, which can make it hard to view hierarchical structure as seen in t-SNE. 
+In the Euclidean vs Hamming distance scatterplot, the data points did splay out from the LOESS line in lower genetic distances, but far less so compared to t-SNE - the more distinguishing characteristics were the clusters shown in the scatter plot itself, with one cluster of points at euclidean distances less that 15, and another at distances above 20, revealing UMAP’s approach to visualizing local patterns while still preserving the globality of the data by keeping ratio between genetic and euclidean distance constant (Figure 2D). 
+The correlation of the data points to the LOESS line is described by UMAP’s Pearson Coefficient of .615. 
+The LOESS line decreases in slope at a genetic distance of 30, revealing that at higher genetic distances, UMAP puts them closer together, which coincides with the expectations for the algorithm. 
 Euclidean distance is a strong measure for distinguishing strains as between or within clades. 
-The density of the within violin plot was almost completely concentrated at euclidean distances lower than 10 while the between clade violin plot’s density was above that distance (Figure 3D). This accuracy can we quantified through the P-value of ________________ 
+In Figure 3B, the bulk of within clade relationships are defined from -2 to -1, and between clade at 0 and above. 
+The median ratio of 1:38 corroborates this finding, with UMAP being incredibly good at compartementalizing the clade statuses by Euclidean distance.
+While UMAP places all genetically similar strains by clade incredibly close together, UMAP also places similar clades very close to other clades, which makes it hard to define the differences between clades without the colorings.
+The threshold distance value calculated using the SVM run on MDS gave a confusion matrix with with a Matthews Correlation Coefficient of 0.762 and an accuracy of 0.929, which reveals an embedding where the inferred clade statuses are fairly accurate given no other information. 
 
 
 
@@ -239,7 +244,7 @@ The density of the within violin plot was almost completely concentrated at eucl
  
 ## Figure Three
 
-![](FullViolinPlotFlu.png)
+![](FullKDEDensityFlu.png)
 
 
 
@@ -255,39 +260,43 @@ It can be reasonably assumed that zika is a good test case for Cartography.
 
 PCA: The PCA plot for Zika colored by clade (Figure 4B) did not reveal any visually identifiable clusters in the data, and the data’s overall structure also did not reveal anything interesting. 
 Visually, there was no relationship between Hamming Distance and Euclidean Distance within the PCA embedding, shown by the completely random placement of points on the scatterplot (Figure 5A). 
-To quantify this visual observation, the Pearson Coefficient was .005, which reveals close to no correlation. 
+To quantify this visual observation, the Pearson Coefficient was .089, which reveals close to no correlation. 
 The lack of visible clustering in this embedding reveals that scaling and centering nucleotide data does not capture the genetic diversity present between each genome.  
-Euclidean distance does not help distinguish viral genomes by genetic diversity (Figure 6A). ___________________________-
+Euclidean distance does not help distinguish viral genomes by genetic diversity (Figure 6A). 
+In the KDE density plot for PCA, the within and between KDE density curves overlap completely, and there is no place the SVM can correctly optimize for clade status, which is revealed through the median ratio of 1:1.
 
 MDS: The embedding seemed to differentiate between the clusters in the data on a very global scale (Figure 4C). 
-There were a few visually identifiable clusters in the data, such as clusters containing clades 1, 10, and 2, but there was a single mass of points on the graph in the center where clades 3,4,5, and 6 were slightly overlapping.
-There was segmentation in the colors of the data and their overlap in this single mass of points, however - clade 4 is layered over clade 5. Because MDS tends to reveal global structure over local, MDS tries to as accurately as possible preserve the data’s overall structure. 
-In the Euclidean and Hamming distance scatterplot, the points begin relatively close to the LOESS curve, but begin to move farther and farther away as the genetic distance increases, and this divergence is corroborated by the Pearson Coefficient of .376 for the plot. 
-This “splayed” pattern as Euclidean and Hamming distance begin to diverge increasingly is typical of an algorithm that preserves both local and global relationships - global due to the linear relationship between euclidean and hamming distance, and local from the splay pattern - which reveals that MDS seems to be segmenting and compartmentalizing the data better than the distance matrix does on its own. 
+There were a few visually identifiable clusters in the data, such as clusters containing clades 1, 5, and 4, but clades such as 7 and 9 were almost completely overlapped by other clades.
+Because MDS tends to reveal global structure over local, MDS tries to as accurately as possible preserve the data’s overall structure, which means it doesn't reveal many local patterns. 
+In the Euclidean and Hamming distance scatterplot, the points begin relatively close to the LOESS curve, but begin to move farther and farther away as the genetic distance increases, and this divergence is corroborated by the Pearson Coefficient of .199 for the plot. 
+The LOESS line plateaus at a genetic distance of 50, revealing that as points become more and more divergent, MDS places them at similar euclidean distances, which is a hallmark of algorithms that preserve some local structure.
 Euclidean distance does a fairly accurate job distinguishing viruses from similar and different clades (Figure 6B). 
-In Figure 6B, the within density in the violin plot is in lower distances than the density of the between clade violin plot, which means their medians have a large difference between them. 
-In the permutation test, we obtained a p-value of  ____________________________-
+In Figure 6B, the within clade relationship curve on the KDE density plot is at lower euclidean distances than the between clade relationships, which there is a lot of overlap. 
+The embedding had a median ratio of 1:14, which reveals that it's fairly good at compartementalizing the data by euclidean distance.
+The threshold distance value calculated using the SVM run on MDS gave a confusion matrix with with a Matthews Correlation Coefficient of ___ and an accuracy of ______, which reveals an embedding where the inferred clade statuses are fairly accurate given no other information. 
 
 
 t-SNE: This embedding does a very good job of clustering the data; every clade is a visually identifiable cluster, and clades more similarly related genetically are closer together in the plot (Figure 4D). 
 The data points from different clades did not overlap each other much, and the embedding did revealed different relationships than the rendering of the tree, giving less euclidean space between points that were more genetically diverse and creating a “threshold” for how much genetic diversity would impact euclidean distance. 
-In the euclidean and Hamming distance scatterplot for t-SNE (Figure 5C), the points stay at a constant distance from the LOESS line as genetic distance increases. 
-This correlation can be expressed through the scatterplot's Pearson Coefficient of .455. 
-The LOESS line plateaus as the genetic diversity continues to increase, meaning that after a certain genetic distance all euclidean distances in the t-SNE embedding are very similar. 
-This “plateau” usually point to an embedding that gives little importance to the exact distance between clusters and instead focuses on cluster shape and spread. These statistics show that t-SNE tends to preserve global structure, shown through the high pearson coefficient, while also revealing local patterns. 
+In the euclidean and Hamming distance scatterplot for t-SNE (Figure 5C), the points splay out from the LOESS line as genetic distance increases, which is expected for this algorithm. 
+This correlation can be expressed through the scatterplot's Pearson Coefficient of .499. 
+The decrease in slope of the LOESS line after a genetic distance of 100 usually points to an embedding that gives little importance to the exact distance between clusters and instead focuses on cluster shape and spread. 
+These statistics reveal that t-SNE gives a large focus to finding new patterns within the data while still revealing similar patterns to the tree. 
 It is quite easy to distinguish viruses of different and same clades given a euclidean distance. 
-In the between vs within clade violin plot for t-SNE (Figure 6C), the density of the within clade violin plot is concentrated at lower euclidean distances than the density of the between clade violin plot is, which reveals a well clustered and compartmentalized embedding of these data points. 
-To quantitatively reveal this pattern, the permutation test run on this data gave a P-value of ___________________
+In the KDE Density plot for t-SNE, the bulk of the same clade relationships fall to the left of the between clade relationships, which reveals a well clustered and compartmentalized embedding of these data points (Figure 6C). 
+To quantitatively reveal this pattern, the median ratio for t-SNE is 1:8, which is lower because of the "splay" and local patterns t-SNE tends to optimize for.
+The threshold distance value calculated using the SVM run on t-SNE gave a confusion matrix with with a Matthews Correlation Coefficient of ___ and an accuracy of ______, which reveals an embedding where the inferred clade statuses are fairly accurate given no other information. 
 
-UMAP: The embedding did translate the data differently than the rendering of the tree, where genetically similar strains were very densely packed and genetically different clades were incredibly far apart in UMAP euclidean space (Figure 4E). There were visually identifiable clusters, but the distance disparities made it hard to separate clades 9, 7, 6, and 3 from each other due to how close the clusters were.
+UMAP: The embedding did translate the data differently than the rendering of the tree, where genetically similar strains were very densely packed and genetically different clades were incredibly far apart in UMAP euclidean space (Figure 4E). 
+There were visually identifiable clusters, but the distance disparities made it hard to separate clades 9, 7, 6, and 3 from each other due to how close the clusters were.
 The pattern can be seen and explained in the Hamming and genetic distance scatterplot for UMAP (Figure 5D). 
-In UMAP’s scatterplot, there are two clusters of data points on the LOESS line, instead of the equal spread seen in the other 3 embeddings. 
-These clusters point to a graph that places genetically similar strains incredibly close together - around 0 to 20 - but places genetically different strains almost 50 to 80 apart. 
-The LOESS line reflects this increase through its exponential-like growth, and the density of these two clusters can be quantitatively shown through its Pearson Coefficient of .787. 
+In UMAP’s scatterplot, there are two clusters of data points on the LOESS line, instead of the equal spread of points over euclidean and genetic space seen in the other 3 embeddings. 
+These clusters point to a local pattern preserving algorithm that places genetically similar strains incredibly close together - a Euclidean distance around 0 to 20 - but places genetically different strains almost 50 to 80 apart. 
+The LOESS line reflects this increase through its exponential-like growth, and the density of these two clusters can be quantitatively shown through its Pearson Coefficient of .595. 
 Euclidean distance is not a very strong measure to distinguish viruses from the same or different clades. 
-In the UMAP violin plot (Figure 6D), the euclidean distance density distribution for between clusters is equal at Euclidean distances of 10 and 70. 
-While the density distribution for within clusters for UMAP is concentrated almost entirely at 10, if given a euclidean distance of 10, it would be difficult to classify that strain as within the clade or between the clade it’s being compared to. 
-The permutation test corroborates this, __________________
+In the UMAP KDE Density plot (Figure 6D), the clades are all places close together save for clade 2, which is incredibly divergent compared to the others.
+Because all other between clade distances are the same as within clade distances, UMAP's median ratio is 1:1, meaning it is not easy to optimize an SVM with euclidean distance for clade relationships.
+The SVM statistics corroborate this, with __________________
 
 
 ## Figure Four

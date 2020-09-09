@@ -224,6 +224,8 @@ def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, c
         list of all the TITLES you want for each axis: goes in order of[x1,y1,x2,y2,x3,y3] etc.
     color: string
         what the data should be colored by (ex. by clade, by region)
+    fields:
+        what the legend uses as selection parameters
     ToolTip: list
         when hovering over the data, what data should be shown
         
