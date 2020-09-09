@@ -117,6 +117,7 @@ fauna/
 zika-nextstrain/.snakemake
 zika-nextstrain/.snakemake/metadata/
 zika-nextstrain/results/
+seasonal-flu-nextstrain/results/
 seasonal-flu-nextstrain/.snakemake/
 zika-nextstrain/results-20182020/
 zika-nextstrain/auspice/
