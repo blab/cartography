@@ -10,7 +10,7 @@ rule all:
     input:
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
         expand("results/KDEDensity_{method}.png", method=EMBEDDING_METHODS),
-        "../auspice/flu_seasonal_h3n2_ha_2y.json"
+        "../auspice/cartography_flu_seasonal_h3n2_ha_2y.json"
 
 rule files:
     params:
@@ -257,7 +257,7 @@ rule export:
         auspice_config = files.auspice_config,
         clades = rules.clades.output.clade_data
     output:
-        auspice_tree = "../auspice/flu_seasonal_h3n2_ha_2y.json"
+        auspice_tree = "../auspice/cartography_flu_seasonal_h3n2_ha_2y.json"
     conda: "../cartography.yml"
     shell:
         """

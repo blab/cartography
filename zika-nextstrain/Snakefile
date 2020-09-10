@@ -10,7 +10,7 @@ rule all:
     input:
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
         expand("results/KDEDensity_{method}.png", method=EMBEDDING_METHODS),
-        auspice_tree = "../auspice/zika-cartography_tree.json"
+        auspice_tree = "../auspice/cartography_zika-cartography_tree.json"
 
 rule files:
     params:
