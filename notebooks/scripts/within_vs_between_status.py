@@ -6,6 +6,10 @@ import pandas as pd
 from scipy.spatial.distance import pdist
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler
+from sklearn.svm import LinearSVC
+from sklearn.metrics import confusion_matrix, matthews_corrcoef
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 import sys
 
 from Helpers import get_euclidean_data_frame
@@ -54,6 +58,7 @@ if __name__ == "__main__":
             {"strain": sequence_name, args.differentiator_column: node_data["nodes"][sequence_name][args.differentiator_column]}
             for sequence_name in sequences_list
         ])
+
     elif args.metadata is not None:
         node_data = pd.read_csv(args.metadata, sep='\t')
         node_data.index = node_data["strain"]
@@ -72,9 +77,42 @@ if __name__ == "__main__":
 
     KDE_df = get_euclidean_data_frame(merged_df, args.embedding_columns[0], args.embedding_columns[1], args.differentiator_column, args.method)
 
+    #intializing scaler
     scaler = StandardScaler()
 
     KDE_df["scaled_distance"] = scaler.fit_transform(pdist(merged_df.drop(["strain", args.differentiator_column], axis = 1)).reshape(-1, 1))
+
+
+    # Use a support vector machine classifier to identify an optimal threshold
+    # to distinguish between within and between class pairs.
+    # See also: https://scikit-learn.org/stable/modules/svm.html#svm-classification
+    classifier = make_pipeline(
+        StandardScaler(),
+        LinearSVC(random_state=0, tol=1e-5)
+    )
+
+    #fitting the classifier with the scaled distance and the within vs between per strain relationship
+
+    classifier.fit(np.array(KDE_df["scaled_distance"]).reshape(-1,1), KDE_df["clade_status"])
+    classifier_threshold = (0.5 - classifier.named_steps["linearsvc"].intercept_) / classifier.named_steps["linearsvc"].coef_[0]
+
+    #creating metrics for quantifying patterns within the graph
+
+    confusion_matrix_val = confusion_matrix(classifier.predict(np.array(KDE_df["scaled_distance"]).reshape(-1,1)), KDE_df["clade_status"])
+
+    confusion_matrix_number = (confusion_matrix_val[0][0] + confusion_matrix_val[1][1]) / float(len(KDE_df))
+
+    matthews_cc_val = matthews_corrcoef(classifier.predict(np.array(KDE_df["scaled_distance"]).reshape(-1,1)), KDE_df["clade_status"])
+
+    median_within = np.median(KDE_df.query("clade_status == 'within'")["scaled_distance"])
+    
+    median_between = np.median(KDE_df.query("clade_status == 'between'")["scaled_distance"])
+
+    #appending data to dataframe
+    KDE_df["matthews_cc"] = matthews_cc_val
+    KDE_df["accuracy_confusion_matrix"] = confusion_matrix_number
+    KDE_df["median_within"] = median_within
+    KDE_df["median_between"] = median_between
 
     if args.output_dataframe is not None:
         KDE_df.to_csv(args.output_dataframe)
@@ -86,15 +124,13 @@ if __name__ == "__main__":
         ax = sns.kdeplot(KDE_df.query("clade_status == 'within'")["scaled_distance"], label="Same clade", ax=ax)
         ax = sns.kdeplot(KDE_df.query("clade_status == 'between'")["scaled_distance"], label="Different clade", ax=ax)
 
+        ax.axvline(x=classifier_threshold, label="SVC threshold", color="#000000", alpha=0.5)
+
         ax.set_xlabel("Scaled Euclidean distance from embedding")
         ax.set_ylabel("KDE density")
 
-        median_within = np.median(KDE_df.query("clade_status == 'within'")["scaled_distance"])
-        median_between = np.median(KDE_df.query("clade_status == 'between'")["scaled_distance"])
-
-        ratio_within_between = abs(int((median_within)/(median_between)))
         
-        fig.suptitle(args.method + ' KDE Plot - ' + str(1) + ":" + str(ratio_within_between), fontsize=16)
+        fig.suptitle(args.method + ' KDE Plot - ', fontsize=16)
         sns.despine()
 
         plt.savefig(args.output_figure)
