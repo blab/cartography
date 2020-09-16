@@ -18,11 +18,10 @@ if __name__ == "__main__":
 
     sequences = Bio.SeqIO.parse(args.sequences, "fasta")
 
-    cleaned_sequences = []
     metadata_records = []
     for sequence in sequences:
         # Jeddah-1|KF917527|camel|2013-11-08 -> Jeddah-1-KF917527-camel-2013-11-08
-        sequence_id = sequence.id.replace(args.delimiter, "-")
+        sequence_id = sequence.id
         attributes = sequence.id.split(args.delimiter)
         metadata_record = dict(zip(args.fields, attributes))
 
@@ -32,18 +31,7 @@ if __name__ == "__main__":
         metadata_record["strain"] = sequence_id
         metadata_records.append(metadata_record)
 
-        sequence.id = sequence_id
-        sequence.description = ""
-        cleaned_sequences.append(sequence)
-
     df = pd.DataFrame(metadata_records)
-
-    # Annotate a numerical date.
-    if "date" in args.fields:
-        df["num_date"] = pd.to_datetime(df["date"]).apply(numeric_date)
 
     # Save the metadata.
     df.to_csv(args.output_metadata, sep="\t", index=False)
-
-    # Save the sequences.
-    Bio.SeqIO.write(cleaned_sequences, args.output_sequences, "fasta")

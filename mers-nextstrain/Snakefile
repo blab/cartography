@@ -7,6 +7,7 @@ EMBEDDING_METHODS = [
 
 rule all:
     input:
+        "../auspice/cartography_mers.json",
         "results/tree.nwk",
         "results/aligned.fasta",
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
@@ -16,11 +17,22 @@ rule files:
     params:
         dropped_strains = "config/exclude.txt"
 
-rule download:
+rule download_elife_tree:
     output:
         mers_data = "data/elife-31257-fig1-data5-v3.zip"
     params:
         mers_url = "https://elifesciences.org/download/aHR0cHM6Ly9jZG4uZWxpZmVzY2llbmNlcy5vcmcvYXJ0aWNsZXMvMzEyNTcvZWxpZmUtMzEyNTctZmlnMS1kYXRhNS12My56aXA-/elife-31257-fig1-data5-v3.zip?_hash=YhuQfm%2BGO%2BY6MsWLZB4WrPQvYtSlHOhLnzwnvTaesws%3D"
+    conda: "../cartography.yml"
+    shell:
+        """
+        wget "{params.mers_url}" -O {output.mers_data}
+        """
+
+rule download_mcc_tree:
+    output:
+        mers_data = "data/MERS_CoV_274_mcc.tree"
+    params:
+        mers_url = "https://raw.githubusercontent.com/nextstrain/augur/master/tests/builds/beast_mers/data/MERS_CoV_274_mcc.tree"
     conda: "../cartography.yml"
     shell:
         """
@@ -42,7 +54,7 @@ rule extract_sequences:
     input:
         mers_tree = "data/MERS_CoV_274.nex"
     output:
-        sequences = "results/sequences.fasta"
+        sequences = "results/aligned.fasta"
     conda: "../cartography.yml"
     shell:
         """
@@ -51,56 +63,41 @@ rule extract_sequences:
             {output.sequences}
         """
 
-rule extract_tree:
+rule import_tree:
     input:
-        mers_tree = "data/MERS_CoV_274.nex"
+        mers_tree = "data/MERS_CoV_274_mcc.tree"
     output:
-        tree = "results/tree.nwk"
+        tree = "results/tree.nwk",
+        node_data = "results/node_data.json"
     conda: "../cartography.yml"
     shell:
         """
-        python3 scripts/nexus_to_newick.py \
-            {input.mers_tree} \
-            {output.tree}
+        augur import beast \
+            --mcc {input.mers_tree} \
+            --output-tree {output.tree} \
+            --output-node-data {output.node_data}
         """
-
-# rule import_tree:
-#     input:
-#         mers_tree = "data/MERS_CoV_274.nex"
-#     output:
-#         tree = "results/tree.nwk",
-#         node_data = "results/node_data.json"
-#     conda: "../cartography.yml"
-#     shell:
-#         """
-#         augur import beast \
-#             --mcc {input.mers_tree} \
-#             --output-tree {output.tree} \
-#             --output-node-data {output.node_data}
-#         """
 
 rule parse:
     input:
-        sequences = "results/sequences.fasta"
+        sequences = "results/aligned.fasta"
     output:
-        alignment = "results/aligned.fasta",
         metadata = "results/metadata.tsv"
     params:
         fields = "strain accession host date"
     conda: "../cartography.yml"
     shell:
         """
-        augur parse \
+        python3 scripts/parse_metadata.py \
             --sequences {input.sequences} \
             --fields {params.fields} \
-            --output-sequences {output.alignment} \
             --output-metadata {output.metadata}
         """
 
 rule create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
-        alignment = rules.parse.output.alignment
+        alignment = "results/aligned.fasta"
     output:
         output = "results/distance_matrix.csv"
     conda: "../cartography.yml"
@@ -114,7 +111,7 @@ rule create_distance_matrix:
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
-        alignment = rules.parse.output.alignment
+        alignment = "results/aligned.fasta"
     output:
         node_data = "results/embed_pca.json",
         dataframe = "results/embed_pca.csv",
@@ -126,7 +123,7 @@ rule embed_pca:
         """
         python3 ../notebooks/scripts/embed.py \
             --alignment {input.alignment} \
-            --cluster True \
+            --cluster \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -150,7 +147,7 @@ rule embed_tsne:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster True \
+            --cluster \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -175,7 +172,7 @@ rule embed_umap:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster True \
+            --cluster \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -199,7 +196,7 @@ rule embed_mds:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster True \
+            --cluster \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -258,6 +255,28 @@ rule KDE_density:
             --differentiator-column {params.differentiator_column} \
             --output-figure {output.figure} \
             --output-dataframe {output.dataframe}
+        """
+
+rule export:
+    input:
+        tree = "results/tree.nwk",
+        metadata = "results/metadata.tsv",
+        branch_lengths = "results/node_data.json",
+        embeddings = expand("results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
+        auspice_config = "config/auspice_config.json",
+        colors = "config/colors.tsv"
+    output:
+        auspice_tree = "../auspice/cartography_mers.json"
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur export v2 \
+            --tree {input.tree} \
+            --metadata {input.metadata} \
+            --node-data {input.branch_lengths} {input.embeddings} \
+            --auspice-config {input.auspice_config} \
+            --colors {input.colors} \
+            --output {output.auspice_tree}
         """
 
 rule clean:

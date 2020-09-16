@@ -1,0 +1,53 @@
+{
+    "title": "MERS-CoV phylogeny from Dudas et al. 2018",
+    "colorings": [
+        {
+            "key": "num_date",
+            "title": "sampling date",
+            "type": "continuous"
+        },
+        {
+            "key": "pca_label",
+            "title": "PCA cluster",
+            "type": "categorical"
+        },
+        {
+            "key": "mds_label",
+            "title": "MDS cluster",
+            "type": "categorical"
+        },
+        {
+            "key": "t-sne_label",
+            "title": "t-SNE cluster",
+            "type": "categorical"
+        },
+        {
+            "key": "umap_label",
+            "title": "UMAP cluster",
+            "type": "categorical"
+        },
+        {
+            "key": "host",
+            "title": "host",
+            "type": "categorical"
+        }
+    ],
+    "display_defaults": {
+        "color_by": "num_date",
+        "distance_measure": "num_date"
+    },
+    "maintainer": [
+        "author names (displayed in footer)",
+        "author URL"
+    ],
+    "filters": [
+      "pca_label",
+      "mds_label",
+      "t-sne_label",
+      "umap_label",
+      "host"
+    ],
+    "panels": [
+        "tree"
+    ]
+}
