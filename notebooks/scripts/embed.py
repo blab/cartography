@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--distance-matrix", help="a csv distance matrix that can be read in by pandas, index column as row 0")
     parser.add_argument("--alignment", help="an aligned FASTA file to create a distance matrix with")
-    parser.add_argument("--cluster", help="clustering labels given via DBSCAN")
+    parser.add_argument("--cluster", action="store_true", help="cluster data from embedding and assign labels given via HDBSCAN")
     parser.add_argument("--output-node-data", help="outputting a node data JSON file")
     parser.add_argument("--output-dataframe", help="outputting a csv file")
     parser.add_argument("--output-figure", help="plot of the embedding, for debugging purposes")
@@ -152,7 +152,7 @@ if __name__ == "__main__":
         explained_variance["principal components"] = [i for i in range(0, args.components)]
         explained_variance.to_csv("results/explained_variance_pca.csv", index=False)
 
-    if(args.cluster is not None):
+    if args.cluster:
         clusterer = hdbscan.HDBSCAN(min_cluster_size=15)
         clusterer.fit(embedding)
         embedding_df["label"] = clusterer.labels_
