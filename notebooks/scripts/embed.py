@@ -155,7 +155,7 @@ if __name__ == "__main__":
     if args.cluster:
         clusterer = hdbscan.HDBSCAN(min_cluster_size=15)
         clusterer.fit(embedding)
-        embedding_df["label"] = clusterer.labels_
+        embedding_df[f"{args.command}_label"] = clusterer.labels_
 
     if args.output_node_data is not None:
         embedding_dict = embedding_df.transpose().to_dict()
