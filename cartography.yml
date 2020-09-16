@@ -28,5 +28,5 @@ dependencies:
     - snakemake
     - svglib
     - hdbscan
-    - nextstrain-augur==10.0.0
+    - nextstrain-augur==10.0.2
     - rethinkdb==2.3.0.post6
