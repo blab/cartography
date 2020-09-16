@@ -1,0 +1,70 @@
+{
+    "title": "Seasonal influenza A/H3N2 phylogeny from 2016-2018",
+    "colorings": [
+        {
+            "key": "pca_label",
+            "title": "PCA cluster",
+            "type": "categorical"
+        },
+        {
+            "key": "mds_label",
+            "title": "MDS cluster",
+            "type": "categorical"
+        },
+        {
+            "key": "t-sne_label",
+            "title": "t-SNE cluster",
+            "type": "categorical"
+        },
+        {
+            "key": "umap_label",
+            "title": "UMAP cluster",
+            "type": "categorical"
+        },
+        {
+            "key": "gt",
+            "title": "Genotype",
+            "type": "categorical"
+        },
+        {
+            "key": "num_date",
+            "title": "Date",
+            "type": "continuous"
+        },
+        {
+            "key": "clade_membership",
+            "title": "Clade",
+            "type": "categorical"
+        },
+        {
+            "key": "region",
+            "title": "Region",
+            "type": "categorical"
+        },
+        {
+            "key": "country",
+            "title": "Country",
+            "type": "categorical"
+        }
+    ],
+    "display_defaults": {
+        "color_by": "clade_membership",
+        "distance_measure": "num_date"
+    },
+    "maintainer": [
+        "author names (displayed in footer)",
+        "author URL"
+    ],
+    "filters": [
+      "pca_label",
+      "mds_label",
+      "t-sne_label",
+      "umap_label",
+      "clade_membership",
+      "region",
+      "country"
+    ],
+    "panels": [
+        "tree"
+    ]
+}

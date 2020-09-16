@@ -18,14 +18,14 @@ rule all:
     input:
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
         expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
-        "../auspice/cartography_flu_seasonal_h3n2_ha_2y.json"
+        "../auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json"
 
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha.fa",
         dropped_strains = "config/exclude.txt",
         reference = "config/reference_h3n2_ha.gb",
-        auspice_config = "config/auspice_config_h3n2.json",
+        auspice_config = "config/auspice_config.json",
         clades = "config/clades_h3n2_ha.tsv"
 
 files = rules.files.params
@@ -262,18 +262,21 @@ rule export:
         traits = rules.traits.output.node_data,
         nt_muts = rules.ancestral.output.node_data,
         aa_muts = rules.translate.output.node_data,
+        embeddings = expand("results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
         auspice_config = files.auspice_config,
+        colors = "config/colors.tsv",
         clades = rules.clades.output.clade_data
     output:
-        auspice_tree = "../auspice/cartography_flu_seasonal_h3n2_ha_2y.json"
+        auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json"
     conda: "../cartography.yml"
     shell:
         """
         augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} \
+            --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} \
             --auspice-config {input.auspice_config} \
+            --colors {input.colors} \
             --output {output.auspice_tree}
         """
 
@@ -306,7 +309,7 @@ rule embed_pca:
         """
         python3 ../notebooks/scripts/embed.py \
             --alignment {input.alignment} \
-            --cluster True \
+            --cluster \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -330,7 +333,7 @@ rule embed_tsne:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster True \
+            --cluster \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -355,7 +358,7 @@ rule embed_umap:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster True \
+            --cluster \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -379,7 +382,7 @@ rule embed_mds:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster True \
+            --cluster \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
