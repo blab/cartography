@@ -3,7 +3,7 @@ from augur.utils import read_node_data
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy.spatial.distance import pdist
+from scipy.spatial.distance import pdist, squareform
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVC
@@ -19,10 +19,10 @@ if __name__ == "__main__":
     # Initialize parsers
     parser = argparse.ArgumentParser(description = "creates embeddings", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     
-    parser.add_argument("--embedding", required=True, help="the path to a dataframe csv file")
+    parser.add_argument("--embedding", help="the path to a dataframe csv file OR distance matrix csv for a genetic KDE plot")
     parser.add_argument("--clades", help="a path to the clade status of the different strains in the build")
     parser.add_argument("--metadata", help="a path to a tsv file that contains information about the differentiator column")
-    parser.add_argument("--method", required=True, choices = ["pca", "mds", "t-sne", "umap"], help="the embedding used")
+    parser.add_argument("--method", required=True, choices = ["pca", "mds", "t-sne", "umap", "genetic"], help="the embedding used")
     parser.add_argument("--embedding-columns", nargs=2, required=True, help="list of the two columns to use as coordinates from the embedding data frame")
     parser.add_argument("--differentiator-column", default="clade_membership", help="string name of the column to differentiate by (clade, host, etc)")
     parser.add_argument("--output-figure", help="path for outputting as a PNG")
@@ -41,6 +41,7 @@ if __name__ == "__main__":
 
     #read in embedding file
     embedding_df = pd.read_csv(args.embedding, index_col=0)
+
     #read in node data
     if args.clades is not None:
         node_data = read_node_data(args.clades)
@@ -58,7 +59,6 @@ if __name__ == "__main__":
             {"strain": sequence_name, args.differentiator_column: node_data["nodes"][sequence_name][args.differentiator_column]}
             for sequence_name in sequences_list
         ])
-
     elif args.metadata is not None:
         node_data = pd.read_csv(args.metadata, sep='\t')
         node_data.index = node_data["strain"]
@@ -69,19 +69,28 @@ if __name__ == "__main__":
             {"strain": sequence, args.differentiator_column: node_dict[sequence][args.differentiator_column]}
             for sequence in node_data.index
         ])
-    
-    
+        
+    if args.method != "genetic":
+        merged_df = embedding_df.merge(clade_annotations, on="strain")
+        KDE_df = get_euclidean_data_frame(sampled_df=merged_df, column1=args.embedding_columns[0], column2=args.embedding_columns[1], column_for_analysis=args.differentiator_column, embedding=args.method)
 
-    merged_df = embedding_df.merge(clade_annotations, on="strain")
+        #intializing scaler
+        scaler = StandardScaler()
+        KDE_df["scaled_distance"] = scaler.fit_transform(pdist(merged_df.drop(["strain", args.differentiator_column], axis = 1)).reshape(-1, 1))
 
+    if args.method == "genetic":
+        embedding_df.columns = embedding_df.index
+        indices_to_drop = embedding_df[~embedding_df.index.isin(clade_annotations["strain"])].dropna(how = 'all')
+        embedding_df = embedding_df[embedding_df.index.isin(clade_annotations["strain"])].dropna(how = 'all')
+        embedding_df = embedding_df.drop(indices_to_drop.index, axis=1)
+        embedding_df["strain"] = embedding_df.index
 
-    KDE_df = get_euclidean_data_frame(merged_df, args.embedding_columns[0], args.embedding_columns[1], args.differentiator_column, args.method)
+        print(clade_annotations)
+        merged_df = embedding_df.merge(clade_annotations, on="strain")
+        print(merged_df)
 
-    #intializing scaler
-    scaler = StandardScaler()
-
-    KDE_df["scaled_distance"] = scaler.fit_transform(pdist(merged_df.drop(["strain", args.differentiator_column], axis = 1)).reshape(-1, 1))
-
+        KDE_df = get_euclidean_data_frame(sampled_df=merged_df, column_for_analysis=args.differentiator_column, embedding=args.method)
+        KDE_df.rename(columns={'distance':'scaled_distance'}, inplace=True)
 
     # Use a support vector machine classifier to identify an optimal threshold
     # to distinguish between within and between class pairs.

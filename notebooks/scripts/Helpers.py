@@ -376,7 +376,7 @@ def scatterplot_tooltips(strains, similarity_matrix, df_merged, column1, column2
     ).properties(title="Genetic vs. Euclidean scatterplot: " + type_of_embedding + "  (R^2 = " + str((r_value ** 2).round(3)) + ")", height=200, width=300)
     return chart
 
-def get_euclidean_data_frame(sampled_df, column1, column2, column_for_analysis, embedding):
+def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column1=None, column2=None):
     """Gives a dataframe of euclidean distances for embedding columns to use in plotting and analysis
     Parameters
     -----------
@@ -392,7 +392,6 @@ def get_euclidean_data_frame(sampled_df, column1, column2, column_for_analysis, 
     ----------
     A data frame of Euclidean distances for the requested embedding columns.
     
-    The given `sampled_df` MUST include a "clade_membership" column.
     """
     # Traverse pairs of samples from left-to-right, top-to-bottom
     # along the upper triangle of the pairwise matrix and collect
@@ -410,7 +409,11 @@ def get_euclidean_data_frame(sampled_df, column1, column2, column_for_analysis, 
     # Calculate pairwise distances between samples for the requested columns.
     # The resulting array is in the same left-to-right, top-to-bottom order
     # as the clade statuses above.
-    sampled_distances = pdist(sampled_df[[column1, column2]])
+    if (column1 is not None):
+        sampled_distances = pdist(sampled_df[[column1, column2]])
+    
+    else:
+        sampled_distances = squareform(sampled_df.drop([column_for_analysis, "strain"], axis=1))
 
     # Align clade status with pairwise distance for each pairwise comparison.
     sampled_distances_df = pd.DataFrame(
