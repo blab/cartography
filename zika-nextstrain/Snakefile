@@ -5,12 +5,19 @@ EMBEDDING_METHODS = [
     "umap"
 ]
 
+KDE_METHODS = [
+    "pca",
+    "mds",
+    "t-sne",
+    "umap",
+    "genetic"
+]
 
 rule all:
     input:
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        expand("results/KDEDensity_{method}.png", method=EMBEDDING_METHODS),
-        auspice_tree = "../auspice/cartography_zika-cartography_tree.json"
+        expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
+        auspice_tree = "../auspice/cartography_zika.json"
 
 rule files:
     params:
@@ -287,7 +294,7 @@ rule embed_pca:
         """
         python3 ../notebooks/scripts/embed.py \
             --alignment {input.alignment} \
-            --cluster True \
+            --cluster \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -311,7 +318,7 @@ rule embed_tsne:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster True \
+            --cluster \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -336,7 +343,7 @@ rule embed_umap:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster True \
+            --cluster \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -360,7 +367,7 @@ rule embed_mds:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster True \
+            --cluster \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -375,7 +382,8 @@ rule scatterplot:
         embedding = "results/embed_{method}.csv"
     output:
         figure = "results/scatterplot_{method}.png",
-        dataframe = "results/scatterplot_{method}.csv"
+        dataframe = "results/scatterplot_{method}.csv",
+        metadata = "results/scatterplot_{method}_metadata.csv"
     conda: "../cartography.yml"
     shell:
         """
@@ -384,8 +392,17 @@ rule scatterplot:
             --embedding {input.embedding} \
             --method {wildcards.method} \
             --output-figure {output.figure} \
-            --output-dataframe {output.dataframe}
+            --output-dataframe {output.dataframe} \
+            --output-metadata {output.metadata}
         """
+
+def _get_embedding_path_by_wildcards(wildcards):
+    method = wildcards.method
+
+    if method in ("pca", "mds", "t-sne", "umap"):
+        return f"results/embed_{method}.csv"
+    else:
+        return "results/distance_matrix.csv"
 
 def _get_embedding_columns_by_wildcards(wildcards):
     method = wildcards.method.replace("-", "")
@@ -398,11 +415,12 @@ def _get_embedding_columns_by_wildcards(wildcards):
 rule KDE_density:
     message: "creating the KDE density plot"
     input:
-        embedding = "results/embed_{method}.csv",
+        embedding = _get_embedding_path_by_wildcards,
         clades = rules.clades.output.clade_data
     output:
         figure = "results/KDEDensity_{method}.png",
-        dataframe = "results/KDEDensity_{method}.csv"
+        dataframe = "results/KDEDensity_{method}.csv",
+        metadata = "results/KDEDensity_{method}_metadata.csv"
     params:
         embedding_columns = _get_embedding_columns_by_wildcards
     conda: "../cartography.yml"
@@ -414,7 +432,8 @@ rule KDE_density:
             --method {wildcards.method} \
             --embedding-columns {params.embedding_columns} \
             --output-figure {output.figure} \
-            --output-dataframe {output.dataframe}
+            --output-dataframe {output.dataframe} \
+            --output-metadata {output.metadata}
         """
 
 

@@ -402,9 +402,9 @@ def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column1
     for i in range(sampled_df.shape[0] - 1):
         for j in range(i + 1, sampled_df.shape[0]):
             if clade_memberships[i] != clade_memberships[j]:
-                clade_status.append("between")
+                clade_status.append(1)
             else:
-                clade_status.append("within")
+                clade_status.append(0)
 
     # Calculate pairwise distances between samples for the requested columns.
     # The resulting array is in the same left-to-right, top-to-bottom order

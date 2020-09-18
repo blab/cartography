@@ -17,8 +17,10 @@ if __name__ == "__main__":
     parser.add_argument("--distance", required=True, help="a distance matrix of pairwise distances with the strain name as the index")
     parser.add_argument("--embedding", required=True, help="an embedding csv matrix - the order of distances per strain MUST be the same as the distance matrix")
     parser.add_argument("--method", required=True, choices = ["pca", "mds", "t-sne", "umap"], help="the embedding used")
+    parser.add_argument("--bootstrapping-sample", default=10000, type=int, help="number of times the data is sampled with replacement to find the mean and standard deviation of the pearson coefficient")
     parser.add_argument("--output-figure", help="path for outputting as a PNG")
     parser.add_argument("--output-dataframe", help="path for outputting as a dataframe")
+    parser.add_argument("--output-metadata", help="output the pearson coefficient, mean, and standard deviation for the scatterplot")
     
     args = parser.parse_args()
     
@@ -41,7 +43,7 @@ if __name__ == "__main__":
     total_df = scatterplot_xyvalues(list(embedding_df.index), distance_matrix, embedding_df, column_names[0], column_names[1], args.method)
     
     r_value_arr = []
-    for i in range(0, 10000):
+    for i in range(0, args.bootstrapping_sample):
         sampled_df = total_df.sample(frac=1.0, replace=True)
         regression = linregress(sampled_df["genetic"], sampled_df["euclidean"])
         slope, intercept, r_value, p_value, std_err = regression
@@ -77,7 +79,7 @@ if __name__ == "__main__":
 
             ax.set_xlabel("Genetic distance")
             ax.set_ylabel(f"Euclidean distance ({args.method})")
-            ax.set_title(f"Euclidean distance ({args.method}) vs. genetic distance ($R^2={mean:.3f}$) +/- " + str(std))
+            ax.set_title(f"Euclidean distance ({args.method}) vs. genetic distance ($R^2={mean:.3f}$ +/- {std:.3f}$)")
 
             sns.despine()
             
@@ -85,7 +87,11 @@ if __name__ == "__main__":
             
     if args.output_dataframe is not None:
         total_df = pd.concat([total_df, PD_Y_values], axis=1)
-        total_df["pearson_coef"]=r_value ** 2
-        total_df["mean"] = mean
-        total_df["std"] = std
         total_df.to_csv(args.output_dataframe)
+
+    if args.output_metadata is not None:
+        metadata_df = pd.DataFrame()
+        metadata_df["pearson_coef"]=r_value ** 2
+        metadata_df["mean"] = mean
+        metadata_df["std"] = std
+        metadata_df.to_csv(args.output_metadata)

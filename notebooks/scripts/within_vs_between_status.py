@@ -27,6 +27,7 @@ if __name__ == "__main__":
     parser.add_argument("--differentiator-column", default="clade_membership", help="string name of the column to differentiate by (clade, host, etc)")
     parser.add_argument("--output-figure", help="path for outputting as a PNG")
     parser.add_argument("--output-dataframe", help="path for outputting as a dataframe")
+    parser.add_argument("--output-metadata", help="return the Matthews Correlation Coefficient, Median within and between thresholds and accuracy values for the KDE density plot")
     
     args = parser.parse_args()
     
@@ -70,12 +71,12 @@ if __name__ == "__main__":
             for sequence in node_data.index
         ])
         
+    #initializing scaler
+    scaler = StandardScaler()
+
     if args.method != "genetic":
         merged_df = embedding_df.merge(clade_annotations, on="strain")
         KDE_df = get_euclidean_data_frame(sampled_df=merged_df, column1=args.embedding_columns[0], column2=args.embedding_columns[1], column_for_analysis=args.differentiator_column, embedding=args.method)
-
-        #intializing scaler
-        scaler = StandardScaler()
         KDE_df["scaled_distance"] = scaler.fit_transform(pdist(merged_df.drop(["strain", args.differentiator_column], axis = 1)).reshape(-1, 1))
 
     if args.method == "genetic":
@@ -85,12 +86,11 @@ if __name__ == "__main__":
         embedding_df = embedding_df.drop(indices_to_drop.index, axis=1)
         embedding_df["strain"] = embedding_df.index
 
-        print(clade_annotations)
         merged_df = embedding_df.merge(clade_annotations, on="strain")
-        print(merged_df)
 
         KDE_df = get_euclidean_data_frame(sampled_df=merged_df, column_for_analysis=args.differentiator_column, embedding=args.method)
-        KDE_df.rename(columns={'distance':'scaled_distance'}, inplace=True)
+        KDE_df["scaled_distance"] = scaler.fit_transform(np.array(KDE_df["distance"]).reshape(-1, 1))
+        #KDE_df.rename(columns={'distance':'scaled_distance'}, inplace=True)
 
     # Use a support vector machine classifier to identify an optimal threshold
     # to distinguish between within and between class pairs.
@@ -113,15 +113,18 @@ if __name__ == "__main__":
 
     matthews_cc_val = matthews_corrcoef(classifier.predict(np.array(KDE_df["scaled_distance"]).reshape(-1,1)), KDE_df["clade_status"])
 
-    median_within = np.median(KDE_df.query("clade_status == 'within'")["scaled_distance"])
+    median_within = np.median(KDE_df.query("clade_status == 1")["scaled_distance"])
     
-    median_between = np.median(KDE_df.query("clade_status == 'between'")["scaled_distance"])
+    median_between = np.median(KDE_df.query("clade_status == 0")["scaled_distance"])
 
-    #appending data to dataframe
-    KDE_df["matthews_cc"] = matthews_cc_val
-    KDE_df["accuracy_confusion_matrix"] = confusion_matrix_number
-    KDE_df["median_within"] = median_within
-    KDE_df["median_between"] = median_between
+    #create metadata dataframe
+    if args.output_metadata is not None:
+        metadata_df = pd.DataFrame()
+        metadata_df["matthews_cc"] = matthews_cc_val
+        metadata_df["accuracy_confusion_matrix"] = confusion_matrix_number
+        metadata_df["median_within"] = median_within
+        metadata_df["median_between"] = median_between
+        metadata_df.to_csv(args.output_metadata)
 
     if args.output_dataframe is not None:
         KDE_df.to_csv(args.output_dataframe)
@@ -130,8 +133,8 @@ if __name__ == "__main__":
         
         fig, ax = plt.subplots(1, 1, figsize=(12, 6))
 
-        ax = sns.kdeplot(KDE_df.query("clade_status == 'within'")["scaled_distance"], label="Same clade", ax=ax)
-        ax = sns.kdeplot(KDE_df.query("clade_status == 'between'")["scaled_distance"], label="Different clade", ax=ax)
+        ax = sns.kdeplot(KDE_df.query("clade_status == 1")["scaled_distance"], label="Same clade", ax=ax)
+        ax = sns.kdeplot(KDE_df.query("clade_status == 0")["scaled_distance"], label="Different clade", ax=ax)
 
         ax.axvline(x=classifier_threshold, label="SVC threshold", color="#000000", alpha=0.5)
 

@@ -23,6 +23,7 @@ if __name__ == "__main__":
     parser.add_argument("--distance-matrix", help="a csv distance matrix that can be read in by pandas, index column as row 0")
     parser.add_argument("--alignment", help="an aligned FASTA file to create a distance matrix with")
     parser.add_argument("--cluster", action="store_true", help="cluster data from embedding and assign labels given via HDBSCAN")
+    parser.add_argument("--random-seed", default = 314159, type=int, help="an integer used as the random seed for reproducible results")
     parser.add_argument("--output-node-data", help="outputting a node data JSON file")
     parser.add_argument("--output-dataframe", help="outputting a csv file")
     parser.add_argument("--output-figure", help="plot of the embedding, for debugging purposes")
@@ -48,6 +49,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     # Checking that the input fits the restrictions
+
+    # Setting Random seed for numpy
+    np.random.seed(seed=args.random_seed)
 
     if args.output_node_data is None and args.output_dataframe is None:
         print("You must specify one of the outputs", file=sys.stderr)
@@ -111,7 +115,8 @@ if __name__ == "__main__":
         embedding_parameters = {
             "metric": "precomputed",
             "perplexity": args.perplexity,
-            "learning_rate": args.learning_rate
+            "learning_rate": args.learning_rate,
+            "random_state" : args.random_seed
         }
     elif args.command == "umap":
         embedding_class = UMAP
@@ -119,7 +124,8 @@ if __name__ == "__main__":
             "n_neighbors": args.nearest_neighbors,
             "min_dist": args.min_dist,
             "n_components": 2,
-            "init": "spectral"
+            "init": "spectral",
+            "random_state" : args.random_seed
         }
     elif args.command == "mds":
         embedding_class = MDS
