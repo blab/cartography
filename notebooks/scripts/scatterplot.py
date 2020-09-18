@@ -79,7 +79,7 @@ if __name__ == "__main__":
 
             ax.set_xlabel("Genetic distance")
             ax.set_ylabel(f"Euclidean distance ({args.method})")
-            ax.set_title(f"Euclidean distance ({args.method}) vs. genetic distance ($R^2={mean:.3f}$ +/- {std:.3f}$)")
+            ax.set_title(f"Euclidean distance ({args.method}) vs. genetic distance ($R^2={mean:.3f} +/- {std:.3f}$)")
 
             sns.despine()
             
