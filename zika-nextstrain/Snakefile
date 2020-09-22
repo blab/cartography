@@ -239,7 +239,7 @@ rule traits:
             --columns {params.columns} \
             --confidence
         """
-
+        
 rule export:
     message: "Exporting data files for for auspice"
     input:
@@ -249,6 +249,7 @@ rule export:
         traits = rules.traits.output.node_data,
         nt_muts = rules.ancestral.output.node_data,
         aa_muts = rules.translate.output.node_data,
+        embeddings = expand("results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
         colors = files.colors,
         auspice_config = files.auspice_config,
         clades = rules.clades.output.clade_data
@@ -260,7 +261,7 @@ rule export:
         augur export v2\
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} \
+            --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} \
             --auspice-config {input.auspice_config} \
             --output {output.auspice_tree} \
         """
