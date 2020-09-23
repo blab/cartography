@@ -169,6 +169,15 @@ Therefore, it can be assumed that h3n2 HA influenza is a good test case for Cart
 
 ## SUMMARY OF RESULTS FOR INFLUENZA 
 
+PCA (within clade -1.539, between clade -.058, MCC: DNE accuracy:.888)
+
+MDS (within clade -1.361, between clade median 0.108, MCC: 0.560 accuracy:0.922)
+
+TSNE(within clade median -1.694, between clade median 0.186, MCC: 0.784 accuracy: 0.958)
+
+UMAP(within clade median -1.337, between clade median 0.034, MCC: 0.631, accuracy: 0.926)
+
+
 PCA: There were visually identifiable clusters within the data (Figure 1B), with the PCA output largely recapitulating patterns already seen in the phylogenetic tree. 
 Overall, the graph segmented well with the most divergent clades, such as 3c3.A, being most distant in the PCA plot from clades more related, such as clade 3c2.A, A1, A1a, and A1b.
 In the Euclidean and Hamming distance scatterplot for PCA (Figure 2A), the points are at a constant distance from the LOESS line as genetic distance increases.
@@ -252,6 +261,16 @@ It can be reasonably assumed that zika is a good test case for Cartography.
 
 ## SUMMARY OF RESULTS FOR ZIKA: 
 
+
+PCA (within clade -.421, between clade -.214, MCC: DNE accuracy: .855)
+
+MDS (within clade -1.179, between clade median -.083, MCC: .541 accuracy:0.898)
+
+TSNE(within clade median -1.142,  between clade median -.312, MCC: 0.616 accuracy: 0.913)
+
+UMAP(within clade median -.783, between clade median -.544, MCC: 0.368, accuracy: 0.877)
+
+
 PCA: The PCA plot for Zika colored by clade (Figure 4B) did not reveal any visually identifiable clusters in the data, and the data’s overall structure also did not reveal anything interesting. 
 Visually, there was no relationship between Hamming Distance and Euclidean Distance within the PCA embedding, shown by the completely random placement of points on the scatterplot (Figure 5A). 
 To quantify this visual observation, the Pearson Coefficient was .089, which reveals close to no correlation. 
@@ -279,7 +298,7 @@ The decrease in slope of the LOESS line after a genetic distance of 100 usually 
 These statistics reveal that t-SNE gives a large focus to finding new patterns within the data while still revealing similar patterns to the tree. 
 It is quite easy to distinguish viruses of different and same clades given a euclidean distance. 
 In the KDE Density plot for t-SNE, the bulk of the same clade relationships fall to the left of the between clade relationships, which reveals a well clustered and compartmentalized embedding of these data points (Figure 6C). 
-To quantitatively reveal this pattern, the embedding had a within clade median of 1.142 and the between clade median of -0.132, which is lower because of the "splay" and local patterns t-SNE tends to optimize for.
+To quantitatively reveal this pattern, the embedding had a within clade median of -1.142 and the between clade median of -0.132, which is lower because of the "splay" and local patterns t-SNE tends to optimize for.
 The threshold distance value calculated using the SVM run on t-SNE gave a confusion matrix with with a Matthews Correlation Coefficient of 0.616 and an accuracy of 0.913, which reveals an embedding where the inferred clade statuses are fairly accurate given no other information. 
 
 UMAP: The embedding did translate the data differently than the rendering of the tree, where genetically similar strains were very densely packed and genetically different clades were incredibly far apart in UMAP euclidean space (Figure 4E). 

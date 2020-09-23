@@ -119,11 +119,7 @@ if __name__ == "__main__":
 
     #create metadata dataframe
     if args.output_metadata is not None:
-        metadata_df = pd.DataFrame()
-        metadata_df["matthews_cc"] = matthews_cc_val
-        metadata_df["accuracy_confusion_matrix"] = confusion_matrix_number
-        metadata_df["median_within"] = median_within
-        metadata_df["median_between"] = median_between
+        metadata_df = pd.DataFrame([[matthews_cc_val, confusion_matrix_number, median_within, median_between]], columns=["matthews_cc", "accuracy_confusion_matrix", "median_within", "median_between"])
         metadata_df.to_csv(args.output_metadata)
 
     if args.output_dataframe is not None:
