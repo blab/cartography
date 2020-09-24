@@ -80,7 +80,7 @@ if __name__ == "__main__":
                 sequences_by_name.values()
             )
             distance_matrix = squareform(hamming_distances)
-
+            distance_matrix.index = sequence_names
 
     # Calculate Embedding
 
@@ -144,6 +144,7 @@ if __name__ == "__main__":
             # create dictionary to be "wrapped" by write_json
 
         embedding_df = pd.DataFrame(embedding)
+        ##BUG
         embedding_df.index = list(distance_matrix.index)
 
     if args.command == "mds" or args.command == "pca":
