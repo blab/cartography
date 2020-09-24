@@ -239,7 +239,7 @@ rule traits:
             --columns {params.columns} \
             --confidence
         """
-        
+
 rule export:
     message: "Exporting data files for for auspice"
     input:
@@ -296,6 +296,7 @@ rule embed_pca:
         python3 ../notebooks/scripts/embed.py \
             --alignment {input.alignment} \
             --cluster \
+            --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -320,6 +321,7 @@ rule embed_tsne:
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
             --cluster \
+            --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -345,6 +347,7 @@ rule embed_umap:
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
             --cluster \
+            --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -369,6 +372,7 @@ rule embed_mds:
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
             --cluster \
+            --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -380,11 +384,13 @@ rule scatterplot:
     message: "Creating the scatterplot (PNG, dataframe)"
     input:
         distance_matrix = rules.create_distance_matrix.output.output,
-        embedding = "results/embed_{method}.csv"
+        embedding = "results/embed_{method}.csv",
     output:
         figure = "results/scatterplot_{method}.png",
         dataframe = "results/scatterplot_{method}.csv",
         metadata = "results/scatterplot_{method}_metadata.csv"
+    params:
+        bootstrap = 10000
     conda: "../cartography.yml"
     shell:
         """
@@ -392,6 +398,7 @@ rule scatterplot:
             --distance {input.distance_matrix} \
             --embedding {input.embedding} \
             --method {wildcards.method} \
+            --bootstrapping-sample {params.bootstrap} \
             --output-figure {output.figure} \
             --output-dataframe {output.dataframe} \
             --output-metadata {output.metadata}
@@ -417,13 +424,14 @@ rule KDE_density:
     message: "creating the KDE density plot"
     input:
         embedding = _get_embedding_path_by_wildcards,
-        clades = rules.clades.output.clade_data
+        clades = rules.clades.output.clade_data,
     output:
         figure = "results/KDEDensity_{method}.png",
         dataframe = "results/KDEDensity_{method}.csv",
         metadata = "results/KDEDensity_{method}_metadata.csv"
     params:
         embedding_columns = _get_embedding_columns_by_wildcards
+        differentiator_column = "clade_membership"
     conda: "../cartography.yml"
     shell:
         """
@@ -432,6 +440,7 @@ rule KDE_density:
             --clades {input.clades} \
             --method {wildcards.method} \
             --embedding-columns {params.embedding_columns} \
+            --differentiator-column {params.differentiator_column} \
             --output-figure {output.figure} \
             --output-dataframe {output.dataframe} \
             --output-metadata {output.metadata}

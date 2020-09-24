@@ -221,6 +221,8 @@ rule scatterplot:
         figure = "results/scatterplot_{method}.png",
         dataframe = "results/scatterplot_{method}.csv",
         metadata = "results/scatterplot_{method}_metadata.csv"
+    params:
+        bootstrap = 10000
     conda: "../cartography.yml"
     shell:
         """
@@ -228,6 +230,7 @@ rule scatterplot:
             --distance {input.distance_matrix} \
             --embedding {input.embedding} \
             --method {wildcards.method} \
+            --bootstrapping-sample {params.bootstrap} \
             --output-figure {output.figure} \
             --output-dataframe {output.dataframe} \
             --output-metadata {output.metadata}
