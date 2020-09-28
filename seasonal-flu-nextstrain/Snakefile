@@ -444,7 +444,7 @@ rule KDE_density:
         dataframe = "results/KDEDensity_{method}.csv",
         metadata = "results/KDEDensity_{method}_metadata.csv"
     params:
-        embedding_columns = _get_embedding_columns_by_wildcards
+        embedding_columns = _get_embedding_columns_by_wildcards,
         differentiator_column = "clade_membership"
     conda: "../cartography.yml"
     shell:
@@ -454,7 +454,7 @@ rule KDE_density:
             --clades {input.clades} \
             --method {wildcards.method} \
             --embedding-columns {params.embedding_columns} \
-            --differentiator-column {params.differentiator_column}
+            --differentiator-column {params.differentiator_column} \
             --output-figure {output.figure} \
             --output-dataframe {output.dataframe} \
             --output-metadata {output.metadata}

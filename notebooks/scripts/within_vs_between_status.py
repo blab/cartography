@@ -90,7 +90,6 @@ if __name__ == "__main__":
 
         KDE_df = get_euclidean_data_frame(sampled_df=merged_df, column_for_analysis=args.differentiator_column, embedding=args.method)
         KDE_df["scaled_distance"] = scaler.fit_transform(np.array(KDE_df["distance"]).reshape(-1, 1))
-        #KDE_df.rename(columns={'distance':'scaled_distance'}, inplace=True)
 
     # Use a support vector machine classifier to identify an optimal threshold
     # to distinguish between within and between class pairs.
@@ -105,6 +104,8 @@ if __name__ == "__main__":
     classifier.fit(np.array(KDE_df["scaled_distance"]).reshape(-1,1), KDE_df["clade_status"])
     classifier_threshold = (0.5 - classifier.named_steps["linearsvc"].intercept_) / classifier.named_steps["linearsvc"].coef_[0]
 
+    print(KDE_df["clade_status"].value_counts().sort_values(ascending=False))
+    print(list(set(classifier.predict(np.array(KDE_df["scaled_distance"]).reshape(-1,1)))))
     #creating metrics for quantifying patterns within the graph
 
     confusion_matrix_val = confusion_matrix(classifier.predict(np.array(KDE_df["scaled_distance"]).reshape(-1,1)), KDE_df["clade_status"])

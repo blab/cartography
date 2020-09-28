@@ -60,6 +60,7 @@ def get_hamming_distances(genomes):
 
     return hamming_distances
 
+
 def get_y_positions(tree):
     """Create a mapping of each clade to its vertical position. Dict of {clade:
     y-coord}. Coordinates are negative, and integers for tips.
@@ -224,8 +225,6 @@ def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, c
         list of all the TITLES you want for each axis: goes in order of[x1,y1,x2,y2,x3,y3] etc.
     color: string
         what the data should be colored by (ex. by clade, by region)
-    fields:
-        what the legend uses as selection parameters
     ToolTip: list
         when hovering over the data, what data should be shown
         
@@ -286,7 +285,7 @@ def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, c
         return list_of_chart
 
 
-def scatterplot_xyvalues(strains, similarity_matrix, df_merged, column1, column2, type_of_embedding):
+def scatterplot_xyvalues(strains, similarity_matrix, embedding_df, column1, column2, type_of_embedding):
     """Returns a unraveled similarity matrix Pandas dataframe of pairwise and euclidean distances for each strain pair 
      Parameters
     -----------
@@ -307,11 +306,10 @@ def scatterplot_xyvalues(strains, similarity_matrix, df_merged, column1, column2
     ---------
     A Pandas Dataframe of pairwise and euclidean distances for every strain pair
     """
-    embedding_df = df_merged[[column1, column2, 'strain']]
     pairwise_distance_array = np.array(similarity_matrix)[
-        np.triu_indices(len(df_merged), k=0)]
+        np.triu_indices(len(embedding_df), k=0)]
 
-    indexes_tuple = np.triu_indices(len(df_merged), k=0)
+    indexes_tuple = np.triu_indices(len(embedding_df), k=0)
     row_number = indexes_tuple[0]
     column_number = indexes_tuple[1]
     row_strain = pd.DataFrame([strains[x] for x in row_number])
@@ -322,16 +320,16 @@ def scatterplot_xyvalues(strains, similarity_matrix, df_merged, column1, column2
         column_strain, how='outer', left_index=True, right_index=True)
     row_column.columns = ["row", "column"]
 
-    distances = pdist(df_merged[[column1, column2]])
+    distances = pdist(embedding_df[[column1, column2]])
     euclidean_df = pd.DataFrame({"distance": distances})
     euclidean_df["embedding"] = type_of_embedding
     euclidean_df.columns = ["euclidean", "embedding"]
-
+    
     row_column_pairwise = row_column.merge(
         pairwise_df, how='outer', left_index=True, right_index=True)
     row_column_pairwise = row_column_pairwise.where(
         row_column_pairwise["row"] != row_column_pairwise["column"]).dropna().set_index(euclidean_df.index)
-
+    
     total_df = row_column_pairwise.merge(
         euclidean_df, how='inner', left_index=True, right_index=True).dropna()
     total_df.columns = ["row", "column", "genetic",
@@ -378,7 +376,7 @@ def scatterplot_tooltips(strains, similarity_matrix, df_merged, column1, column2
     ).properties(title="Genetic vs. Euclidean scatterplot: " + type_of_embedding + "  (R^2 = " + str((r_value ** 2).round(3)) + ")", height=200, width=300)
     return chart
 
-def get_euclidean_data_frame(sampled_df, column1, column2, embedding):
+def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column1=None, column2=None):
     """Gives a dataframe of euclidean distances for embedding columns to use in plotting and analysis
     Parameters
     -----------
@@ -388,29 +386,34 @@ def get_euclidean_data_frame(sampled_df, column1, column2, embedding):
         the name of the first column in sampled_df
     column2: string
         the name of the second column in sampled_df
+    column_for_analysis: string
+        the name of the column which the dataframe will construct "between" and "within" from (ex. Host, Clade_membership, etc)
     Returns
     ----------
     A data frame of Euclidean distances for the requested embedding columns.
     
-    The given `sampled_df` MUST include a "clade_membership" column.
     """
     # Traverse pairs of samples from left-to-right, top-to-bottom
     # along the upper triangle of the pairwise matrix and collect
     # the clade status of each pair as either within- or between-clades.
     # This traversal excludes self-self comparisons along the diagonal.
     clade_status = []
-    clade_memberships = sampled_df["clade_membership"].values
+    clade_memberships = sampled_df[column_for_analysis].values
     for i in range(sampled_df.shape[0] - 1):
         for j in range(i + 1, sampled_df.shape[0]):
             if clade_memberships[i] != clade_memberships[j]:
-                clade_status.append("between")
+                clade_status.append(1)
             else:
-                clade_status.append("within")
+                clade_status.append(0)
 
     # Calculate pairwise distances between samples for the requested columns.
     # The resulting array is in the same left-to-right, top-to-bottom order
     # as the clade statuses above.
-    sampled_distances = pdist(sampled_df[[column1, column2]])
+    if (column1 is not None):
+        sampled_distances = pdist(sampled_df[[column1, column2]])
+    
+    else:
+        sampled_distances = squareform(sampled_df.drop([column_for_analysis, "strain"], axis=1))
 
     # Align clade status with pairwise distance for each pairwise comparison.
     sampled_distances_df = pd.DataFrame(
