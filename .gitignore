@@ -109,7 +109,6 @@ venv.bak/
 #files I don't want tracked
 *.snakemake*
 seasonal-flu
-seasonal-flu-nextstrain/config
 seasonal-flu-nextstrain/mafft_7.467-1_amd64.deb
 chromedriver.exe
 tex2pdf.21972/
