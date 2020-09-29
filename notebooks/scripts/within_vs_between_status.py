@@ -77,7 +77,7 @@ if __name__ == "__main__":
     if args.method != "genetic":
         merged_df = embedding_df.merge(clade_annotations, on="strain")
         KDE_df = get_euclidean_data_frame(sampled_df=merged_df, column1=args.embedding_columns[0], column2=args.embedding_columns[1], column_for_analysis=args.differentiator_column, embedding=args.method)
-        KDE_df["scaled_distance"] = scaler.fit_transform(pdist(merged_df.drop(["strain", args.differentiator_column], axis = 1)).reshape(-1, 1))
+        KDE_df["scaled_distance"] = scaler.fit_transform(KDE_df["distance"].values.reshape(-1, 1)).flatten()
 
     if args.method == "genetic":
         embedding_df.columns = embedding_df.index
@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
     classifier.fit(np.array(KDE_df["scaled_distance"]).reshape(-1,1), KDE_df["clade_status"])
     classifier_threshold = (0.5 - classifier.named_steps["linearsvc"].intercept_) / classifier.named_steps["linearsvc"].coef_[0]
-
+    classifier_threshold = classifier_threshold[0]
     print(KDE_df["clade_status"].value_counts().sort_values(ascending=False))
     print(list(set(classifier.predict(np.array(KDE_df["scaled_distance"]).reshape(-1,1)))))
     #creating metrics for quantifying patterns within the graph
