@@ -79,7 +79,7 @@ if __name__ == "__main__":
             hamming_distances = get_hamming_distances(
                 sequences_by_name.values()
             )
-            distance_matrix = squareform(hamming_distances)
+            distance_matrix = pd.DataFrame(squareform(hamming_distances))
             distance_matrix.index = sequence_names
 
     # Calculate Embedding
