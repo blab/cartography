@@ -90,8 +90,5 @@ if __name__ == "__main__":
         total_df.to_csv(args.output_dataframe)
 
     if args.output_metadata is not None:
-        metadata_df = pd.DataFrame()
-        metadata_df["pearson_coef"]=r_value ** 2
-        metadata_df["mean"] = mean
-        metadata_df["std"] = std
+        metadata_df = pd.DataFrame([[r_value ** 2, mean, std]], columns=["pearson_coef", "mean", "std"])
         metadata_df.to_csv(args.output_metadata)

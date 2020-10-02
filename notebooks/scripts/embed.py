@@ -36,6 +36,7 @@ if __name__ == "__main__":
 
     pca = subparsers.add_parser("pca")
     pca.add_argument("--components", default=10, type=int, help="the number of components for PCA")
+    pca.add_argument("--explained-variance", default="results/explained_variance_pca.png", help="the path for the explained variance table")
 
     tsne = subparsers.add_parser("t-sne")
     tsne.add_argument("--perplexity", default=30.0, type=float, help="the perplexity value for the tsne embedding")
@@ -149,7 +150,6 @@ if __name__ == "__main__":
             # create dictionary to be "wrapped" by write_json
 
         embedding_df = pd.DataFrame(embedding)
-        ##BUG
         embedding_df.index = list(distance_matrix.index)
 
     if args.command == "mds" or args.command == "pca":
@@ -162,7 +162,7 @@ if __name__ == "__main__":
         #add explained variance as the first row of the dataframe
         explained_variance = pd.DataFrame([round(pca.explained_variance_ratio_[i],4) for i in range(0,len(pca.explained_variance_ratio_))], columns=["explained variance"])
         explained_variance["principal components"] = [i for i in range(0, args.components)]
-        explained_variance.to_csv("results/explained_variance_pca.csv", index=False)
+        explained_variance.to_csv(args.explained_variance, index=False)
 
     if args.cluster:
         clusterer = hdbscan.HDBSCAN(min_cluster_size=15)

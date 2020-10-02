@@ -55,7 +55,6 @@ This means the data is clustered by genetic diversity (in a phylogenetic tree ge
 Each genome was split into separate nucleotides and compared with other nucleotides in the same site on other genomes.
 We only counted a difference between the main nucleotide pairs (AGCT) -- gaps (N) were not.
 This is because some sequences were significantly shorter than others, and a shorter strain does not necessarily mean complete genetic dissimilarity, which is what counting gaps implied. 
-Using SNP-sites [@page_taylor_delaney_soares_seemann_keane_harris_2016], we found SNP sites from the multi-FASTA alignment files for each disease and calculated the distance matrix from this for computational efficiency.
 
 We reduced the similarity distance matrix through MDS, t-SNE, and UMAP, plotted using [Altair](https://altair-viz.github.io/) ,and colored by clade assignment.
 Clade membership metadata was provided by a .json build of the influenza h3n2 tree and zika trees. For MERS, the host data was given via the Newick tree. 

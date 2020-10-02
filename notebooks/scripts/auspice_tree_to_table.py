@@ -6,6 +6,8 @@ import json
 import pandas as pd
 import sys
 
+from Helpers import get_y_positions
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -30,7 +32,7 @@ if __name__ == "__main__":
     else:
         attributes = sorted(list(tree.root.node_attr.keys()) + list(tree.root.branch_attrs.keys()))
 
-    for node in tree.find_clades():
+    for node in tree.find_clades(terminal=True):
         if node.is_terminal() or args.include_internal_nodes:
             record = {
                 "name": node.name
@@ -46,6 +48,14 @@ if __name__ == "__main__":
 
             records.append(record)
 
+    tree_records = []
+    heights = get_y_positions(tree)
+    for node in tree.find_clades(terminal=True):
+        tree_records.append(dict(strain=node.name, y=heights[node]))
+    tree_records_df = pd.DataFrame(tree_records)
     # Convert records to a data frame and save as a tab-delimited file.
     df = pd.DataFrame(records)
-    df.to_csv(args.output, sep="\t", header=True, index=False, columns=["name"] + list(attributes), float_format="%.2f")
+    df.columns = ["strain"] + list(attributes)
+    df["y_value"] = tree_records_df["y"]
+
+    df.to_csv(args.output, sep="\t", header=True, index=False, float_format="%.2f")
