@@ -17,6 +17,9 @@ rule all:
     input:
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
         expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
+        "results/table.tsv",
+        "results/full_KDE_metadata.csv",
+        "results/imputed_fasta.fasta",
         auspice_tree = "../auspice/cartography_zika.json"
 
 rule files:
@@ -266,10 +269,43 @@ rule export:
             --output {output.auspice_tree} \
         """
 
+rule tree_to_table:
+    message: "creating a table of node data values from the tree attributes"
+    input: 
+        tree = rules.export.output.auspice_tree
+    output:
+        table = "results/table.tsv"
+    params:
+        attributes = "num_date pca1 pca2 mds1 mds2 tsne_x tsne_y umap_x umap_y clade_membership"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/auspice_tree_to_table.py \
+            {input.tree} \
+            {output.table} \
+            --include-internal-nodes \
+            --attributes {params.attributes}
+        """
+rule impute_data:
+    message: "creating an imputed dataframe/fasta file"
+    input:
+        alignment = rules.align.output.alignment
+    output:
+        dataframe = "results/imputed_dataframe.csv",
+        fasta = "results/imputed_fasta.fasta"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/impute_data.py \
+            --alignment {input.alignment} \
+            --output-dataframe {output.dataframe} \
+            --output-fasta {output.fasta}
+        """
+
 rule create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
-        alignment = rules.align.output.alignment
+        alignment = rules.impute_data.output.fasta
     output:
         output = "results/distance_matrix.csv"
     conda: "../cartography.yml"
@@ -283,11 +319,12 @@ rule create_distance_matrix:
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
-        alignment = rules.align.output.alignment
+        alignment = rules.impute_data.output.fasta
     output:
         node_data = "results/embed_pca.json",
         dataframe = "results/embed_pca.csv",
-        figure = "results/embed_pca.pdf"
+        figure = "results/embed_pca.pdf",
+        explained_variance = "results/explained_variance_pca.png"
     params:
         components = 10
     conda: "../cartography.yml"
@@ -301,7 +338,8 @@ rule embed_pca:
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             pca \
-            --components {params.components}
+            --components {params.components} \
+            --explained-variance {output.explained_variance}
         """
 
 rule embed_tsne:
@@ -446,6 +484,25 @@ rule KDE_density:
             --output-metadata {output.metadata}
         """
 
+rule concat_KDE_table:
+    message: "concatenating all the KDE data into one csv dataframe"
+    input:
+       dataframe_pca = "results/KDEDensity_pca.csv",
+       dataframe_mds = "results/KDEDensity_mds.csv", 
+       dataframe_tsne = "results/KDEDensity_t-sne.csv", 
+       dataframe_umap = "results/KDEDensity_umap.csv"
+    output:
+        metadata = "results/full_KDE_metadata.csv"
+    params:
+        dataframes = "results/KDEDensity_pca.csv results/KDEDensity_mds.csv results/KDEDensity_t-sne.csv results/KDEDensity_umap.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/concatenate_tables.py \
+            --tables {params.dataframes} \
+            --separator ',' \
+            --output {output.metadata}
+        """
 
 rule clean:
     message: "Removing directories: {params}"

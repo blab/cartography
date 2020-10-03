@@ -9,7 +9,6 @@ import pandas as pd
 import re
 from scipy.spatial.distance import squareform
 from sklearn.decomposition import PCA
-from sklearn.impute import SimpleImputer
 from sklearn.manifold import TSNE, MDS
 import sys
 from umap import UMAP
@@ -102,12 +101,9 @@ if __name__ == "__main__":
 
         genomes_df = pd.DataFrame(numbers)
         genomes_df.columns = ["Site " + str(k) for k in range(0,len(numbers[i]))]
+
+        
         #performing PCA on my pandas dataframe
-
-        # Impute missing values using the most frequent value in each column.
-        imputer = SimpleImputer(missing_values=5, strategy="most_frequent")
-        genomes_df = pd.DataFrame(imputer.fit_transform(genomes_df))
-
         pca = PCA(n_components=args.components,svd_solver='full') #can specify n, since with no prior knowledge, I use None
         principalComponents = pca.fit_transform(genomes_df)
 
