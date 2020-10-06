@@ -151,7 +151,36 @@ We use h3n2's HA sequences as they have a relatively high mutation rate compared
 As these sequences are biologically relevant, short, and do not recombine, the genomes can be reasonably assigned to phylogenetic clades. 
 Therefore, it can be assumed that h3n2 HA influenza is a good test case for Cartography.
 
-## SUMMARY OF RESULTS FOR INFLUENZA 
+## Embedding clusters recapitulate phylogenetic clades for seasonal influenza A/H3N2
+
+All four dimensionality reduction methods qualitatively recapitulated clade-level groupings observed in the phylogeny (Figure 1).
+Strains from the same clade appeared tightly grouped in PCA, t-SNE, and UMAP embeddings and more loosely clustered in the MDS embedding.
+Closely related clades also tended to cluster close together in PCA, MDS, UMAP, and, to a lesser extent, t-SNE.
+For example, the clade A2 (orange) and its subclade A2/re (red) map to adjacent regions of all four embeddings.
+We observed the same pattern for A1 (purple) and its subclade A1a (pink) and for A1b (brown) and its subclades A1b/135K (gray) and A1b/135N (blue).
+The clade 3c2.A (red) and its subclade A3 (light blue) clustered in all embeddings except t-SNE.
+This result matched our expectation that t-SNE would preserve local clusters and not retain global structure between more distantly related data.
+
+To quantify the patterns we observed in Figure 1, we calculated two complementary metrics for each embedding method.
+First, we measured the linearity of the relationship of the Euclidean distance between two strains in an embedding space and the genetic distance between the same strains.
+All four methods exhibited a consistent linear relationship for pairs of strains that differed by no more than 30 amino acids (Figure 2).
+PCA and UMAP provided the strongest linear mapping to genetic distance (Pearson's R2 = 0.693 and 0.615, respectively).
+This same mapping for the MDS method was less of a linear function (Pearson's R2 = 0.468) than a piecewise function of two parts.
+Strain pairs with fewer than 30 amino acid differences were not as well separated in MDS space as strains with greater genetic distances.
+This result suggests that MDS might be most effective for distinguishing between more distantly related strain pairs.
+t-SNE's mapping was the weakest (Pearson's R2 = 0.269) and revealed that only closely related strains map near each other in t-SNE space.
+Pairs of strains that differ by more than 15 amino acids are unlikely to placed near each other in a t-SNE embedding.
+
+Second, we determined how accurately the Euclidean distance between pairs of strains in an embedding could classify those strains as belonging to the same clade or not.
+Specifically, we used a support vector machine (SVM) classifier to identify an optimal Euclidean distance threshold that distinguished pairs of strains from the same clade.
+To train the classifier, we used the Euclidean distance between all pairs of strains as a one-dimensional feature and a binary encoding of within (1) or between (0) clade status as a model target.
+As there were far more pairs of strains from different clades, we measured classifiction accuracy with the Matthew's correlation coefficient (MCC), a metric that is robust to unbalanced counts in the confusion matrix (citation here).
+As a control, we compared the accuracy of each method's classifier to a classifier fit to genetic distance between strains.
+t-SNE and PCA provided the most accurate classifications (MCC = 0.73 and 0.68, respectively) and outperformed pairwise genetic distance (MCC = 0.65) and UMAP (MCC = 0.63, Figure 3).
+MDS performed poorly (MCC = 0.41), confirming our expectations based on MDS's piecewise linear relationship with genetic distances.
+These results show the potential benefits of using t-SNE embeddings for cluster analysis over the computationally simpler genetic distance, despite the t-SNE's lack of global linear relationships between strains.
+
+## SUMMARY OF RESULTS FOR INFLUENZA
 
 PCA (within clade -1.539, between clade -.058, MCC: DNE accuracy:.888)
 
