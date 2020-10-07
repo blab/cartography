@@ -324,7 +324,7 @@ rule embed_pca:
         node_data = "results/embed_pca.json",
         dataframe = "results/embed_pca.csv",
         figure = "results/embed_pca.pdf",
-        explained_variance = "results/explained_variance_pca.png"
+        explained_variance = "results/explained_variance_pca.csv"
     params:
         components = 10
     conda: "../cartography.yml"

@@ -19,7 +19,10 @@ rule all:
         "results/tree.nwk",
         "results/aligned.fasta",
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        expand("results/KDEDensity_{method}.png", method=KDE_METHODS)
+        expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
+        "results/table.tsv",
+        "results/full_KDE_metadata.csv",
+        "results/imputed_fasta.fasta",
 
 rule files:
     params:
@@ -102,6 +105,22 @@ rule parse:
             --output-metadata {output.metadata}
         """
 
+rule impute_data:
+    message: "creating an imputed dataframe/fasta file"
+    input:
+        alignment = rules.extract_sequences.output.sequences
+    output:
+        dataframe = "results/imputed_dataframe.csv",
+        fasta = "results/imputed_fasta.fasta"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/impute_data.py \
+            --alignment {input.alignment} \
+            --output-dataframe {output.dataframe} \
+            --output-fasta {output.fasta}
+        """
+
 rule create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
@@ -119,12 +138,12 @@ rule create_distance_matrix:
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
-        alignment = rules.align.output.alignment
+        alignment = rules.extract_sequences.output.sequences
     output:
         node_data = "results/embed_pca.json",
         dataframe = "results/embed_pca.csv",
         figure = "results/embed_pca.pdf",
-        explained_variance = "results/explained_variance_pca.png"
+        explained_variance = "results/explained_variance_pca.csv"
     params:
         components = 10
     conda: "../cartography.yml"
@@ -138,7 +157,7 @@ rule embed_pca:
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             pca \
-            --components {params.components}
+            --components {params.components} \
             --explained-variance {output.explained_variance}
         """
 
@@ -306,7 +325,6 @@ rule export:
             --output {output.auspice_tree}
         """
 
-
 rule tree_to_table:
     message: "creating a table of node data values from the tree attributes"
     input: 
@@ -314,16 +332,17 @@ rule tree_to_table:
     output:
         table = "results/table.tsv"
     params:
-        attributes = " num_date pca1 pca2 mds1 mds2 tsne_x tsne_y umap_x umap_y clade_membership"
+        attributes = "num_date pca1 pca2 mds1 mds2 tsne_x tsne_y umap_x umap_y host"
     conda: "../cartography.yml"
     shell:
-    """
-    python3 ../notebooks/scripts/auspice_tree_to_table.py \
-        tree {input.tree} \
-        output {output.table} \
-        --include-internal-nodes \
-        --attributes {params.attributes}
-    """
+        """
+        python3 ../notebooks/scripts/auspice_tree_to_table.py \
+            {input.tree} \
+            {output.table} \
+            --include-internal-nodes \
+            --attributes {params.attributes}
+        """
+
 rule concat_KDE_table:
     message: "concatenating all the KDE data into one csv dataframe"
     input:

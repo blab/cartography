@@ -20,7 +20,8 @@ rule all:
         expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
         "../auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json",
         "results/table.tsv",
-        "results/full_KDE_metadata.csv"
+        "results/full_KDE_metadata.csv",
+        "results/explained_variance_pca.csv"
 
 rule files:
     params:
@@ -321,7 +322,7 @@ rule embed_pca:
         node_data = "results/embed_pca.json",
         dataframe = "results/embed_pca.csv",
         figure = "results/embed_pca.pdf",
-        explained_variance = "results/explained_variance_pca.png"
+        explained_variance = "results/explained_variance_pca.csv"
     params:
         components = 10
     conda: "../cartography.yml"
@@ -335,7 +336,7 @@ rule embed_pca:
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             pca \
-            --components {params.components}
+            --components {params.components} \
             --explained-variance {output.explained_variance}
         """
 
