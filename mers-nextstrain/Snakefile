@@ -301,7 +301,20 @@ rule KDE_density:
             --output-metadata {output.metadata}
         """
 
-#figure out how to get clades from a nexus tree
+rule clades:
+     input:
+         metadata = "results/metadata.tsv",
+         tree = "results/tree.nwk"
+     output:
+         clades = "results/clades.json"
+     conda: "../cartography.yml"
+     shell:
+         """
+         python3 scripts/assign_clades.py \
+             --metadata {input.metadata} \
+             --tree {input.tree} \
+             --output {output.clades}
+         """
 
 rule export:
     input:
@@ -309,6 +322,7 @@ rule export:
         metadata = "results/metadata.tsv",
         branch_lengths = "results/node_data.json",
         embeddings = expand("results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
+        clades = "results/clades.json",
         auspice_config = "config/auspice_config.json",
         colors = "config/colors.tsv"
     output:
@@ -319,7 +333,7 @@ rule export:
         augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.embeddings} \
+            --node-data {input.branch_lengths} {input.embeddings} {input.clades} \
             --auspice-config {input.auspice_config} \
             --colors {input.colors} \
             --output {output.auspice_tree}
