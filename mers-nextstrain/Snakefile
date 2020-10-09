@@ -22,7 +22,7 @@ rule all:
         expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
         "results/table.tsv",
         "results/full_KDE_metadata.csv",
-        "results/imputed_fasta.fasta",
+        "results/subset_fasta.fasta",
 
 rule files:
     params:
@@ -105,18 +105,19 @@ rule parse:
             --output-metadata {output.metadata}
         """
 
-rule impute_data:
+rule subset_data:
     message: "creating an imputed dataframe/fasta file"
     input:
         alignment = rules.extract_sequences.output.sequences
     output:
-        dataframe = "results/imputed_dataframe.csv",
-        fasta = "results/imputed_fasta.fasta"
+        dataframe = "results/subset_dataframe.csv",
+        fasta = "results/subset_fasta.fasta"
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/impute_data.py \
+        python3 scripts/remove_gaps.py \
             --alignment {input.alignment} \
+            --gaps 100 \
             --output-dataframe {output.dataframe} \
             --output-fasta {output.fasta}
         """
@@ -138,7 +139,7 @@ rule create_distance_matrix:
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
-        alignment = rules.extract_sequences.output.sequences
+        alignment = rules.subset_data.output.fasta
     output:
         node_data = "results/embed_pca.json",
         dataframe = "results/embed_pca.csv",
@@ -279,14 +280,14 @@ rule KDE_density:
     message: "creating the KDE density plot"
     input:
         embedding =  _get_embedding_path_by_wildcards,
-        metadata = rules.parse.output.metadata
+        metadata = "results/table.tsv"
     output:
         figure = "results/KDEDensity_{method}.png",
         dataframe = "results/KDEDensity_{method}.csv",
         metadata = "results/KDEDensity_{method}_metadata.csv"
     params:
         embedding_columns = _get_embedding_columns_by_wildcards,
-        differentiator_column = "host"
+        differentiator_column = "clade_membership"
     conda: "../cartography.yml"
     shell:
         """
@@ -346,7 +347,7 @@ rule tree_to_table:
     output:
         table = "results/table.tsv"
     params:
-        attributes = "num_date pca1 pca2 mds1 mds2 tsne_x tsne_y umap_x umap_y host"
+        attributes = "num_date pca1 pca2 mds1 mds2 tsne_x tsne_y umap_x umap_y host clade_membership"
     conda: "../cartography.yml"
     shell:
         """

@@ -251,7 +251,7 @@ Strains from the same clade were tightly grouped in t-SNE and UMAP, and more loo
 Closely related clades still tended to tightly cluster in MDS, UMAP, and, to a lesser extent, t-SNE.
 In all four embeddings, clades that were genetically and evolutionarily divergent from the other clades were incredibly distant in embedding space.
 For example, the clade c2 (red) and the other clades are incredibly distant in UMAP and t-SNE, and all the other clades cluster much closer together.
-in MDS, however, clade c2 (red) is not placed at a large distace from the other clades, which is surprising considering the MDS embedding for Influenza. 
+in MDS, however, clade c2 (red) is not placed at a large distance from the other clades, which is surprising considering the MDS embedding for Influenza. 
 The clade c5 (yellow) and its most related clade c7 (pink) clustered tightly in all embeddings.
 Clade c4 (green) was somewhat arbitrarily split into two clusters in the UMAP embedding. 
 According to the phylogenetic tree, there is no internal node split between the two clusters in clade c4, which is not the expectation for UMAP.
@@ -269,7 +269,7 @@ Pairs of strains that differ by more than 50 nucleotides are unlikely to placed 
 
 Once again, t-SNE and PCA provided the most accurate classifications (MCC = 0.61 and 0.56, respectively) and outperformed pairwise genetic distance (MCC = 0.49) and UMAP (MCC = 0.27, Figure 3).
 UMAP performed incredibly poorly, which we attribute to the incredible distance between clade c2 and the other clades, which may have caused the classifier to misrepresent the euclidean threshold between and within clades (FN: 28369 vs FP: 970).
-MDS performed poorly (MCC = 0.41), confirming our expectations based on MDS's piecewise linear relationship with genetic distances.
+MDS performed poorly (MCC = ???), confirming our expectations based on MDS's piecewise linear relationship with genetic distances.
 These results corroborate our previous conclusion about the potential benefits of using t-SNE embeddings for cluster analysis over the computationally simpler genetic distance, but it also affirmed that t-SNE does reveal global relationships when the genetic distance is incredibly divergent.
  
 ## SUMMARY OF RESULTS FOR ZIKA: 

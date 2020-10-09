@@ -106,6 +106,7 @@ if __name__ == "__main__":
     classifier_threshold = classifier_threshold[0]
     print(KDE_df["clade_status"].value_counts().sort_values(ascending=False))
     print(list(set(classifier.predict(np.array(KDE_df["scaled_distance"]).reshape(-1,1)))))
+    print(KDE_df["scaled_distance"].head())
     #creating metrics for quantifying patterns within the graph
 
     confusion_matrix_val = confusion_matrix(classifier.predict(np.array(KDE_df["scaled_distance"]).reshape(-1,1)), KDE_df["clade_status"])
