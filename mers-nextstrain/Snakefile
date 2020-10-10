@@ -361,14 +361,15 @@ rule tree_to_table:
 rule concat_KDE_table:
     message: "concatenating all the KDE data into one csv dataframe"
     input:
-       dataframe_pca = "results/KDEDensity_pca.csv",
-       dataframe_mds = "results/KDEDensity_mds.csv", 
-       dataframe_tsne = "results/KDEDensity_t-sne.csv", 
-       dataframe_umap = "results/KDEDensity_umap.csv"
+       dataframe_pca = "results/KDEDensity_pca_metadata.csv",
+       dataframe_mds = "results/KDEDensity_mds_metadata.csv", 
+       dataframe_tsne = "results/KDEDensity_t-sne_metadata.csv", 
+       dataframe_umap = "results/KDEDensity_umap_metadata.csv",
+       dataframe_genetic = "results/KDEDensity_genetic_metadata.csv"
     output:
         metadata = "results/full_KDE_metadata.csv"
     params:
-        dataframes = "results/KDEDensity_pca.csv results/KDEDensity_mds.csv results/KDEDensity_t-sne.csv results/KDEDensity_umap.csv"
+        dataframes = "results/KDEDensity_pca_metadata.csv results/KDEDensity_mds_metadata.csv results/KDEDensity_t-sne_metadata.csv results/KDEDensity_umap_metadata.csv results/KDEDensity_genetic_metadata.csv"
     conda: "../cartography.yml"
     shell:
         """

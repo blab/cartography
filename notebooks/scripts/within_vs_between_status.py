@@ -106,7 +106,6 @@ if __name__ == "__main__":
     classifier_threshold = classifier_threshold[0]
     print(KDE_df["clade_status"].value_counts().sort_values(ascending=False))
     print(list(set(classifier.predict(np.array(KDE_df["scaled_distance"]).reshape(-1,1)))))
-    print(KDE_df["scaled_distance"].head())
     #creating metrics for quantifying patterns within the graph
 
     confusion_matrix_val = confusion_matrix(classifier.predict(np.array(KDE_df["scaled_distance"]).reshape(-1,1)), KDE_df["clade_status"])
@@ -118,7 +117,6 @@ if __name__ == "__main__":
     median_within = np.median(KDE_df.query("clade_status == 1")["scaled_distance"])
     
     median_between = np.median(KDE_df.query("clade_status == 0")["scaled_distance"])
-
     #create metadata dataframe
     if args.output_metadata is not None:
         metadata_df = pd.DataFrame([[matthews_cc_val, confusion_matrix_number, median_within, median_between, classifier_threshold, args.method, confusion_matrix_val[0][0], confusion_matrix_val[1][0], confusion_matrix_val[1][1], confusion_matrix_val[0][1]]], columns=["matthews_cc", "accuracy_confusion_matrix", "median_within", "median_between", "classifier_threshold", "embedding", "TN", "FN", "TP", "FP"])
