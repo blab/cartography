@@ -221,7 +221,7 @@ The threshold distance value calculated using the SVM run on MDS gave a confusio
 
 ## Figure One
 
-<iframe src="https://blab.github.io/cartography/FullLinkedChartClickableFlu.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
+<iframe src="https://blab.github.io/cartography/FullLinkedChartBrushableFlu.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
 
 ## Figure Two
 
@@ -327,7 +327,7 @@ The SVM statistics corroborate this, with the threshold distance value calculate
 
 
 ## Figure Four
-<iframe src="https://blab.github.io/cartography/FullLinkedChartClickableZika.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
+<iframe src="https://blab.github.io/cartography/FullLinkedChartBrushableZika.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
 
 ## Figure Five
 
@@ -371,8 +371,6 @@ By comparison, the genetic distance within:between was 45:60.
 
 
 
-
-
 ## Supplementary Figures and Analysis
 
 
@@ -384,28 +382,32 @@ By comparison, the genetic distance within:between was 45:60.
 ##### Zika
 ![](ExplainedVarianceZika.png)
 
+##### MERS
+![](ExplainedVarianceMERS.png)
+
 ### PCA Full Plots
 
 ##### Flu
-<iframe src="https://blab.github.io/cartography/PCAFluBrush.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
+<iframe src="https://blab.github.io/cartography/FullPCABrushSupplementFlu.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
 
 
 ##### Zika
-<iframe src="https://blab.github.io/cartography/PCAZikaBrush.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
+<iframe src="https://blab.github.io/cartography/FullPCABrushSupplementZika.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
 
+##### MERS
+<iframe src="https://blab.github.io/cartography/FullPCABrushSupplementMERS.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
 
 ### MDS Full Plot: 
 
 ##### Flu
-
-<iframe src="https://blab.github.io/cartography/MDSFluBrush.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
+<iframe src="https://blab.github.io/cartography/FullMDSBrushSupplementFlu.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
 
 
 ##### Zika
+<iframe src="https://blab.github.io/cartography/FullMDSBrushSupplementZika.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
 
-<iframe src="https://blab.github.io/cartography/MDSZikaBrush.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
-
-
+##### MERS
+<iframe src="https://blab.github.io/cartography/FullMDSBrushSupplementMERS.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
 
 
 # Works Cited

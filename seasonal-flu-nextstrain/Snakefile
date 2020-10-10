@@ -26,7 +26,8 @@ rule all:
         "../docs/FullScatterplotFlu.png",
         "../docs/FullLinkedChartBrushableFlu.html",
         "../docs/FullMDSBrushSupplementFlu.html",
-        "../docs/FullPCABrushSupplementFlu.html"
+        "../docs/FullPCABrushSupplementFlu.html",
+        "../docs/explainedVarianceZika.png"
 
 rule files:
     params:
@@ -554,7 +555,8 @@ rule create_notebook_docs:
         Scatterplot = "../docs/FullScatterplotFlu.png",
         fullChart = "../docs/FullLinkedChartBrushableFlu.html",
         MDS_Supplement = "../docs/FullMDSBrushSupplementFlu.html",
-        PCA_Supplement = "../docs/FullPCABrushSupplementFlu.html"
+        PCA_Supplement = "../docs/FullPCABrushSupplementFlu.html",
+        Explained_variance_PCA = "../docs/explainedVarianceFlu.png"
 
     conda: "../cartography.yml"
     notebook:
