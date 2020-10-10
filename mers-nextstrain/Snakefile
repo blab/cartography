@@ -23,6 +23,12 @@ rule all:
         "results/table.tsv",
         "results/full_KDE_metadata.csv",
         "results/subset_fasta.fasta",
+        "../docs/FullKDEDensityMERS.png",
+        "../docs/FullScatterplotMERS.png",
+        "../docs/FullLinkedChartBrushableMERS.html",
+        "../docs/FullMDSBrushSupplementMERS.html",
+        "../docs/FullPCABrushSupplementMERS.html"
+
 
 rule files:
     params:
@@ -378,6 +384,56 @@ rule concat_KDE_table:
             --separator ',' \
             --output {output.metadata}
         """
+rule create_notebook_docs:
+    message: "creating linked and grouped charts using the jupyter notebook"
+    input:
+        #Charts, tree:
+        node_df = "results/table.tsv",
+
+        pca_df = "results/embed_pca.csv",
+        explained_variance_pca = "results/explained_variance_pca.csv",
+
+        mds_df = "results/embed_mds.csv",
+
+        #Scatterplot:
+        scatterplot_pca = "results/scatterplot_pca.csv",
+        scatterplot_pca_metadata = "results/scatterplot_pca_metadata.csv",
+
+        scatterplot_mds = "results/scatterplot_mds.csv",
+        scatterplot_mds_metadata = "results/scatterplot_mds_metadata.csv",
+
+        scatterplot_tsne = "results/scatterplot_t-sne.csv",
+        scatterplot_tsne_metadata = "results/scatterplot_t-sne_metadata.csv",
+
+        scatterplot_umap = "results/scatterplot_umap.csv",
+        scatterplot_umap_metadata = "results/scatterplot_umap_metadata.csv",
+
+        #KDE Density:
+        KDE_pca = "results/KDEDensity_pca.csv",
+        KDE_pca_metadata = "results/KDEDensity_pca_metadata.csv",
+
+        KDE_mds = "results/KDEDensity_mds.csv",
+        KDE_mds_metadata = "results/KDEDensity_mds_metadata.csv",
+
+        KDE_tsne = "results/KDEDensity_t-sne.csv",
+        KDE_tsne_metadata = "results/KDEDensity_t-sne_metadata.csv",
+
+        KDE_umap = "results/KDEDensity_umap.csv",
+        KDE_umap_metadata = "results/KDEDensity_umap_metadata.csv",
+
+        KDE_genetic = "results/KDEDensity_genetic.csv",
+        KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv",
+
+    output:
+        KDE_density = "../docs/FullKDEDensityMERS.png",
+        Scatterplot = "../docs/FullScatterplotMERS.png",
+        fullChart = "../docs/FullLinkedChartBrushableMERS.html",
+        MDS_Supplement = "../docs/FullMDSBrushSupplementMERS.html",
+        PCA_Supplement = "../docs/FullPCABrushSupplementMERS.html"
+
+    conda: "../cartography.yml"
+    notebook:
+        "FinalNotebookMers09-05-2020.ipynb"
 
 rule clean:
     message: "Removing directories: {params}"

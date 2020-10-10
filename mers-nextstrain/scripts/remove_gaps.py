@@ -35,7 +35,7 @@ if __name__ == "__main__":
     # Drop columns with more than (number user picks) of bases missing in given site.
    
     dist_df = genomes_df.apply(pd.value_counts).iloc[4]
-    
+
     dist_df = pd.DataFrame(dist_df)
     dist_df.columns = ["gaps"]
 
