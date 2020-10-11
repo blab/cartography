@@ -118,7 +118,7 @@ def concatenate_results_with_strain_data(principal_Df, result_metadata, fields):
     return finalDf
 
 
-def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip, color):
+def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip, color, domain=None, range_=None):
     """Creates an interactive scatterplot in altair
     
     Parameters
@@ -146,14 +146,14 @@ def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip,
     chart = alt.Chart(finalDf).mark_circle(size=60).encode(
         x=alt.X(x, title=Titlex),
         y=alt.X(y, title=Titley),
-        color=color,
+        color=alt.Color(color, scale=alt.Scale(domain=domain, range=range_)),
         tooltip=ToolTip
     ).interactive()
     # chart.display()
     return chart
 
 
-def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color, ToolTip):
+def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color, ToolTip, domain=None, range_=None):
     """Creates a linked brushable altair plot with the tree and the charts appended
     Parameters
     -----------
@@ -172,6 +172,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
     ---------
     A brushable altair plot combining the tree with the plots of columns passed in
     """
+    
     list_of_chart = []
     if(len(list_of_data) % 2 != 0 or len(list_of_titles) % 2 != 0):
         raise Exception(
@@ -190,7 +191,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
                 "y:Q",
                 title=""
             ),
-            color=alt.condition(brush, color, alt.ColorValue('gray')),
+            color=alt.condition(brush, if_false=alt.ColorValue('gray'), if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_))),
             tooltip=ToolTip
         ).add_selection(brush).properties(width=400, height=250)
         list_of_chart.append(tree_name)
@@ -201,7 +202,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
             chart = base.mark_circle(size=60).encode(
                 x=alt.X(list_of_data[i], title=list_of_titles[i]),
                 y=alt.X(list_of_data[i + 1], title=list_of_titles[i + 1]),
-                color=alt.condition(brush, color, alt.ColorValue('gray')),
+                color=alt.condition(brush, if_false=alt.ColorValue('gray'), if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_))),
                 tooltip=ToolTip
             ).add_selection(
                 brush
@@ -213,7 +214,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
         return list_of_chart
 
 
-def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, colors, fields, ToolTip):
+def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, colors, fields, ToolTip, domain=None, range_=None):
     """
     Parameters
     -----------
@@ -241,8 +242,8 @@ def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, c
         selection = alt.selection_multi(fields=fields)
 
         color = alt.condition(selection,
-                              alt.Color(colors, legend=None),
-                              alt.value('lightgray'))
+                              if_true=alt.Color(color, alt.ColorValue('gray'), scale=alt.Scale(domain=domain, range=range_), legend=None),
+                              if_false=alt.value('lightgray'))
         tree_name = base.mark_circle().encode(
             x=alt.X(
                 "date:Q",
@@ -275,8 +276,8 @@ def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, c
             )
             list_of_chart.append(chart)
         legend = base.mark_point().encode(
-            y=alt.Y(colors, axis=alt.Axis(orient='right')),
-            color=colors
+            y=alt.Y(color=alt.Color(color, scale=alt.Scale(domain=domain, range=range_)), axis=alt.Axis(orient='right')),
+            color=alt.Color(color, scale=alt.Scale(domain=domain, range=range_))
         ).add_selection(
             selection
         )
