@@ -28,6 +28,7 @@ rule all:
         "../docs/FullLinkedChartBrushableMERS.html",
         "../docs/FullMDSBrushSupplementMERS.html",
         "../docs/FullPCABrushSupplementMERS.html",
+        "../docs/FullLinkedChartBrushableHostMERS.html",
         "../docs/explainedVarianceMERS.png"
 
 
@@ -429,6 +430,7 @@ rule create_notebook_docs:
         KDE_density = "../docs/FullKDEDensityMERS.png",
         Scatterplot = "../docs/FullScatterplotMERS.png",
         fullChart = "../docs/FullLinkedChartBrushableMERS.html",
+        fullChartHost = "../docs/FullLinkedChartBrushableHostMERS.html",
         MDS_Supplement = "../docs/FullMDSBrushSupplementMERS.html",
         PCA_Supplement = "../docs/FullPCABrushSupplementMERS.html",
         Explained_variance_PCA = "../docs/explainedVarianceMERS.png"

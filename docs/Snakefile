@@ -1,7 +1,7 @@
 rule all:
     input:
-        "docs/cartography.pdf",
-        "docs/cartography.html"
+        "cartography.pdf",
+        "cartography.html"
 
 def pandoc_options(wildcards):
     suffix = wildcards["suffix"]
@@ -14,10 +14,10 @@ def pandoc_options(wildcards):
 
 rule report:
     params: options = pandoc_options
-    output: "docs/cartography.{suffix}"
+    output: "cartography.{suffix}"
     wildcard_constraints: suffix = "((html)|(pdf))"
-    conda: "cartography.yml"
+    conda: "../cartography.yml"
     shell:
         """
-        pandoc --filter pandoc-citeproc --bibliography=docs/cartography.bib -s docs/index.md -o docs/cartography.{wildcards.suffix}
+        pandoc --filter pandoc-citeproc --bibliography=cartography.bib -s index.md -o docs/cartography.{wildcards.suffix}
         """
