@@ -154,9 +154,10 @@ if __name__ == "__main__":
 
         ax.set_xlabel("Scaled Euclidean distance from embedding")
         ax.set_ylabel("KDE density")
+        ax.legend(frameon=False)
 
-        
-        fig.suptitle(args.method + ' KDE Plot - ', fontsize=16)
+        fig.suptitle(args.method + ' KDE Plot', fontsize=16)
         sns.despine()
 
+        plt.tight_layout()
         plt.savefig(args.output_figure)
