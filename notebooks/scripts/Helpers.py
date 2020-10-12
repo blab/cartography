@@ -99,7 +99,7 @@ def get_y_positions(tree):
 
 def concatenate_results_with_strain_data(principal_Df, result_metadata, fields):
     """Takes the data from data reductions (T-SNE, MDS, etc) and pairs up each strain's euclidean plotpoints with its metadata
-    
+
     Parameters
     ----------
     principal_Df: Pandas Dataframe
@@ -108,7 +108,7 @@ def concatenate_results_with_strain_data(principal_Df, result_metadata, fields):
         the metadata that is being read in (Pandas DataFrame)
     fields: list
         the parts of metadata that should be concatenated with princiapl_Df (eg. "strain", "region", "country")
-        
+
     Returns
     --------
     finalDf: Pandas Dataframe
@@ -120,7 +120,7 @@ def concatenate_results_with_strain_data(principal_Df, result_metadata, fields):
 
 def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip, color):
     """Creates an interactive scatterplot in altair
-    
+
     Parameters
     -----------
     finalDf: Pandas Dataframe
@@ -137,10 +137,10 @@ def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip,
         the data available when scanning over a plot
     Color: string
         what the scatterplot is colored by
-    
+
     Returns
     --------
-    an Altair chart 
+    an Altair chart
     """
     brush = alt.selection(type='interval', resolve='global')
     chart = alt.Chart(finalDf).mark_circle(size=60).encode(
@@ -158,7 +158,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
     Parameters
     -----------
     dataframe: Pandas Dataframe
-        dataframe including node data and dimensionality reduction data 
+        dataframe including node data and dimensionality reduction data
     list_of_data: list
         list of all the names of the columns in the dataframe for which you want graphs: goes in the order of [x1,y1,x2,y2,x3,y3] etc.
     list_of_titles: list
@@ -167,7 +167,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
         what the data should be colored by (ex. by clade, by region)
     ToolTip: list
         when hovering over the data, what data should be shown
-        
+
     Returns
     ---------
     A brushable altair plot combining the tree with the plots of columns passed in
@@ -218,7 +218,7 @@ def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, c
     Parameters
     -----------
     dataframe: Pandas Dataframe
-        dataframe including node data and dimensionality reduction data 
+        dataframe including node data and dimensionality reduction data
     list_of_data: list
         list of all the names of the columns in the dataframe for which you want graphs: goes in the order of [x1,y1,x2,y2,x3,y3] etc.
     list_of_titles: list
@@ -227,7 +227,7 @@ def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, c
         what the data should be colored by (ex. by clade, by region)
     ToolTip: list
         when hovering over the data, what data should be shown
-        
+
     Returns
     ---------
     A clickable altair plot combining the tree with the plots of columns passed in
@@ -286,7 +286,7 @@ def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, c
 
 
 def scatterplot_xyvalues(strains, similarity_matrix, embedding_df, column1, column2, type_of_embedding):
-    """Returns a unraveled similarity matrix Pandas dataframe of pairwise and euclidean distances for each strain pair 
+    """Returns a unraveled similarity matrix Pandas dataframe of pairwise and euclidean distances for each strain pair
      Parameters
     -----------
     strains: list
@@ -301,8 +301,8 @@ def scatterplot_xyvalues(strains, similarity_matrix, embedding_df, column1, colu
         the name of the second column in df_merged to compare distance between
     type_of_embedding: string
         "MDS", "PCA", "TSNE", or "UMAP"
-        
-    Returns 
+
+    Returns
     ---------
     A Pandas Dataframe of pairwise and euclidean distances for every strain pair
     """
@@ -324,12 +324,12 @@ def scatterplot_xyvalues(strains, similarity_matrix, embedding_df, column1, colu
     euclidean_df = pd.DataFrame({"distance": distances})
     euclidean_df["embedding"] = type_of_embedding
     euclidean_df.columns = ["euclidean", "embedding"]
-    
+
     row_column_pairwise = row_column.merge(
         pairwise_df, how='outer', left_index=True, right_index=True)
     row_column_pairwise = row_column_pairwise.where(
         row_column_pairwise["row"] != row_column_pairwise["column"]).dropna().set_index(euclidean_df.index)
-    
+
     total_df = row_column_pairwise.merge(
         euclidean_df, how='inner', left_index=True, right_index=True).dropna()
     total_df.columns = ["row", "column", "genetic",
@@ -340,7 +340,7 @@ def scatterplot_xyvalues(strains, similarity_matrix, embedding_df, column1, colu
 
 def scatterplot_tooltips(strains, similarity_matrix, df_merged, column1, column2, type_of_embedding, n_sample):
     """uses scatterplot_xyvalues, returns a pairwise vs euclidean scatterplot
-    
+
     Parameters
     -----------
     strains: list
@@ -357,7 +357,7 @@ def scatterplot_tooltips(strains, similarity_matrix, df_merged, column1, column2
         "MDS", "PCA", "TSNE", or "UMAP"
     n_sample:
         how many strains to sample (altair cannot currently run with that many strains, sample around 1000 - 2000)
-    
+
     Returns
     ----------
     An altair pairwise vs Euclidean scatterplot with tooltips
@@ -381,7 +381,7 @@ def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column1
     Parameters
     -----------
     sampled_df: pandas DataFrame
-        a dataframe of euclidean coordinate points containing the two columns passed in 
+        a dataframe of euclidean coordinate points containing the two columns passed in
     column1: string
         the name of the first column in sampled_df
     column2: string
@@ -391,7 +391,7 @@ def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column1
     Returns
     ----------
     A data frame of Euclidean distances for the requested embedding columns.
-    
+
     """
     # Traverse pairs of samples from left-to-right, top-to-bottom
     # along the upper triangle of the pairwise matrix and collect
@@ -411,7 +411,7 @@ def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column1
     # as the clade statuses above.
     if (column1 is not None):
         sampled_distances = pdist(sampled_df[[column1, column2]])
-    
+
     else:
         sampled_distances = squareform(sampled_df.drop([column_for_analysis, "strain"], axis=1))
 

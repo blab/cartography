@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     # Initialize parsers
     parser = argparse.ArgumentParser(description = "creates embeddings", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    
+
     parser.add_argument("--embedding", help="the path to a dataframe csv file OR distance matrix csv for a genetic KDE plot")
     parser.add_argument("--clades", help="a path to the clade status of the different strains in the build")
     parser.add_argument("--metadata", help="a path to a tsv file that contains information about the differentiator column")
@@ -28,9 +28,9 @@ if __name__ == "__main__":
     parser.add_argument("--output-figure", help="path for outputting as a PNG")
     parser.add_argument("--output-dataframe", help="path for outputting as a dataframe")
     parser.add_argument("--output-metadata", help="return the Matthews Correlation Coefficient, Median within and between thresholds and accuracy values for the KDE density plot")
-    
+
     args = parser.parse_args()
-    
+
     #Error Handling
     if args.output_figure is None and args.output_dataframe is None:
         print("You must specify one of the outputs", file=sys.stderr)
@@ -53,7 +53,7 @@ if __name__ == "__main__":
         for sequence in sequences_by_name:
             if sequence in node_data["nodes"]:
                 sequences_list.append(sequence)
-            
+
         # Build a data frame of clade annotations per strain in the same order
         # as the sequences and the subsequent distance matrix.
         clade_annotations = pd.DataFrame([
@@ -70,7 +70,7 @@ if __name__ == "__main__":
             {"strain": sequence, args.differentiator_column: node_dict[sequence][args.differentiator_column]}
             for sequence in node_data.index
         ])
-        
+
     #initializing scaler
     scaler = StandardScaler()
 
@@ -144,7 +144,7 @@ if __name__ == "__main__":
         KDE_df.to_csv(args.output_dataframe)
 
     if args.output_figure is not None:
-        
+
         fig, ax = plt.subplots(1, 1, figsize=(12, 6))
 
         ax = sns.kdeplot(KDE_df.query("clade_status == 1")["scaled_distance"], label="Same clade", ax=ax)
