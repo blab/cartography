@@ -89,38 +89,56 @@ if __name__ == "__main__":
         merged_df = embedding_df.merge(clade_annotations, on="strain")
 
         KDE_df = get_euclidean_data_frame(sampled_df=merged_df, column_for_analysis=args.differentiator_column, embedding=args.method)
-        KDE_df["scaled_distance"] = scaler.fit_transform(np.array(KDE_df["distance"]).reshape(-1, 1))
+        KDE_df["scaled_distance"] = scaler.fit_transform(np.array(KDE_df["distance"]).reshape(-1, 1)).flatten()
 
     # Use a support vector machine classifier to identify an optimal threshold
-    # to distinguish between within and between class pairs.
+    # to distinguish between within and between class pairs. Assign higher
+    # weight to "within group" data, to address unbalanced nature of these data
+    # with respect to the "between group" data.
+    #
     # See also: https://scikit-learn.org/stable/modules/svm.html#svm-classification
-    classifier = make_pipeline(
-        StandardScaler(),
-        LinearSVC(random_state=0, tol=1e-5)
+    classifier = LinearSVC(
+        dual=False,
+        random_state=0,
+        class_weight={1: 5},
+        verbose=0
     )
+    X = np.array(KDE_df["scaled_distance"]).reshape(-1,1)
+    y = KDE_df["clade_status"].astype(float).values
+    classifier.fit(X, y)
 
-    #fitting the classifier with the scaled distance and the within vs between per strain relationship
+    # Find the SVM's threshold between the two given classes by passing the
+    # range of possible scaled distance values (effectively z-scores) to the
+    # classifier's decision function. When the resulting "scores" are >0, the
+    # positive class (e.g., "within clade") are predicted for the corresponding
+    # input values. Since negative scaled distances indicate samples that are
+    # closer together and the class labels is 1 for "within clade" samples, we
+    # look for the highest valued scaled distance for which the decision
+    # function returns a positive value. See the documentation for more:
+    # https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC.decision_function
+    x_range = np.linspace(-3, 3, 1000)
+    z = classifier.decision_function(x_range.reshape(-1, 1))
+    classifier_threshold = x_range[np.argwhere(z > 0)[-1]][0]
 
-    classifier.fit(np.array(KDE_df["scaled_distance"]).reshape(-1,1), KDE_df["clade_status"])
-    classifier_threshold = (0.5 - classifier.named_steps["linearsvc"].intercept_) / classifier.named_steps["linearsvc"].coef_[0]
-    classifier_threshold = classifier_threshold[0]
+    # Estimate group labels using the same input data used to train the SVM.
+    estimated_clade_status = classifier.predict(X)
+
     print(KDE_df["clade_status"].value_counts().sort_values(ascending=False))
-    print(list(set(classifier.predict(np.array(KDE_df["scaled_distance"]).reshape(-1,1)))))
+    print(list(set(estimated_clade_status)))
+
     #creating metrics for quantifying patterns within the graph
+    confusion_matrix_val = confusion_matrix(y, estimated_clade_status)
+    print(confusion_matrix_val)
 
-    confusion_matrix_val = confusion_matrix(classifier.predict(np.array(KDE_df["scaled_distance"]).reshape(-1,1)), KDE_df["clade_status"])
-
-    confusion_matrix_number = (confusion_matrix_val[0][0] + confusion_matrix_val[1][1]) / float(len(KDE_df))
-
-    matthews_cc_val = matthews_corrcoef(classifier.predict(np.array(KDE_df["scaled_distance"]).reshape(-1,1)), KDE_df["clade_status"])
-
+    accuracy = classifier.score(X, y)
+    matthews_cc_val = matthews_corrcoef(y, estimated_clade_status)
     median_within = np.median(KDE_df.query("clade_status == 1")["scaled_distance"])
-    
     median_between = np.median(KDE_df.query("clade_status == 0")["scaled_distance"])
+
     #create metadata dataframe
     if args.output_metadata is not None:
-        metadata_df = pd.DataFrame([[matthews_cc_val, confusion_matrix_number, median_within, median_between, classifier_threshold, args.method, confusion_matrix_val[0][0], confusion_matrix_val[1][0], confusion_matrix_val[1][1], confusion_matrix_val[0][1]]], columns=["matthews_cc", "accuracy_confusion_matrix", "median_within", "median_between", "classifier_threshold", "embedding", "TN", "FN", "TP", "FP"])
-        metadata_df.to_csv(args.output_metadata)
+        metadata_df = pd.DataFrame([[matthews_cc_val, accuracy, median_within, median_between, classifier_threshold, args.method, confusion_matrix_val[0][0], confusion_matrix_val[1][0], confusion_matrix_val[1][1], confusion_matrix_val[0][1]]], columns=["matthews_cc", "accuracy_confusion_matrix", "median_within", "median_between", "classifier_threshold", "embedding", "TN", "FN", "TP", "FP"])
+        metadata_df.to_csv(args.output_metadata, index=False)
 
     if args.output_dataframe is not None:
         KDE_df.to_csv(args.output_dataframe)

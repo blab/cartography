@@ -401,7 +401,7 @@ def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column1
     clade_memberships = sampled_df[column_for_analysis].values
     for i in range(sampled_df.shape[0] - 1):
         for j in range(i + 1, sampled_df.shape[0]):
-            if clade_memberships[i] != clade_memberships[j]:
+            if clade_memberships[i] == clade_memberships[j]:
                 clade_status.append(1)
             else:
                 clade_status.append(0)
