@@ -214,7 +214,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
         return list_of_chart
 
 
-def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, colors, fields, ToolTip, domain=None, range_=None):
+def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, colors, fields, ToolTip):
     """
     Parameters
     -----------
@@ -242,8 +242,8 @@ def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, c
         selection = alt.selection_multi(fields=fields)
 
         color = alt.condition(selection,
-                              if_true=alt.Color(color, alt.ColorValue('gray'), scale=alt.Scale(domain=domain, range=range_), legend=None),
-                              if_false=alt.value('lightgray'))
+                              alt.Color(colors, legend=None),
+                              alt.value('lightgray'))
         tree_name = base.mark_circle().encode(
             x=alt.X(
                 "date:Q",
@@ -276,8 +276,8 @@ def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, c
             )
             list_of_chart.append(chart)
         legend = base.mark_point().encode(
-            y=alt.Y(color=alt.Color(color, scale=alt.Scale(domain=domain, range=range_)), axis=alt.Axis(orient='right')),
-            color=alt.Color(color, scale=alt.Scale(domain=domain, range=range_))
+            y=alt.Y(colors, axis=alt.Axis(orient='right')),
+            color=colors
         ).add_selection(
             selection
         )
