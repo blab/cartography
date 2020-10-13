@@ -117,119 +117,13 @@
         "type": "categorical"
       },
       {
-        "key": "pca8",
-        "title": "pca8",
+        "key": "pca3",
+        "title": "pca3",
         "type": "continuous"
       },
       {
-        "key": "t-sne_label",
-        "scale": [
-          [
-            "0",
-            "#4784C8"
-          ],
-          [
-            "1",
-            "#67AE95"
-          ],
-          [
-            "2",
-            "#98BD5E"
-          ]
-        ],
-        "title": "t-SNE cluster",
-        "type": "categorical"
-      },
-      {
-        "key": "mds5",
-        "title": "mds5",
-        "type": "continuous"
-      },
-      {
-        "key": "mds7",
-        "title": "mds7",
-        "type": "continuous"
-      },
-      {
-        "key": "posterior",
-        "title": "posterior",
-        "type": "continuous"
-      },
-      {
-        "key": "pca2",
-        "title": "pca2",
-        "type": "continuous"
-      },
-      {
-        "key": "mds2",
-        "title": "mds2",
-        "type": "continuous"
-      },
-      {
-        "key": "mds10",
-        "title": "mds10",
-        "type": "continuous"
-      },
-      {
-        "key": "pca6",
-        "title": "pca6",
-        "type": "continuous"
-      },
-      {
-        "key": "pca4",
-        "title": "pca4",
-        "type": "continuous"
-      },
-      {
-        "key": "mds4",
-        "title": "mds4",
-        "type": "continuous"
-      },
-      {
-        "key": "type",
-        "title": "type",
-        "type": "categorical"
-      },
-      {
-        "key": "mds1",
-        "title": "mds1",
-        "type": "continuous"
-      },
-      {
-        "key": "umap_label",
-        "scale": [
-          [
-            "-1",
-            "#CCCCCC"
-          ],
-          [
-            "0",
-            "#4784C8"
-          ],
-          [
-            "1",
-            "#67AE95"
-          ],
-          [
-            "2",
-            "#98BD5E"
-          ],
-          [
-            "3",
-            "#CDB642"
-          ]
-        ],
-        "title": "UMAP cluster",
-        "type": "categorical"
-      },
-      {
-        "key": "umap_y",
-        "title": "umap_y",
-        "type": "continuous"
-      },
-      {
-        "key": "pca10",
-        "title": "pca10",
+        "key": "mds3",
+        "title": "mds3",
         "type": "continuous"
       },
       {
@@ -238,75 +132,23 @@
         "type": "continuous"
       },
       {
-        "key": "tsne_y",
-        "title": "tsne_y",
-        "type": "continuous"
-      },
-      {
-        "key": "pca1",
-        "title": "pca1",
-        "type": "continuous"
-      },
-      {
-        "key": "pca9",
-        "title": "pca9",
-        "type": "continuous"
-      },
-      {
         "key": "mds6",
         "title": "mds6",
         "type": "continuous"
       },
       {
-        "key": "mds8",
-        "title": "mds8",
+        "key": "mds2",
+        "title": "mds2",
         "type": "continuous"
       },
       {
-        "key": "pca7",
-        "title": "pca7",
+        "key": "mds1",
+        "title": "mds1",
         "type": "continuous"
       },
       {
-        "key": "mds9",
-        "title": "mds9",
-        "type": "continuous"
-      },
-      {
-        "key": "pca5",
-        "title": "pca5",
-        "type": "continuous"
-      },
-      {
-        "key": "mds_label",
-        "scale": [
-          [
-            "-1",
-            "#CCCCCC"
-          ],
-          [
-            "0",
-            "#4784C8"
-          ],
-          [
-            "1",
-            "#67AE95"
-          ],
-          [
-            "2",
-            "#98BD5E"
-          ],
-          [
-            "3",
-            "#CDB642"
-          ]
-        ],
-        "title": "MDS cluster",
-        "type": "categorical"
-      },
-      {
-        "key": "umap_x",
-        "title": "umap_x",
+        "key": "pca10",
+        "title": "pca10",
         "type": "continuous"
       },
       {
@@ -337,13 +179,171 @@
         "type": "categorical"
       },
       {
-        "key": "pca3",
-        "title": "pca3",
+        "key": "pca9",
+        "title": "pca9",
         "type": "continuous"
       },
       {
-        "key": "mds3",
-        "title": "mds3",
+        "key": "umap_x",
+        "title": "umap_x",
+        "type": "continuous"
+      },
+      {
+        "key": "mds7",
+        "title": "mds7",
+        "type": "continuous"
+      },
+      {
+        "key": "type",
+        "title": "type",
+        "type": "categorical"
+      },
+      {
+        "key": "mds_label",
+        "scale": [
+          [
+            "-1",
+            "#CCCCCC"
+          ],
+          [
+            "0",
+            "#4784C8"
+          ],
+          [
+            "1",
+            "#67AE95"
+          ],
+          [
+            "2",
+            "#98BD5E"
+          ],
+          [
+            "3",
+            "#CDB642"
+          ]
+        ],
+        "title": "MDS cluster",
+        "type": "categorical"
+      },
+      {
+        "key": "pca2",
+        "title": "pca2",
+        "type": "continuous"
+      },
+      {
+        "key": "pca1",
+        "title": "pca1",
+        "type": "continuous"
+      },
+      {
+        "key": "pca5",
+        "title": "pca5",
+        "type": "continuous"
+      },
+      {
+        "key": "mds5",
+        "title": "mds5",
+        "type": "continuous"
+      },
+      {
+        "key": "pca8",
+        "title": "pca8",
+        "type": "continuous"
+      },
+      {
+        "key": "umap_label",
+        "scale": [
+          [
+            "-1",
+            "#CCCCCC"
+          ],
+          [
+            "0",
+            "#4784C8"
+          ],
+          [
+            "1",
+            "#67AE95"
+          ],
+          [
+            "2",
+            "#98BD5E"
+          ],
+          [
+            "3",
+            "#CDB642"
+          ]
+        ],
+        "title": "UMAP cluster",
+        "type": "categorical"
+      },
+      {
+        "key": "pca7",
+        "title": "pca7",
+        "type": "continuous"
+      },
+      {
+        "key": "mds10",
+        "title": "mds10",
+        "type": "continuous"
+      },
+      {
+        "key": "mds4",
+        "title": "mds4",
+        "type": "continuous"
+      },
+      {
+        "key": "pca4",
+        "title": "pca4",
+        "type": "continuous"
+      },
+      {
+        "key": "posterior",
+        "title": "posterior",
+        "type": "continuous"
+      },
+      {
+        "key": "mds9",
+        "title": "mds9",
+        "type": "continuous"
+      },
+      {
+        "key": "pca6",
+        "title": "pca6",
+        "type": "continuous"
+      },
+      {
+        "key": "mds8",
+        "title": "mds8",
+        "type": "continuous"
+      },
+      {
+        "key": "t-sne_label",
+        "scale": [
+          [
+            "0",
+            "#4784C8"
+          ],
+          [
+            "1",
+            "#67AE95"
+          ],
+          [
+            "2",
+            "#98BD5E"
+          ]
+        ],
+        "title": "t-SNE cluster",
+        "type": "categorical"
+      },
+      {
+        "key": "umap_y",
+        "title": "umap_y",
+        "type": "continuous"
+      },
+      {
+        "key": "tsne_y",
+        "title": "tsne_y",
         "type": "continuous"
       }
     ],
@@ -368,7 +368,7 @@
       "tree"
     ],
     "title": "MERS-CoV phylogeny from Dudas et al. 2018",
-    "updated": "2020-10-11"
+    "updated": "2020-10-12"
   },
   "tree": {
     "branch_attrs": {},
