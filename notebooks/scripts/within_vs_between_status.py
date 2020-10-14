@@ -118,7 +118,10 @@ if __name__ == "__main__":
     # https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC.decision_function
     x_range = np.linspace(-3, 3, 1000)
     z = classifier.decision_function(x_range.reshape(-1, 1))
-    classifier_threshold = x_range[np.argwhere(z > 0)[-1]][0]
+    try:
+        classifier_threshold = x_range[np.argwhere(z > 0)[-1]][0]
+    except:
+        classifier_threshold = "NaN"
 
     # Estimate group labels using the same input data used to train the SVM.
     estimated_clade_status = classifier.predict(X)

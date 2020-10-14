@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .error {
+        color: red;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega@5"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega-lite@4.8.1"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega-embed@6"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"name": "data-5be9b71a2667516f6698fee2401d848c"}, "mark": "line", "encoding": {"x": {"type": "quantitative", "field": "principal components"}, "y": {"type": "quantitative", "field": "explained variance"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json", "datasets": {"data-5be9b71a2667516f6698fee2401d848c": [{"explained variance": 0.3789, "principal components": 0}, {"explained variance": 0.1521, "principal components": 1}, {"explained variance": 0.0776, "principal components": 2}, {"explained variance": 0.0547, "principal components": 3}, {"explained variance": 0.0483, "principal components": 4}, {"explained variance": 0.0405, "principal components": 5}, {"explained variance": 0.0318, "principal components": 6}, {"explained variance": 0.0268, "principal components": 7}, {"explained variance": 0.0226, "principal components": 8}, {"explained variance": 0.0184, "principal components": 9}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div class="error" style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>

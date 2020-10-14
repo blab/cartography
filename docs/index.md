@@ -49,6 +49,8 @@ We used two different methods of transforming the data; Scaling and centering th
 For Scaling and Centering the data, we performed PCA on the matrix of nucleotides from the multiple sequence alignment using scikit-learn [@jolliffe_cadima_2016]. 
 An explained variance plot was created to determine the amount of PCs created, which is in the supplementary figures section.
 
+Due to the amount of missing data within the zika genome, we imputed the data using scikit-learn's simple imputer for PCA in order to get a better embedding. This was only applied to PCA, as the hamming distance algorithm disregards missing bases.  
+
 For Hamming distance, we created a similarity matrix. 
 By comparing every genome with every other genome and clustering based on their Hamming distance, distance-based methods take the overall structure of the multidimensional data and groups together genomes that have similar differences.
 This means the data is clustered by genetic diversity (in a phylogenetic tree genetic diversity is categorized using clades).
@@ -65,7 +67,7 @@ The 3 different dimensionality reduction techniques are ordered below by publica
 
 The plots of the full 10 PCs for PCA and the first 6 components for MDS are available in the supplemental figures section.
 
-We tuned hyperparameters for t-SNE and UMAP through an exhaustive grid search, which picked the best values by maximizing Matthews Correlation Coefficient for the confusion matrix created from a Supported Vector Machine splitting the between vs within clade KDE density plots.
+We tuned hyperparameters for t-SNE and UMAP through an exhaustive grid search, which picked the best values by maximizing Matthews Correlation Coefficient on the confusion matrix created from a Supported Vector Machine's classification.
 UMAP's minimum distance and nearest neighbors were tuned, and t-SNEs perplexity and learning rate were tuned as well.
 As nearest neighbors fluctuates depending on the amount of samples, we took the best nearest neighbor value from the cross validation and the total number of samples given per fold. 
 The proportion value was used to determine the nearest neighbors value for the UMAP plots per disease. 
