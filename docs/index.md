@@ -49,7 +49,12 @@ We used two different methods of transforming the data; Scaling and centering th
 For Scaling and Centering the data, we performed PCA on the matrix of nucleotides from the multiple sequence alignment using scikit-learn [@jolliffe_cadima_2016]. 
 An explained variance plot was created to determine the amount of PCs created, which is in the supplementary figures section.
 
-Due to the amount of missing data within the zika genome, we imputed the data using scikit-learn's simple imputer for PCA in order to get a better embedding. This was only applied to PCA, as the hamming distance algorithm disregards missing bases.  
+We dropped around 4 strains in the h3n2 analysis, as they were direct animal to human transmissions where the genomes resembled swine flu (seen through NCBI's BLAST)
+We dropped around 5 strains in the Zika analysis that were exceedingly low quality. 
+Due to the amount of missing data within the zika genome, we also imputed the data using scikit-learn's simple imputer for PCA in order to get a better embedding result. This was only applied to PCA, as the hamming distance algorithm disregards missing bases. 
+While imputation was originally used on all 4 embeddings for Zika, they were robust enough to missing bases to reveal patterns on unimputed data.
+Imputation was tested for MERS, but due to entire columns of missing data for MERS, imputing did not solve the issue of missing data for PCA.
+We therefore dropped all strains with over 3 standard deviations of gaps in its genome from the MERS analysis.
 
 For Hamming distance, we created a similarity matrix. 
 By comparing every genome with every other genome and clustering based on their Hamming distance, distance-based methods take the overall structure of the multidimensional data and groups together genomes that have similar differences.
@@ -67,6 +72,7 @@ The 3 different dimensionality reduction techniques are ordered below by publica
 
 The plots of the full 10 PCs for PCA and the first 6 components for MDS are available in the supplemental figures section.
 
+
 We tuned hyperparameters for t-SNE and UMAP through an exhaustive grid search, which picked the best values by maximizing Matthews Correlation Coefficient on the confusion matrix created from a Supported Vector Machine's classification.
 UMAP's minimum distance and nearest neighbors were tuned, and t-SNEs perplexity and learning rate were tuned as well.
 As nearest neighbors fluctuates depending on the amount of samples, we took the best nearest neighbor value from the cross validation and the total number of samples given per fold. 
@@ -76,6 +82,7 @@ UMAP performed best with a minimum distance of .05 between clusters.
 While tuning these parameters will not change qualitative results, it can help make patterns easier to identify. 
 For example, the more nearest neighbors, the higher the computational load, and while smaller minimum distances can break connectivity between clusters, they will not change the groupings of individuals.
 
+We ran the raw embedding distances through the clustering algorithm Hierarchical Density-Based Spatial Clustering of Applications with Noise (HDBSCAN) to understand the usage of the embeddings to cluster data without the phylogenetic tree.
 
 To further analyze these embeddings’ ability to accurately capture the multidimensional data, we made two separate plots: hamming vs euclidean distance scatterplots with a LOESS best fit line, and within vs between clade KDE density plots per embedding.
 
@@ -97,26 +104,7 @@ The Between vs Within clade KDE Density Plots visually represent how well Euclid
 In other words, it describes the probability that a certain Euclidean distance can be used to classify a given pair of genomes as within vs between clades. 
 The larger the median ratio between the two curves presented per clade relationship, the higher the relative probability that the embedding will accurately predict if two strains with any specific distance is a between or within clade relationship.
 To create this plot, the matrix of euclidean distances for each embedding was flattened, and each comparison was labeled as a “within clade” or “between clade” comparison using the clade assignments from the .json build of the tree.
-KDE plots were made using [seaborn](https://seaborn.pydata.org/) , separated by clade status and euclidean distance on the y axis. 
-
-
-Cross Validation: 
-
-To quantify the patterns seen in the plots and further understand the benefits and drawbacks to each embedding method, we ran a cross validation analysis using the h3n2 data from 2016-2020. 
-This test would answer if viral genomes from the same clades have smaller Euclidean distances in a given embedding than viral genomes from different clades. 
-It also answers if any of these embeddings classify pairs of viral genomes better than genetic Hamming distance, which would help decide if creating the computationally intensive embeddings is worthwhile. 
-We constructed the time-series cross validation test by creating a K-fold cross-validation generator, with 5 folds containing both training and validation strains for data from 2016 to 2018. 
-A KDE Density plot was created per training fold.
-A Support Vector Machine optimized a distance threshold that most accurately predicted clade relationships for that given fold, and a confusion matrix was created per fold on the validation data.
-The distance threshold values given by the SVM were pooled via an average, and one final confusion matrix was created on the 2018-2020 h3n2 data to not counfound the results. 
- 
-Classification Accuracy Test
-
-For MERS, a classification accuracy test was run to determine the accuracy of using just the embeddings to determine the clade the strain is from in the Newick tree. 
-This would allow us to further understand how the embeddings could be used in recombinant diseases, where the host would not matter as much as the genetic simmilarity and different between strains.
-Hierarchical Density-based Spatial Clustering of Applications with Noise (HDBSCAN) was used to find clusters in the embeddings without any set number of clusters. 
-The Newick Tree predefined clades were used as the "Truth", and the labels assigned by HDBSCAN were compared against these values. 
-The accuracy value was determined by the proportion of correct relationships retained to total relationships. 
+KDE plots were made using [seaborn](https://seaborn.pydata.org/) , separated by clade status and euclidean distance on the y axis.  
 
 # RESULTS:
 
@@ -124,7 +112,8 @@ The accuracy value was determined by the proportion of correct relationships ret
 
 Principal Component Analysis (PCA) reduces multidimensional data, increasing interpretability while minimizing information loss[@jolliffe_cadima_2016] . 
 PCA relies on linear assumptions, does not affect the scale of the data, and does not normalize the data as part of the algorithm.
-PCA preserves long range distances but hides finer-scale details. Because PCA is almost entirely focused on retaining the global structure and variance of the data, and one of its limitations is revealing patterns locally. 
+PCA preserves long range distances but hides finer-scale details. 
+Because PCA is almost entirely focused on retaining the global structure and variance of the data, and one of its limitations is revealing patterns locally. 
 PCA is not an algorithm to be used on a similarity matrix, and is instead intended for transformed and normalized multidimensional data.
 In the context of this paper, PCA will be used on transformed and normalized genetic data and not on the similarity matrix described above.
 
@@ -144,14 +133,15 @@ Some limitations include its lack of maturity - this novel technique does not ha
 In the context of this paper, UMAP will reveal a tightly clustered set of data that retains both the global structure of the data and the clusters and similarities present at the local level. 
 
 
-## Influenza:
+## Expectations for Influenza:
 
 h3n2 Influenza in this project is used as a proof of concept as h3n2 HA influenza only reassorts and does not recombine. 
 The genomes are 1701 bases long, with a mean bases missing of .045217 and median of 0. 
-The evolutionary rate for H3N2 HA influenza from Baysian structured coalescent estimate is 5.15×10^-3 (HPD 4.62 * 10^-3, -5.70 * 10^-3) substitutions per site per year. 
+h3n2 Influenza is a seasonal, global disease where the clades are defined by mutations from other strains, making it the most compatible with the Hamming Distance algorithm used to reduce the embeddings detailed in the methods. 
 We use h3n2's HA sequences as they have a relatively high mutation rate compared to the other gene segments, it encodes a protein that is a target of human immunity, and has traditionally been used for analysis of influenza evolution.
 As these sequences are biologically relevant, short, and do not recombine, the genomes can be reasonably assigned to phylogenetic clades. 
 Therefore, it can be assumed that h3n2 HA influenza is a good test case for Cartography.
+We infer that the clusters pulled out by the embeddings will closely correspond to the clades on the phylogenetic tree, and we also expect that the embedding will reveal patterns within phylogenetic clades by clustering more finely within the larger clusters.
 
 ## Embedding clusters recapitulate phylogenetic clades for seasonal influenza A/H3N2
 
@@ -182,44 +172,6 @@ t-SNE and PCA provided the most accurate classifications (MCC = 0.73 and 0.68, r
 MDS performed poorly (MCC = 0.41), confirming our expectations based on MDS's piecewise linear relationship with genetic distances.
 These results show the potential benefits of using t-SNE embeddings for cluster analysis over the computationally simpler genetic distance, despite the t-SNE's lack of global linear relationships between strains.
 
-## SUMMARY OF RESULTS FOR INFLUENZA
-
-PCA (within clade -1.539, between clade -.058, MCC: DNE accuracy:.888)
-
-MDS (within clade -1.361, between clade median 0.108, MCC: 0.560 accuracy:0.922)
-
-TSNE(within clade median -1.694, between clade median 0.186, MCC: 0.784 accuracy: 0.958)
-
-UMAP(within clade median -1.337, between clade median 0.034, MCC: 0.631, accuracy: 0.926)
-
-
-PCA: We observed visually identifiable clusters within the data (Figure 1B), and found less distance between genetically and geographically similar clades (3c2.A, A1, A1a, and A1b), and divergence between other clades (3c3.A).
-PCA is consistent with phylogenetic observations; this is reflected in the points' constant distances from the LOESS line in the Euclidean and Hamming distance scatterplot for PCA (Figure 2A).
-The LOESS line with a Pearson Coefficient of .693 was fairly linear, which upholds preexisting beliefs about the algorithm.
-Euclidean distance can be used with some confidence to distinguish strains by clade status, as the density of within clade relationships is concentrated at lower distances (within clade median of -1.539) than the density of the between clade relationships(between clade median of -0.058) (Figure 3A)
-The threshold distance value calculated using the SVM run on PCA gave a confusion matrix with an accuracy of 0.888, which corroborates that Euclidean distance is a fairly strong indicator of clade status. 
-
-MDS: While we did observe visually identifiable clusters, we found many clades overlapped each other, particularly clades A2/re, A1, A2, A1b/135N, and A1b/135K (Figure 1C).
-MDS is fairly consistent with phylogenetic obervations; this is seen in the points's constant and short distance from the LOESS line in the Euclidean and Hamming distance scatterplot (Figure 2B).
-The LOESS line with Pearson Coefficient of .468 is fairly linear, with a steeper slope starting from a genetic distance of 30; this upholds preexisting assumptions about this method.
-Euclidean distance can be used with some confidence tp distinguish strains by clade status, as the bulk of within clade relationships are defined from -2 to 0 (within clade median of -1.361) while the between clade was at 0 and above (between clade median of 0.108)  (Figure 3B).
-The threshold distance value calculated using the SVM run on MDS gave a confusion matrix with with a Matthews Correlation Coefficient of 0.560 and an accuracy of 0.922, which corroborates that Euclidean distance is fairly useful as an indicator of clade status. 
-
-t-SNE: We observed t-SNE going beyond compartementalizing by clade and actually revealing a stronger understanding of hierarchical structure and resemblance to the tree produced for the data.
-In particular, t-SNE split A1b into three clusters, which were lineages directly or incredibly related to each other, revealing a tuning to local patterns not seen in PCA and MDS; this is corroborated by the points' splaying out from the LOESS line as genetic distance increases in the Euclidean and Hamming distance scatterplot for t-SNE (Figure 2C).
-The LOESS line had a Pearson Coefficient of .269 due to this splay and overall tuning to local structure.
-Euclidean distance can be used with confidence to distinguish strains by clade status, with a within clade median of -1.694 and between clade median of 0.186 in the KDE density plot for t-SNE's clade statuses(Figure 3C). 
-While the difference is smaller than PCA and MDS, the KDE plots for those embeddings were skewed by the "outlier" clades, which PCA placed very far away from the other clades.
-The threshold distance value calculated using the SVM run on t-SNE gave a confusion matrix with with a Matthews Correlation Coefficient of 0.784 and an accuracy of 0.958, corroborates that Euclidean distance is useful as an indicatior of clade status in spite of of t-SNE splitting clades due to local diversity. 
-
-
-UMAP: We observed UMAP placing tightly clustering similar datapoints, which we found can make it difficult to view hierarchical structure as seen in t-SNE. 
-In the Euclidean vs Hamming distance scatterplot, we observed the data points splaying out from the LOESS line in lower genetic distances, but the more distinguishing characteristic was the clustering at lower versus higher euclidean distances(Figure 2D), which upholds preexisting beliefs about the locality of manifold reduction techniques such as UMAP. 
-The correlation of the data points to the LOESS line is described by UMAP’s Pearson Coefficient of .615. 
-Euclidean distance can be used with confidence to distinguish strains by clade status, with the bulk of within clade relationships are defined from -2 to -1 (within clade median of -1.337) and between clade at 0 and above (between clade median of 0.034).
-The threshold distance value calculated using the SVM run on MDS gave a confusion matrix with with a Matthews Correlation Coefficient of 0.631 and an accuracy of 0.926, which reveals that Euclidean distance is useful as an indicator of clade status. 
-
-
 
 ## Figure One
 
@@ -234,98 +186,49 @@ The threshold distance value calculated using the SVM run on MDS gave a confusio
 ![](FullKDEDensityFlu.png)
 
 
-
-
-## Zika:
+## Expectations for Zika:
 
 Zika: Zika in this project is used as a test case. 
 While h3n2 Influenza is a globally distributed virus that has caused infections seasonally for decades, Zika is a fairly new human pathogenic virus that has a restricted geographic distribution that recapitulates the patterns of viral transmission. 
-Therefore, Zika is better compartamentalized by region than by clade - this is why the clades determined in the analysis for Zika were lagely based on important geographical introductions. 
-The evolutionary rate from Baysian structured coalescent estimate is 4.04 × 10^-4 substitution/site/year (95% HPD: 1.32 × 10^-4, -7.41 * 10^-4) substitutions per site per year. 
+Therefore, while Influenza's clades were defined by mutations, zika's clades were defined by significant geographical introductions and outbreaks. 
+Because of the difference in the definition of a clade, we used Zika to determine if the embeddings can not only recapitulate mutational but also geographical significance within its clustering. 
 The genomes are 10769 bases long, with a mean bases missing of 913.613 and median of 154.
-With a longer genome and reassortment, it can be reasonably assumed that zika is a good test case for Cartography.
+With a longer genome and possible recombination, it can be reasonably assumed that zika is a good test case for Cartography.
+We infer that the embeddings will reveal outbreak patterns, but with less defined clusters than Influenza.
 
+## Embedding clusters reveal outbreak and geographical patterns within Zika
 
-
-All four dimensionality reduction methods qualitatively recapitulated clade-level groupings observed in the phylogeny (Figure 1).
+All four dimensionality reduction methods recapitulated phylogenetic patterns observed in the phylogeny (Figure 1).
 PCA, after imputing missing data, had a similar global structure to the findings in Metsky et.al., where the clades were featured on a continuum of shifting between clades instead of tightly clustered as seen in Influenza. 
-Strains from the same clade were tightly grouped in t-SNE and UMAP, and more loosely clustered in the MDS embedding.
-Closely related clades still tended to tightly cluster in MDS, UMAP, and, to a lesser extent, t-SNE.
-In all four embeddings, clades that were genetically and evolutionarily divergent from the other clades were incredibly distant in embedding space.
-For example, the clade c2 (red) and the other clades are incredibly distant in UMAP and t-SNE, and all the other clades cluster much closer together.
-in MDS, however, clade c2 (red) is not placed at a large distance from the other clades, which is surprising considering the MDS embedding for Influenza. 
-The clade c5 (yellow) and its most related clade c7 (pink) clustered tightly in all embeddings.
-Clade c4 (green) was somewhat arbitrarily split into two clusters in the UMAP embedding. 
-According to the phylogenetic tree, there is no internal node split between the two clusters in clade c4, which is not the expectation for UMAP.
-
-According to the Genetic vs Euclidean distance scatterplots, all four methods exhibited a consistent linear relationship for pairs of strains that differed by no more than 50 nucleotides (Figure 2).
-After 50 nucleotide difference in genetic distance, PCA, t-SNE, and UMAP increase much faster in a piecewise fashion, revealing that these embeddings are using local patterns to map genetically distance strain combinations farther away for better visualization. 
-This is the expectation for t-SNE and UMAP, but is surprising to see in PCA. 
-PCA and UMAP provided the strongest linear mapping to genetic distance (Pearson's R2 = 0.573 +/- .002 and 0.580 +/- .002, respectively).
-The UMAP mapping revealed two different clusters of points in the scatterplot, which is the stark Euclidean distance differences between clade c2 (red) and the other strains.
-This same mapping for MDS was less linear and the weakest (Pearson's R2 = 0.253 +/- .002).
+Geographical introductions and outbreaks isolated from the others were placed at larger euclidean distances than related introductions. 
+An example is clade c2, an outbreak in Singapore and Thailand separated from the other geographical introductions in the Americas. 
+Clade c10 is also a good example of a densely sampled outbreak in Colombia (introduced from Brazil) that forms distinct clusters in all the embeddings.
+PC1 and PC2 dileneate the variance between c2 and the other clades (Americas v Asia), and PC3 and PC4 are used to show the variance between clade c4 and c3 compared to clade c6 and c9 (variance within the Americas). 
+HDBSCAN performed on PC1 and PC2 was able to define clusters of outbreaks not noted in the phylogenetic tree, such as a small Brazil-only outbreak as well as a cluster from China and Samoa.
+Clade c3 was the parent of all Americas outbreaks; in the tree this clade is split into multiple sections, with clades c7, c5, c9, c6, and c4 being children of that outbreak. 
+Therefore, clade c3 clustered into multiple sections within each embedding, with these clusters correlating to different outbreaks within the parent clade c3 (the most notable being in PC3 and PC4, as well as t-SNE)
+Clade c9 is a second parent (with clade c10) of an outbreak in Brazil that spread to the US Virgin Islands and Puerto Rico, where c6 is a child outbreak of c9 that also spread to neighboring countries.
+All four of the embeddings recognized their similarities and placed the clades in close proximity to each other. 
+Clade c4, which is a Central American outbreak that spread to Puerto Rico and other neighboring countries, was not placed closely to clades c6 and c9 even given similar geographical locations and introduction times.
+t-SNE and UMAP also recognized a smaller cluster within clade c7 by placing it farther away from the rest of the embedding, which was a subset of a larger outbreak which spread into North America from Brazil.
+These results suggest that genetic dissimilarity reduced via t-SNE and UMAP can be used to distinguish outbreaks from eachother without imputation, which rivals PCA's sensitivity to missing data. 
 Strain pairs were not as well separated in MDS space, but MDS did loosely cluster clades with genetically and evolutionarily distant clades farther away (Clade c1, the strains dated in 2013-2014).
 This result suggests that MDS does better with unimputed data than imputed, as the genetic distance normalization process is robust to gaps.
-t-SNE's mapping was fairly strong (Pearson's R2 = 0.522 +/- .002) and revealed that only closely related strains map near each other in t-SNE space.
-Pairs of strains that differ by more than 50 nucleotides are unlikely to placed near each other in a t-SNE embedding.
 
-Once again, t-SNE and PCA provided the most accurate classifications (MCC = 0.61 and 0.56, respectively) and outperformed pairwise genetic distance (MCC = 0.49) and UMAP (MCC = 0.27, Figure 3).
-UMAP performed incredibly poorly, which we attribute to the incredible distance between clade c2 and the other clades, which may have caused the classifier to misrepresent the euclidean threshold between and within clades (FN: 28369 vs FP: 970).
-MDS performed poorly (MCC = ???), confirming our expectations based on MDS's piecewise linear relationship with genetic distances.
-These results corroborate our previous conclusion about the potential benefits of using t-SNE embeddings for cluster analysis over the computationally simpler genetic distance, but it also affirmed that t-SNE does reveal global relationships when the genetic distance is incredibly divergent.
- 
-## SUMMARY OF RESULTS FOR ZIKA: 
+According to the Genetic vs Euclidean distance scatterplots, all four methods exhibited a piecewise linear relationship for pairs of strains that differed by no more than 50 nucleotides (Figure 2).
+For larger than 50 nucleotide difference in genetic distance, PCA, t-SNE, and UMAP increase much faster in a piecewise fashion, revealing that these embeddings are using local patterns to map genetically distant strain combinations farther away for better visualization. 
+This is the expectation for t-SNE and UMAP, but is surprising to see in PCA. 
+PCA and UMAP provided the strongest linear mapping to genetic distance (Pearson's R2 = 0.573 +/- .002 and 0.580 +/- .002, respectively).
+The UMAP mapping revealed two different clusters of points in the scatterplot, which is the stark Euclidean distance differences between clade c2 and the other strains due to its isolated sampling.
+This clustering is only seen in UMAP, revealing UMAP's sensitivity to large amounts of outliers in the embeddings quality. 
+The same mapping for MDS was the weakest and non linear(Pearson's R2 = 0.253 +/- .002).
+No strains were placed far away from eachother with MDS' loose clusters.
+t-SNE's mapping was fairly strong (Pearson's R2 = 0.522 +/- .002) and revealed that pairs of strains that differ by more than 50 nucleotides are unlikely to placed near each other in a t-SNE embedding.
 
-
-PCA (within clade -.421, between clade -.214, MCC: DNE accuracy: .855)
-
-MDS (within clade -1.179, between clade median -.083, MCC: .541 accuracy:0.898)
-
-TSNE(within clade median -1.142,  between clade median -.312, MCC: 0.616 accuracy: 0.913)
-
-UMAP(within clade median -.783, between clade median -.544, MCC: 0.368, accuracy: 0.877)
-
-
-PCA: The PCA plot for Zika colored by clade (Figure 4B) did not reveal any visually identifiable clusters in the data, and the data’s overall structure also did not reveal anything interesting. 
-Visually, there was no relationship between Hamming Distance and Euclidean Distance within the PCA embedding, shown by the completely random placement of points on the scatterplot (Figure 5A). 
-To quantify this visual observation, the Pearson Coefficient was .089, which reveals close to no correlation. 
-The lack of visible clustering in this embedding reveals that scaling and centering nucleotide data does not capture the genetic diversity present between each genome.  
-Euclidean distance does not help distinguish viral genomes by genetic diversity (Figure 6A). 
-In the KDE density plot for PCA, the within and between KDE density curves overlap completely, and there is no place the SVM can correctly optimize for clade status, which is revealed through the within clade median of -0.421 and the between clade median of -0.214.
-The threshold distance value calculated using the SVM run on MDS gave a confusion matrix with an accuracy of .855, which is most likely skewed due to the large dataset and size based accuracy value.
-
-
-MDS: The embedding seemed to differentiate between the clusters in the data on a very global scale (Figure 4C). 
-There were a few visually identifiable clusters in the data, such as clusters containing clades 1, 5, and 4, but clades such as 7 and 9 were almost completely overlapped by other clades.
-Because MDS tends to reveal global structure over local, MDS tries to as accurately as possible preserve the data’s overall structure, which means it doesn't reveal many local patterns. 
-In the Euclidean and Hamming distance scatterplot, the points begin relatively close to the LOESS curve, but begin to move farther and farther away as the genetic distance increases, and this divergence is corroborated by the Pearson Coefficient of .199 for the plot. 
-The LOESS line plateaus at a genetic distance of 50, revealing that as points become more and more divergent, MDS places them at similar euclidean distances, which is a hallmark of algorithms that preserve some local structure.
-Euclidean distance does a fairly accurate job distinguishing viruses from similar and different clades (Figure 6B). 
-In Figure 6B, the within clade relationship curve on the KDE density plot is at lower euclidean distances than the between clade relationships, which there is a lot of overlap. 
-The embedding had the within clade median of -1.179 and the between clade median of -0.083, which reveals that it's fairly good at compartementalizing the data by euclidean distance.
-The threshold distance value calculated using the SVM run on MDS gave a confusion matrix with with a Matthews Correlation Coefficient of 0.541 and an accuracy of 0.898, which reveals an embedding where the inferred clade statuses are fairly accurate given no other information.
-
-t-SNE: This embedding does a very good job of clustering the data; every clade is a visually identifiable cluster, and clades more similarly related genetically are closer together in the plot (Figure 4D). 
-The data points from different clades did not overlap each other much, and the embedding did revealed different relationships than the rendering of the tree, giving less euclidean space between points that were more genetically diverse and creating a “threshold” for how much genetic diversity would impact euclidean distance. 
-In the euclidean and Hamming distance scatterplot for t-SNE (Figure 5C), the points splay out from the LOESS line as genetic distance increases, which is expected for this algorithm. 
-This correlation can be expressed through the scatterplot's Pearson Coefficient of .499. 
-The decrease in slope of the LOESS line after a genetic distance of 100 usually points to an embedding that gives little importance to the exact distance between clusters and instead focuses on cluster shape and spread. 
-These statistics reveal that t-SNE gives a large focus to finding new patterns within the data while still revealing similar patterns to the tree. 
-It is quite easy to distinguish viruses of different and same clades given a euclidean distance. 
-In the KDE Density plot for t-SNE, the bulk of the same clade relationships fall to the left of the between clade relationships, which reveals a well clustered and compartmentalized embedding of these data points (Figure 6C). 
-To quantitatively reveal this pattern, the embedding had a within clade median of -1.142 and the between clade median of -0.132, which is lower because of the "splay" and local patterns t-SNE tends to optimize for.
-The threshold distance value calculated using the SVM run on t-SNE gave a confusion matrix with with a Matthews Correlation Coefficient of 0.616 and an accuracy of 0.913, which reveals an embedding where the inferred clade statuses are fairly accurate given no other information. 
-
-UMAP: The embedding did translate the data differently than the rendering of the tree, where genetically similar strains were very densely packed and genetically different clades were incredibly far apart in UMAP euclidean space (Figure 4E). 
-There were visually identifiable clusters, but the distance disparities made it hard to separate clades 9, 7, 6, and 3 from each other due to how close the clusters were.
-The pattern can be seen and explained in the Hamming and genetic distance scatterplot for UMAP (Figure 5D). 
-In UMAP’s scatterplot, there are two clusters of data points on the LOESS line, instead of the equal spread of points over euclidean and genetic space seen in the other 3 embeddings. 
-These clusters point to a local pattern preserving algorithm that places genetically similar strains incredibly close together - a Euclidean distance around 0 to 20 - but places genetically different strains almost 50 to 80 apart. 
-The LOESS line reflects this increase through its exponential-like growth, and the density of these two clusters can be quantitatively shown through its Pearson Coefficient of .595. 
-Euclidean distance is not a very strong measure to distinguish viruses from the same or different clades. 
-In the UMAP KDE Density plot (Figure 6D), the clades are all places close together save for clade 2, which is incredibly divergent compared to the others.
-Because all other between clade distances are the same as within clade distances, UMAP had a within clade median of -0.783 and the between clade median of -0.544, meaning it is not easy to optimize an SVM with euclidean distance for clade relationships.
-The SVM statistics corroborate this, with the threshold distance value calculated using the SVM run on UMAP giving a confusion matrix with with a Matthews Correlation Coefficient of 0.368 and an accuracy of 0.877, which reveals an embedding where the inferred clade statuses are fairly accurate given no other information. 
+Just as in Influenza, t-SNE and PCA provided the most accurate classifications (MCC = 0.56 and 0.52, respectively) and outperformed pairwise genetic distance (MCC = 0.51) and UMAP (MCC = 0.37, Figure 3).
+UMAP performed incredibly poorly, which we attribute to the incredible distance between clade c2 and the other clades, which may have caused the classifier to misrepresent the euclidean threshold between and within clades (FN: 7934 vs FP: 49397).
+MDS performed poorly (MCC = .34), confirming our expectations based on MDS's piecewise linear relationship with genetic distances.
+These results corroborate our previous conclusion about the potential benefits of using t-SNE embeddings for cluster analysis over genetic distance.
 
 
 ## Figure Four
@@ -340,15 +243,16 @@ The SVM statistics corroborate this, with the threshold distance value calculate
 
 ![](FullKDEDensityZika.png)
 
-## MERS:
+## Expectations for MERS:
 
 MERS: MERS in this project is used as a extreme test case. 
-MERS is an incredibly recombinant virus, making it difficult to construct a phylogenetic tree explaining the relationships between strains and locations. 
-The evolutionary rate of MERS is within the expected range for RNA viruses, with a rate from Baysian structured coalescent estimate of around 9.57 * 10^-4 (95% Highest Posterior Density: 8.28 - 10.9 * 10^-4) subs/site/year. 
-Observed departures from strictly clonal evolution suggest that recombination is an issue for inferring MERS-CoV phylogenies. 
+MERS is a virus spread between species, with camel to human to human outbreaks. 
+MERS is a recombinant virus, and there are observed departures from strictly clonal evolution, suggesting that recombination is an issue for inferring MERS-CoV phylogenies. 
 While its effect on human outbreaks is minimal, as humans are transient hosts with a smaller probability for co-infection, its effect is exacerbated in camel outbreaks. 
+While Influenza's clades are defined by mutations and Zika's by significant geographical introductions, MERS clades were assigned to internal nodes and tips in the tree based on monophyletic host status (strictly camel or human) to reveal patterns within host outbreaks.
 The genomes are 30130 bases long, with a mean bases missing of 889.781 and median of 42.5.
-It can be reasonably assumed that MERS is a good case to test and challenge Cartography.
+With a long genome, recombination, missing bases, and mutliple hosts, it can be reasonably assumed that MERS is a good case to test and challenge Cartography.
+Because MERS clades are defined by outbreak, we infer the embeddings will behave similarly to Zika, with clustering by outbreak and host status. 
 
 ## SUMMARY OF RESULTS FOR MERS:
 
@@ -356,16 +260,18 @@ It can be reasonably assumed that MERS is a good case to test and challenge Cart
 
 ## SUMMARY OF RESULTS ACROSS VIRUSES
 
-Overall, the best recapitulation of the phylogenetic clades of the four analyzed was that of MDS and UMAP, because they preserved the most local and global structure. 
-However, t-SNE separated clusters much better than MDS as lots of the points were layered on top of each other in the MDS embedding (clade A1b/131K in h3n2 Influenza was impossible to see in MDS clusters 1 and 2). 
+PCA is incredibly senstive to missing data, which is the larger issue of using sites on a genome as features. 
+While PCA can therefore be used to pull out low quality strains, we had to remove all the low quality samples through imputation, dropping strains, and thorough inspection of the data to create a useful PCA embedding. 
+The advantage of UMAP and t-SNE over PCA is their robustness to missing data while preserving similar, if not better, quality results. 
+t-SNE performed the best out of the embeddings at finding outbreaks, newly created clades, and local patterns in general. 
+While UMAP has been used extensively recently in genomic studies, we reccomend the use of t-SNE for a most robust embedding to outliers and other sample quality issues extrapolated within the UMAP embedding that are not in t-SNE.
+This paper has systematically and quantitatively demonstrated the usefulness, accuracy, and usages of these embeddings in viral epidemiology, something not done until now. 
+It has opened a gateway for its usage in practical applications in the future, especially since the code and analysis used for this paper have been made public, easy to use on other datasets, and will be onboarded into neststrain-augur for ease of use. 
+The hope is that scientists will now be able to use these embeddings to further understand their dataset and diseases. 
 
-Of the 3 embeddings that reduced the Hamming distance matrix, as the focus of the algorithms shifted more towards preserving local structure over global structure, the closer the Pearson Coefficient got to 0 (MDS > UMAP > t-SNE). 
-Pearson Coefficient studies the effectiveness of an embedding at preserving a relationship between genetic and euclidean distance, so for t-SNE, an algorithm that focuses primarily on exaggerating distances and clusters locally to convey patterns, the pearson coefficient is going to be closer to 0, as the data points will not adhere to a best fit line. 
-For MDS, however, the embedding relies almost entirely on creating an exact 1:1 genetic:euclidean relationship, so the pearson coefficient was much higher. 
-In the same vein, as the algorithms shifted towards retaining local patterns over global patterns, the disparity between the densities of the between vs within violin plots became more pronounced. 
-Because the violin plots assess an embedding’s ability to distinguish between clades (how clustered the embedding is), the more exaggerated the differences between euclidean and genetic distance, the more disparate the densities are. 
-t-SNE’s within clade violin plot had the most concentrated density at around 5, and its between clade violin plot had the most concentrated density at around 45. 
-By comparison, the genetic distance within:between was 45:60.  
+
+
+
 
 ## Discussion
 
