@@ -434,7 +434,7 @@ rule scatterplot:
         dataframe = "results/scatterplot_{method}.csv",
         metadata = "results/scatterplot_{method}_metadata.csv"
     params:
-        bootstrap = 10000
+        bootstrap = 1000
     conda: "../cartography.yml"
     shell:
         """

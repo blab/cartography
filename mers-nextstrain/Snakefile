@@ -118,22 +118,19 @@ rule subset_data:
     input:
         alignment = rules.extract_sequences.output.sequences
     output:
-        dataframe = "results/subset_dataframe.csv",
         fasta = "results/subset_fasta.fasta"
     conda: "../cartography.yml"
     shell:
         """
-        python3 scripts/remove_gaps.py \
+        python3 ../notebooks/scripts/bases_missing.py \
             --alignment {input.alignment} \
-            --gaps 100 \
-            --output-dataframe {output.dataframe} \
             --output-fasta {output.fasta}
         """
 
 rule create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
-        alignment = "results/aligned.fasta"
+        alignment = "results/subset_fasta.fasta"
     output:
         output = "results/distance_matrix.csv"
     conda: "../cartography.yml"
@@ -253,7 +250,7 @@ rule scatterplot:
         dataframe = "results/scatterplot_{method}.csv",
         metadata = "results/scatterplot_{method}_metadata.csv"
     params:
-        bootstrap = 10000
+        bootstrap = 1000
     conda: "../cartography.yml"
     shell:
         """
@@ -386,6 +383,7 @@ rule concat_KDE_table:
             --separator ',' \
             --output {output.metadata}
         """
+        
 rule create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:
