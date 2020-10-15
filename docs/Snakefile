@@ -2,7 +2,7 @@ rule all:
     input:
         "cartography.pdf",
         "cartography.html"
-
+        
 def pandoc_options(wildcards):
     suffix = wildcards["suffix"]
     if suffix == "html":
