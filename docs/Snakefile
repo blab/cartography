@@ -5,7 +5,7 @@ rule all:
 
 rule manuscript_pdf:
     input:
-        manuscript = "index.md"
+        manuscript = "cartography.md"
     output:
         manuscript = "cartography.pdf"
     conda: "../cartography.yml"
@@ -16,7 +16,7 @@ rule manuscript_pdf:
 
 rule manuscript_html:
     input:
-        manuscript = "index.md"
+        manuscript = "cartography.md"
     output:
         manuscript = "cartography.html"
     conda: "../cartography.yml"
