@@ -16,11 +16,13 @@ rule manuscript_pdf:
 
 rule manuscript_html:
     input:
-        manuscript = "cartography.md"
+        manuscript = "cartography.md",
+        template = "pandoc-scholar.html",
+        css = "pandoc-scholar.css"
     output:
         manuscript = "cartography.html"
     conda: "../cartography.yml"
     shell:
         """
-        pandoc --citeproc --bibliography=cartography.bib -s {input.manuscript} -o {output.manuscript}
+        pandoc --citeproc --bibliography=cartography.bib --template {input.template} --css {input.css} -s {input.manuscript} -o {output.manuscript}
         """
