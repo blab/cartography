@@ -2,22 +2,25 @@ rule all:
     input:
         "cartography.pdf",
         "cartography.html"
-        
-def pandoc_options(wildcards):
-    suffix = wildcards["suffix"]
-    if suffix == "html":
-        return "cartography.html"
-    elif suffix == "pdf":
-        return "cartography.pdf"
-    else:
-        raise ValueError(f"Cannot create report with suffix {suffix}.")
 
-rule report:
-    params: options = pandoc_options
-    output: "cartography.{suffix}"
-    wildcard_constraints: suffix = "((html)|(pdf))"
+rule manuscript_pdf:
+    input:
+        manuscript = "index.md"
+    output:
+        manuscript = "cartography.pdf"
     conda: "../cartography.yml"
     shell:
         """
-        pandoc --filter pandoc-citeproc --bibliography=cartography.bib -s index.md -o docs/cartography.{wildcards.suffix}
+        pandoc --citeproc --bibliography=cartography.bib -s {input.manuscript} -o {output.manuscript}
+        """
+
+rule manuscript_html:
+    input:
+        manuscript = "index.md"
+    output:
+        manuscript = "cartography.html"
+    conda: "../cartography.yml"
+    shell:
+        """
+        pandoc --citeproc --bibliography=cartography.bib -s {input.manuscript} -o {output.manuscript}
         """

@@ -18,7 +18,7 @@ dependencies:
   - jsonschema
   - jupyterlab
   - matplotlib
-  - pandoc
+  - pandoc=2.11
   - selenium
   - snp-sites
   - python-chromedriver-binary
