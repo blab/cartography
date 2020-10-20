@@ -1,6 +1,6 @@
 rule all:
     input:
-        "cartography.pdf",
+        #"cartography.pdf",
         "cartography.html"
 
 rule manuscript_pdf:
@@ -17,6 +17,8 @@ rule manuscript_pdf:
 rule manuscript_html:
     input:
         manuscript = "cartography.md",
+        bibliography = "cartography.bib",
+        csl = "chicago-author-date.csl",
         template = "pandoc-scholar.html",
         css = "pandoc-scholar.css"
     output:
@@ -24,5 +26,13 @@ rule manuscript_html:
     conda: "../cartography.yml"
     shell:
         """
-        pandoc --citeproc --bibliography=cartography.bib --template {input.template} --css {input.css} -s {input.manuscript} -o {output.manuscript}
+        pandoc \
+            --filter pandoc-crossref \
+            --citeproc \
+            --bibliography={input.bibliography} \
+            --csl {input.csl} \
+            --template {input.template} \
+            --css {input.css} \
+            -s {input.manuscript} \
+            -o {output.manuscript}
         """

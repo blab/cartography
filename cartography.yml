@@ -19,6 +19,7 @@ dependencies:
   - jupyterlab
   - matplotlib
   - pandoc=2.11
+  - pandoc-crossref=0.3.8.2
   - selenium
   - snp-sites
   - python-chromedriver-binary

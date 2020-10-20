@@ -16,6 +16,10 @@ institute:
     index: 2
   - name: Molecular and Cell Biology Program, University of Washington, Seattle, WA, USA
     index: 3
+
+bibliography: cartography.bib
+titleDelim: "."
+figPrefix: Figure
 ---
 
 # Introduction
@@ -23,22 +27,22 @@ institute:
 Phylogenetic inference is a fundamental tool for understanding genealogical relationships among human pathogenic viruses.
 However, recombination and reassortment of viral genomes invalidates basic phylogenetic assumptions of inheritance and requires more sophisticated approaches.
 One approach is to split a genome into multiple phylogenies to model the evolution of the nonrecombinant fragments.
-This is done using a genetic algorithm that scans strains for recombination breakpoints, quantifies and analyzes the impact of recombination at each one, and splits the phylogeny at its most important breakpoints [@kosakovsky_pond_posada_gravenor_woelk_frost_2006].
+This is done using a genetic algorithm that scans strains for recombination breakpoints, quantifies and analyzes the impact of recombination at each one, and splits the phylogeny at its most important breakpoints [@kosakovsky_pond_2006].
 Finding recombination breakpoints relies on the detection of a recombination signal through methods such as CHIMAERA and LARD.
-Both CHIMAERA and LARD use split decomposition, a method which depicts parallel edges between sequences if there are conflicting phylogenetic signals in the data [@Posada13757] [@martin_murrell_khoosal_muhire_2017].
+Both CHIMAERA and LARD use split decomposition, a method which depicts parallel edges between sequences if there are conflicting phylogenetic signals in the data [@Posada13757; @martin_murrell_khoosal_muhire_2017].
 
-An alternate strategy is to compare viral genomes with alternative methods that do not make the same strong assumptions as phylogenetic inference (e.g., PCA, MDS, etc.).
-PCA has been used to estimate and model ancestry in unrelated individuals and plot peoples genomes to reveal patterns in national origin [@alexander_novembre_lange_2009] [@GenesMirrorGeography2008], and was also used to genotype major classes of structural variants - structural differences such as deletion, duplication, and novel sequence insertion - in diverse populations to map their population stratification [@sudmant_1000_gene_paper].
-PCA was also used to reveal Zika’s genetic diversity and spread in the Americas by assessing clustering of multidimensional genetic data [@H.C.109348].
+An alternate strategy is to compare viral genomes with methods that do not make the same strong assumptions as phylogenetic inference.
+Principal component analysis (PCA) has been used to visualize human population structure from genomic variants [@novembre_2008; @alexander_2009; @sudmant_2015]
+PCA was also used to reveal Zika’s genetic diversity and spread in the Americas by assessing clustering of multidimensional genetic data [@metsky_2017].
 Principal component analysis (PCA) was consistent with the phylogenetic observations, and showed tight clustering in Zika genomes in strains from the same geographical introduction.
-MDS has been applied to h3n2 sequences to inspect relationships between all gene segments, which is closely related to the subject of this paper, for the difference that Rambaut et .al. 2008 looks at between-gene diversity rather than within-gene [@rambaut_pybus_nelson_viboud_taubenberger_holmes_2008].
+MDS has been applied to H3N2 sequences to inspect relationships between all gene segments, which is closely related to the subject of this paper, for the difference that @rambaut_2008 looks at between-gene diversity rather than within-gene.
 The MDS analyses showed tight clustering between genes, which suggested that the evolutionary dynamics of influenza A virus is shaped to some degree by phylogenetic history and global epidemiological dynamics.
-PCA, t-SNE, and UMAP have all been used to better capture both discrete and continuous patterns of variation in human genomes across a genetic continuum, and the embeddings were able to show relationships between genotype, phenotype, and geography [@diaz-papkovich_anderson-trocmé_ben-eghan_gravel_2019].
+PCA, t-SNE, and UMAP have all been used to better capture both discrete and continuous patterns of variation in human genomes across a genetic continuum, and the embeddings were able to show relationships between genotype, phenotype, and geography [@diaz-papkovich_2019].
 
-While Diaz-Papkovich et.al. and Metsky et.al. explored qualitative measurements of embedding accuracy and fitness, this paper will go beyond that by establishing quantitative measurements as to the fit and accuracy of the embeddings to further bridge the gap between visualization and statistical testing.
+While @diaz-papkovich_2019 and @metsky_2017 explored qualitative measurements of embedding accuracy and fitness, this paper will go beyond that by establishing quantitative measurements as to the fit and accuracy of the embeddings to further bridge the gap between visualization and statistical testing.
 This paper will also give insight into different reduction techniques, and will discuss both their limitations and strengths in the realm of viral data.
 We present a novel approach to understanding relationships among viral genomes by transforming genomic data and then using dimensionality reduction methods such as PCA, MDS, t-SNE, and UMAP.
-We investigate the degree to which this method can recapitulate known phylogenetic relationships for viruses whose genomes are phylogenetically tractable (we used influenza h3n2 HA and Zika, with of evolutionary rates of around 4.04 × 10^-4 (95% HPD: 1.32 × 10^-4, -7.41 * 10^-4) and 9.57 * 10^-4 (95% Highest Posterior Density: 8.28 - 10.9 * 10^-4) subs/site/year respectively).
+We investigate the degree to which this method can recapitulate known phylogenetic relationships for viruses whose genomes are phylogenetically tractable (we used influenza H3N2 HA and Zika, with of evolutionary rates of around 4.04 × 10^-4 (95% HPD: 1.32 × 10^-4, -7.41 * 10^-4) and 9.57 * 10^-4 (95% Highest Posterior Density: 8.28 - 10.9 * 10^-4) subs/site/year respectively).
 We apply this method to viruses whose genomes are known to undergo substantial recombination, such as MERS (evolutionary rate of around 5.15×10^-3 (HPD 4.62 * 10^-3, -5.70 * 10^-3) substitutions/site/year).) and SARS-CoV-2 to assess how well each method is able to reconstruct previously identified biologically-meaningful clusters.
 
 Recombination: occurs when at least two viral genomes co-infect the same host cell and exchange genetic segments.
@@ -48,7 +52,7 @@ Shuffling/reassortment, a particular type of recombination, occurs in viruses wi
 
 ## Expectations for PCA, MDS, t-SNE, and UMAP
 
-Principal Component Analysis (PCA) reduces multidimensional data, increasing interpretability while minimizing information loss[@jolliffe_cadima_2016] .
+Principal Component Analysis (PCA) reduces multidimensional data, increasing interpretability while minimizing information loss [@jolliffe_cadima_2016] .
 PCA relies on linear assumptions, does not affect the scale of the data, and does not normalize the data as part of the algorithm.
 PCA preserves long range distances but hides finer-scale details.
 Because PCA is almost entirely focused on retaining the global structure and variance of the data, and one of its limitations is revealing patterns locally.
@@ -72,17 +76,17 @@ In the context of this paper, UMAP will reveal a tightly clustered set of data t
 
 ## Expectations for Influenza
 
-h3n2 Influenza in this project is used as a proof of concept as h3n2 HA influenza only reassorts and does not recombine.
+H3N2 Influenza in this project is used as a proof of concept as H3N2 HA influenza only reassorts and does not recombine.
 The genomes are 1701 bases long, with a mean bases missing of .045217 and median of 0.
-h3n2 Influenza is a seasonal, global disease where the clades are defined by mutations from other strains, making it the most compatible with the Hamming Distance algorithm used to reduce the embeddings detailed in the methods.
-We use h3n2's HA sequences as they have a relatively high mutation rate compared to the other gene segments, it encodes a protein that is a target of human immunity, and has traditionally been used for analysis of influenza evolution.
+H3N2 Influenza is a seasonal, global disease where the clades are defined by mutations from other strains, making it the most compatible with the Hamming Distance algorithm used to reduce the embeddings detailed in the methods.
+We use H3N2's HA sequences as they have a relatively high mutation rate compared to the other gene segments, it encodes a protein that is a target of human immunity, and has traditionally been used for analysis of influenza evolution.
 As these sequences are biologically relevant, short, and do not recombine, the genomes can be reasonably assigned to phylogenetic clades.
-Therefore, it can be assumed that h3n2 HA influenza is a good test case for Cartography.
+Therefore, it can be assumed that H3N2 HA influenza is a good test case for Cartography.
 We infer that the clusters pulled out by the embeddings will closely correspond to the clades on the phylogenetic tree, and we also expect that the embedding will reveal patterns within phylogenetic clades by clustering more finely within the larger clusters.
 
 ## Embedding clusters recapitulate phylogenetic clades for seasonal influenza A/H3N2
 
-All four dimensionality reduction methods qualitatively recapitulated clade-level groupings observed in the phylogeny (Figure 1).
+All four dimensionality reduction methods qualitatively recapitulated clade-level groupings observed in the phylogeny ([@fig:flu-embeddings]).
 Strains from the same clade appeared tightly grouped in PCA, t-SNE, and UMAP embeddings and more loosely clustered in the MDS embedding.
 Closely related clades tended to tightly cluster in PCA, MDS, UMAP, and, to a lesser extent, t-SNE.
 For example, the clade A2 (orange) and its subclade A2/re (red) map to adjacent regions of all four embeddings.
@@ -90,9 +94,12 @@ We observed the same pattern for A1 (purple) and its subclade A1a (pink) as well
 The clade 3c2.A (red) and its subclade A3 (light blue) clustered in all embeddings except t-SNE.
 This result matched our expectation that t-SNE would preserve local clusters and not retain global structure between more distantly related data.
 
-To quantify the patterns we observed in Figure 1, we calculated two complementary metrics for each embedding method.
+<iframe src="https://blab.github.io/cartography/FullLinkedChartBrushableFlu.html" style="width: 1200px; height: 650px;" frameBorder="0"></iframe>
+![Genetic cartography of H3N2 strains by dimensionality reduction methods compared to inferred phylogeny.](){#fig:flu-embeddings}
+
+To quantify the patterns we observed in [@fig:flu-embeddings], we calculated two complementary metrics for each embedding method.
 First, we measured the linearity of the relationship of Euclidean distance between two strains in an embedding space and the genetic distance between these same strains.
-All four methods exhibited a consistent linear relationship for pairs of strains that differed by no more than 30 nucleotides (Figure 2).
+All four methods exhibited a consistent linear relationship for pairs of strains that differed by no more than 30 nucleotides ([@fig:flu-euclidean-vs-genetic-distance]).
 PCA and UMAP provided the strongest linear mapping to genetic distance (Pearson's R2 = 0.693 and 0.615, respectively).
 This same mapping for the MDS method was less of a linear function (Pearson's R2 = 0.468) than a piecewise function of two parts.
 Strain pairs with fewer than 30 nucleotide differences were not as well separated in MDS space as strains with greater genetic distances.
@@ -100,32 +107,23 @@ This result suggests that MDS might be most effective for distinguishing between
 t-SNE's mapping was the weakest (Pearson's R2 = 0.269) and revealed that only closely related strains map near each other in t-SNE space.
 Pairs of strains that differ by more than 15 nucleotides are unlikely to placed near each other in a t-SNE embedding.
 
+![Mapping between Euclidean and genetic distances for all pairs of H3N2 strains by dimensionality reduction method.](FullScatterplotFlu.png){#fig:flu-euclidean-vs-genetic-distance}
+
 Second, we determined how accurately the Euclidean distance between pairs of strains in an embedding could classify those strains as belonging to the same clade or not.
 Specifically, we used a support vector machine (SVM) classifier to identify an optimal Euclidean distance threshold that distinguished pairs of strains from the same clade.
 To train the classifier, we used the Euclidean distance between all pairs of strains as a one-dimensional feature and a binary encoding of within (1) or between (0) clade status as a model target.
 As there were far more pairs of strains from different clades, we measured classifiction accuracy with the Matthew's correlation coefficient (MCC), a metric that is robust to unbalanced counts in the confusion matrix (citation here).
 As a control, we compared the accuracy of each method's classifier to the MCC from a classifier fit to genetic distance between strains.
-t-SNE and PCA provided the most accurate classifications (MCC = 0.73 and 0.68, respectively) and outperformed pairwise genetic distance (MCC = 0.65) and UMAP (MCC = 0.63, Figure 3).
+t-SNE and PCA provided the most accurate classifications (MCC = 0.73 and 0.68, respectively) and outperformed pairwise genetic distance (MCC = 0.65) and UMAP (MCC = 0.63, [@fig:flu-within-and-between-group-distances]).
 MDS performed poorly (MCC = 0.41), confirming our expectations based on MDS's piecewise linear relationship with genetic distances.
 These results show the potential benefits of using t-SNE embeddings for cluster analysis over the computationally simpler genetic distance, despite the t-SNE's lack of global linear relationships between strains.
 
-
-## Figure One
-
-<iframe src="https://blab.github.io/cartography/FullLinkedChartBrushableFlu.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
-
-## Figure Two
-
-![](FullScatterplotFlu.png)
-
-## Figure Three
-
-![](FullKDEDensityFlu.png)
+![Distribution of scaled Euclidean distances between all pairs of H3N2 strains by clade status and dimensionality reduction method.](FullKDEDensityFlu.png){#fig:flu-within-and-between-group-distances}
 
 ## Expectations for Zika
 
 Zika: Zika in this project is used as a test case.
-While h3n2 Influenza is a globally distributed virus that has caused infections seasonally for decades, Zika is a fairly new human pathogenic virus that has a restricted geographic distribution that recapitulates the patterns of viral transmission.
+While H3N2 Influenza is a globally distributed virus that has caused infections seasonally for decades, Zika is a fairly new human pathogenic virus that has a restricted geographic distribution that recapitulates the patterns of viral transmission.
 Therefore, while Influenza's clades were defined by mutations, zika's clades were defined by significant geographical introductions and outbreaks.
 Because of the difference in the definition of a clade, we used Zika to determine if the embeddings can not only recapitulate mutational but also geographical significance within its clustering.
 The genomes are 10769 bases long, with a mean bases missing of 913.613 and median of 154.
@@ -209,20 +207,20 @@ The hope is that scientists will now be able to use these embeddings to further 
 
 The analysis environment can be recreated using conda and all installation instructions are available on [Cartography’s github](https://github.com/blab/cartography) .
 
-The genome data we used for h3n2 HA influenza is from the NCBI Influenza database.
+The genome data we used for H3N2 HA influenza is from the NCBI Influenza database.
 We used [this search](https://www.ncbi.nlm.nih.gov/genomes/FLU/Database/nph-select.cgi?cdate_has_day=true&cdate_has_month=true&cmd=show_query&collapse=on&country=any&defline_saved=%3E%7Baccession%7D%20%7Bstrain%7D%20%7Byear%7D/%7Bmonth%7D/%7Bday%7D%20%7Bsegname%7D&fyear=2015&go=database&host=Human&lab=exclude&lineage=include&niaid=include&qcollapse=on&searchin=strain&segment=4&sequence=N&showfilters=true&sonly=on&subtype_h=3&subtype_mix=include&subtype_n=2&swine=include&tyear=2020&type=a&vac_strain=include). Clades were defined by reasonable phylogenetic signal.
 The Zika data was curated by Allison Black, with sequences from Genbank and the Bedford Lab. Clades were defined by regionally important introductions as well as by reasonable phylogenetic signal in terms of mutations on branches.
 The MERS data was downloaded from [e-life](https://elifesciences.org/download/aHR0cHM6Ly9jZG4uZWxpZmVzY2llbmNlcy5vcmcvYXJ0aWNsZXMvMzEyNTcvZWxpZmUtMzEyNTctZmlnMS1kYXRhNS12My56aXA-/elife-31257-fig1-data5-v3.zip?_hash=YhuQfm%2BGO%2BY6MsWLZB4WrPQvYtSlHOhLnzwnvTaesws%3D), which was split into a Newick tree and Aligned FASTA file. [@dudas_carvalho_rambaut_bedford_2018]
 
 Clades and host were used in the MERS analysis, as the hosts, camel and human, are scientifically useful and phylogenetically accurate to the Newick tree.
 The clade assignments were taken from the newick tree created in Gytis' and Bedford's paper [@dudas_carvalho_rambaut_bedford_2018].
-We analyzed Influenza A/h3n2 and Zika by creating a FASTA file of multiple sequence alignments with MAFFT v7.407 [@Katoh2002] via augur align [@Hadfield2018] and phylogenies with IQ-TREE v1.6.10 [@Nguyen2014] via augur tree version 9.0.0.
+We analyzed Influenza A/H3N2 and Zika by creating a FASTA file of multiple sequence alignments with MAFFT v7.407 [@Katoh2002] via augur align [@Hadfield2018] and phylogenies with IQ-TREE v1.6.10 [@Nguyen2014] via augur tree version 9.0.0.
 
 We used two different methods of transforming the data; Scaling and centering the data, and a Hamming distance similarity matrix.
 For Scaling and Centering the data, we performed PCA on the matrix of nucleotides from the multiple sequence alignment using scikit-learn [@jolliffe_cadima_2016].
 An explained variance plot was created to determine the amount of PCs created, which is in the supplementary figures section.
 
-We dropped around 4 strains in the h3n2 analysis, as they were direct animal to human transmissions where the genomes resembled swine flu (seen through NCBI's BLAST)
+We dropped around 4 strains in the H3N2 analysis, as they were direct animal to human transmissions where the genomes resembled swine flu (seen through NCBI's BLAST)
 We dropped around 5 strains in the Zika analysis that were exceedingly low quality.
 Due to the amount of missing data within the zika genome, we also imputed the data using scikit-learn's simple imputer for PCA in order to get a better embedding result. This was only applied to PCA, as the hamming distance algorithm disregards missing bases.
 While imputation was originally used on all 4 embeddings for Zika, they were robust enough to missing bases to reveal patterns on unimputed data.
@@ -237,7 +235,7 @@ We only counted a difference between the main nucleotide pairs (AGCT) -- gaps (N
 This is because some sequences were significantly shorter than others, and a shorter strain does not necessarily mean complete genetic dissimilarity, which is what counting gaps implied.
 
 We reduced the similarity distance matrix through MDS, t-SNE, and UMAP, plotted using [Altair](https://altair-viz.github.io/) ,and colored by clade assignment.
-Clade membership metadata was provided by a .json build of the influenza h3n2 tree and zika trees. For MERS, the host data was given via the Newick tree.
+Clade membership metadata was provided by a .json build of the influenza H3N2 tree and zika trees. For MERS, the host data was given via the Newick tree.
 The 3 different dimensionality reduction techniques are ordered below by publication date:
 - [MDS](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.MDS.html)
 - [t-SNE](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html)
