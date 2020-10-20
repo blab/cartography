@@ -29,7 +29,7 @@ rule all:
         "../docs/FullMDSBrushSupplementMERS.html",
         "../docs/FullPCABrushSupplementMERS.html",
         "../docs/FullLinkedChartBrushableHostMERS.html",
-        "../docs/explainedVarianceMERS.html"
+        "../docs/explainedVarianceMERS.png"
 
 
 rule files:
@@ -431,7 +431,7 @@ rule create_notebook_docs:
         fullChartHost = "../docs/FullLinkedChartBrushableHostMERS.html",
         MDS_Supplement = "../docs/FullMDSBrushSupplementMERS.html",
         PCA_Supplement = "../docs/FullPCABrushSupplementMERS.html",
-        Explained_variance_PCA = "../docs/explainedVarianceMERS.html"
+        Explained_variance_PCA = "../docs/explainedVarianceMERS.png"
 
     conda: "../cartography.yml"
     notebook:

@@ -25,7 +25,7 @@ rule all:
         "../docs/FullLinkedChartBrushableZika.html",
         "../docs/FullMDSBrushSupplementZika.html",
         "../docs/FullPCABrushSupplementZika.html",
-        "../docs/explainedVarianceZika.html",
+        "../docs/explainedVarianceZika.png",
         auspice_tree = "../auspice/cartography_zika.json",
 
 rule files:
@@ -556,7 +556,7 @@ rule create_notebook_docs:
         fullChart = "../docs/FullLinkedChartBrushableZika.html",
         MDS_Supplement = "../docs/FullMDSBrushSupplementZika.html",
         PCA_Supplement = "../docs/FullPCABrushSupplementZika.html",
-        Explained_variance_PCA = "../docs/explainedVarianceZika.html"
+        Explained_variance_PCA = "../docs/explainedVarianceZika.png"
 
     conda: "../cartography.yml"
     notebook:

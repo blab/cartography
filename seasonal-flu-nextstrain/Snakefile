@@ -27,7 +27,7 @@ rule all:
         "../docs/FullLinkedChartBrushableFlu.html",
         "../docs/FullMDSBrushSupplementFlu.html",
         "../docs/FullPCABrushSupplementFlu.html",
-        "../docs/explainedVarianceFlu.html"
+        "../docs/explainedVarianceFlu.png"
 
 rule files:
     params:
@@ -556,7 +556,7 @@ rule create_notebook_docs:
         fullChart = "../docs/FullLinkedChartBrushableFlu.html",
         MDS_Supplement = "../docs/FullMDSBrushSupplementFlu.html",
         PCA_Supplement = "../docs/FullPCABrushSupplementFlu.html",
-        Explained_variance_PCA = "../docs/explainedVarianceFlu.html"
+        Explained_variance_PCA = "../docs/explainedVarianceFlu.png"
 
     conda: "../cartography.yml"
     notebook:
