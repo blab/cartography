@@ -10,7 +10,7 @@ author:
   - name: Trevor Bedford
     institute_indices: 2
 institute:
-  - name: Redmond High School
+  - name: Issaquah High School
     index: 1
   - name: Vaccine and Infectious Disease Division, Fred Hutchinson Cancer Research Center, Seattle, WA, USA
     index: 2
