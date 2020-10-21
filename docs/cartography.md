@@ -190,6 +190,36 @@ Because MERS clades are defined by outbreak, we infer the embeddings will behave
 
 ## SUMMARY OF RESULTS FOR MERS
 
+While MDS, t-SNE, and UMAP all recapitulated the patterns observed in the phylogeny, PCA did not. 
+With MDS missing bases in multiple strains, imputation did not help add more depth to the alignment, and therefore PCA was only able to separate low quality strains from high quality strains. 
+To try and combat this issue, all strains with 3 standard deviations higher of missing bases were removed from the analysis; while this helped create tighter clusters in the distance based methods, PCA did not reveal any further structure. 
+Outbreaks isolated from others and strains from different hosts were placed at larger euclidean distances from related strains and host.
+Clade 32 (clade_32) is a good example of an outlier human outbreak from Seoul and surrounding territories that is isolated from other clades, most notable in t-SNE and UMAP and to a lesser degree in MDS.  
+Because clades were defined as outbreaks sharing a common host, more local clustering revealing differences within a clade was expected; this divergence was seen in t-SNE and UMAP in Clade 13 (clade_13), a human outbreak made up of two distinct clusters
+branching off from the same node in March of 2014. 
+Clades 20, Clade 21, and Clade 22, camel outbreaks from Saudi Arabia, clustered together in all of the disance based embeddings, reaffirming the genetic similarity of these strains. 
+The embeddings also cluster between host, putting human host disease strains without a clade membership with the same cluster as a nearby clade. 
+These "other" clade membership strains are inferred to be direct camel to human transferrals, so this between host clustering recapitulates the genetic similarity between these inter-host strains. 
+t-SNE performed exceedingly better than the other embeddings at differentiating between intra-host clades highly related in the embedding, outperforming UMAP and MDS.
+An example of this is Clade 9, Clade 10, Clade 11, and Clade 12, camel and human outbreaks concentrated in Saudi Arabia and the UAE, which were clearly separated from eachother in t-SNE and not in UMAP. 
+This suggests that t-SNE is a stronger tool for viewing genetically homologous populations than UMAP. 
+
+According to the Genetic vs Euclidean distance scatterplots, MDS had a linear relationship throughout while t-SNE and UMAP exhibited a piecewise linear relationship for pairs of strains that differed by no more than 100 nucleotides (Figure 2).
+For larger than 100 nucleotide difference, t-SNE and UMAP decrease sharply, a contrast to the patterns seen in Zika and Influenza. 
+While these embeddings are still using local patterns to map genetically distant strain combinations at higher and lower euclidean distances, t-SNE and UMAP select a low or high euclidean distance depending on the strain relationship. 
+This can be attributed to the two larger clusters both UMAP and t-SNE made within the embedding, with Clades 27 through 32 in one group, and the rest in another.
+MDS provided the strongest linear mapping to genetic distance (Pearson's R2 = 0.469 +/- .005).
+UMAP and t-SNE's scatterplots shared many similar characteristics in terms of shape, spread, and clustering (Pearson's R2 = 0.203 +/- .005 and 0.254 +/- .005 respectively).
+The same mapping for PCA was incredibly weak and non linear(Pearson's R2 = 0.026 +/- .001).
+
+Just as in Influenza and Zika, t-SNE provided the most accurate classification of the embeddings (MCC = 0.62) but did not outperform pairwise genetic distance (MCC = 0.71).
+PCA could not be considered in this analysis, as the classifier was unable to find a distance threshold to separate within vs between clade relationships.
+UMAP performed poorest (MCC = .479), which we attribute to the tight clusters between multiple related clades seen in UMAP, which may have caused the classifier to create a lower euclidean distance threshold between and within clades (FN: 309 vs FP: 2164).
+MDS performed much better than in Influenza and Zika (MCC = .578), and with MDS being the most global reduction of the data and genetic distance outperforming all the embeddings, shows MERS to be a disease best classified without local patterns.
+These results corroborate our conclusion about using t-SNE embeddings for cluster analysis, but suggest viewing and quantifying the data through multiple reductions in order to create the best view of the data. 
+
+
+
 ## SUMMARY OF RESULTS ACROSS VIRUSES
 
 PCA is incredibly senstive to missing data, which is the larger issue of using sites on a genome as features.
