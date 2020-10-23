@@ -25,6 +25,7 @@ rule all:
         "../docs/FullKDEDensityFlu.png",
         "../docs/FullScatterplotFlu.png",
         "../docs/FullLinkedChartBrushableFlu.html",
+        "../docs/FullLinkedChartBrushableFlu.svg",
         "../docs/FullMDSBrushSupplementFlu.html",
         "../docs/FullPCABrushSupplementFlu.html",
         "../docs/explainedVarianceFlu.png"
@@ -554,6 +555,7 @@ rule create_notebook_docs:
         KDE_density = "../docs/FullKDEDensityFlu.png",
         Scatterplot = "../docs/FullScatterplotFlu.png",
         fullChart = "../docs/FullLinkedChartBrushableFlu.html",
+        fullChartSVG = "../docs/FullLinkedChartBrushableFlu.svg",
         MDS_Supplement = "../docs/FullMDSBrushSupplementFlu.html",
         PCA_Supplement = "../docs/FullPCABrushSupplementFlu.html",
         Explained_variance_PCA = "../docs/explainedVarianceFlu.png"

@@ -23,6 +23,7 @@ rule all:
         "../docs/FullKDEDensityZika.png",
         "../docs/FullScatterplotZika.png",
         "../docs/FullLinkedChartBrushableZika.html",
+        "../docs/FullLinkedChartBrushableZika.svg",
         "../docs/FullMDSBrushSupplementZika.html",
         "../docs/FullPCABrushSupplementZika.html",
         "../docs/explainedVarianceZika.png",
@@ -554,6 +555,7 @@ rule create_notebook_docs:
         KDE_density = "../docs/FullKDEDensityZika.png",
         Scatterplot = "../docs/FullScatterplotZika.png",
         fullChart = "../docs/FullLinkedChartBrushableZika.html",
+        fullChartSVG = "../docs/FullLinkedChartBrushableZika.svg",
         MDS_Supplement = "../docs/FullMDSBrushSupplementZika.html",
         PCA_Supplement = "../docs/FullPCABrushSupplementZika.html",
         Explained_variance_PCA = "../docs/explainedVarianceZika.png"
