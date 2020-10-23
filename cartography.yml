@@ -2,6 +2,7 @@ name: cartography
 channels:
   - conda-forge
   - bioconda
+  - anaconda
   - defaults
 dependencies:
   - mafft
@@ -23,8 +24,9 @@ dependencies:
   - selenium
   - snp-sites
   - python-chromedriver-binary
-  - altair_saver
+  - reportlab
   - pip:
+    - altair-saver
     - statsmodels
     - statistics
     - snakemake
