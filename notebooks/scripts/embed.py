@@ -157,7 +157,7 @@ if __name__ == "__main__":
 
         #add explained variance as the first row of the dataframe
         explained_variance = pd.DataFrame([round(pca.explained_variance_ratio_[i],4) for i in range(0,len(pca.explained_variance_ratio_))], columns=["explained variance"])
-        explained_variance["principal components"] = [i for i in range(0, args.components)]
+        explained_variance["principal components"] = [i for i in range(1, args.components + 1)]
         explained_variance.to_csv(args.explained_variance, index=False)
 
     if args.cluster:
