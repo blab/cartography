@@ -1,9 +1,7 @@
 """
-Takes aligned strain data and outputs a two dataframes: strains_df and genomes_df, which can be converted to lists for hamming distance
-"""
-import pandas as pd
+Takes aligned strain data and outputs a fasta file that removes all low quality strains missing more than 3 standard deviations above the mean of missing bases"""
+
 import numpy as np
-from scipy.spatial.distance import squareform, pdist
 from Bio import SeqIO
 import re
 from pathlib import Path
@@ -18,42 +16,26 @@ if __name__ == "__main__":
 
     strains = []
     genomes = []
-    for record in SeqIO.parse(args.alignment, "fasta"):
+    for record in SeqIO.parse("results/aligned.fasta", "fasta"):
         strains.append(str(record.id))
         genomes.append(str(record.seq))
-            
-    genomes_df = pd.DataFrame(genomes)
-    strains_df = pd.DataFrame(strains)
-    strains_df.columns = ["strain"]
 
     #Checking missing_bases
 
     genomes_missing_bases = []
     for x in genomes:
         x = re.sub(r'[^AGCT]', '5', x)
-        numberOfN = x.count("5")
+        numberOfN = x.count("5") #I'm leaving this logic here because MERS uses both "N" and "-" to dileneate missing sequences.
         genomes_missing_bases.append(numberOfN)
-        
-    genomes_missing_bases_df = pd.DataFrame(genomes_missing_bases)
-    genomes_missing_bases_df = genomes_missing_bases_df.merge(strains_df, how='outer', left_index = True, right_index = True)
-    genomes_missing_bases_df.columns = ["bases_missing", "strain"]
 
     threshold = np.mean(genomes_missing_bases) + 3*np.std(genomes_missing_bases)
-    genomes_missing_bases_df = genomes_missing_bases_df[genomes_missing_bases_df['bases_missing'] >= threshold]
-    list_of_val = genomes_missing_bases_df.index.tolist()
 
-    strains = np.array(strains)
-    genomes = np.array(genomes)
+    new_strains = np.take(strains, np.where(genomes_missing_bases >= threshold)).tolist()[0]
+    new_genomes = np.take(genomes, np.where(genomes_missing_bases >= threshold)).tolist()[0]
 
-    deleted_strains = list(np.delete(strains, list_of_val))
-    deleted_genomes = list(np.delete(genomes, list_of_val))
+    strains_genomes = dict(zip(new_strains,new_genomes))
 
     if args.output_fasta is not None:
-        fasta_file = open(args.output_fasta, "w")
-
-        for i in range(len(deleted_genomes)):
-
-            fasta_file.write(">" + deleted_strains[i] + "\n" + deleted_genomes[i] + "\n")
-
-        fasta_file.close()
+        with open(args.output_fasta, "w") as output_handle:
+            SeqIO.write(strains_genomes, output_handle, "fasta")
 
