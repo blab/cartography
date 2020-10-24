@@ -193,7 +193,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
             ),
             color=alt.condition(brush, if_false=alt.ColorValue('gray'), if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_))),
             tooltip=ToolTip
-        ).add_selection(brush).properties(width=400, height=250)
+        ).add_selection(brush).properties(width=560, height=250)
         list_of_chart.append(tree_name)
 
         for i in range(0, len(list_of_data) - 1, 2):

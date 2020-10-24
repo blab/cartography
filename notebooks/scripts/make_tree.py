@@ -1,6 +1,9 @@
 """
 takes tree path, disease name, and similarity matrix and outputs node_df and re-done similarity_matrix
 """
+import sys
+sys.path.append("../")
+
 import pandas as pd
 import numpy as np
 from augur.utils import json_to_tree

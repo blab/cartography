@@ -1,6 +1,9 @@
 """
 takes the output from bases_missing.py and outputs a distance matrix
 """
+import sys
+sys.path.append("../")
+
 import argparse
 import Bio.SeqIO
 from collections import OrderedDict

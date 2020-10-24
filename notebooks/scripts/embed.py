@@ -1,3 +1,6 @@
+import sys
+sys.path.append("../")
+
 import argparse
 from augur.utils import write_json
 import Bio.SeqIO

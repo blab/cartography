@@ -1,3 +1,6 @@
+import sys
+sys.path.append("../")
+
 import argparse
 import matplotlib.pyplot as plt
 import numpy as np
@@ -21,6 +24,7 @@ if __name__ == "__main__":
     parser.add_argument("--output-figure", help="path for outputting as a PNG")
     parser.add_argument("--output-dataframe", help="path for outputting as a dataframe")
     parser.add_argument("--output-metadata", help="output the pearson coefficient, mean, and standard deviation for the scatterplot")
+    parser.add_argument("--nucleotide", type=float, help="the number of nucleotides in the aligned fasta file")
     
     args = parser.parse_args()
     
@@ -29,6 +33,9 @@ if __name__ == "__main__":
     if args.output_figure is None and args.output_dataframe is None:
         print("You must specify one of the outputs", file=sys.stderr)
         sys.exit(1)
+
+    if args.nucleotide is None and args.output_metadata is not None:
+            print("you must specify the amount of nucleodies per strain in the aligned FASTA in order to get the metadata")
         
     # reading in the distance matrix and embedding csv files, checking to make sure the format is correct
     
@@ -51,8 +58,21 @@ if __name__ == "__main__":
     
     r_value_arr = np.array(r_value_arr)
 
+    print(args.nucleotide)
+    print(type(args.nucleotide))
     mean = np.mean(r_value_arr, axis=0)
     std  = np.std(r_value_arr, axis=0)
+    variation_percent = (np.quantile(total_df["genetic"], .75)/ args.nucleotide) * 100
+
+    mean_euclidean = np.mean(total_df["euclidean"], axis=0)
+    std_euclidean  = np.std(total_df["euclidean"], axis=0)
+    max_euclidean = max(total_df["euclidean"].values.tolist())
+
+    mean_genetic = np.mean(total_df["genetic"], axis=0)
+    std_genetic  = np.std(total_df["genetic"], axis=0)
+    max_genetic = max(total_df["genetic"].values.tolist())
+
+
 
     if args.output_figure is not None:
         y_values = statsmodels.nonparametric.smoothers_lowess.lowess(
@@ -90,5 +110,5 @@ if __name__ == "__main__":
         total_df.to_csv(args.output_dataframe)
 
     if args.output_metadata is not None:
-        metadata_df = pd.DataFrame([[r_value ** 2, mean, std]], columns=["pearson_coef", "mean", "std"])
+        metadata_df = pd.DataFrame([[r_value ** 2, mean, std, variation_percent, mean_genetic, std_genetic, max_genetic, mean_euclidean, std_euclidean, max_euclidean]], columns=["pearson_coef", "mean", "std", "genetic_variation", "genetic_mean", "genetic_std", "genetic_max", "euclidean_mean", "euclidean_std", "euclidean_max"])
         metadata_df.to_csv(args.output_metadata)

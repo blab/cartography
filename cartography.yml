@@ -27,6 +27,7 @@ dependencies:
   - reportlab
   - pip:
     - altair-saver
+    - portpicker
     - statsmodels
     - statistics
     - snakemake
