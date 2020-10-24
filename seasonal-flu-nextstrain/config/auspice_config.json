@@ -45,7 +45,53 @@
             "key": "country",
             "title": "Country",
             "type": "categorical"
+        },
+		{
+            "key": "pca1",
+            "title": "PCA1",
+            "type": "categorical"
+        },
+		{
+            "key": "pca1",
+            "title": "PCA1",
+            "type": "continuous"
+        },
+		{
+            "key": "pca2",
+            "title": "PCA2",
+            "type": "continuous"
+        },
+		{
+            "key": "pca3",
+            "title": "PCA3",
+            "type": "continuous"
+        },
+		{
+            "key": "pca4",
+            "title": "PCA4",
+            "type": "continuous"
+        },
+		{
+            "key": "tsne_x",
+            "title": "t-sne_x",
+            "type": "continuous"
+        },
+		{
+            "key": "tsne_y",
+            "title": "t-sne_y",
+            "type": "continuous"
+        },
+		{
+            "key": "umap_x",
+            "title": "UMAP_x",
+            "type": "continuous"
+        },
+		{
+            "key": "umap_y",
+            "title": "UMAP_y",
+            "type": "continuous"
         }
+		
     ],
     "display_defaults": {
         "color_by": "clade_membership",
@@ -64,6 +110,7 @@
       "region",
       "country"
     ],
+	
     "panels": [
         "tree"
     ]
