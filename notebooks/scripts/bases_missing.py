@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     strains = []
     genomes = []
-    for record in SeqIO.parse("results/aligned.fasta", "fasta"):
+    for record in SeqIO.parse(args.alignment, "fasta"):
         strains.append(str(record.id))
         genomes.append(str(record.seq))
 

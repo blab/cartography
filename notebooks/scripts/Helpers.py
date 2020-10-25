@@ -287,7 +287,7 @@ def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, c
 
 
 def scatterplot_xyvalues(strains, similarity_matrix, embedding_df, column1, column2, type_of_embedding):
-    """Returns a unraveled similarity matrix Pandas dataframe of pairwise and euclidean distances for each strain pair 
+    """Returns a unraveled similarity matrix Pandas dataframe of pairwise and euclidean distances for each strain pair
      Parameters
     -----------
     strains: list
@@ -302,8 +302,7 @@ def scatterplot_xyvalues(strains, similarity_matrix, embedding_df, column1, colu
         the name of the second column in df_merged to compare distance between
     type_of_embedding: string
         "MDS", "PCA", "TSNE", or "UMAP"
-        
-    Returns 
+    Returns
     ---------
     A Pandas Dataframe of pairwise and euclidean distances for every strain pair
     """
@@ -325,12 +324,12 @@ def scatterplot_xyvalues(strains, similarity_matrix, embedding_df, column1, colu
     euclidean_df = pd.DataFrame({"distance": distances})
     euclidean_df["embedding"] = type_of_embedding
     euclidean_df.columns = ["euclidean", "embedding"]
-    
+
     row_column_pairwise = row_column.merge(
         pairwise_df, how='outer', left_index=True, right_index=True)
     row_column_pairwise = row_column_pairwise.where(
         row_column_pairwise["row"] != row_column_pairwise["column"]).dropna().set_index(euclidean_df.index)
-    
+
     total_df = row_column_pairwise.merge(
         euclidean_df, how='inner', left_index=True, right_index=True).dropna()
     total_df.columns = ["row", "column", "genetic",
@@ -382,7 +381,7 @@ def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column1
     Parameters
     -----------
     sampled_df: pandas DataFrame
-        a dataframe of euclidean coordinate points containing the two columns passed in 
+        a dataframe of euclidean coordinate points containing the two columns passed in
     column1: string
         the name of the first column in sampled_df
     column2: string
@@ -392,7 +391,6 @@ def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column1
     Returns
     ----------
     A data frame of Euclidean distances for the requested embedding columns.
-    
     """
     # Traverse pairs of samples from left-to-right, top-to-bottom
     # along the upper triangle of the pairwise matrix and collect
@@ -402,7 +400,7 @@ def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column1
     clade_memberships = sampled_df[column_for_analysis].values
     for i in range(sampled_df.shape[0] - 1):
         for j in range(i + 1, sampled_df.shape[0]):
-            if clade_memberships[i] != clade_memberships[j]:
+            if clade_memberships[i] == clade_memberships[j]:
                 clade_status.append(1)
             else:
                 clade_status.append(0)
@@ -412,7 +410,7 @@ def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column1
     # as the clade statuses above.
     if (column1 is not None):
         sampled_distances = pdist(sampled_df[[column1, column2]])
-    
+
     else:
         sampled_distances = squareform(sampled_df.drop([column_for_analysis, "strain"], axis=1))
 

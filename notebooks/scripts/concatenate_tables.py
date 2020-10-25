@@ -8,6 +8,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--tables", nargs="+", help="tables to concatenate")
     parser.add_argument("--separator", default="\t", help="separator between columns in the given tables")
+    parser.add_argument("--sort-by", help="what to sort the dataframe by (optional)")
     parser.add_argument("--output", help="concatenated table")
 
     args = parser.parse_args()
@@ -17,5 +18,12 @@ if __name__ == "__main__":
         pd.read_csv(table_file, sep=args.separator)
         for table_file in args.tables
     ], ignore_index=True, sort=True)
+
+    if args.sort_by is not None:
+        df = df.sort_values(by=[args.sort_by])
+        cols_to_order = [args.sort_by]
+        new_columns = cols_to_order + (df.columns.drop(cols_to_order).tolist())
+        df = df[new_columns]
+
 
     df.to_csv(args.output, sep=args.separator, header=True, index=False)
