@@ -1,8 +1,27 @@
 rule all:
     input:
         #"cartography.pdf",
-        "cartography.html"
+        #"cartography.html",
+        "total_KDE_table.csv"
 
+rule concat_KDE_tables:
+    input:
+        Flu_KDE = "../seasonal-flu-nextstrain/results/full_KDE_metadata.csv",
+        Zika_KDE = "../zika-nextstrain/results/full_KDE_metadata.csv",
+        MERS_KDE = "../mers-nextstrain/results/full_KDE_metadata.csv"
+    output:
+        fullKDE = "total_KDE_table.csv"
+    params:
+        disease_names = "Influenza Zika MERS",
+        dataframes = "../seasonal-flu-nextstrain/results/full_KDE_metadata.csv ../zika-nextstrain/results/full_KDE_metadata.csv ../mers-nextstrain/results/full_KDE_metadata.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/concat_KDE_tables.py \
+            --tables {params.dataframes} \
+            --output {output.fullKDE} \
+            --disease-names {params.disease_names}
+        """
 rule manuscript_pdf:
     input:
         manuscript = "cartography.md"
@@ -36,3 +55,6 @@ rule manuscript_html:
             -s {input.manuscript} \
             -o {output.manuscript}
         """
+
+
+#pandoc --filter pandoc-crossref --citeproc --bibliography=cartography.bib --csl chicago-author-date.csl --template pandoc-scholar.html --css pandoc-scholar.css -s cartography.md -o cartography.html
