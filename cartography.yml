@@ -10,6 +10,7 @@ dependencies:
   - pip
   - seaborn
   - altair
+  - altair_saver
   - pandas
   - numpy
   - biopython
@@ -26,7 +27,6 @@ dependencies:
   - python-chromedriver-binary
   - reportlab
   - pip:
-    - altair-saver
     - portpicker
     - statsmodels
     - statistics
