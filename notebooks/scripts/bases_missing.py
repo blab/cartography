@@ -34,8 +34,8 @@ if __name__ == "__main__":
 
     threshold = np.mean(genomes_missing_bases) + 3*np.std(genomes_missing_bases)
 
-    new_strains = np.take(strains, np.where(genomes_missing_bases >= threshold)).tolist()[0]
-    new_genomes = np.take(genomes, np.where(genomes_missing_bases >= threshold)).tolist()[0]
+    new_strains = np.take(strains, np.where(genomes_missing_bases < threshold)).tolist()[0]
+    new_genomes = np.take(genomes, np.where(genomes_missing_bases < threshold)).tolist()[0]
 
     if args.bases_missing_vs_pca is not None:
 
