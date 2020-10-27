@@ -78,6 +78,7 @@ In the context of this paper, UMAP will reveal a tightly clustered set of data t
 
 H3N2 Influenza in this project is used as a proof of concept as H3N2 HA influenza only reassorts and does not recombine.
 The genomes are 1701 bases long, with a mean bases missing of .045217 and median of 0.
+The variation percent within the genomes is ____, which ____. 
 H3N2 Influenza is a seasonal, global disease where the clades are defined by mutations from other strains, making it the most compatible with the Hamming Distance algorithm used to reduce the embeddings detailed in the methods.
 We use H3N2's HA sequences as they have a relatively high mutation rate compared to the other gene segments, it encodes a protein that is a target of human immunity, and has traditionally been used for analysis of influenza evolution.
 As these sequences are biologically relevant, short, and do not recombine, the genomes can be reasonably assigned to phylogenetic clades.
@@ -127,12 +128,13 @@ While H3N2 Influenza is a globally distributed virus that has caused infections 
 Therefore, while Influenza's clades were defined by mutations, zika's clades were defined by significant geographical introductions and outbreaks.
 Because of the difference in the definition of a clade, we used Zika to determine if the embeddings can not only recapitulate mutational but also geographical significance within its clustering.
 The genomes are 10769 bases long, with a mean bases missing of 913.613 and median of 154.
-With a longer genome and possible recombination, it can be reasonably assumed that zika is a good test case for Cartography.
+The variation percent within the genomes is ____, which ____. 
+With a longer genome and possible recombination, it can be reasonably assumed that Zika is a good test case for Cartography.
 We infer that the embeddings will reveal outbreak patterns, but with less defined clusters than Influenza.
 
 ## Embedding clusters reveal outbreak and geographical patterns within Zika
 
-All four dimensionality reduction methods recapitulated phylogenetic patterns observed in the phylogeny (Figure 1).
+All four dimensionality reduction methods recapitulated phylogenetic patterns observed in the phylogeny ([@fig:zika-embeddings]).
 PCA, after imputing missing data, had a similar global structure to the findings in Metsky et.al., where the clades were featured on a continuum of shifting between clades instead of tightly clustered as seen in Influenza.
 Geographical introductions and outbreaks isolated from the others were placed at larger euclidean distances than related introductions.
 An example is clade c2, an outbreak in Singapore and Thailand separated from the other geographical introductions in the Americas.
@@ -149,7 +151,10 @@ These results suggest that genetic dissimilarity reduced via t-SNE and UMAP can 
 Strain pairs were not as well separated in MDS space, but MDS did loosely cluster clades with genetically and evolutionarily distant clades farther away (Clade c1, the strains dated in 2013-2014).
 This result suggests that MDS does better with unimputed data than imputed, as the genetic distance normalization process is robust to gaps.
 
-According to the Genetic vs Euclidean distance scatterplots, all four methods exhibited a piecewise linear relationship for pairs of strains that differed by no more than 50 nucleotides (Figure 2).
+<iframe src="https://blab.github.io/cartography/FullLinkedChartBrushableZika.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
+![Genetic cartography of Zika strains by dimensionality reduction methods compared to inferred phylogeny.](){#fig:zika-embeddings}
+
+According to the Genetic vs Euclidean distance scatterplots, all four methods exhibited a piecewise linear relationship for pairs of strains that differed by no more than 50 nucleotides ([@fig:zika-euclidean-vs-genetic-distance]).
 For larger than 50 nucleotide difference in genetic distance, PCA, t-SNE, and UMAP increase much faster in a piecewise fashion, revealing that these embeddings are using local patterns to map genetically distant strain combinations farther away for better visualization.
 This is the expectation for t-SNE and UMAP, but is surprising to see in PCA.
 PCA and UMAP provided the strongest linear mapping to genetic distance (Pearson's R2 = 0.573 +/- .002 and 0.580 +/- .002, respectively).
@@ -159,23 +164,15 @@ The same mapping for MDS was the weakest and non linear(Pearson's R2 = 0.253 +/-
 No strains were placed far away from eachother with MDS' loose clusters.
 t-SNE's mapping was fairly strong (Pearson's R2 = 0.522 +/- .002) and revealed that pairs of strains that differ by more than 50 nucleotides are unlikely to placed near each other in a t-SNE embedding.
 
-Just as in Influenza, t-SNE and PCA provided the most accurate classifications (MCC = 0.56 and 0.52, respectively) and outperformed pairwise genetic distance (MCC = 0.51) and UMAP (MCC = 0.37, Figure 3).
+![Mapping between Euclidean and genetic distances for all pairs of Zika strains by dimensionality reduction method.](FullScatterplotZika.png){#fig:zika-euclidean-vs-genetic-distance}
+
+Just as in Influenza, t-SNE and PCA provided the most accurate classifications (MCC = 0.56 and 0.52, respectively) and outperformed pairwise genetic distance (MCC = 0.51) and UMAP (MCC = 0.37, [@fig:zika-within-and-between-group-distances]).
 UMAP performed incredibly poorly, which we attribute to the incredible distance between clade c2 and the other clades, which may have caused the classifier to misrepresent the euclidean threshold between and within clades (FN: 7934 vs FP: 49397).
 MDS performed poorly (MCC = .34), confirming our expectations based on MDS's piecewise linear relationship with genetic distances.
 These results corroborate our previous conclusion about the potential benefits of using t-SNE embeddings for cluster analysis over genetic distance.
 
+![Distribution of scaled Euclidean distances between all pairs of Zika strains by clade status and dimensionality reduction method.](FullKDEDensityZika.png){#fig:zika-within-and-between-group-distances}
 
-## Figure Four
-<iframe src="https://blab.github.io/cartography/FullLinkedChartBrushableZika.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
-
-## Figure Five
-
-![](FullScatterplotZika.png)
-
-
-## Figure Six
-
-![](FullKDEDensityZika.png)
 
 ## Expectations for MERS
 
@@ -185,12 +182,13 @@ MERS is a recombinant virus, and there are observed departures from strictly clo
 While its effect on human outbreaks is minimal, as humans are transient hosts with a smaller probability for co-infection, its effect is exacerbated in camel outbreaks.
 While Influenza's clades are defined by mutations and Zika's by significant geographical introductions, MERS clades were assigned to internal nodes and tips in the tree based on monophyletic host status (strictly camel or human) to reveal patterns within host outbreaks.
 The genomes are 30130 bases long, with a mean bases missing of 889.781 and median of 42.5.
+The variation percent within the genomes is ____, which ____. 
 With a long genome, recombination, missing bases, and mutliple hosts, it can be reasonably assumed that MERS is a good case to test and challenge Cartography.
 Because MERS clades are defined by outbreak, we infer the embeddings will behave similarly to Zika, with clustering by outbreak and host status.
 
 ## SUMMARY OF RESULTS FOR MERS
 
-While MDS, t-SNE, and UMAP all recapitulated the patterns observed in the phylogeny, PCA did not. 
+While MDS, t-SNE, and UMAP all recapitulated the patterns observed in the phylogeny, PCA did not ([@fig:MERS-embeddings]). 
 With MDS missing bases in multiple strains, imputation did not help add more depth to the alignment, and therefore PCA was only able to separate low quality strains from high quality strains. 
 To try and combat this issue, all strains with 3 standard deviations higher of missing bases were removed from the analysis; while this helped create tighter clusters in the distance based methods, PCA did not reveal any further structure. 
 Outbreaks isolated from others and strains from different hosts were placed at larger euclidean distances from related strains and host.
@@ -204,7 +202,10 @@ t-SNE performed exceedingly better than the other embeddings at differentiating 
 An example of this is Clade 9, Clade 10, Clade 11, and Clade 12, camel and human outbreaks concentrated in Saudi Arabia and the UAE, which were clearly separated from eachother in t-SNE and not in UMAP. 
 This suggests that t-SNE is a stronger tool for viewing genetically homologous populations than UMAP. 
 
-According to the Genetic vs Euclidean distance scatterplots, MDS had a linear relationship throughout while t-SNE and UMAP exhibited a piecewise linear relationship for pairs of strains that differed by no more than 100 nucleotides (Figure 2).
+<iframe src="https://blab.github.io/cartography/FullLinkedChartBrushableMERS.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
+![Genetic cartography of MERS strains by dimensionality reduction methods compared to inferred phylogeny.](){#fig:MERS-embeddings}
+
+According to the Genetic vs Euclidean distance scatterplots, MDS had a linear relationship throughout while t-SNE and UMAP exhibited a piecewise linear relationship for pairs of strains that differed by no more than 100 nucleotides ([@fig:MERS-euclidean-vs-genetic-distance]).
 For larger than 100 nucleotide difference, t-SNE and UMAP decrease sharply, a contrast to the patterns seen in Zika and Influenza. 
 While these embeddings are still using local patterns to map genetically distant strain combinations at higher and lower euclidean distances, t-SNE and UMAP select a low or high euclidean distance depending on the strain relationship. 
 This can be attributed to the two larger clusters both UMAP and t-SNE made within the embedding, with Clades 27 through 32 in one group, and the rest in another.
@@ -212,26 +213,59 @@ MDS provided the strongest linear mapping to genetic distance (Pearson's R2 = 0.
 UMAP and t-SNE's scatterplots shared many similar characteristics in terms of shape, spread, and clustering (Pearson's R2 = 0.203 +/- .005 and 0.254 +/- .005 respectively).
 The same mapping for PCA was incredibly weak and non linear(Pearson's R2 = 0.026 +/- .001).
 
-Just as in Influenza and Zika, t-SNE provided the most accurate classification of the embeddings (MCC = 0.62) but did not outperform pairwise genetic distance (MCC = 0.71).
+![Mapping between Euclidean and genetic distances for all pairs of MERS strains by dimensionality reduction method.](FullScatterplotMERS.png){#fig:MERS-euclidean-vs-genetic-distance}
+
+Just as in Influenza and Zika, t-SNE provided the most accurate classification of the embeddings (MCC = 0.62) but did not outperform pairwise genetic distance (MCC = 0.71, [@fig:MERS-within-and-between-group-distances]).
 PCA could not be considered in this analysis, as the classifier was unable to find a distance threshold to separate within vs between clade relationships.
 UMAP performed poorest (MCC = .479), which we attribute to the tight clusters between multiple related clades seen in UMAP, which may have caused the classifier to create a lower euclidean distance threshold between and within clades (FN: 309 vs FP: 2164).
 MDS performed much better than in Influenza and Zika (MCC = .578), and with MDS being the most global reduction of the data and genetic distance outperforming all the embeddings, shows MERS to be a disease best classified without local patterns.
 These results corroborate our conclusion about using t-SNE embeddings for cluster analysis, but suggest viewing and quantifying the data through multiple reductions in order to create the best view of the data. 
 
+![Distribution of scaled Euclidean distances between all pairs of MERS strains by clade status and dimensionality reduction method.](FullKDEDensityMERS.png){#fig:MERS-within-and-between-group-distances}
 
 
-## SUMMARY OF RESULTS ACROSS VIRUSES
+# Discussion
 
-PCA is incredibly senstive to missing data, which is the larger issue of using sites on a genome as features.
-While PCA can therefore be used to pull out low quality strains, we had to remove all the low quality samples through imputation, dropping strains, and thorough inspection of the data to create a useful PCA embedding.
-The advantage of UMAP and t-SNE over PCA is their robustness to missing data while preserving similar, if not better, quality results.
-t-SNE performed the best out of the embeddings at finding outbreaks, newly created clades, and local patterns in general.
-While UMAP has been used extensively recently in genomic studies, we reccomend the use of t-SNE for a most robust embedding to outliers and other sample quality issues extrapolated within the UMAP embedding that are not in t-SNE.
+In this paper, we analyzed the usage of PCA, MDS, t-SNE, and UMAP to better understand population structure in varying types of disease with differing clade assignments. 
+We accomplished this both qualitiatively by using interactive visualizations, a novel and important part of the analysis that enables a more in-depth exploration of patterns in the data that would otherwise require more technical expertise.
+This interactibility makes these charts, along with Cartography's public automated code pipelines and scripts, more accessible to scientists and the public. 
+
+The diseases we used to analyzed varied in genome length, genetic variance, and phylogenetic clade assignment due to different modes of transmission and mutability. 
+Across all the disease, we found PCA to be incredibly senstive to missing data. 
+While this is not a major issue in smaller genomes with less variance within the population, imputing missing data and dropping strains to create a useful PCA embedding introduced noise into the embeddings. 
+We attributed this drawback to the larger flaw of using sites on a genome as features to find useful patterns. 
+This, however, does make PCA useful in pulling out low quality and misnamed strains in an analysis. 
+A future direction would be defining a euclidean threshold between low quality and normal strains to find outliers within a population, which could potentially save scientists hours of outlier detection. 
+As it is common practice to run flu builds all the way through to auspice JSONs, view them, and find a handful of outliers that should have been excluded from the analysis, this research could potentially be used as an upstream tool to flag potential outliers before building a tree.
+
+
+In terms of local patterns and clade detection, t-SNE consistently did better than the other embeddings.
+An advantage of t-SNE over PCA is its robustness to missing data while preserving similar, if not better, quality results.
+t-SNE performed the best at finding outbreaks, newly created clades, and local patterns within larger clades.
+A queston we aimed to answer with this research was the level of their phylogeny that clusters within each embeddings were being developed. 
+Using the community builds of Cartography's phylogenies colored by t-sne x (component 1), we analyzed Flu, Zika, and MERS clade structure and coloring. 
+We found that within Flu, t-SNE clusters exactly as defined by the clades, which were defined by genomic variance, and we attributed this success to small genomes with clades defined exactly how the algorithm defines genetic distance.
+Within Zika, t-SNE was able to pull out outbreaks and transmissions limited to 4 or less strains as a group, which were defined by the same node, or one node away at most from eachother. 
+This level of fine-tuning with clades and groups defined by geographical introductions and outbreaks revealed t-SNEs ability to reference ancestral population structure in structuring the embedding. 
+Within MERS, the clades were defined by outbreaks per host, and t-SNE did the best at pulling out these per host outbreaks of the four embeddings, correctly identifying outbreaks with less than 6 samples and 3 nodes apart. 
+Beyond qualitative patterns, t-SNE outperformed all the embeddings and genetic distance in Influenza and Zika for classification of between and within clade relationships, while genetic did better than t-SNE for MERS. 
+As genetic variance and genome length continues to increase, t-SNE continues to work well, but the added noise does create less segmented embeddings. Of the four embeddings and genetic distance, the best indicator for the mathematical determination of clades (how many relationships are preserved) is t-SNE's euclidean distance and genetic distance. 
+A future direction for testing the applicability of t-SNE would be a cross-validation test, where a t-SNE threshold of euclidean distance between relationships is used on a population of the same disease from some years later. 
+This could potentially help determine the usefulness of t-SNE in understanding future trends in present populations.
+While UMAP has been used extensively recently in genomic studies, we recommend the use of t-SNE for a more robust embedding to outliers and other sample quality issues extrapolated within the UMAP embedding that are not in t-SNE.
+UMAP consistently performed worse with classification and finding local patterns, and we conclude this is due to UMAP's inability to cluster finer patterns in genetically variable populations, and instead creates larger groups of often multiple clades and outbreaks. 
+
+Our recommendations for algorithm choices have to do with the many factors that create a population. 
+For a population with smaller genomes and very few missing bases, PCA and t-SNE work best at both defining clades, and embeddings that convey useful information. 
+For genomes with around 10K bases and  more missing data, PCA will still work with pretty basic imputation (the caviat, however, is the added noise). 
+To get around this issue, t-SNE creates a similar, if not better quality embedding than PCA without imputation, making it a more versatile algorithm. 
+Classification of within and between clade relationships is best performed by t-SNE of genetic distance. 
+For large genomes (30K bases+), lots of missing data with fewer samples, and diversity, t-SNE is the most useful of the embeddings, while it is not as strong as it is in smaller, less variable genomes. 
+Genetic distance works best in these populations for classifying relationships as within or between clade. 
+
 This paper has systematically and quantitatively demonstrated the usefulness, accuracy, and usages of these embeddings in viral epidemiology, something not done until now.
 It has opened a gateway for its usage in practical applications in the future, especially since the code and analysis used for this paper have been made public, easy to use on other datasets, and will be onboarded into neststrain-augur for ease of use.
 The hope is that scientists will now be able to use these embeddings to further understand their dataset and diseases.
-
-# Discussion
 
 # Materials and methods
 
