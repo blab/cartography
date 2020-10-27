@@ -20,6 +20,7 @@ if __name__ == "__main__":
     parser.add_argument("--distance", required=True, help="a distance matrix of pairwise distances with the strain name as the index")
     parser.add_argument("--embedding", required=True, help="an embedding csv matrix - the order of distances per strain MUST be the same as the distance matrix")
     parser.add_argument("--method", required=True, choices = ["pca", "mds", "t-sne", "umap"], help="the embedding used")
+    parser.add_argument("--columns", nargs="+", help="the columns which the pdist will be calculated on")
     parser.add_argument("--bootstrapping-sample", default=10000, type=int, help="number of times the data is sampled with replacement to find the mean and standard deviation of the pearson coefficient")
     parser.add_argument("--output-figure", help="path for outputting as a PNG")
     parser.add_argument("--output-dataframe", help="path for outputting as a dataframe")
@@ -44,10 +45,7 @@ if __name__ == "__main__":
     assert np.array_equal(distance_matrix.index, embedding_df.index)
 
     #calling Helpers.py scatterplot_xyvalues on the data
-
-    column_names = list(embedding_df.columns.values)
-
-    total_df = scatterplot_xyvalues(list(embedding_df.index), distance_matrix, embedding_df, column_names[0], column_names[1], args.method)
+    total_df = scatterplot_xyvalues(list(embedding_df.index), distance_matrix, embedding_df, args.columns, args.method)
     
     r_value_arr = []
     for i in range(0, args.bootstrapping_sample):
@@ -110,5 +108,5 @@ if __name__ == "__main__":
         total_df.to_csv(args.output_dataframe)
 
     if args.output_metadata is not None:
-        metadata_df = pd.DataFrame([[r_value ** 2, mean, std, variation_percent, mean_genetic, std_genetic, max_genetic, mean_euclidean, std_euclidean, max_euclidean]], columns=["pearson_coef", "mean", "std", "genetic_variation", "genetic_mean", "genetic_std", "genetic_max", "euclidean_mean", "euclidean_std", "euclidean_max"])
+        metadata_df = pd.DataFrame([[args.method, r_value ** 2, mean, std, variation_percent, mean_genetic, std_genetic, max_genetic, mean_euclidean, std_euclidean, max_euclidean]], columns=["embedding", "pearson_coef", "mean", "std", "genetic_variation", "genetic_mean", "genetic_std", "genetic_max", "euclidean_mean", "euclidean_std", "euclidean_max"])
         metadata_df.to_csv(args.output_metadata)

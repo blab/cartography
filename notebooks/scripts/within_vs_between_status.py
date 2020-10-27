@@ -26,7 +26,7 @@ if __name__ == "__main__":
     parser.add_argument("--clades", help="a path to the clade status of the different strains in the build")
     parser.add_argument("--metadata", help="a path to a tsv file that contains information about the differentiator column")
     parser.add_argument("--method", required=True, choices = ["pca", "mds", "t-sne", "umap", "genetic"], help="the embedding used")
-    parser.add_argument("--embedding-columns", nargs=2, required=True, help="list of the two columns to use as coordinates from the embedding data frame")
+    parser.add_argument("--embedding-columns", nargs="+", required=True, help="list of the columns to use as coordinates from the embedding data frame")
     parser.add_argument("--differentiator-column", default="clade_membership", help="string name of the column to differentiate by (clade, host, etc)")
     parser.add_argument("--output-figure", help="path for outputting as a PNG")
     parser.add_argument("--output-dataframe", help="path for outputting as a dataframe")
@@ -79,7 +79,7 @@ if __name__ == "__main__":
 
     if args.method != "genetic":
         merged_df = embedding_df.merge(clade_annotations, on="strain")
-        KDE_df = get_euclidean_data_frame(sampled_df=merged_df, column1=args.embedding_columns[0], column2=args.embedding_columns[1], column_for_analysis=args.differentiator_column, embedding=args.method)
+        KDE_df = get_euclidean_data_frame(sampled_df=merged_df, column_list=args.embedding_columns, column_for_analysis=args.differentiator_column, embedding=args.method)
         KDE_df["scaled_distance"] = scaler.fit_transform(KDE_df["distance"].values.reshape(-1, 1)).flatten()
 
     if args.method == "genetic":

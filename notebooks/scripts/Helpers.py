@@ -286,7 +286,7 @@ def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, c
         return list_of_chart
 
 
-def scatterplot_xyvalues(strains, similarity_matrix, embedding_df, column1, column2, type_of_embedding):
+def scatterplot_xyvalues(strains, similarity_matrix, embedding_df, column_list, type_of_embedding):
     """Returns a unraveled similarity matrix Pandas dataframe of pairwise and euclidean distances for each strain pair
      Parameters
     -----------
@@ -296,10 +296,8 @@ def scatterplot_xyvalues(strains, similarity_matrix, embedding_df, column1, colu
         a similarity matrix using hamming distance to compare pairwise distance between each strain
     df_merged: Pandas Dataframe
         dataframe containing the euclidean coordinates of each strain in an embedding (PCA, MDS, t-SNE, UMAP)
-    column1: string
-        the name of the first column in df_merged to compare distance between
-    column2: string
-        the name of the second column in df_merged to compare distance between
+    column_list: list
+        string list contaning the names of the columns to find the distance between
     type_of_embedding: string
         "MDS", "PCA", "TSNE", or "UMAP"
     Returns
@@ -320,7 +318,7 @@ def scatterplot_xyvalues(strains, similarity_matrix, embedding_df, column1, colu
         column_strain, how='outer', left_index=True, right_index=True)
     row_column.columns = ["row", "column"]
 
-    distances = pdist(embedding_df[[column1, column2]])
+    distances = pdist(embedding_df[column_list])
     euclidean_df = pd.DataFrame({"distance": distances})
     euclidean_df["embedding"] = type_of_embedding
     euclidean_df.columns = ["euclidean", "embedding"]
@@ -376,7 +374,7 @@ def scatterplot_tooltips(strains, similarity_matrix, df_merged, column1, column2
     ).properties(title="Genetic vs. Euclidean scatterplot: " + type_of_embedding + "  (R^2 = " + str((r_value ** 2).round(3)) + ")", height=200, width=300)
     return chart
 
-def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column1=None, column2=None):
+def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column_list=None):
     """Gives a dataframe of euclidean distances for embedding columns to use in plotting and analysis
     Parameters
     -----------
@@ -408,8 +406,8 @@ def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column1
     # Calculate pairwise distances between samples for the requested columns.
     # The resulting array is in the same left-to-right, top-to-bottom order
     # as the clade statuses above.
-    if (column1 is not None):
-        sampled_distances = pdist(sampled_df[[column1, column2]])
+    if (column_list is not None):
+        sampled_distances = pdist(sampled_df[column_list])
 
     else:
         sampled_distances = squareform(sampled_df.drop([column_for_analysis, "strain"], axis=1))

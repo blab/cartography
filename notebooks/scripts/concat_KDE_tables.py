@@ -30,9 +30,5 @@ if __name__ == "__main__":
         return rt  
 
     df.index = flatten(table_index)
-
-    cols_to_order = ["MCC"]
-    new_columns = cols_to_order + (df.columns.drop(cols_to_order).tolist())
-    df = df[new_columns]
     
-    df.to_csv(args.output, sep=args.separator, header=True, index=True)
+    df.to_csv(args.output, sep=args.separator, header=True, index=True, columns=["embedding", "MCC", "accuracy_confusion_matrix", "TN", "FN", "TP", "FP", "classifier_threshold", "median_within", "median_between"])
