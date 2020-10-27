@@ -7,7 +7,6 @@
   ],
   "build_url": "https://github.com/nextstrain/zika",
   "colorings": [
-    "colorings": [
         {
             "key": "pca_label",
             "title": "PCA cluster",
@@ -96,6 +95,76 @@
 		{
             "key": "umap_y",
             "title": "UMAP_y",
+            "type": "continuous"
+        },
+		{
+            "key": "pca5",
+            "title": "PCA5",
+            "type": "continuous"
+        },
+		{
+            "key": "pca6",
+            "title": "PCA6",
+            "type": "continuous"
+        },
+		{
+            "key": "pca7",
+            "title": "PCA7",
+            "type": "continuous"
+        },
+		{
+            "key": "pca8",
+            "title": "PCA8",
+            "type": "continuous"
+        },
+		{
+            "key": "pca9",
+            "title": "PCA9",
+            "type": "continuous"
+        },
+		{
+            "key": "pca10",
+            "title": "PCA10",
+            "type": "continuous"
+        },
+		{
+            "key": "mds3",
+            "title": "MDS3",
+            "type": "continuous"
+        },
+		{
+            "key": "mds4",
+            "title": "MDS4",
+            "type": "continuous"
+        },
+		{
+            "key": "mds5",
+            "title": "MDS5",
+            "type": "continuous"
+        },
+		{
+            "key": "mds6",
+            "title": "MDS6",
+            "type": "continuous"
+        },
+		{
+            "key": "mds7",
+            "title": "MDS7",
+            "type": "continuous"
+        },
+		{
+            "key": "mds8",
+            "title": "MDS8",
+            "type": "continuous"
+        },
+		{
+            "key": "mds9",
+            "title": "MDS9",
+            "type": "continuous"
+        },
+		{
+            "key": "mds10",
+            "title": "MDS10",
             "type": "continuous"
         }
   ],

@@ -19,6 +19,7 @@ rule all:
         expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
         "results/table.tsv",
         "results/full_KDE_metadata.csv",
+        "results/full_Scatterplot_metadata.csv",
         "results/imputed_fasta.fasta",
         "../docs/FullKDEDensityZika.png",
         "../docs/FullScatterplotZika.png",
@@ -425,17 +426,28 @@ rule embed_mds:
             --components {params.components} \
         """
 
+def _get_embedding_columns_by_wildcards(wildcards):
+    method = wildcards.method.replace("-", "")
+
+    if method in ("pca", "mds"):
+        return f"{method}1 {method}2 {method}3 {method}4"
+    else:
+        return f"{method}_x {method}_y"
+
+
 rule scatterplot:
     message: "Creating the scatterplot (PNG, dataframe)"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output,
+        distance_matrix = "results/distance_matrix.csv",
         embedding = "results/embed_{method}.csv",
     output:
         figure = "results/scatterplot_{method}.png",
         dataframe = "results/scatterplot_{method}.csv",
         metadata = "results/scatterplot_{method}_metadata.csv"
     params:
-        bootstrap = 1000
+        bootstrap = 1000,
+        nucleotides = 1701.0,
+        columns = _get_embedding_columns_by_wildcards
     conda: "../cartography.yml"
     shell:
         """
@@ -443,12 +455,14 @@ rule scatterplot:
             --distance {input.distance_matrix} \
             --embedding {input.embedding} \
             --method {wildcards.method} \
+            --columns {params.columns} \
             --bootstrapping-sample {params.bootstrap} \
             --output-figure {output.figure} \
             --output-dataframe {output.dataframe} \
-            --output-metadata {output.metadata}
+            --output-metadata {output.metadata} \
+            --nucleotide {params.nucleotides}
         """
-
+        
 def _get_embedding_path_by_wildcards(wildcards):
     method = wildcards.method
 
@@ -456,14 +470,6 @@ def _get_embedding_path_by_wildcards(wildcards):
         return f"results/embed_{method}.csv"
     else:
         return "results/distance_matrix.csv"
-
-def _get_embedding_columns_by_wildcards(wildcards):
-    method = wildcards.method.replace("-", "")
-
-    if method in ("pca", "mds"):
-        return f"{method}1 {method}2"
-    else:
-        return f"{method}_x {method}_y"
 
 rule KDE_density:
     message: "creating the KDE density plot"
@@ -509,6 +515,27 @@ rule concat_KDE_table:
         python3 ../notebooks/scripts/concatenate_tables.py \
             --tables {params.dataframes} \
             --separator ',' \
+            --output {output.metadata}
+        """
+rule concat_scatterplot_table:
+    message: "concatenating all the scatterplot metadata into one csv dataframe"
+    input:
+       dataframe_pca = "results/scatterplot_pca_metadata.csv",
+       dataframe_mds = "results/scatterplot_mds_metadata.csv", 
+       dataframe_tsne = "results/scatterplot_t-sne_metadata.csv", 
+       dataframe_umap = "results/scatterplot_umap_metadata.csv"
+    output:
+        metadata = "results/full_Scatterplot_metadata.csv"
+    params:
+        column = "pearson_coef",
+        dataframes = "results/scatterplot_pca_metadata.csv results/scatterplot_mds_metadata.csv results/scatterplot_t-sne_metadata.csv results/scatterplot_umap_metadata.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/concatenate_tables.py \
+            --tables {params.dataframes} \
+            --separator ',' \
+            --sort-by {params.column} \
             --output {output.metadata}
         """
 rule create_notebook_docs:
