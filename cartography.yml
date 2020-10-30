@@ -11,6 +11,7 @@ dependencies:
   - seaborn
   - altair
   - altair_saver
+  - dendropy
   - pandas
   - numpy
   - biopython
