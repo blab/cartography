@@ -5,6 +5,8 @@ import argparse
 from augur.utils import write_json
 import Bio.SeqIO
 from collections import OrderedDict
+from dendropy.calculate import popgenstat
+from dendropy import DnaCharacterMatrix
 import hdbscan
 import matplotlib.pyplot as plt
 import numpy as np
@@ -105,6 +107,11 @@ if __name__ == "__main__":
         genomes_df = pd.DataFrame(numbers)
         genomes_df.columns = ["Site " + str(k) for k in range(0,len(numbers[i]))]
 
+        d = DnaCharacterMatrix.get(
+            path=args.alignment,
+            schema="fasta"
+        )
+
         
         #performing PCA on my pandas dataframe
         pca = PCA(n_components=args.components,svd_solver='full') #can specify n, since with no prior knowledge, I use None
@@ -161,6 +168,8 @@ if __name__ == "__main__":
         #add explained variance as the first row of the dataframe
         explained_variance = pd.DataFrame([round(pca.explained_variance_ratio_[i],4) for i in range(0,len(pca.explained_variance_ratio_))], columns=["explained variance"])
         explained_variance["principal components"] = [i for i in range(1, args.components + 1)]
+        explained_variance["nucleotide_diversity"] = popgenstat.nucleotide_diversity(d, ignore_uncertain=True)
+        print(popgenstat.nucleotide_diversity(d, ignore_uncertain=True))
         explained_variance.to_csv(args.explained_variance, index=False)
 
     if args.cluster:
