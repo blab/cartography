@@ -27,7 +27,6 @@ dependencies:
   - python-chromedriver-binary
   - reportlab
   - pip:
-    - portpicker
     - statsmodels
     - statistics
     - snakemake
