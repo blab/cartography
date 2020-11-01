@@ -31,7 +31,9 @@ rule all:
         "../docs/FullMDSBrushSupplementMERS.html",
         "../docs/FullPCABrushSupplementMERS.html",
         "../docs/FullLinkedChartBrushableHostMERS.html",
-        "../docs/explainedVarianceMERS.png"
+        "../docs/explainedVarianceMERS.png",
+        "results/bases_missing_vs_pc1.png",
+        "results/nucleotide_diversity.txt"
 
 
 rule files:
@@ -133,22 +135,36 @@ rule pca_before:
             pca \
             --components {params.components} 
         """
-rule subset_data:
-    message: "creating a new dataframe/fasta file"
+
+rule bases_missing_vs_pc1:
+    message: "creating a bases_missing vs PC1 graph"
     input:
         alignment = rules.extract_sequences.output.sequences,
         pca = "results/embed_pca_before.csv"
     output:
-        fasta = "results/subset_fasta.fasta",
         figure = "results/bases_missing_vs_pc1.png"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/pc1_vs_bases_missing.py \
+            --alignment {input.alignment} \
+            --pca {input.pca} \
+            --output {output.figure}
+        """
+
+
+rule subset_data:
+    message: "creating a new dataframe/fasta file"
+    input:
+        alignment = rules.extract_sequences.output.sequences
+    output:
+        fasta = "results/subset_fasta.fasta",
     conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/bases_missing.py \
             --alignment {input.alignment} \
-            --output-fasta {output.fasta} \
-            --output-bases-missing {output.figure} \
-            --bases-missing-vs-pca {input.pca} \
+            --output-fasta {output.fasta} 
         """
 
 rule create_distance_matrix:
@@ -164,6 +180,21 @@ rule create_distance_matrix:
             --alignment {input.alignment} \
             --output {output.output}
         """
+
+rule nucleotide_diversity:
+    message: "finding the nucleotide diversity of an aligned FASTA file"
+    input:
+        alignment = "results/aligned.fasta"
+    output:
+        output = "results/nucleotide_diversity.txt"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/nucleotide_diversity.py \
+            --alignment {input.alignment} \
+            --output {output.output}
+        """
+
 
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"

@@ -26,9 +26,10 @@ rule all:
         "../docs/FullKDEDensityFlu.png",
         "../docs/FullScatterplotFlu.png",
         "../docs/FullLinkedChartBrushableFlu.html",
-        #"../docs/FullLinkedChartBrushableFlu.svg",
+        "../docs/FullLinkedChartBrushableFlu.svg",
         "../docs/FullMDSBrushSupplementFlu.html",
         "../docs/FullPCABrushSupplementFlu.html",
+        "results/nucleotide_diversity.txt",
         "../docs/explainedVarianceFlu.png"
 
 rule files:
@@ -308,6 +309,20 @@ rule tree_to_table:
             --attributes {params.attributes}
         """
 
+rule nucleotide_diversity:
+    message: "finding the nucleotide diversity of an aligned FASTA file"
+    input:
+        alignment = "results/aligned.fasta"
+    output:
+        output = "results/nucleotide_diversity.txt"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/nucleotide_diversity.py \
+            --alignment {input.alignment} \
+            --output {output.output}
+        """
+
 rule create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
@@ -585,7 +600,7 @@ rule create_notebook_docs:
         KDE_density = "../docs/FullKDEDensityFlu.png",
         Scatterplot = "../docs/FullScatterplotFlu.png",
         fullChart = "../docs/FullLinkedChartBrushableFlu.html",
-        #fullChartSVG = "../docs/FullLinkedChartBrushableFlu.svg",
+        fullChartSVG = "../docs/FullLinkedChartBrushableFlu.svg",
         MDS_Supplement = "../docs/FullMDSBrushSupplementFlu.html",
         PCA_Supplement = "../docs/FullPCABrushSupplementFlu.html",
         Explained_variance_PCA = "../docs/explainedVarianceFlu.png"
