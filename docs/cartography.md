@@ -295,7 +295,7 @@ We analyzed influenza A/H3N2 and Zika by creating a FASTA file of multiple seque
 
 We used two different methods of transforming the data; Scaling and centering the data, and a Hamming distance similarity matrix.
 For Scaling and Centering the data, we performed PCA on the matrix of nucleotides from the multiple sequence alignment using scikit-learn [@jolliffe_cadima_2016].
-An explained variance plot was created to determine the amount of PCs created, which is in the supplementary figures section.
+An explained variance plot was created to determine the amount of PCs used for distance calulations and visualization, which is in the supplementary figures section.
 A separate bases missing vs PC1 was also created to help reveal the level of relation between missing bases and outliers in PCA; this is available for MERS in the supplemental section.
 
 We dropped around 4 strains in the H3N2 analysis, as they were direct animal to human transmissions where the genomes resembled swine flu (seen through NCBI's BLAST).
@@ -312,7 +312,7 @@ We only counted a difference between the main nucleotide pairs (AGCT) - gaps (N,
 This is because some sequences were significantly shorter than others, and a shorter strain does not necessarily correspond to genetic dissimilarity, which is what counting gaps implied.
 
 We reduced the similarity distance matrix through MDS, t-SNE, and UMAP, plotted using [Altair](https://altair-viz.github.io/) [@VanderPlas2018], and colored by clade assignment.
-Clade membership metadata was provided by a .json build of the influenza H3N2 tree and Zika trees. Clade membership metadata was provided by a .json build of the influenza H3N2 tree and Zika trees. For MERS, the host data was given via the Newick tree, and clade membership was defined using [BioPython](https://biopython.org/) as outbreaks with a monophyletic host status (strictly camel or human).
+Clade membership metadata was provided by a .json build of the influenza H3N2 tree and Zika trees. For MERS, the host data was given via the Newick tree, and clade membership was defined using [BioPython](https://biopython.org/) as outbreaks with a monophyletic host status (strictly camel or human).
 
 The 3 different dimensionality reduction techniques are ordered below by publication date:
 - [MDS](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.MDS.html)
@@ -321,8 +321,8 @@ The 3 different dimensionality reduction techniques are ordered below by publica
 
 The plots of the full 10 PCs for PCA and the first 6 components for MDS are available in the supplemental figures section.
 
-We tuned hyperparameters for t-SNE and UMAP through an exhaustive grid search, which picked the best values by maximizing Matthews Correlation Coefficient on the confusion matrix created from a Supported Vector Machine's classification.
-UMAP's minimum distance and nearest neighbors were tuned, and t-SNEs perplexity and learning rate were tuned as well.
+We tuned hyperparameters for t-SNE and UMAP using an exhaustive grid search, which picked the best parameters by maximizing Matthews Correlation Coefficient for the confusion matrix created from the Supported Vector Machine's classification.
+UMAP's minimum distance and nearest neighbors were tuned, and t-SNEs perplexity and learning rate were tuned.
 As nearest neighbors fluctuates depending on the amount of samples, we took the best nearest neighbor value from the cross validation and the total number of samples given per fold.
 This proportion was used to determine the nearest neighbors value for the UMAP plots.
 t-SNE performed best with a perplexity of 15.0 and a learning rate of 100.0.
@@ -331,7 +331,7 @@ While tuning these parameters does not change qualitative results, it can help m
 
 We ran the raw embedding distances through the clustering algorithm Hierarchical Density-Based Spatial Clustering of Applications with Noise (HDBSCAN) to understand the usage of the embeddings to cluster data without the phylogenetic tree.
 
-To further analyze these embeddings’ ability to accurately capture the multidimensional data, we made two separate plots: hamming vs Euclidean distance scatterplots with a LOESS best fit line, and within vs between clade KDE density plots per embedding.
+To further analyze these embeddings’ ability to accurately capture the multidimensional data, we made two separate plots: Hamming vs Euclidean distance scatterplots with a LOESS best fit line, and within vs between clade KDE density plots per embedding.
 
 #### Hamming distance vs Euclidean distance scatterplots:
 
@@ -340,7 +340,7 @@ The Hamming distance between nucleotide sequences is plotted on the x axis, and 
 PCA and MDS's distances were calculated using 4 components, while t-SNE and UMAP were calculated with 2. 
 By plotting these distance measurements, we can observe how correlated the dataset is.
 The higher the correlation, the better a function can describe the relationship between the Hamming distance value and the Euclidean distance value.
-In this way, constant correlation in a plot reveals that the embedding tends to capture and retain global patterns rather than look, and a splayed structure points to local structure preservation over global.
+In this way, constant correlation in a plot reveals that the embedding tends to capture and retain global patterns, and a splayed structure points to local structure preservation.
 Therefore, the closer the Pearson Coefficient is to 1, the better the embedding is at preserving pairwise relationships in Euclidean space.
 The LOESS line drawn through the plot assesses the best fit function for the embedding.
 We bootstrapped our scatterplot to find the Pearson Coefficient with a confidence interval.
@@ -352,7 +352,7 @@ The Between vs Within clade KDE Density Plots visually represent how well Euclid
 In other words, it describes the probability that a certain Euclidean distance can be used to classify a given pair of genomes as within vs between clades.
 The larger the median ratio between the two curves presented per clade relationship, the higher the relative probability that the embedding will accurately predict if two strains with any specific distance is a between or within clade relationship.
 To create this plot, the matrix of Euclidean distances for each embedding was flattened, and each comparison was labeled as a “within clade” or “between clade” comparison using the clade assignments from the .json build of the tree.
-KDE plots were made using [seaborn](https://seaborn.pydata.org/) , separated by clade status and Euclidean distance on the y axis.
+KDE plots were made using [seaborn](https://seaborn.pydata.org/), separated by clade status and Euclidean distance on the y axis.
 A Supported Vector Machine was run to optimize for clade relationships by Euclidean distance, and the Matthews Correlation Coefficient, accuracy value, and classifier thresholds were calculated and captured along with the confusion matrix of values.
 
 # Acknowledgements
