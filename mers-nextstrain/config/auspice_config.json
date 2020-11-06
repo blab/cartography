@@ -96,7 +96,7 @@
             "title": "UMAP_y",
             "type": "continuous"
         },
-				{
+		{
             "key": "pca5",
             "title": "PCA5",
             "type": "continuous"

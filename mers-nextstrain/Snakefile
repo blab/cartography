@@ -32,8 +32,9 @@ rule all:
         "../docs/FullPCABrushSupplementMERS.html",
         "../docs/FullLinkedChartBrushableHostMERS.html",
         "../docs/explainedVarianceMERS.png",
-        "results/bases_missing_vs_pc1.png",
-        "results/nucleotide_diversity.txt"
+        "../docs/bases_missing_vs_pc1_MERS.png",
+        "results/nucleotide_diversity.txt",
+        "../docs/t-SNEInteractiveChart.html"
 
 
 rule files:
@@ -142,7 +143,7 @@ rule bases_missing_vs_pc1:
         alignment = rules.extract_sequences.output.sequences,
         pca = "results/embed_pca_before.csv"
     output:
-        figure = "results/bases_missing_vs_pc1.png"
+        figure = "../docs/bases_missing_vs_pc1_MERS.png"
     conda: "../cartography.yml"
     shell:
         """
@@ -512,6 +513,8 @@ rule create_notebook_docs:
         fullChart = "../docs/FullLinkedChartBrushableMERS.html",
         fullChartSVG = "../docs/FullLinkedChartBrushableMERS.svg",
         fullChartHost = "../docs/FullLinkedChartBrushableHostMERS.html",
+        TSNE_Supplement = "../docs/t-SNEInteractiveChart.html",
+        TSNE_Supplement_svg = "../docs/t-SNEInteractiveChart.svg",
         MDS_Supplement = "../docs/FullMDSBrushSupplementMERS.html",
         PCA_Supplement = "../docs/FullPCABrushSupplementMERS.html",
         Explained_variance_PCA = "../docs/explainedVarianceMERS.png"
