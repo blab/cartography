@@ -319,7 +319,7 @@ Each genome was split into separate nucleotides and compared with other nucleoti
 We only counted a difference between the main nucleotide pairs (AGCT) - gaps (N, -, etc.) were not.
 This is because some sequences were significantly shorter than others, and a shorter strain does not necessarily mean complete genetic dissimilarity, which is what counting gaps implied.
 
-We reduced the similarity distance matrix through MDS, t-SNE, and UMAP, plotted using [Altair](https://altair-viz.github.io/) ,and colored by clade assignment.
+We reduced the similarity distance matrix through MDS, t-SNE, and UMAP, plotted using [Altair](https://altair-viz.github.io/) [@VanderPlas2018], and colored by clade assignment.
 Clade membership metadata was provided by a .json build of the influenza H3N2 tree and Zika trees. For MERS, the host data was given via the Newick tree.
 The 3 different dimensionality reduction techniques are ordered below by publication date:
 - [MDS](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.MDS.html)
