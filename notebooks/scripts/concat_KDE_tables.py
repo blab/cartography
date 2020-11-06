@@ -5,7 +5,8 @@ import numpy as np
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--tables", nargs="+", help="KDE plots")
-    parser.add_argument("--output", help="comma or tab-delimited file of attributes per node of the given tree")
+    parser.add_argument("--output-csv", help="comma or tab-delimited file of attributes per node of the given tree")
+    parser.add_argument("--output-table", help="rmarkdown table in file")
     parser.add_argument("--separator", default=',', help="separator between columns in the given tables")
     parser.add_argument("--disease-names", nargs="+", help="names of diseases, separated by space")
 
@@ -30,5 +31,8 @@ if __name__ == "__main__":
         return rt  
 
     df.index = flatten(table_index)
-    
-    df.to_csv(args.output, sep=args.separator, header=True, index=True, columns=["embedding", "MCC", "accuracy_confusion_matrix", "TN", "FN", "TP", "FP", "classifier_threshold", "median_within", "median_between"])
+    if args.output_csv:
+        df.to_csv(args.output_csv, sep=args.separator, header=True, index=True, columns=["embedding", "MCC", "accuracy_confusion_matrix", "TN", "FN", "TP", "FP", "classifier_threshold", "median_within", "median_between"])
+    if args.output_table:
+        with open(args.output_table, 'w') as f:
+            f.write(df.to_markdown(index=True, tablefmt="grid"))
