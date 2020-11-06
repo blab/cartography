@@ -64,6 +64,7 @@ rule manuscript_html:
             --csl {input.csl} \
             --template {input.template} \
             --css {input.css} \
+            --from markdown+link_attributes \
             -s {input.manuscript} \
             -o {output.manuscript}
         """

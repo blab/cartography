@@ -126,8 +126,8 @@ We observed the same pattern for A1 and its subclade A1a as well as for A1b and 
 The clade 3c2.A and its subclade A3 clustered in all embeddings except t-SNE.
 This result matched our expectation that t-SNE would preserve local clusters and not retain global structure between more distantly related data.
 
-<iframe src="https://blab.github.io/cartography/FullLinkedChartBrushableFlu.html" style="width: 1200px; height: 1200px;" frameBorder="0"></iframe>
-![Genetic cartography of H3N2 strains by dimensionality reduction methods compared to inferred phylogeny.](){#fig:flu-embeddings}
+<iframe src="https://blab.github.io/cartography/FullLinkedChartBrushableFlu.html" style="width: 1200px; height: 935px;" frameBorder="0"></iframe>
+![Genetic cartography of H3N2 strains by dimensionality reduction methods compared to inferred phylogeny.](flu-embeddings.png){#fig:flu-embeddings .static-embedding}
 
 To quantify the patterns we observed in [@fig:flu-embeddings], we calculated two complementary metrics for each embedding method.
 First, we measured the linearity of the relationship of Euclidean distance between two strains in an embedding space and the genetic distance between these same strains.
