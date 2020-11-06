@@ -24,7 +24,7 @@ rule all:
         "../docs/FullKDEDensityZika.png",
         "../docs/FullScatterplotZika.png",
         "../docs/FullLinkedChartBrushableZika.html",
-        "../docs/FullLinkedChartBrushableZika.svg",
+        "../docs/FullLinkedChartBrushableZika.png",
         "../docs/FullMDSBrushSupplementZika.html",
         "../docs/FullPCABrushSupplementZika.html",
         "../docs/explainedVarianceZika.png",
@@ -598,9 +598,11 @@ rule create_notebook_docs:
         KDE_density = "../docs/FullKDEDensityZika.png",
         Scatterplot = "../docs/FullScatterplotZika.png",
         fullChart = "../docs/FullLinkedChartBrushableZika.html",
-        fullChartSVG = "../docs/FullLinkedChartBrushableZika.svg",
+        fullChartPNG = "../docs/FullLinkedChartBrushableZika.png",
         MDS_Supplement = "../docs/FullMDSBrushSupplementZika.html",
+        MDS_Supplement_PNG = "../docs/FullMDSBrushSupplementZika.png",
         PCA_Supplement = "../docs/FullPCABrushSupplementZika.html",
+        PCA_Supplement_PNG = "../docs/FullPCABrushSupplementZika.png",
         Explained_variance_PCA = "../docs/explainedVarianceZika.png"
 
     conda: "../cartography.yml"

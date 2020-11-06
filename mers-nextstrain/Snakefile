@@ -27,14 +27,15 @@ rule all:
         "../docs/FullKDEDensityMERS.png",
         "../docs/FullScatterplotMERS.png",
         "../docs/FullLinkedChartBrushableMERS.html",
-        "../docs/FullLinkedChartBrushableMERS.svg",
+        "../docs/FullLinkedChartBrushableMERS.png",
         "../docs/FullMDSBrushSupplementMERS.html",
+        "../docs/FullMDSBrushSupplementMERS.png",
         "../docs/FullPCABrushSupplementMERS.html",
-        "../docs/FullLinkedChartBrushableHostMERS.html",
+        "../docs/FullPCABrushSupplementMERS.png",
         "../docs/explainedVarianceMERS.png",
+        "../docs/FullLinkedChartBrushableHostMERS.html",
         "../docs/bases_missing_vs_pc1_MERS.png",
         "results/nucleotide_diversity.txt",
-        "../docs/t-SNEInteractiveChart.html"
 
 
 rule files:
@@ -511,13 +512,15 @@ rule create_notebook_docs:
         KDE_density = "../docs/FullKDEDensityMERS.png",
         Scatterplot = "../docs/FullScatterplotMERS.png",
         fullChart = "../docs/FullLinkedChartBrushableMERS.html",
-        fullChartSVG = "../docs/FullLinkedChartBrushableMERS.svg",
+        fullChartPNG = "../docs/FullLinkedChartBrushableMERS.png",
+        MDS_Supplement = "../docs/FullMDSBrushSupplementMERS.html",
+        MDS_Supplement_PNG = "../docs/FullMDSBrushSupplementMERS.png",
+        PCA_Supplement = "../docs/FullPCABrushSupplementMERS.html",
+        PCA_Supplement_PNG = "../docs/FullPCABrushSupplementMERS.png",
+        Explained_variance_PCA = "../docs/explainedVarianceMERS.png",
         fullChartHost = "../docs/FullLinkedChartBrushableHostMERS.html",
         TSNE_Supplement = "../docs/t-SNEInteractiveChart.html",
-        TSNE_Supplement_svg = "../docs/t-SNEInteractiveChart.svg",
-        MDS_Supplement = "../docs/FullMDSBrushSupplementMERS.html",
-        PCA_Supplement = "../docs/FullPCABrushSupplementMERS.html",
-        Explained_variance_PCA = "../docs/explainedVarianceMERS.png"
+        TSNE_Supplement_png = "../docs/t-SNEInteractiveChart.png",
 
     conda: "../cartography.yml"
     notebook:

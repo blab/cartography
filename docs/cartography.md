@@ -2,20 +2,12 @@
 title: "Genetic cartography reveals ancestral relationships of human pathogenic viruses"
 author:
   - name: Sravani Nanduri
-    institute_indices: 1
-  - name: John Huddleston
-    institute_indices: 2, 3
-  - name: Allison Black
-    institute_indices: 2
-  - name: Trevor Bedford
-    institute_indices: 2
+    institute_indices: 1,2
 institute:
   - name: Issaquah High School
     index: 1
   - name: Vaccine and Infectious Disease Division, Fred Hutchinson Cancer Research Center, Seattle, WA, USA
     index: 2
-  - name: Molecular and Cell Biology Program, University of Washington, Seattle, WA, USA
-    index: 3
 
 bibliography: cartography.bib
 titleDelim: "."
@@ -294,10 +286,10 @@ The analysis environment can be recreated using conda and all installation instr
 
 The genome data we used for H3N2 HA influenza is from the NCBI influenza database.
 We used [this search](https://www.ncbi.nlm.nih.gov/genomes/FLU/Database/nph-select.cgi?cdate_has_day=true&cdate_has_month=true&cmd=show_query&collapse=on&country=any&defline_saved=%3E%7Baccession%7D%20%7Bstrain%7D%20%7Byear%7D/%7Bmonth%7D/%7Bday%7D%20%7Bsegname%7D&fyear=2015&go=database&host=Human&lab=exclude&lineage=include&niaid=include&qcollapse=on&searchin=strain&segment=4&sequence=N&showfilters=true&sonly=on&subtype_h=3&subtype_mix=include&subtype_n=2&swine=include&tyear=2020&type=a&vac_strain=include). Clades were defined by reasonable phylogenetic signal.
-The Zika data was curated by Allison Black, with sequences from Genbank and the Bedford Lab. Clades were defined by regionally important introductions as well as by reasonable phylogenetic signal in terms of mutations on branches.
+The Zika data was curated by Allison Black, with sequences from Genbank and the Bedford Lab. Clades were defined by regionally important introductions and reasonable phylogenetic signal.
 The MERS data was downloaded from [e-life](https://elifesciences.org/download/aHR0cHM6Ly9jZG4uZWxpZmVzY2llbmNlcy5vcmcvYXJ0aWNsZXMvMzEyNTcvZWxpZmUtMzEyNTctZmlnMS1kYXRhNS12My56aXA-/elife-31257-fig1-data5-v3.zip?_hash=YhuQfm%2BGO%2BY6MsWLZB4WrPQvYtSlHOhLnzwnvTaesws%3D). [@dudas_carvalho_rambaut_bedford_2018]
 
-Clades and host were used in the MERS analysis, as the hosts, camel and human, are scientifically useful and phylogenetically accurate to the Newick tree.
+Clades and host were used in the MERS analysis, as the hosts (camel and human) are scientifically useful and phylogenetically accurate to the Newick tree.
 The clade assignments were defined based on monophyletic host status (strictly camel or human) to reveal patterns within host outbreaks.
 We analyzed influenza A/H3N2 and Zika by creating a FASTA file of multiple sequence alignments with MAFFT v7.407 [@Katoh2002] via augur align [@Hadfield2018] and phylogenies with IQ-TREE v1.6.10 [@Nguyen2014] via augur tree version 9.0.0.
 
@@ -308,19 +300,20 @@ A separate bases missing vs PC1 was also created to help reveal the level of rel
 
 We dropped around 4 strains in the H3N2 analysis, as they were direct animal to human transmissions where the genomes resembled swine flu (seen through NCBI's BLAST).
 We dropped around 5 strains in the Zika analysis that were exceedingly low quality.
-Due to the amount of missing data within the zika genome, we also imputed the data using scikit-learn's simple imputer for PCA in order to get a better embedding result. 
-This was only applied to PCA, as the hamming distance algorithm disregards missing bases.
-Imputation was tested for MERS, but due to entire columns of missing data for MERS, we had to drop all strains with over 3 standard deviations of missing bases in its genome from the MERS analysis.
+Due to the amount of missing data within the zika genome, we also imputed the data using scikit-learn's simple imputer for PCA for a better embedding result. 
+This was only applied to PCA, as the hamming distance algorithm used with the distance based methods disregards missing bases.
+Imputation was tested for MERS, but due to entire columns of missing data for MERS, we dropped all strains with over 3 standard deviations of missing bases in its genome from the MERS analysis.
 
 For Hamming distance, we created a similarity matrix.
-By comparing every genome with every other genome and clustering based on their Hamming distance, distance-based methods take the overall structure of the multidimensional data and groups together genomes that have similar differences.
+By comparing every genome with every other genome and clustering based on their Hamming distance, distance-based methods take the overall structure of the multidimensional data and groups together genomes with similar differences.
 This means the data is clustered by genetic diversity (in a phylogenetic tree genetic diversity is categorized using clades).
 Each genome was split into separate nucleotides and compared with other nucleotides in the same site on other genomes.
 We only counted a difference between the main nucleotide pairs (AGCT) - gaps (N, -, etc.) were not.
-This is because some sequences were significantly shorter than others, and a shorter strain does not necessarily mean complete genetic dissimilarity, which is what counting gaps implied.
+This is because some sequences were significantly shorter than others, and a shorter strain does not necessarily correspond to genetic dissimilarity, which is what counting gaps implied.
 
 We reduced the similarity distance matrix through MDS, t-SNE, and UMAP, plotted using [Altair](https://altair-viz.github.io/) [@VanderPlas2018], and colored by clade assignment.
-Clade membership metadata was provided by a .json build of the influenza H3N2 tree and Zika trees. For MERS, the host data was given via the Newick tree.
+Clade membership metadata was provided by a .json build of the influenza H3N2 tree and Zika trees. Clade membership metadata was provided by a .json build of the influenza H3N2 tree and Zika trees. For MERS, the host data was given via the Newick tree, and clade membership was defined using [BioPython](https://biopython.org/) as outbreaks with a monophyletic host status (strictly camel or human).
+
 The 3 different dimensionality reduction techniques are ordered below by publication date:
 - [MDS](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.MDS.html)
 - [t-SNE](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html)
@@ -331,10 +324,10 @@ The plots of the full 10 PCs for PCA and the first 6 components for MDS are avai
 We tuned hyperparameters for t-SNE and UMAP through an exhaustive grid search, which picked the best values by maximizing Matthews Correlation Coefficient on the confusion matrix created from a Supported Vector Machine's classification.
 UMAP's minimum distance and nearest neighbors were tuned, and t-SNEs perplexity and learning rate were tuned as well.
 As nearest neighbors fluctuates depending on the amount of samples, we took the best nearest neighbor value from the cross validation and the total number of samples given per fold.
-The proportion value was used to determine the nearest neighbors value for the UMAP plots per disease.
+This proportion was used to determine the nearest neighbors value for the UMAP plots.
 t-SNE performed best with a perplexity of 15.0 and a learning rate of 100.0.
 UMAP performed best with a minimum distance of .05 between clusters.
-While tuning these parameters will not change qualitative results, it can help make patterns easier to identify.
+While tuning these parameters does not change qualitative results, it can help make patterns easier to identify.
 
 We ran the raw embedding distances through the clustering algorithm Hierarchical Density-Based Spatial Clustering of Applications with Noise (HDBSCAN) to understand the usage of the embeddings to cluster data without the phylogenetic tree.
 
@@ -362,18 +355,22 @@ To create this plot, the matrix of Euclidean distances for each embedding was fl
 KDE plots were made using [seaborn](https://seaborn.pydata.org/) , separated by clade status and Euclidean distance on the y axis.
 A Supported Vector Machine was run to optimize for clade relationships by Euclidean distance, and the Matthews Correlation Coefficient, accuracy value, and classifier thresholds were calculated and captured along with the confusion matrix of values.
 
+# Acknowledgements
+
+I thank the Bedford Lab at the Fred Hutch, specifically Dr. Trevor Bedford, for the opportunity to research and publish work for this project. For help received through the lab, I thank John Huddleston, for his code reviews, edits, weekly meetings, observations, and time to help make me a better scientist. I thank Allison Black for curating the samples and phylogeny for Zika.
+
+
 ## Supplementary Figures and Analysis
 
 
 ### Explained Variance Plots for PCA
-
-##### Flu
+#### Flu
 ![](ExplainedVarianceFlu.png)
 
-##### Zika
+#### Zika
 ![](ExplainedVarianceZika.png)
 
-##### MERS
+#### MERS
 ![](ExplainedVarianceMERS.png)
 
 ### PCA Full Plots
@@ -400,9 +397,7 @@ A Supported Vector Machine was run to optimize for clade relationships by Euclid
 ##### MERS
 <iframe src="https://blab.github.io/cartography/FullMDSBrushSupplementMERS.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
 
-### Bases Missing VS PC1 Plot:
-
-##### MERS
+### Bases Missing VS PC1 Plot:MERS
 
 ![](bases_missing_vs_pc1_MERS.png)
 

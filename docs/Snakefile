@@ -1,6 +1,6 @@
 rule all:
     input:
-        #"cartography.pdf",
+        "cartography.pdf",
         "cartography.html",
         "total_KDE_table.csv"
 

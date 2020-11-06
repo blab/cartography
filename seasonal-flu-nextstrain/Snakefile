@@ -26,7 +26,7 @@ rule all:
         "../docs/FullKDEDensityFlu.png",
         "../docs/FullScatterplotFlu.png",
         "../docs/FullLinkedChartBrushableFlu.html",
-        "../docs/FullLinkedChartBrushableFlu.svg",
+        "../docs/FullLinkedChartBrushableFlu.png",
         "../docs/FullMDSBrushSupplementFlu.html",
         "../docs/FullPCABrushSupplementFlu.html",
         "results/nucleotide_diversity.txt",
@@ -600,9 +600,11 @@ rule create_notebook_docs:
         KDE_density = "../docs/FullKDEDensityFlu.png",
         Scatterplot = "../docs/FullScatterplotFlu.png",
         fullChart = "../docs/FullLinkedChartBrushableFlu.html",
-        fullChartSVG = "../docs/FullLinkedChartBrushableFlu.svg",
+        fullChartPNG = "../docs/FullLinkedChartBrushableFlu.png",
         MDS_Supplement = "../docs/FullMDSBrushSupplementFlu.html",
+        MDS_Supplement_PNG = "../docs/FullMDSBrushSupplementFlu.png",
         PCA_Supplement = "../docs/FullPCABrushSupplementFlu.html",
+        PCA_Supplement_PNG = "../docs/FullPCABrushSupplementFlu.png",
         Explained_variance_PCA = "../docs/explainedVarianceFlu.png"
 
     conda: "../cartography.yml"
