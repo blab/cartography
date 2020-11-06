@@ -24,15 +24,25 @@ rule concat_KDE_tables:
             --output-table {output.table} \
             --disease-names {params.disease_names}
         """
+
 rule manuscript_pdf:
     input:
-        manuscript = "cartography.md"
+        manuscript = "cartography.md",
+        csl = "chicago-author-date.csl",
+        template = "template.tex"
     output:
         manuscript = "cartography.pdf"
     conda: "../cartography.yml"
     shell:
         """
-        pandoc --citeproc --bibliography=cartography.bib -s {input.manuscript} -o {output.manuscript}
+        pandoc \
+            --filter pandoc-crossref \
+            --citeproc \
+            --bibliography=cartography.bib \
+            --csl {input.csl} \
+            --template {input.template} \
+            -s {input.manuscript} \
+            -o {output.manuscript}
         """
 
 rule manuscript_html:
