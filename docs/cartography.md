@@ -212,7 +212,7 @@ This suggests that t-SNE is a strong tool for viewing genetically homogeneous po
 <iframe src="https://blab.github.io/cartography/FullLinkedChartBrushableMERS.html" style="width: 1200px; height: 1200px;" frameBorder="0"></iframe>
 ![Genetic cartography of MERS strains by dimensionality reduction methods compared to inferred phylogeny.](){#fig:MERS-embeddings}
 
-<iframe src="https://blab.github.io/cartography/t-SNEInteractiveChart.html" style="width: 400px; height: 400px;" frameBorder="0"></iframe>
+<iframe src="https://blab.github.io/cartography/t-SNEInteractiveChartMERS.html" style="width: 400px; height: 400px;" frameBorder="0"></iframe>
 ![Interactive t-SNE chart; zoomable with interactive tooltips](){#fig:tsne-interactive}
 
 MDS had a linear relationship throughout while t-SNE and UMAP exhibited a piecewise linear relationship for pairs of strains that differed by no more than 100 nucleotides ([@fig:MERS-Euclidean-vs-genetic-distance]).
