@@ -1,6 +1,6 @@
 rule all:
     input:
-        "cartography.pdf",
+        #"cartography.pdf",
         "cartography.html",
         "total_KDE_table.csv"
 
@@ -10,7 +10,8 @@ rule concat_KDE_tables:
         Zika_KDE = "../zika-nextstrain/results/full_KDE_metadata.csv",
         MERS_KDE = "../mers-nextstrain/results/full_KDE_metadata.csv"
     output:
-        fullKDE = "total_KDE_table.csv"
+        fullKDE = "total_KDE_table.csv",
+        table = "total_KDE_table.txt"
     params:
         disease_names = "Influenza Zika MERS",
         dataframes = "../seasonal-flu-nextstrain/results/full_KDE_metadata.csv ../zika-nextstrain/results/full_KDE_metadata.csv ../mers-nextstrain/results/full_KDE_metadata.csv"
@@ -19,7 +20,8 @@ rule concat_KDE_tables:
         """
         python3 ../notebooks/scripts/concat_KDE_tables.py \
             --tables {params.dataframes} \
-            --output {output.fullKDE} \
+            --output-csv {output.fullKDE} \
+            --output-table {output.table} \
             --disease-names {params.disease_names}
         """
 rule manuscript_pdf:
