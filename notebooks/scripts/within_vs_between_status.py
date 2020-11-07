@@ -143,7 +143,7 @@ if __name__ == "__main__":
 
     #create metadata dataframe
     if args.output_metadata is not None:
-        metadata_df = pd.DataFrame([[matthews_cc_val, accuracy, median_within, median_between, classifier_threshold, args.method, confusion_matrix_val[0][0], confusion_matrix_val[1][0], confusion_matrix_val[1][1], confusion_matrix_val[0][1]]], columns=["MCC", "accuracy_confusion_matrix", "median_within", "median_between", "classifier_threshold", "embedding", "TN", "FN", "TP", "FP"]).round(3)
+        metadata_df = pd.DataFrame([[matthews_cc_val, accuracy, median_within, median_between, classifier_threshold, args.method, confusion_matrix_val[0][0], confusion_matrix_val[1][0], confusion_matrix_val[1][1], confusion_matrix_val[0][1]]], columns=["MCC", "accuracy", "median_within", "median_between", "threshold", "embedding", "TN", "FN", "TP", "FP"]).round(3)
         metadata_df.to_csv(args.output_metadata, index=False)
 
     if args.output_dataframe is not None:

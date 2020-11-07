@@ -31,8 +31,9 @@ if __name__ == "__main__":
         return rt  
 
     df.index = flatten(table_index)
+
     if args.output_csv:
-        df.to_csv(args.output_csv, sep=args.separator, header=True, index=True, columns=["embedding", "MCC", "accuracy_confusion_matrix", "TN", "FN", "TP", "FP", "classifier_threshold", "median_within", "median_between"])
+        df.to_csv(args.output_csv, sep=args.separator, header=True, index=True, columns=["embedding", "MCC", "accuracy", "TN", "FN", "TP", "FP", "threshold", "median_within", "median_between"])
     if args.output_table:
         with open(args.output_table, 'w') as f:
             f.write(df.to_markdown(index=True, tablefmt="grid"))

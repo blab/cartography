@@ -47,18 +47,18 @@ attribution is appreciated. Thanks, broccolini! -->
 <h1 id="results">Results</h1>
 <div id="tbl:KDE_full">
 <table>
-<caption>Table 1. [All KDE values for each virus. MCC (Matthews Correlation Coefficient), FN (False Negative) FP (False Positive) TN (True Negative) TP (True Positive) accuracy_confusion_matrix (accuracy of the confusion matrix, TN + TP / total samples) classifier_threshold (z-score value the Support Vector Machine picked that best separates within vs between clade relationships) embedding (pca, mds, t-sne, or umap) median_between and median_within (z score values of the median of between clade and within clade KDE density curves, respectively)]</caption>
+<caption>Table 1. [All KDE values for each virus. MCC (Matthews Correlation Coefficient), FN (False Negative) FP (False Positive) TN (True Negative) TP (True Positive) accuracy(accuracy of the confusion matrix, TN + TP / total samples) threshold (z-score value the Support Vector Machine picked that best separates within vs between clade relationships) embedding (pca, mds, t-sne, or umap) between and within (z score values of the median of between clade and within clade KDE density curves, respectively)]</caption>
 <colgroup>
+<col style="width: 10%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
 <col style="width: 7%" />
 <col style="width: 6%" />
-<col style="width: 4%" />
-<col style="width: 5%" />
-<col style="width: 5%" />
-<col style="width: 4%" />
-<col style="width: 18%" />
-<col style="width: 15%" />
-<col style="width: 8%" />
 <col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 9%" />
+<col style="width: 10%" />
 <col style="width: 11%" />
 </colgroup>
 <thead>
@@ -69,208 +69,208 @@ attribution is appreciated. Thanks, broccolini! -->
 <th>FP</th>
 <th>TN</th>
 <th>TP</th>
-<th>accuracy_confusion_matrix</th>
-<th>classifier_threshold</th>
+<th>accuracy</th>
 <th>embedding</th>
-<th>median_between</th>
-<th>median_within</th>
+<th>between</th>
+<th>within</th>
+<th>threshold</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Influenza</td>
-<td>0.486461</td>
-<td>11664</td>
-<td>107719</td>
-<td>474118</td>
-<td>66025</td>
-<td><pre><code>               0.818987</code></pre></td>
-<td><pre><code>         -0.75976</code></pre></td>
+<td>0.576</td>
+<td>11237</td>
+<td>69685</td>
+<td>516435</td>
+<td>63318</td>
+<td><pre><code> 0.878</code></pre></td>
 <td>mds</td>
-<td><pre><code>   0.0744309</code></pre></td>
-<td><pre><code>  -1.2153</code></pre></td>
+<td>0.104</td>
+<td>-1.476</td>
+<td>-0.868</td>
 </tr>
 <tr class="even">
 <td></td>
-<td>0.5793</td>
-<td>9542</td>
-<td>77093</td>
-<td>504744</td>
-<td>68147</td>
-<td><pre><code>               0.868641</code></pre></td>
-<td><pre><code>         -0.84985</code></pre></td>
+<td>0.604</td>
+<td>11167</td>
+<td>61032</td>
+<td>525088</td>
+<td>63388</td>
+<td><pre><code> 0.891</code></pre></td>
 <td>genetic</td>
-<td><pre><code>   0.110246</code></pre></td>
-<td><pre><code>  -1.40151</code></pre></td>
+<td>0.11</td>
+<td>-1.418</td>
+<td>-0.88</td>
 </tr>
 <tr class="odd">
 <td></td>
-<td>0.603227</td>
-<td>3462</td>
-<td>87503</td>
-<td>494334</td>
-<td>74227</td>
-<td><pre><code>               0.862075</code></pre></td>
-<td><pre><code>         -0.927928</code></pre></td>
-<td>umap</td>
-<td><pre><code>   0.366974</code></pre></td>
-<td><pre><code>  -1.28696</code></pre></td>
+<td>0.664</td>
+<td>4796</td>
+<td>60044</td>
+<td>526076</td>
+<td>69759</td>
+<td><pre><code> 0.902</code></pre></td>
+<td>pca</td>
+<td>0.28</td>
+<td>-1.659</td>
+<td>-1.138</td>
 </tr>
 <tr class="even">
 <td></td>
-<td>0.641328</td>
-<td>4915</td>
-<td>69233</td>
-<td>512604</td>
-<td>72774</td>
-<td><pre><code>               0.887574</code></pre></td>
-<td><pre><code>         -1.01201</code></pre></td>
-<td>pca</td>
-<td><pre><code>   0.29907</code></pre></td>
-<td><pre><code>  -1.63181</code></pre></td>
+<td>0.67</td>
+<td>1707</td>
+<td>66501</td>
+<td>519619</td>
+<td>72848</td>
+<td><pre><code> 0.897</code></pre></td>
+<td>umap</td>
+<td>0.172</td>
+<td>-1.481</td>
+<td>-1.048</td>
 </tr>
 <tr class="odd">
 <td></td>
-<td>0.697043</td>
-<td>5574</td>
-<td>50558</td>
-<td>531279</td>
-<td>72115</td>
-<td><pre><code>               0.91489</code></pre></td>
-<td><pre><code>         -0.987988</code></pre></td>
+<td>0.764</td>
+<td>4268</td>
+<td>34749</td>
+<td>551371</td>
+<td>70287</td>
+<td><pre><code> 0.941</code></pre></td>
 <td>t-sne</td>
-<td><pre><code>   0.225854</code></pre></td>
-<td><pre><code>  -1.65069</code></pre></td>
+<td>0.159</td>
+<td>-1.666</td>
+<td>-1.09</td>
 </tr>
 <tr class="even">
 <td>Zika</td>
-<td>0.66521</td>
-<td>3243</td>
-<td>21208</td>
-<td>173290</td>
-<td>29060</td>
-<td><pre><code>               0.892192</code></pre></td>
-<td><pre><code>         -0.87988</code></pre></td>
+<td>0.663</td>
+<td>3379</td>
+<td>21376</td>
+<td>172773</td>
+<td>29273</td>
+<td><pre><code> 0.891</code></pre></td>
 <td>pca</td>
-<td><pre><code>   0.0680746</code></pre></td>
-<td><pre><code>  -1.43302</code></pre></td>
+<td>0.07</td>
+<td>-1.434</td>
+<td>-0.868</td>
 </tr>
 <tr class="odd">
 <td></td>
-<td>0.419389</td>
-<td>6420</td>
-<td>46890</td>
-<td>147608</td>
-<td>25883</td>
-<td><pre><code>               0.764948</code></pre></td>
-<td><pre><code>         -0.627628</code></pre></td>
+<td>0.42</td>
+<td>6450</td>
+<td>47231</td>
+<td>146918</td>
+<td>26202</td>
+<td><pre><code> 0.763</code></pre></td>
 <td>mds</td>
-<td><pre><code>   0.07808</code></pre></td>
-<td><pre><code>  -1.09906</code></pre></td>
+<td>0.083</td>
+<td>-1.088</td>
+<td>-0.622</td>
 </tr>
 <tr class="even">
 <td></td>
-<td>0.561357</td>
-<td>3360</td>
-<td>34225</td>
-<td>160273</td>
-<td>28943</td>
-<td><pre><code>               0.834282</code></pre></td>
-<td><pre><code>         -0.75976</code></pre></td>
+<td>0.54</td>
+<td>3644</td>
+<td>36918</td>
+<td>157231</td>
+<td>29008</td>
+<td><pre><code> 0.821</code></pre></td>
 <td>t-sne</td>
-<td><pre><code>  -0.200346</code></pre></td>
-<td><pre><code>  -1.09992</code></pre></td>
+<td>-0.201</td>
+<td>-1.094</td>
+<td>-0.736</td>
 </tr>
 <tr class="odd">
 <td></td>
-<td>0.373857</td>
-<td>7924</td>
-<td>49336</td>
-<td>145162</td>
-<td>24379</td>
-<td><pre><code>               0.747532</code></pre></td>
-<td><pre><code>         -0.66967</code></pre></td>
+<td>0.378</td>
+<td>7830</td>
+<td>49454</td>
+<td>144695</td>
+<td>24822</td>
+<td><pre><code> 0.747</code></pre></td>
 <td>umap</td>
-<td><pre><code>  -0.551316</code></pre></td>
-<td><pre><code>  -0.786576</code></pre></td>
+<td>-0.551</td>
+<td>-0.786</td>
+<td>-0.67</td>
 </tr>
 <tr class="even">
 <td></td>
-<td>0.515471</td>
-<td>5345</td>
-<td>34689</td>
-<td>159809</td>
-<td>26958</td>
-<td><pre><code>               0.823484</code></pre></td>
-<td><pre><code>         -0.6997</code></pre></td>
+<td>0.513</td>
+<td>5608</td>
+<td>34603</td>
+<td>159546</td>
+<td>27044</td>
+<td><pre><code> 0.823</code></pre></td>
 <td>genetic</td>
-<td><pre><code>  -0.0634109</code></pre></td>
-<td><pre><code>  -1.12832</code></pre></td>
+<td>-0.063</td>
+<td>-1.128</td>
+<td>-0.694</td>
 </tr>
 <tr class="odd">
 <td>MERS</td>
 <td>0</td>
 <td>1388</td>
-<td><pre><code> 0</code></pre></td>
+<td><pre><code>0</code></pre></td>
 <td>32803</td>
 <td><pre><code>0</code></pre></td>
-<td><pre><code>               0.959405</code></pre></td>
-<td><pre><code>        nan</code></pre></td>
+<td><pre><code> 0.959</code></pre></td>
 <td>pca</td>
-<td><pre><code>  -0.489132</code></pre></td>
-<td><pre><code>  -0.503597</code></pre></td>
+<td>-0.489</td>
+<td>-0.504</td>
+<td>nan</td>
 </tr>
 <tr class="even">
 <td></td>
-<td>0.624972</td>
+<td>0.625</td>
 <td>234</td>
 <td>1163</td>
 <td>31640</td>
 <td>1154</td>
-<td><pre><code>               0.959141</code></pre></td>
-<td><pre><code>         -1.27027</code></pre></td>
+<td><pre><code> 0.959</code></pre></td>
 <td>mds</td>
-<td><pre><code>  -0.117363</code></pre></td>
-<td><pre><code>  -1.62681</code></pre></td>
+<td>-0.117</td>
+<td>-1.627</td>
+<td>-1.27</td>
 </tr>
 <tr class="odd">
 <td></td>
-<td>0.625887</td>
+<td>0.626</td>
 <td>135</td>
 <td>1466</td>
 <td>31337</td>
 <td>1253</td>
-<td><pre><code>               0.953175</code></pre></td>
-<td><pre><code>         -1.37237</code></pre></td>
+<td><pre><code> 0.953</code></pre></td>
 <td>t-sne</td>
-<td><pre><code>   0.019731</code></pre></td>
-<td><pre><code>  -1.52637</code></pre></td>
+<td>0.02</td>
+<td>-1.526</td>
+<td>-1.372</td>
 </tr>
 <tr class="even">
 <td></td>
-<td>0.47916</td>
+<td>0.479</td>
 <td>309</td>
 <td>2164</td>
 <td>30639</td>
 <td>1079</td>
-<td><pre><code>               0.927671</code></pre></td>
-<td><pre><code>         -1.23423</code></pre></td>
+<td><pre><code> 0.928</code></pre></td>
 <td>umap</td>
-<td><pre><code>   0.0871456</code></pre></td>
-<td><pre><code>  -1.34775</code></pre></td>
+<td>0.087</td>
+<td>-1.348</td>
+<td>-1.234</td>
 </tr>
 <tr class="odd">
 <td></td>
-<td>0.711514</td>
+<td>0.712</td>
 <td>197</td>
 <td>754</td>
 <td>32049</td>
 <td>1191</td>
-<td><pre><code>               0.972186</code></pre></td>
-<td><pre><code>         -1.42042</code></pre></td>
+<td><pre><code> 0.972</code></pre></td>
 <td>genetic</td>
-<td><pre><code>   0.134795</code></pre></td>
-<td><pre><code>  -1.86461</code></pre></td>
+<td>0.135</td>
+<td>-1.865</td>
+<td>-1.42</td>
 </tr>
 </tbody>
 </table>
@@ -284,10 +284,10 @@ attribution is appreciated. Thanks, broccolini! -->
 <p>With a much longer genome, homologous population (pi = 0.00235), recombination, many missing bases, and multiple hosts, MERS tests and challenges the embeddings’ abilities to reveal population patterns. MERS is a recombinant virus that affects both camels and humans, with camel to human transmissions creating a need for a multiple host phylogeny. While influenza’s clades are defined by mutations and Zika’s by significant geographical introductions, MERS clades were assigned to internal nodes and tips in the tree based on monophyletic host status (strictly camel or human) to reveal patterns within host outbreaks. The genomes are 30130 bases long, with a mean bases missing of 889.781 and median of 42.5. MERS population is relatively homologous, as the majority of human infections were collected from the same outbreaks.</p>
 <h2 id="embedding-clusters-recapitulate-phylogenetic-clades-for-seasonal-influenza-ah3n2">Embedding clusters recapitulate phylogenetic clades for seasonal influenza A/H3N2</h2>
 <p>All four dimensionality reduction methods qualitatively recapitulated clade-level groupings observed in the phylogeny (Figure 1). Strains from the same clade appeared tightly grouped in PCA, t-SNE, and UMAP embeddings and more loosely clustered in the MDS embedding. Closely related clades tended to tightly cluster in PCA, MDS, UMAP, and, to a lesser extent, t-SNE. For example, the clade A2 and its subclade A2/re map to adjacent regions of all four embeddings. We observed the same pattern for A1 and its subclade A1a as well as for A1b and its subclades A1b/135K and A1b/135N. The clade 3c2.A and its subclade A3 clustered in all embeddings except t-SNE. This result matched our expectation that t-SNE would preserve local clusters and not retain global structure between more distantly related data.</p>
-<iframe src="https://blab.github.io/cartography/FullLinkedChartBrushableFlu.html" style="width: 1200px; height: 1200px;" frameBorder="0">
+<iframe src="https://blab.github.io/cartography/FullLinkedChartBrushableFlu.html" style="width: 1200px; height: 935px;" frameBorder="0">
 </iframe>
 <figure>
-<img src="" id="fig:flu-embeddings" alt="Figure 1. Genetic cartography of H3N2 strains by dimensionality reduction methods compared to inferred phylogeny." /><figcaption aria-hidden="true">Figure 1. Genetic cartography of H3N2 strains by dimensionality reduction methods compared to inferred phylogeny.</figcaption>
+<img src="flu-embeddings.png" id="fig:flu-embeddings" class="static-embedding" alt="Figure 1. Genetic cartography of H3N2 strains by dimensionality reduction methods compared to inferred phylogeny." /><figcaption aria-hidden="true">Figure 1. Genetic cartography of H3N2 strains by dimensionality reduction methods compared to inferred phylogeny.</figcaption>
 </figure>
 <p>To quantify the patterns we observed in Figure 1, we calculated two complementary metrics for each embedding method. First, we measured the linearity of the relationship of Euclidean distance between two strains in an embedding space and the genetic distance between these same strains. All four methods exhibited a consistent linear relationship for pairs of strains that differed by no more than 30 nucleotides (Figure 2). PCA and MDS provided the strongest linear mapping to genetic distance (Pearson’s <span class="math inline"><em>R</em><sup>2</sup> = 0.69 ± 0.001</span> and <span class="math inline">0.68 ± 0.001</span>, respectively). This same mapping for the UMAP method was less of a linear function (Pearson’s <span class="math inline"><em>R</em><sup>2</sup> = 0.38 ± 0.001</span>) than a piecewise function of two parts. Strain pairs with more than 30 nucleotide differences were not as well separated in UMAP space as strains with lesser genetic distances. This result suggests that UMAP might be most effective for distinguishing between more distantly related strain pairs. t-SNE’s mapping was the weakest (Pearson’s <span class="math inline"><em>R</em><sup>2</sup> ± 0.001</span>) and revealed that only closely related strains map near each other in t-SNE space. Pairs of strains that differ by more than 15 nucleotides are unlikely to be placed near each other in a t-SNE embedding.</p>
 <figure>
@@ -302,7 +302,7 @@ attribution is appreciated. Thanks, broccolini! -->
 <iframe src="https://blab.github.io/cartography/FullLinkedChartBrushableZika.html" style="width: 1200px; height: 1200px;" frameBorder="0">
 </iframe>
 <figure>
-<img src="" id="fig:zika-embeddings" alt="Figure 4. Genetic cartography of Zika strains by dimensionality reduction methods compared to inferred phylogeny." /><figcaption aria-hidden="true">Figure 4. Genetic cartography of Zika strains by dimensionality reduction methods compared to inferred phylogeny.</figcaption>
+<img src="zika-embeddings.png" id="fig:zika-embeddings" class="static-embedding" alt="Figure 4. Genetic cartography of Zika strains by dimensionality reduction methods compared to inferred phylogeny." /><figcaption aria-hidden="true">Figure 4. Genetic cartography of Zika strains by dimensionality reduction methods compared to inferred phylogeny.</figcaption>
 </figure>
 <p>PCA and t-SNE exhibited a piecewise linear relationship for pairs of strains that differed by no more than 50 nucleotides (Figure 5). For larger than a 50 nucleotide difference in genetic distance, PCA, t-SNE, and UMAP’s LOESS line becomes much steeper, revealing that these embeddings use local patterns to map genetically distant strain combinations farther away for better visualization. This is the expectation for t-SNE and UMAP, but is surprising to see in PCA. MDS provided the strongest linear mapping to genetic distance (Pearson’s <span class="math inline"><em>R</em><sup>2</sup> = 0.738 ± 0.001</span>). The UMAP mapping revealed two different clusters of points in the scatterplot, with the cluster at higher Euclidean distances dileneating the distance between clade c2 and the other strains due to its isolated sampling. This clustering is only seen in UMAP, revealing UMAP’s sensitivity to outliers. t-SNE’s mapping was fairly strong (Pearson’s <span class="math inline"><em>R</em><sup>2</sup> = 0.52 ± 0.002</span>) and revealed that pairs of strains that differ by more than 50 nucleotides are unlikely to be placed near each other in a t-SNE embedding.</p>
 <figure>
@@ -314,15 +314,15 @@ attribution is appreciated. Thanks, broccolini! -->
 </figure>
 <h2 id="mers-within-host-outbreak-patterns-revealed-with-embedding-clusters">MERS within host outbreak patterns revealed with embedding clusters</h2>
 <p>While MDS, t-SNE, and UMAP recapitulated the patterns observed in the phylogeny, PCA did not (Figure 7). With MERS missing bases in multiple strains, imputation did not add more depth to the alignment. To combat this issue, all strains with missing bases 3 standard deviations higher than the mean were removed from the analysis; while this helped create tighter clusters in the distance based methods, PCA did not show any further patterns and its use was constrained to separating low quality strains from high quality. Isolated outbreaks and strains from different hosts were placed at larger Euclidean distances from related strains and hosts. Clade 32, a human outbreak from Seoul and surrounding territories isolated from other clades, is an outlier notably separated in t-SNE and UMAP and to a lesser degree in MDS. Because clades were defined by outbreaks that shared a common host, we expected local clustering within clades; this divergence was seen in t-SNE and UMAP in Clade 13, a human outbreak made up of two distinct clusters branching off from the same node in March of 2014. Clades 20, Clade 21, and Clade 22, camel outbreaks from Saudi Arabia, clustered together in all the distance based embeddings, reaffirming the genetic similarity of these strains. The embeddings clustered between hosts, with disease strains lacking a clade membership clustering into the nearest related clade. While t-SNE and UMAP’s embeddings are very similar structurally, t-SNE performed exceedingly better at differentiating between intra-host clades highly related in the embedding. An example of this is the clear separation in t-SNE of the camel and human outbreaks concentrated in Saudi Arabia and the UAE (Clade 9, Clade 10, Clade 11, and Clade 12) Figure 8. This suggests that t-SNE is a strong tool for viewing genetically homogeneous populations.</p>
-<iframe src="https://blab.github.io/cartography/FullLinkedChartBrushableMERS.html" style="width: 1200px; height: 1200px;" frameBorder="0">
+<iframe src="https://blab.github.io/cartography/FullLinkedChartBrushableMERS.html" style="width: 1200px; height: 935px;" frameBorder="0">
 </iframe>
 <figure>
-<img src="" id="fig:MERS-embeddings" alt="Figure 7. Genetic cartography of MERS strains by dimensionality reduction methods compared to inferred phylogeny." /><figcaption aria-hidden="true">Figure 7. Genetic cartography of MERS strains by dimensionality reduction methods compared to inferred phylogeny.</figcaption>
+<img src="MERS-embeddings.png" id="fig:MERS-embeddings" class="static-embedding" alt="Figure 7. Genetic cartography of MERS strains by dimensionality reduction methods compared to inferred phylogeny." /><figcaption aria-hidden="true">Figure 7. Genetic cartography of MERS strains by dimensionality reduction methods compared to inferred phylogeny.</figcaption>
 </figure>
 <iframe src="https://blab.github.io/cartography/t-SNEInteractiveChartMERS.html" style="width: 400px; height: 400px;" frameBorder="0">
 </iframe>
 <figure>
-<img src="" id="fig:tsne-interactive" alt="Figure 8. Interactive t-SNE chart; zoomable with interactive tooltips" /><figcaption aria-hidden="true">Figure 8. Interactive t-SNE chart; zoomable with interactive tooltips</figcaption>
+<img src="t-SNEInteractiveChart.png" id="fig:MERS-tsne" class="static-embedding" alt="Figure 8. Interactive t-SNE chart; zoomable with interactive tooltips" /><figcaption aria-hidden="true">Figure 8. Interactive t-SNE chart; zoomable with interactive tooltips</figcaption>
 </figure>
 <p>MDS had a linear relationship throughout while t-SNE and UMAP exhibited a piecewise linear relationship for pairs of strains that differed by no more than 100 nucleotides (Figure 9). For larger than 100 nucleotide differences, t-SNE and UMAP’s LOESS lines decrease sharply, a contrast to the patterns seen in Zika and influenza. We see patterns of relatedness between UMAP and t-SNE’s scatterplots in terms of shape, spread, and clustering (Pearson’s <span class="math inline"><em>R</em><sup>2</sup> = 0.20 ± 0.005</span> and <span class="math inline">0.25 ± 0.005</span> respectively). The two clusters in their scatterplots at similar genetic but different euclidean distances reveals that t-SNE and UMAP select a low or high Euclidean distance depending on the strain relationship (Clades 27 through 32 in one cluster, the rest in the other). MDS provided the strongest linear mapping to genetic distance (Pearson’s <span class="math inline"><em>R</em><sup>2</sup> = 0.76 ± 0.003</span>). The same mapping for PCA was incredibly weak and nonlinear (Pearson’s <span class="math inline"><em>R</em><sup>2</sup> = 0.023 ± 0.001</span>).</p>
 <figure>
@@ -344,18 +344,19 @@ attribution is appreciated. Thanks, broccolini! -->
 <p>The analysis environment can be recreated using conda and all installation instructions are available on <a href="https://github.com/blab/cartography">this paper’s github</a> .</p>
 <p>The genome data we used for H3N2 HA influenza is from the NCBI influenza database. We used <a href="https://www.ncbi.nlm.nih.gov/genomes/FLU/Database/nph-select.cgi?cdate_has_day=true&amp;cdate_has_month=true&amp;cmd=show_query&amp;collapse=on&amp;country=any&amp;defline_saved=%3E%7Baccession%7D%20%7Bstrain%7D%20%7Byear%7D/%7Bmonth%7D/%7Bday%7D%20%7Bsegname%7D&amp;fyear=2015&amp;go=database&amp;host=Human&amp;lab=exclude&amp;lineage=include&amp;niaid=include&amp;qcollapse=on&amp;searchin=strain&amp;segment=4&amp;sequence=N&amp;showfilters=true&amp;sonly=on&amp;subtype_h=3&amp;subtype_mix=include&amp;subtype_n=2&amp;swine=include&amp;tyear=2020&amp;type=a&amp;vac_strain=include">this search</a>. Clades were defined by reasonable phylogenetic signal. The Zika data was curated by Allison Black, with sequences from Genbank and the Bedford Lab. Clades were defined by regionally important introductions and reasonable phylogenetic signal. The MERS data was downloaded from <a href="https://elifesciences.org/download/aHR0cHM6Ly9jZG4uZWxpZmVzY2llbmNlcy5vcmcvYXJ0aWNsZXMvMzEyNTcvZWxpZmUtMzEyNTctZmlnMS1kYXRhNS12My56aXA-/elife-31257-fig1-data5-v3.zip?_hash=YhuQfm%2BGO%2BY6MsWLZB4WrPQvYtSlHOhLnzwnvTaesws%3D">e-life</a>. <span class="citation" data-cites="dudas_carvalho_rambaut_bedford_2018">(Dudas et al. 2018)</span></p>
 <p>Clades and host were used in the MERS analysis, as the hosts (camel and human) are scientifically useful and phylogenetically accurate to the Newick tree. The clade assignments were defined based on monophyletic host status (strictly camel or human) to reveal patterns within host outbreaks. We analyzed influenza A/H3N2 and Zika by creating a FASTA file of multiple sequence alignments with MAFFT v7.407 <span class="citation" data-cites="Katoh2002">(Katoh et al. 2002)</span> via augur align <span class="citation" data-cites="Hadfield2018">(Hadfield et al. 2018)</span> and phylogenies with IQ-TREE v1.6.10 <span class="citation" data-cites="Nguyen2014">(Nguyen et al. 2014)</span> via augur tree version 9.0.0.</p>
-<p>We used two different methods of transforming the data; Scaling and centering the data, and a Hamming distance similarity matrix. For Scaling and Centering the data, we performed PCA on the matrix of nucleotides from the multiple sequence alignment using scikit-learn <span class="citation" data-cites="jolliffe_cadima_2016">(Jolliffe and Cadima 2016)</span>. An explained variance plot was created to determine the amount of PCs created, which is in the supplementary figures section. A separate bases missing vs PC1 was also created to help reveal the level of relation between missing bases and outliers in PCA; this is available for MERS in the supplemental section.</p>
+<p>We used two different methods of transforming the data; Scaling and centering the data, and a Hamming distance similarity matrix. For Scaling and Centering the data, we performed PCA on the matrix of nucleotides from the multiple sequence alignment using scikit-learn <span class="citation" data-cites="jolliffe_cadima_2016">(Jolliffe and Cadima 2016)</span>. An explained variance plot was created to determine the amount of PCs used for distance calulations and visualization, which is in the supplementary figures section. A separate bases missing vs PC1 was also created to help reveal the level of relation between missing bases and outliers in PCA; this is available for MERS in the supplemental section.</p>
 <p>We dropped around 4 strains in the H3N2 analysis, as they were direct animal to human transmissions where the genomes resembled swine flu (seen through NCBI’s BLAST). We dropped around 5 strains in the Zika analysis that were exceedingly low quality. Due to the amount of missing data within the zika genome, we also imputed the data using scikit-learn’s simple imputer for PCA for a better embedding result. This was only applied to PCA, as the hamming distance algorithm used with the distance based methods disregards missing bases. Imputation was tested for MERS, but due to entire columns of missing data for MERS, we dropped all strains with over 3 standard deviations of missing bases in its genome from the MERS analysis.</p>
 <p>For Hamming distance, we created a similarity matrix. By comparing every genome with every other genome and clustering based on their Hamming distance, distance-based methods take the overall structure of the multidimensional data and groups together genomes with similar differences. This means the data is clustered by genetic diversity (in a phylogenetic tree genetic diversity is categorized using clades). Each genome was split into separate nucleotides and compared with other nucleotides in the same site on other genomes. We only counted a difference between the main nucleotide pairs (AGCT) - gaps (N, -, etc.) were not. This is because some sequences were significantly shorter than others, and a shorter strain does not necessarily correspond to genetic dissimilarity, which is what counting gaps implied.</p>
-<p>We reduced the similarity distance matrix through MDS, t-SNE, and UMAP, plotted using <a href="https://altair-viz.github.io/">Altair</a> ,and colored by clade assignment. Clade membership metadata was provided by a .json build of the influenza H3N2 tree and Zika trees. For MERS, the host data was given via the Newick tree, and clade membership was defined using <a href="https://biopython.org/">BioPython</a> as outbreaks with a monophyletic host status (strictly camel or human). The 3 different dimensionality reduction techniques are ordered below by publication date: - <a href="https://scikit-learn.org/stable/modules/generated/sklearn.manifold.MDS.html">MDS</a> - <a href="https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html">t-SNE</a> - <a href="https://umap-learn.readthedocs.io/en/latest/">UMAP</a></p>
+<p>We reduced the similarity distance matrix through MDS, t-SNE, and UMAP, plotted using <a href="https://altair-viz.github.io/">Altair</a> <span class="citation" data-cites="VanderPlas2018">(VanderPlas et al. 2018)</span>, and colored by clade assignment. Clade membership metadata was provided by a .json build of the influenza H3N2 tree and Zika trees. For MERS, the host data was given via the Newick tree, and clade membership was defined using <a href="https://biopython.org/">BioPython</a> as outbreaks with a monophyletic host status (strictly camel or human).</p>
+<p>The 3 different dimensionality reduction techniques are ordered below by publication date: - <a href="https://scikit-learn.org/stable/modules/generated/sklearn.manifold.MDS.html">MDS</a> - <a href="https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html">t-SNE</a> - <a href="https://umap-learn.readthedocs.io/en/latest/">UMAP</a></p>
 <p>The plots of the full 10 PCs for PCA and the first 6 components for MDS are available in the supplemental figures section.</p>
-<p>We tuned hyperparameters for t-SNE and UMAP through an exhaustive grid search, which picked the best values by maximizing Matthews Correlation Coefficient on the confusion matrix created from a Supported Vector Machine’s classification. UMAP’s minimum distance and nearest neighbors were tuned, and t-SNEs perplexity and learning rate were tuned as well. As nearest neighbors fluctuates depending on the amount of samples, we took the best nearest neighbor value from the cross validation and the total number of samples given per fold. This proportion was used to determine the nearest neighbors value for the UMAP plots. t-SNE performed best with a perplexity of 15.0 and a learning rate of 100.0. UMAP performed best with a minimum distance of .05 between clusters. While tuning these parameters does not change qualitative results, it can help make patterns easier to identify.</p>
+<p>We tuned hyperparameters for t-SNE and UMAP using an exhaustive grid search, which picked the best parameters by maximizing Matthews Correlation Coefficient for the confusion matrix created from the Supported Vector Machine’s classification. UMAP’s minimum distance and nearest neighbors were tuned, and t-SNEs perplexity and learning rate were tuned. As nearest neighbors fluctuates depending on the amount of samples, we took the best nearest neighbor value from the cross validation and the total number of samples given per fold. This proportion was used to determine the nearest neighbors value for the UMAP plots. t-SNE performed best with a perplexity of 15.0 and a learning rate of 100.0. UMAP performed best with a minimum distance of .05 between clusters. While tuning these parameters does not change qualitative results, it can help make patterns easier to identify.</p>
 <p>We ran the raw embedding distances through the clustering algorithm Hierarchical Density-Based Spatial Clustering of Applications with Noise (HDBSCAN) to understand the usage of the embeddings to cluster data without the phylogenetic tree.</p>
-<p>To further analyze these embeddings’ ability to accurately capture the multidimensional data, we made two separate plots: hamming vs Euclidean distance scatterplots with a LOESS best fit line, and within vs between clade KDE density plots per embedding.</p>
+<p>To further analyze these embeddings’ ability to accurately capture the multidimensional data, we made two separate plots: Hamming vs Euclidean distance scatterplots with a LOESS best fit line, and within vs between clade KDE density plots per embedding.</p>
 <h4 id="hamming-distance-vs-euclidean-distance-scatterplots">Hamming distance vs Euclidean distance scatterplots:</h4>
-<p>Hamming distance vs Euclidean distance plots assess the local and global structure of the embedding as well as assess the overall strength of the embedding recapitulation. The Hamming distance between nucleotide sequences is plotted on the x axis, and the Euclidean distance between the points in the embedding are plotted on the y axis. PCA and MDS’s distances were calculated using 4 components, while t-SNE and UMAP were calculated with 2. By plotting these distance measurements, we can observe how correlated the dataset is. The higher the correlation, the better a function can describe the relationship between the Hamming distance value and the Euclidean distance value. In this way, constant correlation in a plot reveals that the embedding tends to capture and retain global patterns rather than look, and a splayed structure points to local structure preservation over global. Therefore, the closer the Pearson Coefficient is to 1, the better the embedding is at preserving pairwise relationships in Euclidean space. The LOESS line drawn through the plot assesses the best fit function for the embedding. We bootstrapped our scatterplot to find the Pearson Coefficient with a confidence interval.</p>
+<p>Hamming distance vs Euclidean distance plots assess the local and global structure of the embedding as well as assess the overall strength of the embedding recapitulation. The Hamming distance between nucleotide sequences is plotted on the x axis, and the Euclidean distance between the points in the embedding are plotted on the y axis. PCA and MDS’s distances were calculated using 4 components, while t-SNE and UMAP were calculated with 2. By plotting these distance measurements, we can observe how correlated the dataset is. The higher the correlation, the better a function can describe the relationship between the Hamming distance value and the Euclidean distance value. In this way, constant correlation in a plot reveals that the embedding tends to capture and retain global patterns, and a splayed structure points to local structure preservation. Therefore, the closer the Pearson Coefficient is to 1, the better the embedding is at preserving pairwise relationships in Euclidean space. The LOESS line drawn through the plot assesses the best fit function for the embedding. We bootstrapped our scatterplot to find the Pearson Coefficient with a confidence interval.</p>
 <h4 id="between-vs-within-clade-kde-density-plots">Between vs Within clade KDE Density Plots:</h4>
-<p>The Between vs Within clade KDE Density Plots visually represent how well Euclidean distances can distinguish virus genomes from different clades. In other words, it describes the probability that a certain Euclidean distance can be used to classify a given pair of genomes as within vs between clades. The larger the median ratio between the two curves presented per clade relationship, the higher the relative probability that the embedding will accurately predict if two strains with any specific distance is a between or within clade relationship. To create this plot, the matrix of Euclidean distances for each embedding was flattened, and each comparison was labeled as a “within clade” or “between clade” comparison using the clade assignments from the .json build of the tree. KDE plots were made using <a href="https://seaborn.pydata.org/">seaborn</a> , separated by clade status and Euclidean distance on the y axis. A Supported Vector Machine was run to optimize for clade relationships by Euclidean distance, and the Matthews Correlation Coefficient, accuracy value, and classifier thresholds were calculated and captured along with the confusion matrix of values.</p>
+<p>The Between vs Within clade KDE Density Plots visually represent how well Euclidean distances can distinguish virus genomes from different clades. In other words, it describes the probability that a certain Euclidean distance can be used to classify a given pair of genomes as within vs between clades. The larger the median ratio between the two curves presented per clade relationship, the higher the relative probability that the embedding will accurately predict if two strains with any specific distance is a between or within clade relationship. To create this plot, the matrix of Euclidean distances for each embedding was flattened, and each comparison was labeled as a “within clade” or “between clade” comparison using the clade assignments from the .json build of the tree. KDE plots were made using <a href="https://seaborn.pydata.org/">seaborn</a>, separated by clade status and Euclidean distance on the y axis. A Supported Vector Machine was run to optimize for clade relationships by Euclidean distance, and the Matthews Correlation Coefficient, accuracy value, and classifier thresholds were calculated and captured along with the confusion matrix of values.</p>
 <h1 id="acknowledgements">Acknowledgements</h1>
 <p>I thank the Bedford Lab at the Fred Hutch, specifically Dr. Trevor Bedford, for the opportunity to research and publish work for this project. For help received through the lab, I thank John Huddleston, for his code reviews, edits, weekly meetings, observations, and time to help make me a better scientist. I thank Allison Black for curating the samples and phylogeny for Zika.</p>
 <h2 id="supplementary-figures-and-analysis">Supplementary Figures and Analysis</h2>
@@ -367,25 +368,37 @@ attribution is appreciated. Thanks, broccolini! -->
 <h4 id="mers">MERS</h4>
 <p><img src="ExplainedVarianceMERS.png" /></p>
 <h3 id="pca-full-plots">PCA Full Plots</h3>
-<h5 id="flu-1">Flu</h5>
 <iframe src="https://blab.github.io/cartography/FullPCABrushSupplementFlu.html" style="width: 1200px; height: 400px;" frameBorder="0">
 </iframe>
-<h5 id="zika-1">Zika</h5>
+<figure>
+<img src="FullPCABrushSupplementFlu.png" id="fig:flu-supplement" class="static-embedding" alt="Figure 11. PCA Full Plot - Flu" /><figcaption aria-hidden="true">Figure 11. PCA Full Plot - Flu</figcaption>
+</figure>
 <iframe src="https://blab.github.io/cartography/FullPCABrushSupplementZika.html" style="width: 1200px; height: 400px;" frameBorder="0">
 </iframe>
-<h5 id="mers-1">MERS</h5>
+<figure>
+<img src="FullPCABrushSupplementZika.png" id="fig:zika-supplement" class="static-embedding" alt="Figure 12. PCA Full Plot - Zika" /><figcaption aria-hidden="true">Figure 12. PCA Full Plot - Zika</figcaption>
+</figure>
 <iframe src="https://blab.github.io/cartography/FullPCABrushSupplementMERS.html" style="width: 1200px; height: 400px;" frameBorder="0">
 </iframe>
+<figure>
+<img src="FullPCABrushSupplementMERS.png" id="fig:MERS-supplement" class="static-embedding" alt="Figure 13. PCA Full Plot - MERS" /><figcaption aria-hidden="true">Figure 13. PCA Full Plot - MERS</figcaption>
+</figure>
 <h3 id="mds-full-plot">MDS Full Plot:</h3>
-<h5 id="flu-2">Flu</h5>
 <iframe src="https://blab.github.io/cartography/FullMDSBrushSupplementFlu.html" style="width: 1200px; height: 400px;" frameBorder="0">
 </iframe>
-<h5 id="zika-2">Zika</h5>
+<figure>
+<img src="FullMDSBrushSupplementFlu.png" id="fig:flu-supplement-mds" class="static-embedding" alt="Figure 14. MDS Full Plot - Flu" /><figcaption aria-hidden="true">Figure 14. MDS Full Plot - Flu</figcaption>
+</figure>
 <iframe src="https://blab.github.io/cartography/FullMDSBrushSupplementZika.html" style="width: 1200px; height: 400px;" frameBorder="0">
 </iframe>
-<h5 id="mers-2">MERS</h5>
+<figure>
+<img src="FullPCABrushSupplementZika.png" id="fig:zika-supplement-mds" class="static-embedding" alt="Figure 15. MDS Full Plot - Zika" /><figcaption aria-hidden="true">Figure 15. MDS Full Plot - Zika</figcaption>
+</figure>
 <iframe src="https://blab.github.io/cartography/FullMDSBrushSupplementMERS.html" style="width: 1200px; height: 400px;" frameBorder="0">
 </iframe>
+<figure>
+<img src="FullPCABrushSupplementMERS.png" id="fig:MERS-supplement-mds" class="static-embedding" alt="Figure 16. MDS Full Plot - MERS" /><figcaption aria-hidden="true">Figure 16. MDS Full Plot - MERS</figcaption>
+</figure>
 <h3 id="bases-missing-vs-pc1-plotmers">Bases Missing VS PC1 Plot:MERS</h3>
 <p><img src="bases_missing_vs_pc1_MERS.png" /></p>
 <h1 class="unnumbered" id="works-cited">Works Cited</h1>
@@ -443,6 +456,9 @@ Posada, David, and Keith A. Crandall. 2001. <span>“Evaluation of Methods for D
 </div>
 <div id="ref-rambaut_2008" class="csl-entry" role="doc-biblioentry">
 Rambaut, Andrew, Oliver G. Pybus, Martha I. Nelson, Cecile Viboud, Jeffery K. Taubenberger, and Edward C. Holmes. 2008. <span>“The Genomic and Epidemiological Dynamics of Human Influenza a Virus.”</span> <em>Nature</em>, April. <a href="https://www.nature.com/articles/nature06945">https://www.nature.com/articles/nature06945</a>.
+</div>
+<div id="ref-VanderPlas2018" class="csl-entry" role="doc-biblioentry">
+VanderPlas, Jacob, Brian E. Granger, Jeffrey Heer, Dominik Moritz, Kanit Wongsuphasawat, Arvind Satyanarayan, Eitan Lees, Ilia Timofeev, Ben Welsh, and Scott Sievert. 2018. <span>“Altair: Interactive Statistical Visualizations for Python.”</span> <em>Journal of Open Source Software</em> 3 (32): 1057. <a href="https://doi.org/10.21105/joss.01057">https://doi.org/10.21105/joss.01057</a>.
 </div>
 </div>
 </div>

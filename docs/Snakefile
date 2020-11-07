@@ -1,8 +1,8 @@
 rule all:
     input:
         "cartography.pdf",
-        "cartography.html",
-        "total_KDE_table.csv"
+        #"cartography.html",
+        #"total_KDE_table.csv"
 
 rule concat_KDE_tables:
     input:
@@ -29,20 +29,23 @@ rule manuscript_pdf:
     input:
         manuscript = "cartography.md",
         csl = "chicago-author-date.csl",
-        template = "template.tex"
+        template = "template.tex",
+        disable = "figure_placement.tex"
     output:
         manuscript = "cartography.pdf"
     conda: "../cartography.yml"
     shell:
         """
         pandoc \
+            -H  {input.disable} \
             --filter pandoc-crossref \
             --citeproc \
             --bibliography=cartography.bib \
             --csl {input.csl} \
             --template {input.template} \
             -s {input.manuscript} \
-            -o {output.manuscript}
+            -o {output.manuscript} \
+            -V geometry:"top=1in, bottom=1in, left=1in, right=1in"
         """
 
 rule manuscript_html:

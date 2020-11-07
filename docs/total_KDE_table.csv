@@ -1,4 +1,4 @@
-,embedding,MCC,accuracy_confusion_matrix,TN,FN,TP,FP,classifier_threshold,median_within,median_between
+,embedding,MCC,accuracy,TN,FN,TP,FP,threshold,median_within,median_between
 Influenza,mds,0.5760000000000001,0.878,516435,11237,63318,69685,-0.868,-1.476,0.104
  ,genetic,0.604,0.8909999999999999,525088,11167,63388,61032,-0.88,-1.418,0.11
  ,pca,0.664,0.902,526076,4796,69759,60044,-1.138,-1.659,0.28
