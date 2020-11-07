@@ -37,6 +37,14 @@ If you're running the snakemake build, there's no need to activate the environme
 ```
 conda activate cartography
 ```
+
+Install Javascript packages required for saving images from notebooks.
+
+```bash
+conda install -c conda-forge nodejs
+npm install -g vega-cli vega-lite canvas
+```
+
 ### Creating a Local Repository of Cartography
 In order to work with this data and create the paper, you'll need to clone the data. 
 You'll first need github for your desktop. Go [Here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for instructions on how to install github on your computer. Once github has been installed, click on the "Clone" button on the top of this repository in green, and click the clipboard icon. This allows you to copy the github repository link to your computer. You can also use the command I pasted below.
@@ -79,7 +87,7 @@ You need to install mamba now for faster downloading and updating of remote pack
 There are two levels of snakefiles in this build. The first level lives within the respective pathogen directories (zika, mers, flu) and creates the documents, tables, and analysis needed for the paper. The second level snakefile puts the charts together with the written paper using pandoc. In order to run each part, you'll need to navigate into 1) mers-nextstrain 2) zika-nextstrain 3) seasonal-flu-nextstrain (in no particular order) and type 
 
 ```
-snakemake --use-conda --conda-frontend mamba --cores 4
+snakemake --cores 4
 ```
 
 Let the snakemake files run! They're pretty memory intensive and take a bit of time, so give the scripts time to completely run. 

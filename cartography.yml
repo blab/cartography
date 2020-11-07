@@ -10,7 +10,6 @@ dependencies:
   - pip
   - seaborn
   - altair
-  - altair_saver
   - dendropy
   - pandas
   - numpy
@@ -28,6 +27,7 @@ dependencies:
   - python-chromedriver-binary
   - reportlab
   - pip:
+    - altair_saver
     - statsmodels
     - statistics
     - snakemake
