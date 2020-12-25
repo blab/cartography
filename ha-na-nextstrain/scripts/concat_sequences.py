@@ -6,7 +6,7 @@ from Bio.SeqRecord import SeqRecord
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--sequences", nargs="+", help="sequences to be concatenated together")
+    parser.add_argument("--sequences", nargs=2, help="sequences to be concatenated together")
     parser.add_argument("--output_fasta", help="FASTA file of concatenated genomes")
 
     args = parser.parse_args()

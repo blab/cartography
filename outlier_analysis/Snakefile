@@ -1,0 +1,131 @@
+
+outlier = [
+    "swine",
+    "human"
+    ]
+
+rule all:
+    input:
+        expand("results/deduplicated_sequences_{method}.fasta", method=outlier),
+        expand("results/filtered_{method}.fasta", method=outlier),
+        "results/total_sequences.fasta",
+        "results/total_metadata.fasta"
+
+rule files:
+    params:
+        input_fasta = "data/ncbi-h3n2-{method}.fa",
+        dropped_strains = "config/exclude.txt",
+        reference = "config/reference_h3n2_ha.gb",
+        auspice_config = "config/auspice_config.json",
+        clades = "config/clades_h3n2_ha.tsv"
+
+files = rules.files.params
+
+rule parse:
+    message: "Parsing fasta into sequences and metadata"
+    input:
+        sequences = files.input_fasta
+    output:
+        sequences = "results/sequences_{method}.fasta",
+        metadata = "results/metadata_{method}.tsv"
+    params:
+        fasta_fields = "strain date accession country region"
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur parse \
+            --sequences {input.sequences} \
+            --output-sequences {output.sequences} \
+            --output-metadata {output.metadata} \
+            --fields {params.fasta_fields}
+        """
+
+rule deduplicate_sequences:
+    message:
+        """
+        Deduplicating sequences
+        """
+    input:
+        sequences = rules.parse.output.sequences
+    output:
+        sequences = "results/deduplicated_sequences_{method}.fasta"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 scripts/deduplicate_sequences.py \
+            --sequences {input.sequences} \
+            --output {output.sequences}
+        """
+
+def _get_group_values_by_wildcards(wildcards):
+    method = wildcards.method
+    if method in ("human"):
+        return 15
+    else:
+        return 1
+
+rule filter:
+    message:
+        """
+        Filtering to
+          - {params.sequences_per_group} sequence(s) per {params.group_by!s}
+          - from {params.min_date} onwards
+          - excluding strains in {input.exclude}
+        """
+    input:
+        sequences = rules.deduplicate_sequences.output.sequences,
+        metadata = rules.parse.output.metadata,
+        exclude = files.dropped_strains
+    output:
+        sequences = "results/filtered_{method}.fasta"
+    params:
+        group_by = "country year month",
+        sequences_per_group = _get_group_values_by_wildcards,
+        min_date = 1970.75,
+        max_date = 2050.25
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur filter \
+            --sequences {input.sequences} \
+            --metadata {input.metadata} \
+            --exclude {input.exclude} \
+            --output {output.sequences} \
+            --group-by {params.group_by} \
+            --sequences-per-group {params.sequences_per_group} \
+            --min-date {params.min_date} \
+            --max-date {params.max_date}
+        """
+
+#grab outlier names from swine, add to outlier_h3n2.txt to label as outliers later
+rule outlier_names:
+    message: """grab outlier names from swine, concat sequences and metadata"""
+    input:
+        sequences_swine = "results/sequences_swine.fasta",
+        sequences_human = "results/sequences_human.fasta",
+        exclude = "config/outliers_h3n2.txt",
+        metadata_swine = "results/metadata_swine.tsv",
+        metadata_human = "results/metadata_human.tsv"
+    output:
+        sequences = "results/total_sequences.fasta",
+        metadata = "results/total_metadata.fasta"
+    shell:
+        """
+        python3 scripts/outlier_concat.py \
+            --sequence-human {input.sequences_human} \
+            --sequence-outlier {input.sequences_swine} \
+            --metadata-outlier {input.metadata_swine} \
+            --metadata-human {input.metadata_human} \
+            --outlier-list {input.exclude} \
+            --output-fasta {output.sequences} \
+            --output-metadata {output.metadata}
+        """
+    
+rule clean:
+    message: "Removing directories: {params}"
+    params:
+        "results ",
+        "auspice"
+    conda: "../cartography.yml"
+    shell:
+        "rm -rfv {params}"
