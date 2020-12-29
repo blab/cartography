@@ -12,11 +12,17 @@ institute:
 bibliography: cartography.bib
 titleDelim: "."
 figPrefix: Figure
+linestretch: 1.5
+fontsize: 11
+mainfont: Times New Roman
 ---
+\pagebreak 
 
 # Abstract
 
 Phylogenetics is vital to epidemiologists understanding of population patterns, dynamics, and transmission, and is integral to public health studies. Most diseases can be modeled in a transmission tree, an approach that tracks mutations in disease samples back to a single common ancestor; however, issues with sample quality, recombination, and other factors can make it difficult to quantify mutations of genetic sequences in reference to others. In this paper, we study the use of dimensionality reducing algorithms PCA, MDS, t-SNE, and UMAP in understanding viral population structure, and present quantitative and qualitative interactive visualizations that summarize the accuracy and scope of these models. With the public tools and automated code pipelines for ease of integration into other research projects, this paper will discuss the practical applications and future steps for this form of analysis and modeling within the scope of viral epidemiology. 
+
+\pagebreak
 
 # Introduction
 
@@ -397,5 +403,7 @@ I thank the Bedford Lab at the Fred Hutch, specifically Dr. Trevor Bedford, for 
 ### Bases Missing VS PC1 Plot:MERS
 
 ![](bases_missing_vs_pc1_MERS.png)
+
+\pagebreak 
 
 # Works Cited

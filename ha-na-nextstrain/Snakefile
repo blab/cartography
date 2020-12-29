@@ -13,7 +13,7 @@ KDE_METHODS = [
     "genetic"
 ]
 
-HA_NA = [
+SEGMENTS = [
     "ha",
     "na"
 ]
@@ -22,8 +22,8 @@ rule all:
     input:
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
         expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
-        expand("results/deduplicated_sequences_{method}.fasta", method=HA_NA),
-        expand("results/aligned_{method}.fasta", method=HA_NA),
+        expand("results/deduplicated_sequences_{segment}.fasta", segment=SEGMENTS),
+        expand("results/aligned_{segment}.fasta", segment=SEGMENTS),
         "results/aligned_concatenated.fasta",
         "../auspice/cartography_flu-seasonal-h3n2-ha-na-2016-2018.json",
         "results/table.tsv",
@@ -33,7 +33,7 @@ rule all:
         "../docs/FullKDEDensityFluHaNa.png",
         "../docs/FullScatterplotFluHaNa.png",
         "../docs/FullLinkedChartBrushableFluHaNa.html",
-        "../docs/flu-embeddingsHaNa.png",
+        "../docs/flu-embeddings.png",
         "../docs/FullMDSBrushSupplementFluHaNa.html",
         "../docs/FullPCABrushSupplementFluHaNa.html",
         "results/nucleotide_diversity.txt",
@@ -53,10 +53,10 @@ files = rules.files.params
 rule parse:
     message: "Parsing fasta of both ha and na into sequences and metadata"
     input:
-        sequences = "data/ncbi-h3n2-{method}.fa"
+        sequences = "data/ncbi-h3n2-{segment}.fa"
     output:
-        sequences = "results/sequences_{method}.fasta",
-        metadata = "results/metadata_{method}.tsv",
+        sequences = "results/sequences_{segment}.fasta",
+        metadata = "results/metadata_{segment}.tsv",
     params:
         fasta_fields = "strain date accession country region"
     conda: "../cartography.yml"
@@ -77,7 +77,7 @@ rule deduplicate_sequences:
     input:
         sequences = rules.parse.output.sequences
     output:
-        sequences = "results/deduplicated_sequences_{method}.fasta"
+        sequences = "results/deduplicated_sequences_{segment}.fasta"
     conda: "../cartography.yml"
     shell:
         """
@@ -99,7 +99,7 @@ rule filter:
         metadata = "results/metadata_ha.tsv",
         exclude = files.dropped_strains
     output:
-        sequences = "results/filtered_{method}.fasta"
+        sequences = "results/filtered_{segment}.fasta"
     params:
         group_by = "country year month",
         sequences_per_group = 10,
@@ -129,7 +129,7 @@ rule align:
         sequences = rules.filter.output.sequences,
         reference = files.reference
     output:
-        alignment = "results/aligned_{method}.fasta"
+        alignment = "results/aligned_{segment}.fasta"
     conda: "../cartography.yml"
     threads: 4
     shell:
@@ -163,7 +163,7 @@ rule concat:
 rule tree:
     message: "Building tree"
     input:
-        alignment = "results/aligned_concatenated.fasta"
+        alignment = "results/aligned_ha.fasta"
     output:
         tree = "results/tree_raw.nwk"
     conda: "../cartography.yml"
@@ -187,7 +187,7 @@ rule refine:
         """
     input:
         tree = rules.tree.output.tree,
-        alignment = "results/aligned_concatenated.fasta",
+        alignment = "results/aligned_ha.fasta",
         metadata = "results/metadata_ha.tsv",
     output:
         tree = "results/tree.nwk",
@@ -220,7 +220,7 @@ rule ancestral:
     message: "Reconstructing ancestral sequences and mutations"
     input:
         tree = rules.refine.output.tree,
-        alignment = "results/aligned_concatenated.fasta"
+        alignment = "results/aligned_ha.fasta"
     output:
         node_data = "results/nt_muts.json"
     params:
@@ -304,7 +304,7 @@ rule export:
         colors = "config/colors.tsv",
         clades = rules.clades.output.clade_data
     output:
-        auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-ha-na-2016-2018.json"
+        auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json"
     conda: "../cartography.yml"
     shell:
         """

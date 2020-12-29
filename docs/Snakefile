@@ -1,6 +1,6 @@
 rule all:
     input:
-        "cartography.pdf",
+        "cartography_regeneron.pdf",
         #"cartography.html",
         #"total_KDE_table.csv"
 
@@ -27,12 +27,12 @@ rule concat_KDE_tables:
 
 rule manuscript_pdf:
     input:
-        manuscript = "cartography.md",
+        manuscript = "cartography_regeneron.md",
         csl = "chicago-author-date.csl",
         template = "template.tex",
         disable = "figure_placement.tex"
     output:
-        manuscript = "cartography.pdf"
+        manuscript = "cartography_regeneron.pdf"
     conda: "../cartography.yml"
     shell:
         """
@@ -45,7 +45,6 @@ rule manuscript_pdf:
             --template {input.template} \
             -s {input.manuscript} \
             -o {output.manuscript} \
-            -V geometry:"top=1in, bottom=1in, left=1in, right=1in"
         """
 
 rule manuscript_html:

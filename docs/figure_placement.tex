@@ -1,4 +1,13 @@
 \usepackage{float}
+\usepackage[a4paper,top=1in, bottom=1in, left=1in, right=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\fancyfoot[R]{\thepage}
+
+
 \let\origfigure\figure
 \let\endorigfigure\endfigure
 \renewenvironment{figure}[1][2] {
