@@ -1,2 +1,0 @@
-MCC,accuracy,median_within,median_between,threshold,embedding,TN,FN,TP,FP
-0.696,0.879,-1.145,0.697,-0.988,umap,23352,110,5342,3836

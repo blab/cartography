@@ -18,31 +18,35 @@ SEGMENTS = [
     "na"
 ]
 
+#TO DO: add HA only embeddings and HA+NA embeddings
+
 rule all:
     input:
-        expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
-        expand("results/deduplicated_sequences_{segment}.fasta", segment=SEGMENTS),
+        "results/ncbi-h3n2-ha.fasta",
+        #expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
+        #expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
         expand("results/aligned_{segment}.fasta", segment=SEGMENTS),
+        expand("results/deduplicated_sequences_{segment}.fasta", segment=SEGMENTS),
+        expand("results/filtered_{segment}.fasta", segment=SEGMENTS),
+        expand("results/metadata_{segment}.tsv", segment=SEGMENTS),
         "results/aligned_concatenated.fasta",
-        "../auspice/cartography_flu-seasonal-h3n2-ha-na-2016-2018.json",
-        "results/table.tsv",
-        "results/full_KDE_metadata.csv",
-        "results/full_Scatterplot_metadata.csv",
-        "results/explained_variance_pca.csv",
-        "../docs/FullKDEDensityFluHaNa.png",
-        "../docs/FullScatterplotFluHaNa.png",
-        "../docs/FullLinkedChartBrushableFluHaNa.html",
-        "../docs/flu-embeddings.png",
-        "../docs/FullMDSBrushSupplementFluHaNa.html",
-        "../docs/FullPCABrushSupplementFluHaNa.html",
-        "results/nucleotide_diversity.txt",
-        "../docs/explainedVarianceFluHaNa.png"
+        #"../auspice/cartography_flu-seasonal-h3n2-ha-na-2016-2018.json",
+        #"results/table.tsv",
+        #"results/full_KDE_metadata.csv",
+        #"results/full_Scatterplot_metadata.csv",
+        #"results/explained_variance_pca.csv",
+        #"../docs/FullKDEDensityFluHaNa.png",
+        #"../docs/FullScatterplotFluHaNa.png",
+        #"../docs/FullLinkedChartBrushableFluHaNa.html",
+        #"../docs/flu-embeddings.png",
+        #"../docs/FullMDSBrushSupplementFluHaNa.html",
+        #"../docs/FullPCABrushSupplementFluHaNa.html",
+        #"results/nucleotide_diversity.txt",
+        #"../docs/explainedVarianceFluHaNa.png"
 
 rule files:
     params:
-        input_fasta_ha = "data/ncbi-h3n2-ha.fa",
-        input_fasta_na = "data/ncbi-h3n2-na.fa",
+        input_fasta = "data/ncbi-h3n2-ha-na.fa",
         dropped_strains = "config/exclude.txt",
         reference = "config/reference_h3n2_ha.gb",
         auspice_config = "config/auspice_config.json",
@@ -50,15 +54,33 @@ rule files:
 
 files = rules.files.params
 
-rule parse:
-    message: "Parsing fasta of both ha and na into sequences and metadata"
+rule split:
+    message:
+        """
+        Split the ha and na file into separate files
+        """
     input:
-        sequences = "data/ncbi-h3n2-{segment}.fa"
+        sequences =  "data/ncbi-h3n2-ha-na.fa",
+    output:
+        sequences_ha = "results/ncbi-h3n2-ha.fasta",
+        sequences_na = "results/ncbi-h3n2-na.fasta"
+    conda: "../cartography/yml"
+    shell:
+        """
+        python3 scripts/split_fasta.py \
+            --sequence {input.sequences} \
+            --output_fastas {output.sequences_ha} {output.sequences_na}\
+        """
+
+rule parse:
+    message: "Parsing fasta into sequences and metadata"
+    input:
+        sequences = "results/ncbi-h3n2-{segment}.fasta"
     output:
         sequences = "results/sequences_{segment}.fasta",
-        metadata = "results/metadata_{segment}.tsv",
+        metadata = "results/metadata_{segment}.tsv"
     params:
-        fasta_fields = "strain date accession country region"
+        fasta_fields = "strain date accession country region segment_name"
     conda: "../cartography.yml"
     shell:
         """
@@ -95,8 +117,8 @@ rule filter:
           - excluding strains in {input.exclude}
         """
     input:
-        sequences = rules.deduplicate_sequences.output.sequences,
-        metadata = "results/metadata_ha.tsv",
+        sequences = "results/deduplicated_sequences_{segment}.fasta",
+        metadata = "results/metadata_{segment}.tsv",
         exclude = files.dropped_strains
     output:
         sequences = "results/filtered_{segment}.fasta"
