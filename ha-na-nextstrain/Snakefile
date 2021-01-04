@@ -18,22 +18,31 @@ SEGMENTS = [
     "na"
 ]
 
+HA_CONCATENATED = [
+    "concatenated",
+    "ha"
+]
+
 #TO DO: add HA only embeddings and HA+NA embeddings
 
 rule all:
     input:
         "results/ncbi-h3n2-ha.fasta",
-        #expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        #expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
+        expand("results/scatterplot_{method}_{ha_concatenated}.png", method=EMBEDDING_METHODS, ha_concatenated=HA_CONCATENATED),
+        expand("results/KDEDensity_{method}_{ha_concatenated}.png", method=KDE_METHODS, ha_concatenated=HA_CONCATENATED),
         expand("results/aligned_{segment}.fasta", segment=SEGMENTS),
         expand("results/deduplicated_sequences_{segment}.fasta", segment=SEGMENTS),
         expand("results/filtered_{segment}.fasta", segment=SEGMENTS),
         expand("results/metadata_{segment}.tsv", segment=SEGMENTS),
         "results/aligned_concatenated.fasta",
         #"../auspice/cartography_flu-seasonal-h3n2-ha-na-2016-2018.json",
-        #"results/table.tsv",
-        #"results/full_KDE_metadata.csv",
-        #"results/full_Scatterplot_metadata.csv",
+        "results/table.tsv",
+        expand("results/full_KDE_metadata_{ha_concatenated}.csv", ha_concatenated=HA_CONCATENATED),
+        expand("results/full_Scatterplot_metadata_{ha_concatenated}.csv", ha_concatenated=HA_CONCATENATED),
+        expand("results/embed_pca_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
+        expand("results/embed_mds_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
+        expand("results/embed_t-sne_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
+        expand("results/embed_umap_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED)
         #"results/explained_variance_pca.csv",
         #"../docs/FullKDEDensityFluHaNa.png",
         #"../docs/FullScatterplotFluHaNa.png",
@@ -274,6 +283,7 @@ rule translate:
             --reference-sequence {input.reference} \
             --output {output.node_data} 
         """
+
 rule clades:
     message: " Labeling clades as specified in config/clades.tsv"
     input:
@@ -356,26 +366,12 @@ rule tree_to_table:
             --attributes {params.attributes}
         """
 
-rule nucleotide_diversity:
-    message: "finding the nucleotide diversity of an aligned FASTA file"
-    input:
-        alignment = rules.concat.output.fasta
-    output:
-        output = "results/nucleotide_diversity.txt"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/nucleotide_diversity.py \
-            --alignment {input.alignment} \
-            --output {output.output}
-        """
-
 rule create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
-        alignment = rules.concat.output.fasta
+        alignment = "results/aligned_{ha_concatenated}.fasta"
     output:
-        output = "results/distance_matrix.csv"
+        output = "results/distance_matrix_{ha_concatenated}.csv"
     conda: "../cartography.yml"
     shell:
         """
@@ -387,12 +383,12 @@ rule create_distance_matrix:
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
-        alignment = rules.concat.output.fasta
+        alignment = "results/aligned_{ha_concatenated}.fasta"
     output:
-        node_data = "results/embed_pca.json",
-        dataframe = "results/embed_pca.csv",
-        figure = "results/embed_pca.pdf",
-        explained_variance = "results/explained_variance_pca.csv"
+        node_data = "results/embed_pca_{ha_concatenated}.json",
+        dataframe = "results/embed_pca_{ha_concatenated}.csv",
+        figure = "results/embed_pca_{ha_concatenated}.pdf",
+        explained_variance = "results/explained_variance_pca_{ha_concatenated}.csv"
     params:
         components = 10
     conda: "../cartography.yml"
@@ -416,9 +412,9 @@ rule embed_tsne:
     input:
         distance_matrix = rules.create_distance_matrix.output.output
     output:
-        node_data = "results/embed_t-sne.json",
-        dataframe = "results/embed_t-sne.csv",
-        figure = "results/embed_t-sne.pdf"
+        node_data = "results/embed_t-sne_{ha_concatenated}.json",
+        dataframe = "results/embed_t-sne_{ha_concatenated}.csv",
+        figure = "results/embed_t-sne_{ha_concatenated}.pdf"
     params:
         perplexity = 25.95,
         learning_rate = 200
@@ -442,9 +438,9 @@ rule embed_umap:
     input:
         distance_matrix = rules.create_distance_matrix.output.output
     output:
-        node_data = "results/embed_umap.json",
-        dataframe = "results/embed_umap.csv",
-        figure = "results/embed_umap.pdf"
+        node_data = "results/embed_umap_{ha_concatenated}.json",
+        dataframe = "results/embed_umap_{ha_concatenated}.csv",
+        figure = "results/embed_umap_{ha_concatenated}.pdf"
     params:
         nearest_neighbors = 200,
         min_dist = .5
@@ -468,9 +464,9 @@ rule embed_mds:
     input:
         distance_matrix = rules.create_distance_matrix.output.output
     output:
-        node_data = "results/embed_mds.json",
-        dataframe = "results/embed_mds.csv",
-        figure = "results/embed_mds.pdf"
+        node_data = "results/embed_mds_{ha_concatenated}.json",
+        dataframe = "results/embed_mds_{ha_concatenated}.csv",
+        figure = "results/embed_mds_{ha_concatenated}.pdf"
     params:
         components = 10
     conda: "../cartography.yml"
@@ -499,12 +495,12 @@ def _get_embedding_columns_by_wildcards(wildcards):
 rule scatterplot:
     message: "Creating the scatterplot (PNG, dataframe)"
     input:
-        distance_matrix = "results/distance_matrix.csv",
-        embedding = "results/embed_{method}.csv",
+        distance_matrix = "results/distance_matrix_{ha_concatenated}.csv",
+        embedding = "results/embed_{method}_{ha_concatenated}.csv",
     output:
-        figure = "results/scatterplot_{method}.png",
-        dataframe = "results/scatterplot_{method}.csv",
-        metadata = "results/scatterplot_{method}_metadata.csv"
+        figure = "results/scatterplot_{method}_{ha_concatenated}.png",
+        dataframe = "results/scatterplot_{method}_{ha_concatenated}.csv",
+        metadata = "results/scatterplot_{method}_metadata_{ha_concatenated}.csv"
     params:
         bootstrap = 1000,
         nucleotides = 1701.0,
@@ -526,11 +522,12 @@ rule scatterplot:
 
 def _get_embedding_path_by_wildcards(wildcards):
     method = wildcards.method
+    ha_concatenated = wildcards.ha_concatenated
 
     if method in ("pca", "mds", "t-sne", "umap"):
-        return f"results/embed_{method}.csv"
+        return f"results/embed_{method}_{ha_concatenated}.csv"
     else:
-        return "results/distance_matrix.csv"
+        return "results/distance_matrix_{ha_concatenated}.csv"
 
 rule KDE_density:
     message: "creating the KDE density plot"
@@ -538,9 +535,9 @@ rule KDE_density:
         embedding = _get_embedding_path_by_wildcards,
         clades = "results/clades.json",
     output:
-        figure = "results/KDEDensity_{method}.png",
-        dataframe = "results/KDEDensity_{method}.csv",
-        metadata = "results/KDEDensity_{method}_metadata.csv"
+        figure = "results/KDEDensity_{method}_{ha_concatenated}.png",
+        dataframe = "results/KDEDensity_{method}_{ha_concatenated}.csv",
+        metadata = "results/KDEDensity_{method}_metadata_{ha_concatenated}.csv"
     params:
         embedding_columns = _get_embedding_columns_by_wildcards,
         differentiator_column = "clade_membership"
@@ -561,16 +558,16 @@ rule KDE_density:
 rule concat_KDE_table:
     message: "concatenating all the KDE data into one csv dataframe"
     input:
-       dataframe_pca = "results/KDEDensity_pca_metadata.csv",
-       dataframe_mds = "results/KDEDensity_mds_metadata.csv", 
-       dataframe_tsne = "results/KDEDensity_t-sne_metadata.csv", 
-       dataframe_umap = "results/KDEDensity_umap_metadata.csv",
-       dataframe_genetic = "results/KDEDensity_genetic_metadata.csv"
+       dataframe_pca = "results/KDEDensity_pca_metadata_{ha_concatenated}.csv",
+       dataframe_mds = "results/KDEDensity_mds_metadata_{ha_concatenated}.csv", 
+       dataframe_tsne = "results/KDEDensity_t-sne_metadata_{ha_concatenated}.csv", 
+       dataframe_umap = "results/KDEDensity_umap_metadata_{ha_concatenated}.csv",
+       dataframe_genetic = "results/KDEDensity_genetic_metadata_{ha_concatenated}.csv"
     output:
-        metadata = "results/full_KDE_metadata.csv"
+        metadata = "results/full_KDE_metadata_{ha_concatenated}.csv"
     params:
         column = "MCC",
-        dataframes = "results/KDEDensity_pca_metadata.csv results/KDEDensity_mds_metadata.csv results/KDEDensity_t-sne_metadata.csv results/KDEDensity_umap_metadata.csv results/KDEDensity_genetic_metadata.csv"
+        dataframes = "results/KDEDensity_pca_metadata_{ha_concatenated}.csv results/KDEDensity_mds_metadata_{ha_concatenated}.csv results/KDEDensity_t-sne_metadata_{ha_concatenated}.csv results/KDEDensity_umap_metadata_{ha_concatenated}.csv results/KDEDensity_genetic_metadata_{ha_concatenated}.csv"
     conda: "../cartography.yml"
     shell:
         """
@@ -584,15 +581,15 @@ rule concat_KDE_table:
 rule concat_scatterplot_table:
     message: "concatenating all the scatterplot metadata into one csv dataframe"
     input:
-       dataframe_pca = "results/scatterplot_pca_metadata.csv",
-       dataframe_mds = "results/scatterplot_mds_metadata.csv", 
-       dataframe_tsne = "results/scatterplot_t-sne_metadata.csv", 
-       dataframe_umap = "results/scatterplot_umap_metadata.csv"
+       dataframe_pca = "results/scatterplot_pca_metadata_{ha_concatenated}.csv",
+       dataframe_mds = "results/scatterplot_mds_metadata_{ha_concatenated}.csv", 
+       dataframe_tsne = "results/scatterplot_t-sne_metadata_{ha_concatenated}.csv", 
+       dataframe_umap = "results/scatterplot_umap_metadata_{ha_concatenated}.csv"
     output:
-        metadata = "results/full_Scatterplot_metadata.csv"
+        metadata = "results/full_Scatterplot_metadata_{ha_concatenated}.csv"
     params:
         column = "pearson_coef",
-        dataframes = "results/scatterplot_pca_metadata.csv results/scatterplot_mds_metadata.csv results/scatterplot_t-sne_metadata.csv results/scatterplot_umap_metadata.csv"
+        dataframes = "results/scatterplot_pca_metadata_{ha_concatenated}.csv results/scatterplot_mds_metadata_{ha_concatenated}.csv results/scatterplot_t-sne_metadata_{ha_concatenated}.csv results/scatterplot_umap_metadata_{ha_concatenated}.csv"
     conda: "../cartography.yml"
     shell:
         """

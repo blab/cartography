@@ -126,7 +126,7 @@ zika-nextstrain/results-20182020/
 zika-nextstrain/auspice/
 mers-nextstrain/results/
 outlier_analysis/results/
-
+ha-na-nextstrain/results/
 notebooks/2019-07-18-view-auspice-tree-json-with-altair.ipynb
 notebooks/2019-08-01DistanceMatrixCode.ipynb
 notebooks/PairwiseVsEuclidean.ipynb

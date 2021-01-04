@@ -336,7 +336,7 @@ rule tree_to_table:
     output:
         table = "results/table.tsv"
     params:
-        attributes = "num_date pca1 pca2 pca3 pca4 mds1 mds2 mds3 mds4 tsne_x tsne_y umap_x umap_y clade_membership pca_label mds_label umap_label t-sne_label"
+        attributes = "num_date pca1 pca2 pca3 pca4 mds1 mds2 tsne_x tsne_y umap_x umap_y clade_membership pca_label mds_label umap_label t-sne_label"
     conda: "../cartography.yml"
     shell:
         """
@@ -448,7 +448,7 @@ rule embed_mds:
         dataframe = "results/embed_mds.csv",
         figure = "results/embed_mds.pdf"
     params:
-        components = 10
+        components = 2
     conda: "../cartography.yml"
     shell:
         """
