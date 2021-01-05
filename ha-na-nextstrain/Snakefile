@@ -331,7 +331,7 @@ rule export:
         traits = rules.traits.output.node_data,
         nt_muts = rules.ancestral.output.node_data,
         aa_muts = rules.translate.output.node_data,
-        embeddings = expand("results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
+        embeddings = expand("results/embed_{embedding}_ha.json", embedding=EMBEDDING_METHODS),
         auspice_config = files.auspice_config,
         colors = "config/colors.tsv",
         clades = rules.clades.output.clade_data
