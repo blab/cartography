@@ -4,6 +4,7 @@ import numpy as np
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
+import re
 
 
 if __name__ == "__main__":
@@ -25,9 +26,9 @@ if __name__ == "__main__":
     # Split genomes into two based on segment name
     for i in range(0, len(strains)):
         if(any(ele in strains[i] for ele in ["|N|4", "|S|4","|T|4"])):
-            indices_na.append(i)
-        else:
             indices_ha.append(i)
+        else:
+            indices_na.append(i)
 
     strains_na = np.array(strains)[indices_na]
     genomes_na = np.array(genomes)[indices_na]
