@@ -192,7 +192,7 @@ rule align:
         """
 
 rule concat:
-    message: 
+    message:
         """putting the na strains with the ha strains"""
     input:
         sequence_ha = "results/aligned_ha.fasta",
@@ -206,7 +206,6 @@ rule concat:
             --sequences {input.sequence_ha} {input.sequence_na}\
             --output {output.fasta} \
         """
-
 
 rule tree:
     message: "Building tree"
@@ -298,7 +297,7 @@ rule translate:
             --tree {input.tree} \
             --ancestral-sequences {input.node_data} \
             --reference-sequence {input.reference} \
-            --output {output.node_data} 
+            --output {output.node_data}
         """
 
 rule clades:
@@ -368,7 +367,7 @@ rule export:
 
 rule tree_to_table:
     message: "creating a table of node data values from the tree attributes"
-    input: 
+    input:
         tree = rules.export.output.auspice_tree
     output:
         table = "results/table.tsv"
@@ -578,8 +577,8 @@ rule concat_KDE_table:
     message: "concatenating all the KDE data into one csv dataframe"
     input:
        dataframe_pca = "results/KDEDensity_pca_metadata_{ha_concatenated}.csv",
-       dataframe_mds = "results/KDEDensity_mds_metadata_{ha_concatenated}.csv", 
-       dataframe_tsne = "results/KDEDensity_t-sne_metadata_{ha_concatenated}.csv", 
+       dataframe_mds = "results/KDEDensity_mds_metadata_{ha_concatenated}.csv",
+       dataframe_tsne = "results/KDEDensity_t-sne_metadata_{ha_concatenated}.csv",
        dataframe_umap = "results/KDEDensity_umap_metadata_{ha_concatenated}.csv",
        dataframe_genetic = "results/KDEDensity_genetic_metadata_{ha_concatenated}.csv"
     output:
@@ -601,8 +600,8 @@ rule concat_scatterplot_table:
     message: "concatenating all the scatterplot metadata into one csv dataframe"
     input:
        dataframe_pca = "results/scatterplot_pca_metadata_{ha_concatenated}.csv",
-       dataframe_mds = "results/scatterplot_mds_metadata_{ha_concatenated}.csv", 
-       dataframe_tsne = "results/scatterplot_t-sne_metadata_{ha_concatenated}.csv", 
+       dataframe_mds = "results/scatterplot_mds_metadata_{ha_concatenated}.csv",
+       dataframe_tsne = "results/scatterplot_t-sne_metadata_{ha_concatenated}.csv",
        dataframe_umap = "results/scatterplot_umap_metadata_{ha_concatenated}.csv"
     output:
         metadata = "results/full_Scatterplot_metadata_{ha_concatenated}.csv"
@@ -623,12 +622,12 @@ rule create_distance_dataframe:
     message: "creating distance dataframe for the ha and ha+na for animation"
     input:
         dataframe_pca = "results/embed_pca_ha.csv",
-        dataframe_mds = "results/embed_mds_ha.csv", 
-        dataframe_tsne = "results/embed_t-sne_ha.csv", 
+        dataframe_mds = "results/embed_mds_ha.csv",
+        dataframe_tsne = "results/embed_t-sne_ha.csv",
         dataframe_umap = "results/embed_umap_ha.csv",
         dataframe_pca_na = "results/embed_pca_concatenated.csv",
-        dataframe_mds_na = "results/embed_mds_concatenated.csv", 
-        dataframe_tsne_na = "results/embed_t-sne_concatenated.csv", 
+        dataframe_mds_na = "results/embed_mds_concatenated.csv",
+        dataframe_tsne_na = "results/embed_t-sne_concatenated.csv",
         dataframe_umap_na = "results/embed_umap_concatenated.csv"
     output:
         metadata = "results/ha_concatenated_data.csv"
