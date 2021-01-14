@@ -630,15 +630,14 @@ rule create_distance_dataframe:
         dataframe_mds_na = "results/embed_mds_concatenated.csv", 
         dataframe_tsne_na = "results/embed_t-sne_concatenated.csv", 
         dataframe_umap_na = "results/embed_umap_concatenated.csv"
-    output: 
-        metadata = "results/ha_concatenated_data.csv",
-        suffixes = "_ha _concatenated"
+    output:
+        metadata = "results/ha_concatenated_data.csv"
     params:
-        dataframes = "results/embed_pca_ha.csv results/embed_mds_ha.csv results/embed_t-sne_ha.csv results/embed_umap_ha.csv results/embed_pca_concatenated.csv results/embed_mds_concatenated.csv results/embed_t-sne_concatenated.csv results/embed_umap_concatenated.csv"
+        suffixes = "_ha _concatenated"
     shell:
         """
         python3 ../notebooks/scripts/make_table.py \
-            --tables {params.dataframes} \
+            --tables {input} \
             --separator ',' \
             --suffixes {params.suffixes} \
             --output {output.metadata}
