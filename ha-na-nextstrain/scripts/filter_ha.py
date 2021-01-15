@@ -13,43 +13,25 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    strains_filter = []
-    genomes_filter = []
-    for record in SeqIO.parse(args.sequence[0], "fasta"):
-        strains_filter.append(str(record.id))
-        genomes_filter.append(str(record.seq))
+    # Index sequences without loading them into memory. This gives us access to
+    # names of strains in both files that we can cross-check.
+    sequences_a = SeqIO.index(args.sequence[0], "fasta")
+    sequences_b = SeqIO.index(args.sequence[1], "fasta")
 
-    strains_filter_by = []
-    genomes_filter_by = []
-    for record in SeqIO.parse(args.sequence[1], "fasta"):
-        strains_filter_by.append(str(record.id))
-        genomes_filter_by.append(str(record.seq))
+    # Identify shared sequences between the two sets.
+    shared_strains = set(sequences_a.keys()) & set(sequences_b.keys())
+    print(f"Found {len(shared_strains)} between input sequence files.")
 
-    strains_ = []
-    for i in range(0, len(strains_filter)):
-        if strains_filter[i] in strains_filter_by:
-            strains_.append(i)
+    # Write out shared strains for sequence set a.
+    SeqIO.write(
+        (sequences_a[strain] for strain in shared_strains),
+        args.output_fasta[0],
+        "fasta"
+    )
 
-    strains_ha = np.array(strains_filter)[strains_]
-    genomes_ha = np.array(genomes_filter)[strains_]
-
-    dictionary_ha = dict(zip(strains_ha, genomes_ha))
-    dictionary_na = dict(zip(strains_filter_by, genomes_filter_by))
-
-    with open(args.output_fasta[0], "w") as output_handle:
-        for strains, genomes in dictionary_ha.items():
-            record = SeqRecord(
-            Seq(genomes),
-            id=strains,
-            description=""
-            )
-            SeqIO.write(record, output_handle, "fasta")
-
-    with open(args.output_fasta[1], "w") as output_handle:
-        for strains, genomes in dictionary_na.items():
-            record = SeqRecord(
-            Seq(genomes),
-            id=strains,
-            description=""
-            )
-            SeqIO.write(record, output_handle, "fasta")
+    # Write out shared strains for sequence set b.
+    SeqIO.write(
+        (sequences_b[strain] for strain in shared_strains),
+        args.output_fasta[1],
+        "fasta"
+    )

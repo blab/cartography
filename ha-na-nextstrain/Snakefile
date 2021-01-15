@@ -101,29 +101,13 @@ rule parse:
             --fields {params.fasta_fields}
         """
 
-rule filter_ha_strains:
-    message: "making ha strains same as na strains"
-    input:
-        sequences_ha = "results/sequences_ha.fasta",
-        sequences_na = "results/sequences_na.fasta"
-    output:
-        output_ha = "results/sequences_ha_filtered.fasta",
-        output_na = "results/sequences_na_filtered.fasta"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 scripts/filter_ha.py \
-            --sequence {input.sequences_ha} {input.sequences_na} \
-            --output_fasta {output.output_ha} {output.output_na}
-        """
-
 rule deduplicate_sequences:
     message:
         """
         Deduplicating sequences
         """
     input:
-        sequences = "results/sequences_{segment}_filtered.fasta"
+        sequences = "results/sequences_{segment}.fasta"
     output:
         sequences = "results/deduplicated_sequences_{segment}.fasta"
     conda: "../cartography.yml"
@@ -138,8 +122,6 @@ rule filter:
     message:
         """
         Filtering to
-          - {params.sequences_per_group} sequence(s) per {params.group_by!s}
-          - from {params.min_date} onwards
           - excluding strains in {input.exclude}
         """
     input:
@@ -148,11 +130,6 @@ rule filter:
         exclude = files.dropped_strains
     output:
         sequences = "results/filtered_{segment}.fasta"
-    params:
-        group_by = "country year month",
-        sequences_per_group = 10,
-        min_date = 1900,
-        max_date = 2050
     conda: "../cartography.yml"
     shell:
         """
@@ -160,11 +137,23 @@ rule filter:
             --sequences {input.sequences} \
             --metadata {input.metadata} \
             --exclude {input.exclude} \
-            --output {output.sequences} \
-            --group-by {params.group_by} \
-            --sequences-per-group {params.sequences_per_group} \
-            --min-date {params.min_date} \
-            --max-date {params.max_date}
+            --output {output.sequences}
+        """
+
+rule pair_ha_strains:
+    message: "making ha strains same as na strains"
+    input:
+        sequences_ha = "results/filtered_ha.fasta",
+        sequences_na = "results/filtered_na.fasta"
+    output:
+        output_ha = "results/paired_ha.fasta",
+        output_na = "results/paired_na.fasta"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 scripts/filter_ha.py \
+            --sequence {input.sequences_ha} {input.sequences_na} \
+            --output_fasta {output.output_ha} {output.output_na}
         """
 
 rule align:
@@ -174,7 +163,7 @@ rule align:
           - filling gaps with N
         """
     input:
-        sequences = rules.deduplicate_sequences.output.sequences,
+        sequences = "results/paired_{segment}.fasta",
         reference = files.reference
     output:
         alignment = "results/aligned_{segment}.fasta"
