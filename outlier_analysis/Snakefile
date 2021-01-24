@@ -20,22 +20,22 @@ OUTLIER = [
 
 rule all:
     input:
-        #expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        #expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
         expand("results/deduplicated_sequences_{type}.fasta", type=OUTLIER),
         expand("results/filtered_{type}.fasta", type=OUTLIER),
+        "results/KDEDensity_mds.png",
         "results/total_sequences.fasta",
         "results/total_metadata.tsv",
         "results/aligned.fasta",
         "../auspice/cartography_flu-outlier-h3n2-swine-human.json",
         "results/table.tsv",
-        "../docs/FullKDEDensityFluOutlier.png",
-        "../docs/FullScatterplotFluOutlier.png",
-        "../docs/FullLinkedChartBrushableFluOutlier.html",
-        "../docs/flu-embeddingsOutlier.png",
-        "../docs/FullMDSBrushSupplementFluOutlier.html",
-        "../docs/FullPCABrushSupplementFluOutlier.html",
-        "../docs/explainedVarianceFluOutlier.png"
+        "results/outliers.csv",
+        #"../docs/FullKDEDensityFluOutlier.png",
+        #"../docs/FullScatterplotFluOutlier.png",
+        #"../docs/FullLinkedChartBrushableFluOutlier.html",
+        #"../docs/flu-embeddingsOutlier.png",
+        #"../docs/FullMDSBrushSupplementFluOutlier.html",
+        #"../docs/FullPCABrushSupplementFluOutlier.html",
+        #"../docs/explainedVarianceFluOutlier.png"
 
 rule files:
     params:
@@ -88,7 +88,7 @@ def _get_group_values_by_wildcards(wildcards):
     if method in ("human"):
         return 15
     else:
-        return 1
+        return 2
 
 rule filter:
     message:
@@ -194,7 +194,6 @@ rule refine:
           - estimate timetree
           - use {params.coalescent} coalescent timescale
           - estimate {params.date_inference} node dates
-          - filter tips more than {params.clock_filter_iqd} IQDs from clock expectation
         """
     input:
         tree = rules.tree.output.tree,
@@ -206,7 +205,6 @@ rule refine:
     params:
         coalescent = "opt",
         date_inference = "marginal",
-        clock_filter_iqd = 4,
         clock_rate = 0.00382,
         clock_std_dev = 0.000764
     conda: "../cartography.yml"
@@ -222,7 +220,6 @@ rule refine:
             --coalescent {params.coalescent} \
             --date-confidence \
             --date-inference {params.date_inference} \
-            --clock-filter-iqd {params.clock_filter_iqd} \
             --clock-rate {params.clock_rate} \
             --clock-std-dev {params.clock_std_dev}
         """
@@ -466,39 +463,12 @@ rule embed_mds:
 def _get_embedding_columns_by_wildcards(wildcards):
     method = wildcards.method.replace("-", "")
 
-    if method in ("pca", "mds"):
+    if method in ("pca"):
         return f"{method}1 {method}2 {method}3 {method}4"
+    if method in ("mds"):
+        return f"{method}1 {method}2"
     else:
         return f"{method}_x {method}_y"
-
-
-rule scatterplot:
-    message: "Creating the scatterplot (PNG, dataframe)"
-    input:
-        distance_matrix = "results/distance_matrix.csv",
-        embedding = "results/embed_{method}.csv",
-    output:
-        figure = "results/scatterplot_{method}.png",
-        dataframe = "results/scatterplot_{method}.csv",
-        metadata = "results/scatterplot_{method}_metadata.csv"
-    params:
-        bootstrap = 1000,
-        nucleotides = 1701.0,
-        columns = _get_embedding_columns_by_wildcards
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/scatterplot.py \
-            --distance {input.distance_matrix} \
-            --embedding {input.embedding} \
-            --method {wildcards.method} \
-            --columns {params.columns} \
-            --bootstrapping-sample {params.bootstrap} \
-            --output-figure {output.figure} \
-            --output-dataframe {output.dataframe} \
-            --output-metadata {output.metadata} \
-            --nucleotide {params.nucleotides}
-        """
 
 def _get_embedding_path_by_wildcards(wildcards):
     method = wildcards.method
@@ -511,14 +481,14 @@ def _get_embedding_path_by_wildcards(wildcards):
 rule KDE_density:
     message: "creating the KDE density plot"
     input:
-        embedding = _get_embedding_path_by_wildcards,
+        embedding = "results/embed_mds.csv",
         clades = "results/clades.json",
     output:
-        figure = "results/KDEDensity_{method}.png",
-        dataframe = "results/KDEDensity_{method}.csv",
-        metadata = "results/KDEDensity_{method}_metadata.csv"
+        figure = "results/KDEDensity_mds.png",
+        dataframe = "results/KDEDensity_mds.csv",
+        metadata = "results/KDEDensity_mds_metadata.csv"
     params:
-        embedding_columns = _get_embedding_columns_by_wildcards,
+        embedding_columns = "mds1 mds2",
         differentiator_column = "clade_membership"
     conda: "../cartography.yml"
     shell:
@@ -557,27 +527,32 @@ rule concat_KDE_table:
             --output {output.metadata}
         """
 
-rule concat_scatterplot_table:
-    message: "concatenating all the scatterplot metadata into one csv dataframe"
+rule find_outliers:
+    message: "find outliers and make figure"
     input:
-       dataframe_pca = "results/scatterplot_pca_metadata.csv",
-       dataframe_mds = "results/scatterplot_mds_metadata.csv", 
-       dataframe_tsne = "results/scatterplot_t-sne_metadata.csv", 
-       dataframe_umap = "results/scatterplot_umap_metadata.csv"
+       embedding = "results/embed_mds.csv",
+       metadata = "results/total_metadata.tsv"
     output:
-        metadata = "results/full_Scatterplot_metadata.csv"
+        outliers = "results/outliers.csv",
+        figure = "results/LOF_figure.png",
+        metadata = "results/LOF_accuracy.csv"
     params:
-        column = "pearson_coef",
-        dataframes = "results/scatterplot_pca_metadata.csv results/scatterplot_mds_metadata.csv results/scatterplot_t-sne_metadata.csv results/scatterplot_umap_metadata.csv"
+        method = "MDS",
+        columns = "mds1 mds2", 
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/concatenate_tables.py \
-            --tables {params.dataframes} \
-            --separator ',' \
-            --sort-by {params.column} \
-            --output {output.metadata}
+        python3 scripts/LOF_distance_calculations.py \
+            --method {params.method} \
+            --embedding {input.embedding} \
+            --true-outliers {input.metadata} \
+            --find-outlier \
+            --columns {params.columns} \
+            --output-outliers {output.outliers} \
+            --output-figure {output.figure} \
+            --output-metadata {output.metadata}
         """
+
 
 rule create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
