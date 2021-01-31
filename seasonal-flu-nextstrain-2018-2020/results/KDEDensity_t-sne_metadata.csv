@@ -1,2 +1,0 @@
-MCC,accuracy,median_within,median_between,threshold,embedding,TN,FN,TP,FP
-0.766,0.925,-1.589,0.176,-0.934,t-sne,87189,892,16476,7544
