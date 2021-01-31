@@ -1,0 +1,5 @@
+tsne perplexity: 15.0
+tsne learning_rate: 500.0
+mcc best value: 0.5115169007275104umap nearest_neighbors: 100.0
+umap min_dist: 0.05
+mcc best value: 0.5062782744152048

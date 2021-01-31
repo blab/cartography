@@ -12,7 +12,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVC
 from sklearn.metrics import confusion_matrix, matthews_corrcoef
 from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
 import sys
 
 from Helpers import get_euclidean_data_frame
@@ -28,6 +27,7 @@ if __name__ == "__main__":
     parser.add_argument("--method", required=True, choices = ["pca", "mds", "t-sne", "umap", "genetic"], help="the embedding used")
     parser.add_argument("--embedding-columns", nargs="+", required=True, help="list of the columns to use as coordinates from the embedding data frame")
     parser.add_argument("--differentiator-column", default="clade_membership", help="string name of the column to differentiate by (clade, host, etc)")
+    parser.add_argument("--cross-v-values", required=False, help="a csv file that contains the method for which the line should be plotted as well as the value (as a vertical line) to plot")
     parser.add_argument("--output-figure", help="path for outputting as a PNG")
     parser.add_argument("--output-dataframe", help="path for outputting as a dataframe")
     parser.add_argument("--output-metadata", help="return the Matthews Correlation Coefficient, Median within and between thresholds and accuracy values for the KDE density plot")
@@ -149,6 +149,10 @@ if __name__ == "__main__":
     if args.output_dataframe is not None:
         KDE_df.to_csv(args.output_dataframe)
 
+    if args.cross_v_values is not None:
+        cross_v_values = pd.read_csv(args.cross_v_values, index_col=0)
+        threshold = cross_v_values.loc[args.method].values.tolist()[0]
+
     if args.output_figure is not None:
 
         fig, ax = plt.subplots(1, 1, figsize=(12, 6))
@@ -158,6 +162,9 @@ if __name__ == "__main__":
 
         ax.axvline(x=classifier_threshold, label="SVC threshold", color="#000000", alpha=0.5)
 
+        if args.cross_v_values is not None:
+            ax.axvline(x=threshold, label="cross validation threshold", color="#000000", alpha=0.5)
+        
         ax.set_xlabel("Scaled Euclidean distance from embedding")
         ax.set_ylabel("KDE density")
         ax.legend(frameon=False)

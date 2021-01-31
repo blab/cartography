@@ -30,7 +30,8 @@ rule all:
         "../docs/FullMDSBrushSupplementFlu.html",
         "../docs/FullPCABrushSupplementFlu.html",
         "results/nucleotide_diversity.txt",
-        "../docs/explainedVarianceFlu.png"
+        "../docs/explainedVarianceFlu.png",
+        "results/cross_validation_thresholds.csv"
 
 rule files:
     params:
@@ -94,7 +95,7 @@ rule filter:
         sequences = "results/filtered.fasta"
     params:
         group_by = "country year month",
-        sequences_per_group = 10,
+        sequences_per_group = 25,
         min_date = 2015.75,
         max_date = 2018.25
     conda: "../cartography.yml"
@@ -443,8 +444,10 @@ rule embed_mds:
 def _get_embedding_columns_by_wildcards(wildcards):
     method = wildcards.method.replace("-", "")
 
-    if method in ("pca", "mds"):
+    if method in ("pca"):
         return f"{method}1 {method}2 {method}3 {method}4"
+    if method in ("mds"):
+        return f"{method}1 {method}2"
     else:
         return f"{method}_x {method}_y"
 
@@ -484,6 +487,31 @@ def _get_embedding_path_by_wildcards(wildcards):
         return f"results/embed_{method}.csv"
     else:
         return "results/distance_matrix.csv"
+
+rule cross_validation:
+    message: "do cross validation test to find best distance thresholds per method for between and within relationship status"
+    input:
+        distance_matrix = rules.create_distance_matrix.output.output,
+        alignment = rules.align.output.alignment,
+        node_data = rules.tree_to_table.output.table
+    output:
+        output = "results/cross_validation_thresholds.csv",
+        metadata = "results/cross_validation_results.csv",
+        figure = "results/cross_validation.png"
+    params:
+        n_repeats = 10,
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 scripts/cross_validation.py \
+            --distance-matrix {input.distance_matrix} \
+            --alignment {input.alignment} \
+            --node-data {input.node_data} \
+            --n-repeats {params.n_repeats} \
+            --output {output.output} \
+            --output-metadata {output.metadata} \
+            --output-figure {output.figure}
+        """
 
 rule KDE_density:
     message: "creating the KDE density plot"
@@ -610,6 +638,43 @@ rule create_notebook_docs:
     conda: "../cartography.yml"
     notebook:
         "2019-08-08FinalNotebookFlu.ipynb"
+
+
+rule create_cross_v_docs:
+    message: "creating linked and grouped charts using the jupyter notebook"
+    input:
+        #Charts, tree:
+        node_df = "results/table.tsv",
+
+        pca_df = "results/embed_pca.csv",
+        explained_variance_pca = "results/explained_variance_pca.csv",
+
+        mds_df = "results/embed_mds.csv",
+
+        #KDE Density:
+        KDE_pca = "results/KDEDensity_pca.csv",
+        KDE_pca_metadata = "results/KDEDensity_pca_metadata.csv",
+
+        KDE_mds = "results/KDEDensity_mds.csv",
+        KDE_mds_metadata = "results/KDEDensity_mds_metadata.csv",
+
+        KDE_tsne = "results/KDEDensity_t-sne.csv",
+        KDE_tsne_metadata = "results/KDEDensity_t-sne_metadata.csv",
+
+        KDE_umap = "results/KDEDensity_umap.csv",
+        KDE_umap_metadata = "results/KDEDensity_umap_metadata.csv",
+
+        KDE_genetic = "results/KDEDensity_genetic.csv",
+        KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv",
+
+    output:
+        exhaustive_grid_search = "results/exhaustive_grid_search.png",
+        metadata_cross_v = "results/table_cross_validation.csv",
+        cross_v_data = "results/cross_validation_graph.png"
+
+    conda: "../cartography.yml"
+    notebook:
+        "../notebooks/2020-07-28-cross-validation-outline.ipynb"
 
 rule clean:
     message: "Removing directories: {params}"

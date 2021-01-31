@@ -88,7 +88,7 @@ def _get_group_values_by_wildcards(wildcards):
     if method in ("human"):
         return 15
     else:
-        return 2
+        return 1
 
 rule filter:
     message:
@@ -496,7 +496,7 @@ rule KDE_density:
         python3 ../notebooks/scripts/within_vs_between_status.py \
             --embedding {input.embedding} \
             --clades {input.clades} \
-            --method {wildcards.method} \
+            --method mds \
             --embedding-columns {params.embedding_columns} \
             --differentiator-column {params.differentiator_column} \
             --output-figure {output.figure} \

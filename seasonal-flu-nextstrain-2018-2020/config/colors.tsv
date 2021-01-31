@@ -1,0 +1,27 @@
+pca_label	-1	#CCCCCC
+pca_label	0	#4784C8
+pca_label	1	#67AE95
+pca_label	2	#98BD5E
+pca_label	3	#CDB642
+pca_label	4	#E68634
+
+mds_label	-1	#CCCCCC
+mds_label	0	#4784C8
+mds_label	1	#67AE95
+mds_label	2	#98BD5E
+mds_label	3	#CDB642
+mds_label	4	#E68634
+
+t-sne_label	-1	#CCCCCC
+t-sne_label	0	#4784C8
+t-sne_label	1	#67AE95
+t-sne_label	2	#98BD5E
+t-sne_label	3	#CDB642
+t-sne_label	4	#E68634
+
+umap_label	-1	#CCCCCC
+umap_label	0	#4784C8
+umap_label	1	#67AE95
+umap_label	2	#98BD5E
+umap_label	3	#CDB642
+umap_label	4	#E68634
