@@ -231,6 +231,21 @@ These results corroborate our conclusion about using t-SNE embeddings for cluste
 
 ![Distribution of scaled Euclidean distances between all pairs of MERS strains by clade status and dimensionality reduction method.](FullKDEDensityMERS.png){#fig:MERS-within-and-between-group-distances}
 
+
+# Analysis of HA and NA joined genomes effects on embedding quality and accuracy
+
+- A2/re and A2 (visible difference)
+- MDS and UMAP show the most obvious improvement moving from the HA-only analysis (top row) to the HA and NA joint analysis (bottom row). t-SNE also seems qualitatively better, but because it only maintains local clusters, I have a harder time seeing how much it has improved. PCA is an outlier here with a strange embedding for PC1 that seems to randomly partition closely related strains. 
+
+  embedding  MCC_ha  MCC_concatenated
+0       mds   0.565             0.625
+1     t-sne   0.579             0.618
+2   genetic   0.592             0.579
+3       pca   0.692             0.351
+4      umap   0.714             0.782
+
+- look at final plot
+
 # Discussion
 
 In this paper, we analyzed the usage of PCA, MDS, t-SNE, and UMAP to better understand population structure in varying types of diseases with differing clade assignments. 
@@ -359,6 +374,32 @@ The larger the median ratio between the two curves presented per clade relations
 To create this plot, the matrix of Euclidean distances for each embedding was flattened, and each comparison was labeled as a “within clade” or “between clade” comparison using the clade assignments from the .json build of the tree.
 KDE plots were made using [seaborn](https://seaborn.pydata.org/), separated by clade status and Euclidean distance on the y axis.
 A Supported Vector Machine was run to optimize for clade relationships by Euclidean distance, and the Matthews Correlation Coefficient, accuracy value, and classifier thresholds were calculated and captured along with the confusion matrix of values.
+
+### HA and NA Full Genomes:
+
+The HA and NA analysis tests the embedding's ability to create accurate embeddings with recombinant genomes, and analyzes the impact the added chromosome sequence has on the embedding's ability to visually separate recombinant clades from their parent clade.
+The Influenza H3N2 HA and NA chromosomes were downloaded from NCBI and joined with their respective strain pair.
+The joined FASTA was then used as input for the embeddings, and the HA vs HA and NA embedding plots were visualized together after running Procrustes analysis to normalize the data.
+A full interactive visualization plot and a quiver plot were created to analyze the differences between the HA and concatenated plots, as well as KDE density plots with the Matthews Correlation Coeficcient value visualized on the respective plots to further assess the efficacy of using full genomes for this approach.
+
+### Cross Validation 
+
+The cross validation test creates a Euclidean distance threshold between clade relationships from a population from the past, and the threshold is tested on a population of the same disease from some years later. 
+This test determines the embedding's abilities to understand future trends in present populations, which further analyses the uses and applicability of this research to other disciplines.
+2016 to 2018 H3N2 Influenza data was used for the initial cross validation, with a repeated K fold analysis with 10 repeats used from scikit-learn [@jolliffe_cadima_2016]. 
+Each of these folds were fit to each embedding method (PCA, MDS, t-SNE, UMAP) using a support vector machine (SVM) classifier that identified an optimal Euclidean distance threshold to accurately classify pairs of strains from the same clade. 
+These ten thresholds were then plotted on a distribution, and the mean threshold was used on Influenza H3N2 data from 2018 to 2020 to test the embedding's ability to classify future strain pairs accurately on the same virus. 
+A confusion matrix, KDE density plot, ROC curve, and accuracy values were recorded using functions from scikit-learn [@jolliffe_cadima_2016] in order to further analyze the results of the test. 
+
+### Outlier Analysis
+
+The outlier analysis defines a Euclidean threshold between outliers and normal strains to quickly find outliers within a population.
+As it is common practice to run flu builds all the way through, view them, and find a handful of outliers that should now be excluded from the analysis, this research can be used as an upstream tool to flag potential outliers before building a tree to potentially save scientists hours of work in outlier detection.
+Human H3N2 Influenza data, labeled with outlier samples, and swine H3N2 Influenza data was concatenated together, with around 40 outliers and 2600 normal strains. 
+This data was transformed and reduced using MDS, which preliminary analysis proved was the strongest of the embeddings at separating outliers by euclidean distance from normal strains due to its emphasis on global patterns.
+The euclidean datapoints from the MDS analysis was inputted into Local Outlier Factor analysis from scikit-learn [@jolliffe_cadima_2016], which outputted outlier scores for each strain.
+A Support Vector Machine was trained on the LOF data, and the SVM outputted labels that identified strains as outliers or not. 
+This information was further analyzed using confusion matrices, ROC curves, Matthews Correlation Coefficient, and KDE Density Plots. 
 
 # Acknowledgements
 
