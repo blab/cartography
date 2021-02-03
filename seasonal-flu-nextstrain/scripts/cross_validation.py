@@ -106,8 +106,6 @@ if __name__ == "__main__":
 
     numbers = np.array(numbers)
 
-    print(numbers)
-
     #cross validation
     random_state = 12883823
     rkf = RepeatedKFold(n_splits=2,  n_repeats=args.n_repeats, random_state=random_state)
@@ -253,7 +251,9 @@ if __name__ == "__main__":
         for i in cross_v_info["method"].unique().tolist():
             cross_v_info_method = cross_v_info.where(cross_v_info["method"] == i).dropna(how = "all")
             average.append(np.average(np.array(cross_v_info_method["matthews_cc"].values.tolist()).flatten()))
-            
+        
+        average.append(np.average(cross_v_info[cross_v_info['method'] == 'genetic']["matthews_cc"].values.tolist()))
+        
         average = dict(zip(cross_v_info["method"].unique().tolist(), average))
 
         df = pd.DataFrame.from_dict(average, orient="index")
@@ -273,7 +273,7 @@ if __name__ == "__main__":
     if args.output is not None:
         list_of_best = []
         for i in ['PCA', 'MDS', 't-SNE', 'UMAP']:
-            df = cross_v_info[cross_v_info.method == i].dropna(axis = 1)
+            df = cross_v_info[cross_v_info.method == i]
             print(df)
             val = df.iloc[df["matthews_cc"].argmax()]
             list_of_best.append(val[["method", "threshold"]])

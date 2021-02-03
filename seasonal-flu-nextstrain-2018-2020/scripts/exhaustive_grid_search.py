@@ -75,6 +75,7 @@ if __name__ == "__main__":
     # reading in the distance matrix and node data
  
     distance_matrix = pd.read_csv(args.distance_matrix, index_col=0)
+    sequence_names = distance_matrix.index.values.tolist()
     distance_matrix.reset_index(drop=True)
     distance_matrix = distance_matrix.to_numpy()
 
@@ -83,8 +84,6 @@ if __name__ == "__main__":
 
     random_state = 12883823
     rkf = RepeatedKFold(n_splits=2, n_repeats=args.n_repeats, random_state=random_state)
-
-    sequence_names = node_df["strain"].values.tolist()
 
     grid_search_results = []
     for training_index, validation_index in rkf.split(sequence_names): 

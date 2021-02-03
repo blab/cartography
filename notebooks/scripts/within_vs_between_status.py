@@ -150,8 +150,12 @@ if __name__ == "__main__":
         KDE_df.to_csv(args.output_dataframe)
 
     if args.cross_v_values is not None:
+
         cross_v_values = pd.read_csv(args.cross_v_values, index_col=0)
-        threshold = cross_v_values.loc[args.method].values.tolist()[0]
+
+        cross_v_values.replace({'PCA' : 'pca', 'MDS': 'mds', 't-SNE': 't-sne', "UMAP": "umap"}, inplace=True, regex=True)
+
+        threshold = cross_v_values.loc[cross_v_values['method'] == args.method]["threshold"].values.tolist()[0]
 
     if args.output_figure is not None:
 
@@ -163,7 +167,7 @@ if __name__ == "__main__":
         ax.axvline(x=classifier_threshold, label="SVC threshold", color="#000000", alpha=0.5)
 
         if args.cross_v_values is not None:
-            ax.axvline(x=threshold, label="cross validation threshold", color="#000000", alpha=0.5)
+            ax.axvline(x=threshold, label="cross validation threshold", color="#800000", alpha=0.5)
         
         ax.set_xlabel("Scaled Euclidean distance from embedding")
         ax.set_ylabel("KDE density")

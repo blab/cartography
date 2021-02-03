@@ -32,7 +32,6 @@ rule all:
         "results/nucleotide_diversity.txt",
         #"../docs/explainedVarianceFlu.png",
         "results/exhaustive_grid_search.png",
-        "results/cross_validation_thresholds.csv"
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha.fa",
