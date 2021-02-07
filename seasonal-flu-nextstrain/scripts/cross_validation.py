@@ -30,6 +30,7 @@ if __name__ == "__main__":
     parser.add_argument("--output", help="the csv path where the best thresholds will be saved.")
     parser.add_argument("--output-metadata", help="the path where the cross validation data will be saved.")
     parser.add_argument("--output-figure", help="PNG with the results displayed graphically")
+    parser.add_argument("--output-total-data", help="output all the data to visualize training and visualization data")
 
     args = parser.parse_args()
 
@@ -67,7 +68,7 @@ if __name__ == "__main__":
 
     embedding_parameters = {
         "dissimilarity": "precomputed",
-        "n_components" : 10
+        "n_components" : 2
     }
     default_tuned_values.append(embedding_parameters)
 
@@ -106,15 +107,18 @@ if __name__ == "__main__":
 
     numbers = np.array(numbers)
 
+    if args.output_total_data is not None:
+        visualize_df = pd.DataFrame()
+
     #cross validation
     random_state = 12883823
     rkf = RepeatedKFold(n_splits=2,  n_repeats=args.n_repeats, random_state=random_state)
-
+    k = 0
     total_list_methods = []
 
     for training_index, validation_index in rkf.split(sequence_names): 
         i = 0
-        print("here")
+        print("here" + str(k))
         for embed in default_tuned_values:
             print(i)
         # Calculate Euclidean distance between pairs of samples in the embedding.
@@ -205,6 +209,20 @@ if __name__ == "__main__":
                 validation_index
             )
 
+            if args.output_total_data is not None:
+                if list_of_embedding_strings[i] != "PCA":
+                    training_embedding_df = pd.DataFrame(training_embedding, columns=[str(list_of_embedding_strings[i])+"_x" + str(k), str(list_of_embedding_strings[i]) + "_y" + str(k)])
+                    validation_embedding_df = pd.DataFrame(validation_embedding, columns=[str(list_of_embedding_strings[i])+"_x" + str(k), str(list_of_embedding_strings[i]) + "_y" + str(k)])
+                else:
+                    training_embedding_df = pd.DataFrame(training_embedding, columns=["PCA" + str(k) + str(j) for j in range(1,11)])
+                    validation_embedding_df = pd.DataFrame(validation_embedding, columns=["PCA" + str(k) + str(j) for j in range(1,11)])
+                
+                training_embedding_df["clade_membership"] = clade_annotations.loc[training_index, "clade_membership"].values
+                validation_embedding_df["clade_membership"] = clade_annotations.loc[validation_index, "clade_membership"].values
+
+                merged_df = validation_embedding_df.merge(training_embedding_df, how='outer', left_index=True, right_index=True)
+
+                visualize_df.append(merged_df)
             # Predict and score clade status from embedding distances and the trained classifier.
             # The first argument is the set to predict classifier labels for. The second argument
             # is the list of true labels. The return argument is the mean accuracy of the predicted
@@ -237,6 +255,7 @@ if __name__ == "__main__":
             total_list_methods.append(method_dict)
             i = i + 1
         total_list_methods.append({"method":"genetic", "matthews_cc": genetic_accuracy})
+        k = k + 1
 
 
     cross_v_info = pd.DataFrame(total_list_methods)
@@ -279,3 +298,6 @@ if __name__ == "__main__":
             list_of_best.append(val[["method", "threshold"]])
             
         pd.DataFrame(list_of_best).to_csv(args.output)
+
+    if args.output_total_data is not None:
+        visualize_df.to_csv(args.output_total_data)

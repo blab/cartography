@@ -23,14 +23,14 @@ rule all:
         "results/full_KDE_metadata.csv",
         "results/full_Scatterplot_metadata.csv",
         "results/explained_variance_pca.csv",
-        "../docs/FullKDEDensityFlu.png",
-        "../docs/FullScatterplotFlu.png",
-        "../docs/FullLinkedChartBrushableFlu.html",
-        "../docs/flu-embeddings.png",
-        "../docs/FullMDSBrushSupplementFlu.html",
-        "../docs/FullPCABrushSupplementFlu.html",
-        "results/nucleotide_diversity.txt",
-        "../docs/explainedVarianceFlu.png",
+        #"../docs/FullKDEDensityFlu.png",
+        #"../docs/FullScatterplotFlu.png",
+        #"../docs/FullLinkedChartBrushableFlu.html",
+        #"../docs/flu-embeddings.png",
+        #"../docs/FullMDSBrushSupplementFlu.html",
+        #"../docs/FullPCABrushSupplementFlu.html",
+        #"results/nucleotide_diversity.txt",
+        #"../docs/explainedVarianceFlu.png",
         "results/cross_validation_thresholds.csv"
 
 rule files:
@@ -497,7 +497,8 @@ rule cross_validation:
     output:
         output = "results/cross_validation_thresholds.csv",
         metadata = "results/cross_validation_results.csv",
-        figure = "results/cross_validation.png"
+        figure = "results/cross_validation.png",
+        total_data = "results/full_visualizations.csv"
     params:
         n_repeats = 10,
     conda: "../cartography.yml"
@@ -510,7 +511,8 @@ rule cross_validation:
             --n-repeats {params.n_repeats} \
             --output {output.output} \
             --output-metadata {output.metadata} \
-            --output-figure {output.figure}
+            --output-figure {output.figure} \
+            --output-total-data {output.total_data}
         """
 
 rule KDE_density:

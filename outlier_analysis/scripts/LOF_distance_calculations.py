@@ -67,7 +67,7 @@ if __name__ == "__main__":
         classifier = LinearSVC(
             dual=False,
             random_state=0,
-            class_weight={-1: 5},
+            #class_weight={-1: 5},
             verbose=0
         )
         X = np.array(scaled_x_scores).reshape(-1,1)
