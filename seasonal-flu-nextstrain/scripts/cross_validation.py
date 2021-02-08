@@ -118,7 +118,7 @@ if __name__ == "__main__":
 
     for training_index, validation_index in rkf.split(sequence_names): 
         i = 0
-        print("here" + str(k))
+        print("here " + str(k))
         for embed in default_tuned_values:
             print(i)
         # Calculate Euclidean distance between pairs of samples in the embedding.
@@ -135,7 +135,6 @@ if __name__ == "__main__":
                 training_distance_matrix = distance_matrix[training_index][:, training_index]
 
                 # Embed training distance matrix.
-                print(embedding_class[i])
                 embedder = embedding_class[i](**embed)
                 training_embedding = embedder.fit_transform(training_distance_matrix)
                 
@@ -221,8 +220,7 @@ if __name__ == "__main__":
                 validation_embedding_df["clade_membership"] = clade_annotations.loc[validation_index, "clade_membership"].values
 
                 merged_df = validation_embedding_df.merge(training_embedding_df, how='outer', left_index=True, right_index=True)
-
-                visualize_df.append(merged_df)
+                visualize_df = visualize_df.append(merged_df)
             # Predict and score clade status from embedding distances and the trained classifier.
             # The first argument is the set to predict classifier labels for. The second argument
             # is the list of true labels. The return argument is the mean accuracy of the predicted
@@ -294,7 +292,7 @@ if __name__ == "__main__":
         for i in ['PCA', 'MDS', 't-SNE', 'UMAP']:
             df = cross_v_info[cross_v_info.method == i]
             print(df)
-            val = df.iloc[df["matthews_cc"].argmax()]
+            val = np.average(df[["matthews_cc"]].to_numpy())
             list_of_best.append(val[["method", "threshold"]])
             
         pd.DataFrame(list_of_best).to_csv(args.output)

@@ -534,7 +534,8 @@ rule find_outliers:
        metadata = "results/total_metadata.tsv"
     output:
         outliers = "results/outliers.csv",
-        figure = "results/LOF_figure.png",
+        figure = "results/main_figure.png",
+        LOF_figure = "results/LOF_figure.html",
         metadata = "results/LOF_accuracy.csv"
     params:
         method = "MDS",
@@ -546,10 +547,10 @@ rule find_outliers:
             --method {params.method} \
             --embedding {input.embedding} \
             --true-outliers {input.metadata} \
-            --find-outlier \
             --columns {params.columns} \
             --output-outliers {output.outliers} \
-            --output-figure {output.figure} \
+            --output-main-figure {output.figure} \
+            --output-LOF-figure {output.LOF_figure} \
             --output-metadata {output.metadata}
         """
 

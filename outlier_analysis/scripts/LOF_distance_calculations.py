@@ -1,4 +1,6 @@
 import argparse
+import altair as alt
+from altair_saver import save
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
@@ -16,6 +18,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix, matthews_corrcoef, roc_curve
 import sys
 
+#Figures to generate: MDS with LOF circles colored by FN, TP, etc ; 1D distance LOF scores with predicted and true outlier status; 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--method", help= "name of embedding type")
@@ -24,13 +27,18 @@ if __name__ == "__main__":
     parser.add_argument("--find-outlier", action="store_true", help="no true outlier information is given, find outliers only")
     parser.add_argument("--columns", nargs=2, help="2 columns in the data to plot and find outlier in")
     parser.add_argument("--output-outliers", required=False, help="list of outliers")
-    parser.add_argument("--output-figure", help="PNG with outlier circles describring the LOF score of the points in the graph")
+    parser.add_argument("--output-main-figure", help="PNG with outlier circles describring the LOF score of the points in the graph")
+    parser.add_argument("--output-LOF-figure", help="PNG with LOF distances colored by outlier and predicted outlier status")
     parser.add_argument("--output-metadata", help="the path where the outlier accuracy information should be saved. This will only work if both find-outlier and true-outliers are defined.")
 
     args = parser.parse_args()
 
     if args.output_metadata is not None and (args.true_outliers is None or args.find_outlier is None):
         print("you must provide true outliers and select find-outlier in order to output metadata about accuracy.", file=sys.stderr)
+        sys.exit(1)
+
+    if args.output_LOF_figure is not None and (args.find_outlier):
+        print("you must provide true outliers for this figure.", file=sys.stderr)
         sys.exit(1)
     
     embedding_df = pd.read_csv(args.embedding)  
@@ -49,7 +57,7 @@ if __name__ == "__main__":
     print(args.columns[0])
     total_list = np.array([list(a) for a in zip(embedding_df['mds1'].values.tolist(), embedding_df['mds2'].values.tolist())])
 
-    y_pred = clf.fit_predict(total_list)
+    predicted = clf.fit_predict(total_list)
     X_scores = clf.negative_outlier_factor_
 
     if args.output_outliers is not None:
@@ -110,15 +118,41 @@ if __name__ == "__main__":
 
     
 
-    if args.output_figure is not None:
+    if args.output_main_figure is not None:
 
         plt.title("Local Outlier Factor (LOF)")
         if args.find_outlier:
             plt.scatter(embedding_df[args.columns[0]].values.tolist(), embedding_df[args.columns[1]].values.tolist(), color='k', s=3., label='Data points')
         else:
-            groups = embedding_df.groupby('outlier')
-            for name, group in groups:
-                plt.scatter(embedding_df[args.columns[0]].values.tolist(), embedding_df[args.columns[1]].values.tolist(), s=3., label=name)
+            from matplotlib.lines import Line2D
+            legend_elements = [Line2D([0], [0], color='#0000FF', lw=4, label='TP'),
+                            Line2D([0], [0], color='#FF0000', lw=4, label='FP'),
+                            Line2D([0], [0], color='#FF6600', lw=4, label='TN'),
+                            Line2D([0], [0], color='#00FF00', lw=4, label='FN')]
+            #creating the true/false positives/negative values for this
+            
+            true_outliers = embedding_df["outlier"].values.tolist()
+            predicted_outliers = embedding_df["predicted_outlier_status"].values.tolist()
+            predicted = [int(x) for x in predicted_outliers]
+            confusion_matrix_values = []
+            for i in range(len(predicted)): 
+                #TP
+                if true_outliers[i]==1 and predicted[i]==1:
+                    confusion_matrix_values.append('#0000FF')
+                #FP
+                elif predicted[i]==1 and true_outliers[i]== -1:
+                    confusion_matrix_values.append('#FF0000')
+                #TN
+                elif true_outliers[i]==-1 and predicted[i]==-1:
+                    confusion_matrix_values.append('#FF6600')
+                #FN
+                elif predicted[i]==-1 and true_outliers[i]==1:
+                    confusion_matrix_values.append('#00FF00')
+                else:
+                    print(str(predicted[i]) + " " + str(true_outliers[i]))
+            
+            embedding_df["confusion_matrix_values"] = confusion_matrix_values
+            plt.scatter(embedding_df[args.columns[0]].values.tolist(), embedding_df[args.columns[1]].values.tolist(), s=3., c=confusion_matrix_values)
 
         # plot circles with radius proportional to the outlier scores
         radius = (X_scores.max() - X_scores) / (X_scores.max() - X_scores.min())
@@ -129,7 +163,24 @@ if __name__ == "__main__":
         plt.xlim((-250, 250))
         plt.ylim((-250, 300))
 
-        legend = plt.legend(loc='upper left')
-        legend.legendHandles[0]._sizes = [15]
-        legend.legendHandles[1]._sizes = [25]
-        plt.savefig(args.output_figure)
+        legend = plt.legend(handles=legend_elements, loc="upper left")
+        plt.savefig(args.output_main_figure)
+
+    if args.output_LOF_figure is not None:
+        embedding_df["LOF_scores"] = X_scores
+        chart1 = alt.Chart(embedding_df).mark_circle(size=60).encode(
+            x=alt.X('LOF_scores', title="Outliers"),
+            color='outlier:N',
+            tooltip=['strain']
+        ).interactive()
+
+
+        chart2 = alt.Chart(embedding_df).mark_circle(size=60).encode(
+            x=alt.X('LOF_scores', title="Predicted Outliers"),
+            color='predicted_outlier_status:N',
+            tooltip=['strain', "outlier:N"]
+        ).interactive()
+
+        full = chart1|chart2
+        full.save(args.output_LOF_figure)
+
