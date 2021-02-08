@@ -9,9 +9,9 @@ KDE_METHODS = [
     "pca",
     "mds",
     "t-sne",
-    "umap",
-    "genetic"
-]
+    "umap"]#,
+    #"genetic"
+#]
 
 
 rule all:

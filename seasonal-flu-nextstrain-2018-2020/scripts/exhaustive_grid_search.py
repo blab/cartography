@@ -75,13 +75,13 @@ if __name__ == "__main__":
     # reading in the distance matrix and node data
  
     distance_matrix = pd.read_csv(args.distance_matrix, index_col=0)
-    sequence_names = distance_matrix.index.values.tolist()
     distance_matrix.reset_index(drop=True)
     distance_matrix = distance_matrix.to_numpy()
 
     node_df = pd.read_csv(args.node_data, sep="\t")
     clade_annotations = node_df[["strain", "clade_membership"]]
 
+    sequence_names = node_df["strain"].values.tolist()
     random_state = 12883823
     rkf = RepeatedKFold(n_splits=2, n_repeats=args.n_repeats, random_state=random_state)
 
