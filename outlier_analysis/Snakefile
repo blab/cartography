@@ -483,20 +483,21 @@ rule KDE_density:
     input:
         embedding = "results/embed_mds.csv",
         clades = "results/clades.json",
+        metadata = "results/total_metadata.tsv"
     output:
         figure = "results/KDEDensity_mds.png",
         dataframe = "results/KDEDensity_mds.csv",
         metadata = "results/KDEDensity_mds_metadata.csv"
     params:
         embedding_columns = "mds1 mds2",
-        differentiator_column = "clade_membership"
+        differentiator_column = "outlier"
     conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/within_vs_between_status.py \
             --embedding {input.embedding} \
-            --clades {input.clades} \
             --method mds \
+            --metadata {input.metadata} \
             --embedding-columns {params.embedding_columns} \
             --differentiator-column {params.differentiator_column} \
             --output-figure {output.figure} \

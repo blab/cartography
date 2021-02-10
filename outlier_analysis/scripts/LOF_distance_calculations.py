@@ -100,6 +100,8 @@ if __name__ == "__main__":
 
         embedding_df["predicted_outlier_status"] = estimated_outlier_status
 
+        embedding_df["predicted_LOF_outlier_status"] = predicted
+
         if args.output_metadata is not None:
             values_df = pd.DataFrame()
             accuracy = accuracy_score(embedding_df["outlier"].values.tolist(), embedding_df["predicted_outlier_status"].values.tolist())
@@ -125,10 +127,8 @@ if __name__ == "__main__":
             plt.scatter(embedding_df[args.columns[0]].values.tolist(), embedding_df[args.columns[1]].values.tolist(), color='k', s=3., label='Data points')
         else:
             from matplotlib.lines import Line2D
-            legend_elements = [Line2D([0], [0], color='#0000FF', lw=4, label='TP'),
-                            Line2D([0], [0], color='#FF0000', lw=4, label='FP'),
-                            Line2D([0], [0], color='#FF6600', lw=4, label='TN'),
-                            Line2D([0], [0], color='#00FF00', lw=4, label='FN')]
+            legend_elements = [Line2D([0], [0], color='#0000FF', lw=4, label='True'),
+                            Line2D([0], [0], color='#FF6600', lw=4, label='False')]
             #creating the true/false positives/negative values for this
             
             true_outliers = embedding_df["outlier"].values.tolist()
@@ -141,13 +141,13 @@ if __name__ == "__main__":
                     confusion_matrix_values.append('#0000FF')
                 #FP
                 elif predicted[i]==1 and true_outliers[i]== -1:
-                    confusion_matrix_values.append('#FF0000')
+                    confusion_matrix_values.append('#FF6600')
                 #TN
                 elif true_outliers[i]==-1 and predicted[i]==-1:
-                    confusion_matrix_values.append('#FF6600')
+                    confusion_matrix_values.append('#0000FF')
                 #FN
                 elif predicted[i]==-1 and true_outliers[i]==1:
-                    confusion_matrix_values.append('#00FF00')
+                    confusion_matrix_values.append('#FF6600')
                 else:
                     print(str(predicted[i]) + " " + str(true_outliers[i]))
             
@@ -156,7 +156,7 @@ if __name__ == "__main__":
 
         # plot circles with radius proportional to the outlier scores
         radius = (X_scores.max() - X_scores) / (X_scores.max() - X_scores.min())
-        plt.scatter(embedding_df[args.columns[0]].values.tolist(), embedding_df[args.columns[1]].values.tolist(), s= 1000 * radius, edgecolors='r',
+        plt.scatter(embedding_df[args.columns[0]].values.tolist(), embedding_df[args.columns[1]].values.tolist(), s= 1000 * radius, edgecolors="#999999",
                     facecolors='none', label='Outlier scores')
 
         plt.axis('tight')

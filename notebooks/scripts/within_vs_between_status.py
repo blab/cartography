@@ -69,6 +69,7 @@ if __name__ == "__main__":
         node_data.drop("strain", axis=1)
         node_dict = node_data.transpose().to_dict()
 
+        print(node_data)
         clade_annotations = pd.DataFrame([
             {"strain": sequence, args.differentiator_column: node_dict[sequence][args.differentiator_column]}
             for sequence in node_data.index
@@ -134,28 +135,42 @@ if __name__ == "__main__":
 
     #creating metrics for quantifying patterns within the graph
     confusion_matrix_val = confusion_matrix(y, estimated_clade_status)
-    print(confusion_matrix_val)
 
     accuracy = classifier.score(X, y)
     matthews_cc_val = matthews_corrcoef(y, estimated_clade_status)
     median_within = np.median(KDE_df.query("clade_status == 1")["scaled_distance"])
     median_between = np.median(KDE_df.query("clade_status == 0")["scaled_distance"])
 
-    #create metadata dataframe
-    if args.output_metadata is not None:
-        metadata_df = pd.DataFrame([[matthews_cc_val, accuracy, median_within, median_between, classifier_threshold, args.method, confusion_matrix_val[0][0], confusion_matrix_val[1][0], confusion_matrix_val[1][1], confusion_matrix_val[0][1]]], columns=["MCC", "accuracy", "median_within", "median_between", "threshold", "embedding", "TN", "FN", "TP", "FP"]).round(3)
-        metadata_df.to_csv(args.output_metadata, index=False)
-
-    if args.output_dataframe is not None:
-        KDE_df.to_csv(args.output_dataframe)
-
-    if args.cross_v_values is not None:
-
+    # Create KDE plot with threshold information from cross-v if applicable
+    if args.cross_v_values is not None and args.method != "genetic":
         cross_v_values = pd.read_csv(args.cross_v_values, index_col=0)
 
         cross_v_values.replace({'PCA' : 'pca', 'MDS': 'mds', 't-SNE': 't-sne', "UMAP": "umap"}, inplace=True, regex=True)
 
         threshold = cross_v_values.loc[cross_v_values['method'] == args.method]["threshold"].values.tolist()[0]
+
+        predict_mine = np.where(KDE_df["scaled_distance"] < threshold, 1, 0)
+
+        matthews_cc_cross_v = matthews_corrcoef(y, predict_mine)
+        print(matthews_cc_cross_v)
+        confusion_matrix_cross_v = confusion_matrix(y, predict_mine)
+        print(confusion_matrix_cross_v)
+
+    #create metadata dataframe
+    if args.output_metadata is not None:
+        metadata_df = pd.DataFrame([[matthews_cc_val, accuracy, median_within, median_between, classifier_threshold, args.method, confusion_matrix_val[0][0], confusion_matrix_val[1][0], confusion_matrix_val[1][1], confusion_matrix_val[0][1]]], columns=["MCC", "accuracy", "median_within", "median_between", "threshold", "embedding", "TN", "FN", "TP", "FP"]).round(3)
+        if args.cross_v_values is not None and args.method != "genetic":
+            metadata_df["matthews_cc_cross_v"] = matthews_cc_cross_v
+            metadata_df["TN_cross_v"] = confusion_matrix_val[0][0]
+            metadata_df["FN_cross_v"] = confusion_matrix_val[1][0]
+            metadata_df["TP_cross_v"] = confusion_matrix_val[1][1]
+            metadata_df["FP_cross_v"] = confusion_matrix_val[0][1]
+            metadata_df["threshold_cross_v"] = threshold
+        metadata_df.to_csv(args.output_metadata, index=False)
+
+
+    if args.output_dataframe is not None:
+        KDE_df.to_csv(args.output_dataframe)
 
     if args.output_figure is not None:
 
@@ -166,7 +181,7 @@ if __name__ == "__main__":
 
         ax.axvline(x=classifier_threshold, label="SVC threshold", color="#000000", alpha=0.5)
 
-        if args.cross_v_values is not None:
+        if args.cross_v_values is not None and args.method != "genetic":
             ax.axvline(x=threshold, label="cross validation threshold", color="#800000", alpha=0.5)
         
         ax.set_xlabel("Scaled Euclidean distance from embedding")
