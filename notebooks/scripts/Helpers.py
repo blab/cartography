@@ -214,7 +214,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
         return list_of_chart
 
 
-def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, colors, fields, ToolTip):
+def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, colors, fields, ToolTip, domain=None, range_=None):
     """
     Parameters
     -----------

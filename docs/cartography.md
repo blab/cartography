@@ -242,6 +242,12 @@ Looking more closely at the MDS and UMAP embeddings using the procrustes analysi
 In MDS, the the joint analysis improved the visualization of clusters between A2 and A2/re.
 The joint embedding was also able to contain clade 3c2.A in the center of the embedding without spilling into clade A4 like it did in the HA analysis.
 
+Comparing the UMAP embedding to the tree as well as the distance analysis between the HA and HA+NA embedding, the larger distance between A1a and A1 in the combined embedding suggests significant reassortment in the NA chromosome. 
+This reassortment is seen in the tangle tree between HA and NA, where the A1a HA clade is split into multiple locations in the NA tree, which suggests A1 reassorting with 3C2.A and A1a. 
+These reassortments are clearly shown in the UMAP joint embedding, where A1a is more distant from A1. 
+Subclades from 3C2.A, such as three strains that have reassorted with A1 in the NA tree and, are also seen in the joint embedding. 
+Clades A4 and 3c2.A are less distant in the joint embedding, suggesting that there is significant reassortment between the clades.
+
 <iframe src="https://blab.github.io/cartography/HaNaAnalysisFinalChart.html" style="width: 400px; height: 400px;" frameBorder="0"></iframe>
 ![Interactive full chart of all four embeddings with HA only embeddings on the top row and HA and NA embeddings on the bottom row; zoomable with interactive tooltips](HaNaAnalysisFinalChart.png){#fig:HANAFullChart .static-embedding}
 
@@ -269,7 +275,8 @@ In the cross-validation analysis, the threshold per method was the mean threshol
 The lower MCC values across folds can be attributed to out of sample performance error from training bias, as MCC values are intrinsically higher when trained and tested on the same dataset using the SVM threshold. 
 These thresholds were analyzed alongside the SVM threshold's predict function in order to analyze the loss in accuracy.
 The MCC values for the cross validation were incredibly similar to the MCC values from the Support Vector Machine, with the cross validation threshold improving the accuracy for PCA. 
-This confirms that the same threshold can be used across the same type of embedding and organism for future and past populations to categorize between vs within clade relationships. 
+This confirms that the same threshold can be used across the same type of embedding and organism for future and past populations to categorize between vs within clade relationships.
+While classifying relationships as within and between clade may not be inherently useful for classification purposes, it can be used for an exporatory analysis of how stable patterns and clade relationships in different pathogen populations over time.  
 
      MCC  matthews_cc_cross_v embedding
  0.700                  NaN   genetic
@@ -428,6 +435,7 @@ A Supported Vector Machine was run to optimize for clade relationships by Euclid
 The HA and NA analysis tests the embedding's ability to create accurate embeddings with recombinant genomes, and analyzes the impact the added chromosome sequence has on the embedding's ability to visually separate recombinant clades from their parent clade.
 The Influenza H3N2 HA and NA chromosomes were downloaded from NCBI and joined with their respective strain pair.
 The joined FASTA was then used as input for the embeddings, and the HA vs HA and NA embedding plots were visualized together after running Procrustes analysis to normalize the data.
+The distances between the points in the HA and HA+NA embedding were studied to further quantify the level of reassortment within HA clades by creating a categorical box plot by HA clades, a histogram, and the HA embeddings colored by the distances between strain points between HA and HA+NA.
 A full interactive visualization plot and a joint plot were created to analyze the differences between the HA and concatenated plots, as well as KDE density plots with the Matthews Correlation Coeficcient value visualized on the respective plots to further assess the efficacy of using full genomes for this approach.
 
 ### Cross Validation 

@@ -18,17 +18,33 @@ OUTLIER = [
     "human"
     ]
 
+ANALYSIS_TYPE = [
+    "filtered",
+    "human",
+    "swine",
+    "full"
+]
+
+ANALYSIS_ALIGN = [
+    "filtered",
+    "human_swine",
+    "full"
+]
 rule all:
     input:
-        expand("results/deduplicated_sequences_{type}.fasta", type=OUTLIER),
-        expand("results/filtered_{type}.fasta", type=OUTLIER),
-        "results/KDEDensity_mds.png",
-        "results/total_sequences.fasta",
-        "results/total_metadata.tsv",
-        "results/aligned.fasta",
-        "../auspice/cartography_flu-outlier-h3n2-swine-human.json",
-        "results/table.tsv",
-        "results/outliers.csv",
+        expand("results/deduplicated_sequences_{analysis}.fasta", analysis=ANALYSIS_TYPE),
+        expand("results/filtered_{type}.fasta", type=ANALYSIS_TYPE),
+        expand("results/metadata_{analysis}.tsv", analysis=ANALYSIS_TYPE),
+        expand("results/aligned_{analysis}.fasta", analysis=ANALYSIS_ALIGN),
+        expand("results/distance_matrix_{analysis}.csv", analysis=ANALYSIS_ALIGN),
+        expand("results/embed_mds_{analysis}.csv", analysis=ANALYSIS_ALIGN),
+        #"results/KDEDensity_mds.png",
+        #"results/total_sequences.fasta",
+        #"results/total_metadata.tsv",
+        #"../auspice/cartography_flu-outlier-h3n2-swine-human.json",
+        #"results/table.tsv",
+        "results/outliers_human_swine.csv",
+        "results/outliers_full.csv",
         #"../docs/FullKDEDensityFluOutlier.png",
         #"../docs/FullScatterplotFluOutlier.png",
         #"../docs/FullLinkedChartBrushableFluOutlier.html",
@@ -37,9 +53,17 @@ rule all:
         #"../docs/FullPCABrushSupplementFluOutlier.html",
         #"../docs/explainedVarianceFluOutlier.png"
 
+def _get_path_by_wildcards(wildcards):
+    method = wildcards.analysis
+    if method in ("human", "filtered"):
+        return "data/ncbi-h3n2-human.fa"
+    if method in ("full"):
+        return "data/ncbi-h3n2-full.fa"
+    if method in ("swine"):
+        return "data/ncbi-h3n2-swine.fa"
+
 rule files:
     params:
-        input_fasta = "data/ncbi-h3n2-{type}.fa",
         dropped_strains = "config/exclude.txt",
         reference = "config/reference_h3n2_ha.gb",
         auspice_config = "config/auspice_config.json",
@@ -50,10 +74,10 @@ files = rules.files.params
 rule parse:
     message: "Parsing fasta into sequences and metadata"
     input:
-        sequences = files.input_fasta
+        sequences = "data/ncbi-h3n2-human.fa" #_get_path_by_wildcards,
     output:
-        sequences = "results/sequences_{type}.fasta",
-        metadata = "results/metadata_{type}.tsv"
+        sequences = "results/sequences_{analysis}.fasta",
+        metadata = "results/metadata_{analysis}.tsv"
     params:
         fasta_fields = "strain date accession country region"
     conda: "../cartography.yml"
@@ -74,7 +98,7 @@ rule deduplicate_sequences:
     input:
         sequences = rules.parse.output.sequences
     output:
-        sequences = "results/deduplicated_sequences_{type}.fasta"
+        sequences = "results/deduplicated_sequences_{analysis}.fasta"
     conda: "../cartography.yml"
     shell:
         """
@@ -84,11 +108,20 @@ rule deduplicate_sequences:
         """
 
 def _get_group_values_by_wildcards(wildcards):
-    method = wildcards.type
+    method = wildcards.analysis
     if method in ("human"):
         return 15
-    else:
+    if method in ("swine"):
         return 1
+    else:
+        return 10
+
+def get_dropped_strains_by_wildcards(wildcards):
+    method = wildcards.analysis
+    if method in ("filtered"):
+        return "config/outliers_h3n2.txt"
+    else:
+        return "config/exclude.txt"
 
 rule filter:
     message:
@@ -103,7 +136,7 @@ rule filter:
         metadata = rules.parse.output.metadata,
         exclude = files.dropped_strains
     output:
-        sequences = "results/filtered_{type}.fasta"
+        sequences = "results/filtered_{analysis}.fasta"
     params:
         group_by = "country year month",
         sequences_per_group = _get_group_values_by_wildcards,
@@ -147,6 +180,20 @@ rule outlier_names:
             --output-metadata {output.metadata}
         """
 
+def get_sequences_by_wildcards(wildcards):
+    method = wildcards.analysis
+    if method in ("human", "swine"):
+        return "results/total_sequences.fasta"
+    else:
+        return f"results/filtered_{method}.fasta"
+
+def get_metadata_by_wildcards(wildcards):
+    method = wildcards.analysis
+    if method in ("human", "swine"):
+        return "results/total_metadata.tsv"
+    else:
+        return f"results/metadata_{method}.tsv"
+
 rule align:
     message:
         """
@@ -154,10 +201,10 @@ rule align:
           - filling gaps with N
         """
     input:
-        sequences = rules.outlier_names.output.sequences,
+        sequences = get_sequences_by_wildcards,
         reference = files.reference
     output:
-        alignment = "results/aligned.fasta"
+        alignment = "results/aligned_{analysis}.fasta"
     conda: "../cartography.yml"
     threads: 4
     shell:
@@ -174,9 +221,9 @@ rule align:
 rule tree:
     message: "Building tree"
     input:
-        alignment = "results/aligned.fasta"
+        alignment = "results/aligned_{analysis}.fasta"
     output:
-        tree = "results/tree_raw.nwk"
+        tree = "results/tree_raw_{analysis}.nwk"
     conda: "../cartography.yml"
     threads: 4
     shell:
@@ -197,11 +244,11 @@ rule refine:
         """
     input:
         tree = rules.tree.output.tree,
-        alignment = "results/aligned.fasta",
-        metadata = "results/total_metadata.tsv",
+        alignment = "results/aligned_{analysis}.fasta",
+        metadata = get_metadata_by_wildcards
     output:
-        tree = "results/tree.nwk",
-        node_data = "results/branch_lengths.json"
+        tree = "results/tree_{analysis}.nwk",
+        node_data = "results/branch_lengths_{analysis}.json"
     params:
         coalescent = "opt",
         date_inference = "marginal",
@@ -348,7 +395,7 @@ rule create_distance_matrix:
     input:
         alignment = rules.align.output.alignment
     output:
-        output = "results/distance_matrix.csv"
+        output = "results/distance_matrix_{analysis}.csv"
     conda: "../cartography.yml"
     shell:
         """
@@ -441,9 +488,9 @@ rule embed_mds:
     input:
         distance_matrix = rules.create_distance_matrix.output.output
     output:
-        node_data = "results/embed_mds.json",
-        dataframe = "results/embed_mds.csv",
-        figure = "results/embed_mds.pdf"
+        node_data = "results/embed_mds_{analysis}.json",
+        dataframe = "results/embed_mds_{analysis}.csv",
+        figure = "results/embed_mds_{analysis}.pdf"
     params:
         components = 2
     conda: "../cartography.yml"
@@ -528,16 +575,17 @@ rule concat_KDE_table:
             --output {output.metadata}
         """
 
+
 rule find_outliers:
     message: "find outliers and make figure"
     input:
-       embedding = "results/embed_mds.csv",
+       embedding = "results/embed_mds_human_swine.csv",
        metadata = "results/total_metadata.tsv"
     output:
-        outliers = "results/outliers.csv",
-        figure = "results/main_figure.png",
-        LOF_figure = "results/LOF_figure.html",
-        metadata = "results/LOF_accuracy.csv"
+        outliers = "results/outliers_human_swine.csv",
+        figure = "results/main_figure_human_swine.png",
+        LOF_figure = "results/LOF_figure_human_swine.html",
+        metadata = "results/LOF_accuracy_human_swine.csv"
     params:
         method = "MDS",
         columns = "mds1 mds2", 
@@ -555,6 +603,30 @@ rule find_outliers:
             --output-metadata {output.metadata}
         """
 
+rule find_outliers_other:
+    message: "find outliers and make figure"
+    input:
+       embedding = "results/embed_mds_full.csv",
+       metadata = "results/metadata_full.tsv"
+    output:
+        outliers = "results/outliers_full.csv",
+        figure = "results/main_figure_full.png",
+        LOF_figure = "results/LOF_figure_full.html",
+        metadata = "results/LOF_accuracy_full.csv"
+    params:
+        method = "MDS",
+        columns = "mds1 mds2", 
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 scripts/LOF_distance_calculations.py \
+            --method {params.method} \
+            --embedding {input.embedding} \
+            --find-outlier \
+            --columns {params.columns} \
+            --output-outliers {output.outliers} \
+            --output-main-figure {output.figure}
+        """
 
 rule create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"

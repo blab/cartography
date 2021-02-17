@@ -88,7 +88,7 @@ if __name__ == "__main__":
         # classifier's decision function. See the documentation for more:
         # https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC.decision_function
         
-        x_range = np.linspace(-3, 3, 1000)
+        x_range = np.linspace(-3, 5, 1000)
         z = classifier.decision_function(x_range.reshape(-1, 1))
         try:
             classifier_threshold = x_range[np.argwhere(z > 0)[-1]][0]

@@ -20,7 +20,8 @@ SEGMENTS = [
 
 HA_CONCATENATED = [
     "concatenated",
-    "ha"
+    "ha",
+    "na"
 ]
 
 #TO DO: add HA only embeddings and HA+NA embeddings
@@ -28,17 +29,19 @@ HA_CONCATENATED = [
 rule all:
     input:
         "results/ncbi-h3n2-ha.fasta",
-        expand("results/scatterplot_{method}_{ha_concatenated}.png", method=EMBEDDING_METHODS, ha_concatenated=HA_CONCATENATED),
+        #expand("results/scatterplot_{method}_{ha_concatenated}.png", method=EMBEDDING_METHODS, ha_concatenated=HA_CONCATENATED),
         expand("results/KDEDensity_{method}_{ha_concatenated}.png", method=KDE_METHODS, ha_concatenated=HA_CONCATENATED),
         expand("results/aligned_{segment}.fasta", segment=SEGMENTS),
         expand("results/deduplicated_sequences_{segment}.fasta", segment=SEGMENTS),
+        expand("results/aligned_{segments}.fasta", segments=SEGMENTS),
         expand("results/filtered_{segment}.fasta", segment=SEGMENTS),
         expand("results/metadata_{segment}.tsv", segment=SEGMENTS),
         "results/aligned_concatenated.fasta",
+        expand("../auspice/cartography_flu-seasonal-h3n2-{segments}-2016-2018.json", segments=SEGMENTS),
         #"../auspice/cartography_flu-seasonal-h3n2-ha-na-2016-2018.json",
-        "results/table.tsv",
+        expand("results/table_{segments}.tsv", segments=SEGMENTS),
         expand("results/full_KDE_metadata_{ha_concatenated}.csv", ha_concatenated=HA_CONCATENATED),
-        expand("results/full_Scatterplot_metadata_{ha_concatenated}.csv", ha_concatenated=HA_CONCATENATED),
+        #expand("results/full_Scatterplot_metadata_{ha_concatenated}.csv", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_pca_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_mds_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_t-sne_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
@@ -199,9 +202,9 @@ rule concat:
 rule tree:
     message: "Building tree"
     input:
-        alignment = "results/aligned_ha.fasta"
+        alignment = "results/aligned_{segments}.fasta"
     output:
-        tree = "results/tree_raw.nwk"
+        tree = "results/tree_raw_{segments}.nwk"
     conda: "../cartography.yml"
     threads: 4
     shell:
@@ -223,11 +226,11 @@ rule refine:
         """
     input:
         tree = rules.tree.output.tree,
-        alignment = "results/aligned_ha.fasta",
-        metadata = "results/metadata_ha.tsv",
+        alignment = "results/aligned_{segments}.fasta",
+        metadata = "results/metadata_{segments}.tsv",
     output:
-        tree = "results/tree.nwk",
-        node_data = "results/branch_lengths.json"
+        tree = "results/tree_{segments}.nwk",
+        node_data = "results/_{segments}.json"
     params:
         coalescent = "opt",
         date_inference = "marginal",
@@ -256,9 +259,9 @@ rule ancestral:
     message: "Reconstructing ancestral sequences and mutations"
     input:
         tree = rules.refine.output.tree,
-        alignment = "results/aligned_ha.fasta"
+        alignment = "results/aligned_{segments}.fasta"
     output:
-        node_data = "results/nt_muts.json"
+        node_data = "results/nt_muts_{segments}.json"
     params:
         inference = "joint"
     conda: "../cartography.yml"
@@ -278,7 +281,7 @@ rule translate:
         node_data = rules.ancestral.output.node_data,
         reference = files.reference
     output:
-        node_data = "results/aa_muts.json"
+        node_data = "results/aa_muts_{segments}.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -297,7 +300,7 @@ rule clades:
         nuc_muts = rules.ancestral.output.node_data,
         clades = files.clades
     output:
-        clade_data = "results/clades.json"
+        clade_data = "results/clades_{segments}.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -311,9 +314,9 @@ rule traits:
     message: "Inferring ancestral traits for {params.columns!s}"
     input:
         tree = rules.refine.output.tree,
-        metadata = "results/metadata_ha.tsv",
+        metadata = "results/metadata_{segments}.tsv",
     output:
-        node_data = "results/traits.json",
+        node_data = "results/traits_{segments}.json",
     params:
         columns = "region country"
     conda: "../cartography.yml"
@@ -331,7 +334,7 @@ rule export:
     message: "Exporting data files for for auspice"
     input:
         tree = rules.refine.output.tree,
-        metadata = "results/metadata_ha.tsv",
+        metadata = "results/metadata_{segments}.tsv",
         branch_lengths = rules.refine.output.node_data,
         traits = rules.traits.output.node_data,
         nt_muts = rules.ancestral.output.node_data,
@@ -339,9 +342,9 @@ rule export:
         embeddings = expand("results/embed_{embedding}_ha.json", embedding=EMBEDDING_METHODS),
         auspice_config = files.auspice_config,
         colors = "config/colors.tsv",
-        clades = rules.clades.output.clade_data
+        clades = "results/clades_ha.json"
     output:
-        auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json"
+        auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-{segments}-2016-2018.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -359,7 +362,7 @@ rule tree_to_table:
     input:
         tree = rules.export.output.auspice_tree
     output:
-        table = "results/table.tsv"
+        table = "results/table_{segments}.tsv"
     params:
         attributes = "num_date pca1 pca2 pca3 pca4 mds1 mds2 tsne_x tsne_y umap_x umap_y clade_membership pca_label mds_label umap_label t-sne_label"
     conda: "../cartography.yml"
@@ -540,7 +543,7 @@ rule KDE_density:
     message: "creating the KDE density plot"
     input:
         embedding = _get_embedding_path_by_wildcards,
-        clades = "results/clades.json",
+        clades = "results/clades_ha.json",
     output:
         figure = "results/KDEDensity_{method}_{ha_concatenated}.png",
         dataframe = "results/KDEDensity_{method}_{ha_concatenated}.csv",
