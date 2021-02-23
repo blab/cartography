@@ -61,46 +61,16 @@ if __name__ == "__main__":
     X_scores = clf.negative_outlier_factor_
 
     if args.output_outliers is not None:
-        #create a SVM to find a distance threshold between the scores
         
-        #initializing scaler
-        scaler = StandardScaler()
-
-        scaled_x_scores = scaler.fit_transform(X_scores.reshape(-1, 1)).flatten()
-
-        print(scaled_x_scores)
-
-        # Use a support vector machine classifier to identify an optimal threshold
-
-        classifier = LinearSVC(
-            dual=False,
-            random_state=0,
-            #class_weight={-1: 5},
-            verbose=0
-        )
-        X = np.array(scaled_x_scores).reshape(-1,1)
-        y = embedding_df["outlier"].astype(float).values
+        classifier_threshold = (np.mean(X_scores) + (4*np.std(X_scores)))*-1
         
-        classifier.fit(X, y)
-
-        # Find the SVM's threshold between the two given classes by passing the
-        # range of possible scaled distance values (effectively z-scores) to the
-        # classifier's decision function. See the documentation for more:
-        # https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC.decision_function
-        
-        x_range = np.linspace(-3, 5, 1000)
-        z = classifier.decision_function(x_range.reshape(-1, 1))
-        try:
-            classifier_threshold = x_range[np.argwhere(z > 0)[-1]][0]
-        except:
-            classifier_threshold = "NaN"
-
-        # Estimate group labels using the same input data used to train the SVM.
-        estimated_outlier_status = classifier.predict(X)
+        estimated_outlier_status = np.where(X_scores < classifier_threshold, -1, 1)
 
         embedding_df["predicted_outlier_status"] = estimated_outlier_status
 
         embedding_df["predicted_LOF_outlier_status"] = predicted
+
+        embedding_df["X_scores"] = X_scores
 
         if args.output_metadata is not None:
             values_df = pd.DataFrame()
@@ -124,7 +94,18 @@ if __name__ == "__main__":
 
         plt.title("Local Outlier Factor (LOF)")
         if args.find_outlier:
-            plt.scatter(embedding_df[args.columns[0]].values.tolist(), embedding_df[args.columns[1]].values.tolist(), color='k', s=3., label='Data points')
+            predicted_outliers = embedding_df["predicted_outlier_status"].values.tolist()
+            confusion_matrix_values = []
+            for i in range(len(predicted)): 
+                #Not Outlier
+                if predicted_outliers[i]==1:
+                    confusion_matrix_values.append('#0000FF')
+                #Outlier
+                elif predicted_outliers[i]==-1:
+                    confusion_matrix_values.append('#FF6600')
+            from matplotlib.lines import Line2D
+            legend_elements = [Line2D([0], [0], color='#0000FF', lw=4, label='Not Outlier'),
+                            Line2D([0], [0], color='#FF6600', lw=4, label='Outlier')]
         else:
             from matplotlib.lines import Line2D
             legend_elements = [Line2D([0], [0], color='#0000FF', lw=4, label='True'),
@@ -151,8 +132,8 @@ if __name__ == "__main__":
                 else:
                     print(str(predicted[i]) + " " + str(true_outliers[i]))
             
-            embedding_df["confusion_matrix_values"] = confusion_matrix_values
-            plt.scatter(embedding_df[args.columns[0]].values.tolist(), embedding_df[args.columns[1]].values.tolist(), s=3., c=confusion_matrix_values)
+        embedding_df["confusion_matrix_values"] = confusion_matrix_values
+        plt.scatter(embedding_df[args.columns[0]].values.tolist(), embedding_df[args.columns[1]].values.tolist(), s=3., c=confusion_matrix_values)
 
         # plot circles with radius proportional to the outlier scores
         radius = (X_scores.max() - X_scores) / (X_scores.max() - X_scores.min())

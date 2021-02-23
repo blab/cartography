@@ -610,9 +610,7 @@ rule find_outliers_other:
        metadata = "results/metadata_full.tsv"
     output:
         outliers = "results/outliers_full.csv",
-        figure = "results/main_figure_full.png",
-        LOF_figure = "results/LOF_figure_full.html",
-        metadata = "results/LOF_accuracy_full.csv"
+        figure = "results/main_figure_full.png"
     params:
         method = "MDS",
         columns = "mds1 mds2", 
@@ -625,7 +623,7 @@ rule find_outliers_other:
             --find-outlier \
             --columns {params.columns} \
             --output-outliers {output.outliers} \
-            --output-main-figure {output.figure}
+            --output-main-figure {output.figure} 
         """
 
 rule create_notebook_docs:
