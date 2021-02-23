@@ -239,6 +239,9 @@ if __name__ == "__main__":
                 squareform(validation_distance_matrix).reshape(-1, 1),
                 validation_clade_status_for_pairs
             )
+
+            matthews_cc_val_genetic = matthews_corrcoef(validation_clade_status_for_pairs, genetic_classifier.predict(validation_embedding_distances))
+
             method_dict = {}
             
             method_dict["method"] = list_of_embedding_strings[i]
@@ -252,7 +255,7 @@ if __name__ == "__main__":
             print(method_dict)
             total_list_methods.append(method_dict)
             i = i + 1
-        total_list_methods.append({"method":"genetic", "matthews_cc": genetic_accuracy})
+        total_list_methods.append({"method":"genetic", "matthews_cc": matthews_cc_val_genetic})
         k = k + 1
 
 
