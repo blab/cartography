@@ -278,7 +278,7 @@ The MCC values for the cross validation were incredibly similar to the MCC value
 This confirms that the same threshold can be used across the same type of embedding and organism for future and past populations to categorize between vs within clade relationships.
 While classifying relationships as within and between clade may not be inherently useful for classification purposes, it can be used for an exporatory analysis of how stable patterns and clade relationships in different pathogen populations over time.  
 
-     MCC  matthews_cc_cross_v embedding
+     MCC          test_case   embedding
  0.700                  NaN   genetic
  0.706             0.663368       mds
  0.746             0.759752       pca
