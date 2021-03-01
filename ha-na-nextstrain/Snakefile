@@ -32,7 +32,6 @@ MDS_UMAP = [
 rule all:
     input:
         "results/ncbi-h3n2-ha.fasta",
-        #expand("results/scatterplot_{method}_{ha_concatenated}.png", method=EMBEDDING_METHODS, ha_concatenated=HA_CONCATENATED),
         expand("results/KDEDensity_{method}_{ha_concatenated}.png", method=KDE_METHODS, ha_concatenated=HA_CONCATENATED),
         expand("results/aligned_{segment}.fasta", segment=SEGMENTS),
         expand("results/deduplicated_sequences_{segment}.fasta", segment=SEGMENTS),
@@ -40,11 +39,10 @@ rule all:
         expand("results/filtered_{segment}.fasta", segment=SEGMENTS),
         expand("results/metadata_{segment}.tsv", segment=SEGMENTS),
         "results/aligned_concatenated.fasta",
-        expand("../auspice/cartography_flu-seasonal-h3n2-{segments}-2016-2018.json", segments=SEGMENTS),
-        #"../auspice/cartography_flu-seasonal-h3n2-ha-na-2016-2018.json",
+        expand("results/procrustes_metadata_{mds_umap}.csv", mds_umap = MDS_UMAP),
+        expand("../auspice/cartography_flu-seasonal-h3n2-{segments}-2016-2018-reassort.json", segments=SEGMENTS),
         expand("results/table_{segments}.tsv", segments=SEGMENTS),
         expand("results/full_KDE_metadata_{ha_concatenated}.csv", ha_concatenated=HA_CONCATENATED),
-        #expand("results/full_Scatterplot_metadata_{ha_concatenated}.csv", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_pca_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_mds_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_t-sne_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
@@ -350,7 +348,7 @@ rule export:
         procrustes_distance = expand("results/procrustes_distance_{mds_umap}.json", mds_umap=MDS_UMAP),
         clades = "results/clades_ha.json"
     output:
-        auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-{segments}-2016-2018.json"
+        auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-{segments}-2016-2018-reassort.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -379,7 +377,8 @@ rule procrustes_distance:
     output:
         procrustes_distance = "results/procrustes_distance_{mds_umap}.json",
         figure_boxplot = "results/boxplot_{mds_umap}_procrustes.png",
-        figure_procrustes = "results/procrustes_main_figure_{mds_umap}.png"
+        figure_procrustes = "results/procrustes_main_figure_{mds_umap}.png",
+        metadata = "results/procrustes_metadata_{mds_umap}.csv"
     params:
         colors = "#4e38d5 #6626d4 #4138c3 #4c89e8 #4e70ff #5499ff #79c9a1 #61b8f0 #5499ff #87dfb3 #a0e994 #bdee78 #ddee64 #f8e957 #ffdb4e #ffc348 #ff9e40 #ff6e36 #f93529",
         columns = _get_embedding_columns_by_wildcards_mds_umap,
@@ -396,7 +395,8 @@ rule procrustes_distance:
             --domain '3c' '3c2' '3c2.A' '3c3' '3c3.A' 'A1' 'A1a' 'A1b' 'A1b/131K' 'A1b/135K' 'A1b/135N' 'A1b/137F' 'A1b/186D' 'A1b/197R' 'A1b/94N' 'A2' 'A2/re' 'A3' 'A4' \
             --output-distance-metric {output.procrustes_distance} \
             --output-figure {output.figure_procrustes} \
-            --output-boxplot {output.figure_boxplot}
+            --output-boxplot {output.figure_boxplot} \
+            --output-metadata {output.metadata}
         """
 
 
@@ -544,35 +544,6 @@ def _get_embedding_columns_by_wildcards(wildcards):
     else:
         return f"{method}_x {method}_y"
 
-
-rule scatterplot:
-    message: "Creating the scatterplot (PNG, dataframe)"
-    input:
-        distance_matrix = "results/distance_matrix_{ha_concatenated}.csv",
-        embedding = "results/embed_{method}_{ha_concatenated}.csv",
-    output:
-        figure = "results/scatterplot_{method}_{ha_concatenated}.png",
-        dataframe = "results/scatterplot_{method}_{ha_concatenated}.csv",
-        metadata = "results/scatterplot_{method}_metadata_{ha_concatenated}.csv"
-    params:
-        bootstrap = 1000,
-        nucleotides = 1701.0,
-        columns = _get_embedding_columns_by_wildcards
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/scatterplot.py \
-            --distance {input.distance_matrix} \
-            --embedding {input.embedding} \
-            --method {wildcards.method} \
-            --columns {params.columns} \
-            --bootstrapping-sample {params.bootstrap} \
-            --output-figure {output.figure} \
-            --output-dataframe {output.dataframe} \
-            --output-metadata {output.metadata} \
-            --nucleotide {params.nucleotides}
-        """
-
 def _get_embedding_path_by_wildcards(wildcards):
     method = wildcards.method
     ha_concatenated = wildcards.ha_concatenated
@@ -688,28 +659,10 @@ rule create_notebook_docs:
 
         mds_df = "results/embed_mds.csv",
 
-        #Scatterplot:
-        scatterplot_pca = "results/scatterplot_pca.csv",
-        scatterplot_pca_metadata = "results/scatterplot_pca_metadata.csv",
-
-        scatterplot_mds = "results/scatterplot_mds.csv",
-        scatterplot_mds_metadata = "results/scatterplot_mds_metadata.csv",
-
-        scatterplot_tsne = "results/scatterplot_t-sne.csv",
-        scatterplot_tsne_metadata = "results/scatterplot_t-sne_metadata.csv",
-
-        scatterplot_umap = "results/scatterplot_umap.csv",
-        scatterplot_umap_metadata = "results/scatterplot_umap_metadata.csv",
-
         #KDE Density:
-        KDE_pca = "results/KDEDensity_pca.csv",
-        KDE_pca_metadata = "results/KDEDensity_pca_metadata.csv",
 
         KDE_mds = "results/KDEDensity_mds.csv",
         KDE_mds_metadata = "results/KDEDensity_mds_metadata.csv",
-
-        KDE_tsne = "results/KDEDensity_t-sne.csv",
-        KDE_tsne_metadata = "results/KDEDensity_t-sne_metadata.csv",
 
         KDE_umap = "results/KDEDensity_umap.csv",
         KDE_umap_metadata = "results/KDEDensity_umap_metadata.csv",
@@ -718,15 +671,15 @@ rule create_notebook_docs:
         KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv",
 
     output:
-        KDE_density = "../docs/FullKDEDensityFluHaNa.png",
-        Scatterplot = "../docs/FullScatterplotFluHaNa.png",
+        KDE_density = "../docs/KDEDensityFluHaNa.png",
         fullChart = "../docs/FullLinkedChartBrushableFluHaNa.html",
+        fullChartPNG = "../docs/FullLinkedChartBrushableFluHaNa.png",
+        umapChart = "../docs/UMAPHaNa.html",
+        umapChartPNG = "../docs/UMAPHaNa.png",
+        MDSProcrustes = "../docs/MDSProcrustesHaNa.png",
+        UMAPProcrustes = "../docs/UMAPProcrustesHaNa.png",
+        UMAPBoxplot = "../docs/UMAPBoxplotHaNA.png"
         fullChartPNG = "../docs/flu-embeddingsHaNa.png",
-        MDS_Supplement = "../docs/FullMDSBrushSupplementFluHaNa.html",
-        MDS_Supplement_PNG = "../docs/FullMDSBrushSupplementFluHaNa.png",
-        PCA_Supplement = "../docs/FullPCABrushSupplementFluHaNa.html",
-        PCA_Supplement_PNG = "../docs/FullPCABrushSupplementFluHaNa.png",
-        Explained_variance_PCA = "../docs/explainedVarianceFluHaNa.png"
 
     conda: "../cartography.yml"
     notebook:

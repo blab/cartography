@@ -22,6 +22,7 @@ if __name__ == "__main__":
     parser.add_argument("--output-distance-metric", help="JSON file of the distance for exporting to the tree")
     parser.add_argument("--output-figure",  help="PNG figure of the procrustes analysis with lines connecting the points. If clade membership is given in the metadata, it will be used")
     parser.add_argument("--output-boxplot",  help="PNG figure of the distances for boxplot split by the first embeddings clade membership")
+    parser.add_argument("--output-metadata",  help="extra information about the data given")
 
     args = parser.parse_args()
 
@@ -64,9 +65,16 @@ if __name__ == "__main__":
         distance = np.sqrt(np.sum(((Ax-Ox)**2, (Ay-Oy)**2), axis=0))
         merged_scaled_df["distance"] = distance
 
+        if args.output_metadata is not None:
+            merged_scaled_df.to_csv(args.output_metadata)
+
+        classifier_threshold = (np.mean(distance) + (1*np.std(distance)))
+        estimated_outlier_status = np.where(distance < classifier_threshold, -1, 1)
 
         distance_df = pd.DataFrame()
-        distance_df["distance_" + str(args.method)] = distance
+        distance_df["distance_" + str(args.method)] = estimated_outlier_status
+
+        #distance_df["distance_" + str(args.method)] = distance
         distance_df.index = merged_scaled_df["strain"]
         distance_dict = distance_df.transpose().to_dict()
         write_json({"nodes": distance_dict}, args.output_distance_metric)

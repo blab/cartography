@@ -583,9 +583,9 @@ rule find_outliers:
        metadata = "results/total_metadata.tsv"
     output:
         outliers = "results/outliers_human_swine.csv",
-        figure = "results/main_figure_human_swine.png",
-        LOF_figure = "results/LOF_figure_human_swine.html",
-        metadata = "results/LOF_accuracy_human_swine.csv"
+        figure = "../docs/outlierMainFigureFiltered.png",
+        LOF_figure = "../docs/LOF_figure_human_swine.html",
+        metadata = "../docs/LOF_accuracy_human_swine.csv"
     params:
         method = "MDS",
         columns = "mds1 mds2", 
@@ -610,7 +610,7 @@ rule find_outliers_other:
        metadata = "results/metadata_full.tsv"
     output:
         outliers = "results/outliers_full.csv",
-        figure = "results/main_figure_full.png"
+        figure = "../docs/outlierMainFigureFull.png"
     params:
         method = "MDS",
         columns = "mds1 mds2", 
@@ -667,15 +667,8 @@ rule create_notebook_docs:
         KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv",
 
     output:
-        KDE_density = "../docs/FullKDEDensityFluOutlier.png",
-        Scatterplot = "../docs/FullScatterplotFluOutlier.png",
-        fullChart = "../docs/FullLinkedChartBrushableFluOutlier.html",
-        fullChartPNG = "../docs/flu-embeddingsOutlier.png",
-        MDS_Supplement = "../docs/FullMDSBrushSupplementFluOutlier.html",
-        MDS_Supplement_PNG = "../docs/FullMDSBrushSupplementFluOutlier.png",
-        PCA_Supplement = "../docs/FullPCABrushSupplementFluOutlier.html",
-        PCA_Supplement_PNG = "../docs/FullPCABrushSupplementFluOutlier.png",
-        Explained_variance_PCA = "../docs/explainedVarianceFluOutlier.png"
+        KDE_density = "../docs/KDEDensityFluOutlier.png",
+        distribution = "../docs/distributionLOFOutlier.png"
 
     conda: "../cartography.yml"
     notebook:

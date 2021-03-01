@@ -288,15 +288,15 @@ While classifying relationships as within and between clade may not be inherentl
 # Outlier Analysis
 
 We expect that MDS, with its focus on global representation of data, can be used as a tool to find outliers before creating a phylogeny. 
-Looking at all 4 embeddings colored by outlier status, MDS clearly is the strongest indicator of outlier status using euclidean distance, seen in the stark separation of values for outlier vs non outlier distances in the MDS KDE plot (figure ___). 
+Looking at all 4 embeddings colored by outlier status, MDS clearly is the strongest indicator of outlier status using euclidean distance, seen in the stark separation of values for outlier vs non outlier distances in the distance distribution below (figure ___). 
 
-In figure 3, the circles determined by the size of the LOF score, the SVM categorizing a strain as an outlier is fairly accurate, with a MCC value of .489.
-The outliers that have been falsely identified as non-outliers by the SVM are consequently not truly outliers.
-Because of the amount of swine samples, some of them clustered closer together, and because the LOF algorithm only categorizes outliers that don't cluster with other strains as an outlier, these false identifications are due to LOF categorizing these closely clustered outliers significant.
-The bulk of mistaken outliers (25 of the 29 errors) were False Positives, or strains that were predicted to be normal strains but were truly outliers.
-In this analysis' use as an upstream tool to flag potential outliers, the existence of relevant clades far removed from the rest of the clades is highly possible, and them being categorized as outlier strains could potentially remove datapoints necessary to the analysis.
-Taking this into account, the SVM was incredibly accurate with true outliers, sole datapoints that were far removed from the rest of the datapoints.
-This can also be seen in figure 4 (LOF colored by predicted/true outlier status), where the predicted outliers are clearly separated as strains with a score higher than -6, whereas the true outliers have no clear threshold between normal and outlier strains.
+In figure 3, the circles were determined by the size of the LOF score. 
+The threshold was fairly accurate at categorizing a strain as an outlier (MCC: 0.67).
+The outliers that were falsely identified as non-outliers by the threshold are consequently not truly outliers.
+The three false negatives were environmental samples, strains that should have been categorized as an outlier that the tool was able to distinguish between.
+The threshold's threshold have be further analyzed in figure 4 (LOF colored by predicted/true outlier status), where the predicted outliers are clearly separated as strains with a score higher than -6, whereas the true outliers have no clear threshold between normal and outlier strains.
+
+Testing the outlier threshold on the full H3N2 HA flu database spanning over 40 years, almost all of the detected outliers were incredibly old (20+ years on average), close relatives to H3N2 swine influenza, environmental strains, and in the lab's exclude file. These results point to using this as an upstream tool to flag and filter potential outliers from a large set of strains without having to preliminarily build a tree.
 
 # Discussion
 
@@ -454,7 +454,7 @@ As it is common practice to run flu builds all the way through, view them, and f
 Human H3N2 Influenza data, labeled with outlier samples, and swine H3N2 Influenza data was concatenated together, with around 40 outliers and 2600 normal strains. 
 This data was transformed and reduced using MDS, which preliminary analysis proved was the strongest of the embeddings at separating outliers by euclidean distance from normal strains due to its emphasis on global patterns.
 The euclidean datapoints from the MDS analysis was inputted into Local Outlier Factor analysis from scikit-learn [@jolliffe_cadima_2016], which outputted outlier scores for each strain.
-A Support Vector Machine was trained on the LOF data, and the SVM outputted labels that identified strains as outliers or not. 
+All values above 4 standard deviations from the mean was identified as an outlier. 
 This information was further analyzed using a graph of LOF score distances colored by both true outlier and predicted outlier status, a plot of MDS with the LOF scores the radius on each datapoint (colored by the true or false nature of the predicted value), confusion matrices, Matthews Correlation Coefficient values, and KDE Density Plots. 
 
 # Acknowledgements

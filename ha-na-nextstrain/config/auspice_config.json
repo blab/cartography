@@ -4,12 +4,12 @@
 		{
             "key": "distance_mds",
             "title": "Procrustes Distance MDS",
-            "type": "continuous"
+            "type": "categorical"
         },
 		{
             "key": "distance_umap",
             "title": "Procrustes Distance UMAP",
-            "type": "continuous"
+            "type": "categorical"
         },
         {
             "key": "pca_label",

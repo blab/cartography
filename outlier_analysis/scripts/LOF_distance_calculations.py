@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
     if args.output_outliers is not None:
         
-        classifier_threshold = (np.mean(X_scores) + (4*np.std(X_scores)))*-1
+        classifier_threshold = (np.mean(X_scores) - (4*np.std(X_scores)))
         
         estimated_outlier_status = np.where(X_scores < classifier_threshold, -1, 1)
 

@@ -159,7 +159,6 @@ rule refine:
           - estimate timetree
           - use {params.coalescent} coalescent timescale
           - estimate {params.date_inference} node dates
-          - filter tips more than {params.clock_filter_iqd} IQDs from clock expectation
         """
     input:
         tree = rules.tree.output.tree,
@@ -171,7 +170,6 @@ rule refine:
     params:
         coalescent = "opt",
         date_inference = "marginal",
-        clock_filter_iqd = 4,
         clock_rate = 0.00382,
         clock_std_dev = 0.000764
     conda: "../cartography.yml"
@@ -187,7 +185,6 @@ rule refine:
             --coalescent {params.coalescent} \
             --date-confidence \
             --date-inference {params.date_inference} \
-            --clock-filter-iqd {params.clock_filter_iqd} \
             --clock-rate {params.clock_rate} \
             --clock-std-dev {params.clock_std_dev}
         """
@@ -645,33 +642,14 @@ rule create_notebook_docs:
 rule create_cross_v_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:
-        #Charts, tree:
-        node_df = "results/table.tsv",
-
-        pca_df = "results/embed_pca.csv",
-        explained_variance_pca = "results/explained_variance_pca.csv",
-
-        mds_df = "results/embed_mds.csv",
-
-        #KDE Density:
-        KDE_pca = "results/KDEDensity_pca.csv",
-        KDE_pca_metadata = "results/KDEDensity_pca_metadata.csv",
-
-        KDE_mds = "results/KDEDensity_mds.csv",
-        KDE_mds_metadata = "results/KDEDensity_mds_metadata.csv",
-
-        KDE_tsne = "results/KDEDensity_t-sne.csv",
-        KDE_tsne_metadata = "results/KDEDensity_t-sne_metadata.csv",
-
-        KDE_umap = "results/KDEDensity_umap.csv",
-        KDE_umap_metadata = "results/KDEDensity_umap_metadata.csv",
-
-        KDE_genetic = "results/KDEDensity_genetic.csv",
-        KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv",
+        node_df = "../seasonal-flu-nextstrain/results/table.tsv",
+        grid_search = "../seasonal-flu-nextstrain-2018-2020/results/grid_search.csv",
+        full_visualizations = "../seasonal-flu-nextstrain/results/full_visualizations.csv",
+        cross_v_results = "../seasonal-flu-nextstrain/results/cross_validation_results.csv",
+        cross_v_thresholds = "../seasonal-flu-nextstrain/results/cross_validation_thresholds.csv"
 
     output:
         exhaustive_grid_search = "results/exhaustive_grid_search.png",
-        metadata_cross_v = "results/table_cross_validation.csv",
         cross_v_data = "results/cross_validation_graph.png"
 
     conda: "../cartography.yml"

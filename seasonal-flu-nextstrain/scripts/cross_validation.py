@@ -81,6 +81,7 @@ if __name__ == "__main__":
     # reading in the distance matrix and node data
  
     distance_matrix = pd.read_csv(args.distance_matrix, index_col=0)
+    print(distance_matrix)
     distance_matrix.reset_index(drop=True)
     distance_matrix = distance_matrix.to_numpy()
 
@@ -98,6 +99,10 @@ if __name__ == "__main__":
             sequences_by_name[sequence.id] = str(sequence.seq)
 
     sequence_names_val = list(sequences_by_name.keys())
+    print(sequence_names_val)
+    print(len(sequence_names_val))
+    #import pdb; pdb.set_trace()
+    assert(len(sequence_names_val) == len(sequence_names))
 
     numbers = list(sequences_by_name.values())[:]
     for i in range(0,len(list(sequences_by_name.values()))):
@@ -296,7 +301,7 @@ if __name__ == "__main__":
             df = cross_v_info[cross_v_info.method == i]
             print(df)
             val = np.average(df[["matthews_cc"]].to_numpy())
-            list_of_best.append(val[["method", "threshold"]])
+            list_of_best.append(val[["method", "threshold"]].tolist())
             
         pd.DataFrame(list_of_best).to_csv(args.output)
 
