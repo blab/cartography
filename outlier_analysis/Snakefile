@@ -43,7 +43,7 @@ rule all:
         #"results/total_metadata.tsv",
         #"../auspice/cartography_flu-outlier-h3n2-swine-human.json",
         #"results/table.tsv",
-        "results/outliers_human_swine.csv",
+        expand("results/outliers_{analysis}.csv", analysis=["filtered", "human_swine"]),
         "results/outliers_full.csv",
         #"../docs/FullKDEDensityFluOutlier.png",
         #"../docs/FullScatterplotFluOutlier.png",
@@ -182,14 +182,14 @@ rule outlier_names:
 
 def get_sequences_by_wildcards(wildcards):
     method = wildcards.analysis
-    if method in ("human", "swine"):
+    if method in ("human_swine"):
         return "results/total_sequences.fasta"
     else:
         return f"results/filtered_{method}.fasta"
 
 def get_metadata_by_wildcards(wildcards):
     method = wildcards.analysis
-    if method in ("human", "swine"):
+    if method in ("human_swine"):
         return "results/total_metadata.tsv"
     else:
         return f"results/metadata_{method}.tsv"
@@ -579,13 +579,13 @@ rule concat_KDE_table:
 rule find_outliers:
     message: "find outliers and make figure"
     input:
-       embedding = "results/embed_mds_human_swine.csv",
+       embedding = "results/embed_mds_{analysis}.csv",
        metadata = "results/total_metadata.tsv"
     output:
-        outliers = "results/outliers_human_swine.csv",
-        figure = "../docs/outlierMainFigureFiltered.png",
-        LOF_figure = "../docs/LOF_figure_human_swine.html",
-        metadata = "../docs/LOF_accuracy_human_swine.csv"
+        outliers = "results/outliers_{analysis}.csv",
+        figure = "../docs/outlierMainFigureFiltered_{analysis}.png",
+        LOF_figure = "../docs/LOF_figure_{analysis}.html",
+        metadata = "../docs/LOF_accuracy_{analysis}.csv"
     params:
         method = "MDS",
         columns = "mds1 mds2", 

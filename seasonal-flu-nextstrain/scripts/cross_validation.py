@@ -296,14 +296,15 @@ if __name__ == "__main__":
         plt.savefig(args.output_figure)
 
     if args.output is not None:
-        list_of_best = []
+        list_of_best_method = []
+        list_of_best_threshold = []
         for i in ['PCA', 'MDS', 't-SNE', 'UMAP']:
             df = cross_v_info[cross_v_info.method == i]
             print(df)
             val = np.average(df[["matthews_cc"]].to_numpy())
-            list_of_best.append(val[["method", "threshold"]].tolist())
-            
-        pd.DataFrame(list_of_best).to_csv(args.output)
+            list_of_best_method.append(val[["method"]].values.tolist()[0])
+            list_of_best_threshold.append(val[["threshold"]].values.tolist()[0])
+        pd.DataFrame(zip(list_of_best_method, list_of_best_threshold)).to_csv(args.output)
 
     if args.output_total_data is not None:
         visualize_df.to_csv(args.output_total_data)

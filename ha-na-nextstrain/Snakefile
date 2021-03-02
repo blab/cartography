@@ -33,8 +33,8 @@ rule all:
     input:
         "results/ncbi-h3n2-ha.fasta",
         expand("results/KDEDensity_{method}_{ha_concatenated}.png", method=KDE_METHODS, ha_concatenated=HA_CONCATENATED),
-        expand("results/aligned_{segment}.fasta", segment=SEGMENTS),
         expand("results/deduplicated_sequences_{segment}.fasta", segment=SEGMENTS),
+        "results/paired_ha.fasta",
         expand("results/aligned_{segments}.fasta", segments=SEGMENTS),
         expand("results/filtered_{segment}.fasta", segment=SEGMENTS),
         expand("results/metadata_{segment}.tsv", segment=SEGMENTS),
@@ -49,17 +49,16 @@ rule all:
         expand("results/embed_umap_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/procrustes_main_figure_{mds_umap}.png", mds_umap=MDS_UMAP),
         expand("results/procrustes_distance_{mds_umap}.json", mds_umap=MDS_UMAP),
-        "results/ha_concatenated_data.csv"
-        #"results/explained_variance_pca.csv",
-        #"../docs/FullKDEDensityFluHaNa.png",
-        #"../docs/FullScatterplotFluHaNa.png",
-        #"../docs/FullLinkedChartBrushableFluHaNa.html",
-        #"../docs/flu-embeddings.png",
-        #"../docs/FullMDSBrushSupplementFluHaNa.html",
-        #"../docs/FullPCABrushSupplementFluHaNa.html",
-        #"results/nucleotide_diversity.txt",
-        #"../docs/explainedVarianceFluHaNa.png"
-
+        "results/ha_concatenated_data.csv",
+        "../docs/KDEDensityFluHaNa.png",
+        "../docs/FullLinkedChartBrushableFluHaNa.html",
+        "../docs/FullLinkedChartBrushableFluHaNa.png",
+        "../docs/UMAPHaNa.html",
+        "../docs/UMAPHaNa.png",
+        "../docs/MDSProcrustesHaNa.png",
+        "../docs/UMAPProcrustesHaNa.png",
+        "../docs/UMAPBoxplotHaNA.png",
+        "../docs/flu-embeddingsHaNa.png"
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha-na.fa",
@@ -165,7 +164,7 @@ rule pair_ha_strains:
 rule align:
     message:
         """
-        Aligning sequences to {input.reference}
+        Aligning sequences
           - filling gaps with N
         """
     input:
@@ -668,7 +667,7 @@ rule create_notebook_docs:
         KDE_umap_metadata = "results/KDEDensity_umap_metadata.csv",
 
         KDE_genetic = "results/KDEDensity_genetic.csv",
-        KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv",
+        KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv"
 
     output:
         KDE_density = "../docs/KDEDensityFluHaNa.png",
@@ -678,8 +677,8 @@ rule create_notebook_docs:
         umapChartPNG = "../docs/UMAPHaNa.png",
         MDSProcrustes = "../docs/MDSProcrustesHaNa.png",
         UMAPProcrustes = "../docs/UMAPProcrustesHaNa.png",
-        UMAPBoxplot = "../docs/UMAPBoxplotHaNA.png"
-        fullChartPNG = "../docs/flu-embeddingsHaNa.png",
+        UMAPBoxplot = "../docs/UMAPBoxplotHaNA.png",
+        fullChartPNG = "../docs/flu-embeddingsHaNa.png"
 
     conda: "../cartography.yml"
     notebook:
