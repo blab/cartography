@@ -234,69 +234,72 @@ These results corroborate our conclusion about using t-SNE embeddings for cluste
 
 # Analysis of HA and NA joined genomes effects on embedding quality and accuracy
 
-While splitting gneomes at recombinant breakpoints is a way to handle recombinaton signal in evolutionary trees, as the embeddings are quanitative measures of genomic distance, we expect that adding genomic information will create a more accurate and quantitatevely stronger graph. (dudas and bedford)
+While splitting gneomes at recombinant breakpoints is how epidemiologists traditionally handle recombinaton signal in evolutionary trees, because the embeddings are quantitative measures of genomic distance and does not rely on homogeneity in the population strains, we expect that adding genomic information will create a more accurate and quantitatevely stronger graph[@dudas_bedford_2019].
 In both the MDS and UMAP embeddings, there is obvious improvement from the HA-only analysis to the HA and NA joint analysis. 
 There is visibly better separation of A2 and its recombinant clade A2/re in the HA and NA joint analysis over the HA only embedding in MDS, t-SNE, and UMAP. 
-PC1 in the HA and NA joint analysis seems to randomly partition closely related strains, which could be due PCA's sensitivity to gaps in the alignment. 
+PC1 in the HA and NA joint analysis seems to randomly partition closely related strains, which is due PCA's sensitivity to gaps in the alignment. 
 Looking more closely at the MDS and UMAP embeddings using the procrustes analysis, the divergence between A2 and A2/re can be seen much clearer, as well as visible distance between clade A1 and A1a. 
+In both the MDS and UMAP embeddings, significant reassortment in clade A1b/135K was detected visually and through distance analysis, with A1b/135K reassorting into clades A2, 3c2.A, A1b/135N, and A4.
 In MDS, the the joint analysis improved the visualization of clusters between A2 and A2/re.
-The joint embedding was also able to contain clade 3c2.A in the center of the embedding without spilling into clade A4 like it did in the HA analysis.
+The joint embedding tightly clustered clade 3c2.A in the center of the embedding, while 3c2.A in the HA only embedding spilled into clade A4.
 
-Comparing the UMAP embedding to the tree as well as the distance analysis between the HA and HA+NA embedding, the larger distance between A1a and A1 in the combined embedding suggests significant reassortment in the NA chromosome. 
+Comparing the UMAP embedding [@fig:Procrustes-UMAP] to the tree [@fig:tree-HaNa] as well as the distance analysis between the HA and HA+NA embedding, the larger distance between A1a and A1 in the combined embedding suggests significant reassortment in the NA chromosome. 
 This reassortment is seen in the tangle tree between HA and NA, where the A1a HA clade is split into multiple locations in the NA tree, which suggests A1 reassorting with 3C2.A and A1a. 
 These reassortments are clearly shown in the UMAP joint embedding, where A1a is more distant from A1. 
 Subclades from 3C2.A, such as three strains that have reassorted with A1 in the NA tree and, are also seen in the joint embedding. 
 Clades A4 and 3c2.A are less distant in the joint embedding, suggesting that there is significant reassortment between the clades.
 
-<iframe src="https://blab.github.io/cartography/HaNaAnalysisFinalChart.html" style="width: 400px; height: 400px;" frameBorder="0"></iframe>
-![Interactive full chart of all four embeddings with HA only embeddings on the top row and HA and NA embeddings on the bottom row; zoomable with interactive tooltips](HaNaAnalysisFinalChart.png){#fig:HANAFullChart .static-embedding}
-
-(procrustes analysis plots)
-
 Quantitatively, the joint analysis improved the accuracy of predicting between vs within clade relationships in MDS, t-SNE, and UMAP.
-In the KDE density plot, there is less overlap between same clade and between clade distances in the joint analysis, reflected in the higher Matthews Correlation Coefficient values (MDS: .57 to .62, t-SNE: .72 to .77). 
+In the KDE density plot, there is less overlap between same clade and between clade distances in the joint analysis, reflected in the higher Matthews Correlation Coefficient values (MDS: .58 to .62, t-SNE: .72 to .76) [@fig:KDE-Ha-Na]. 
 PCA performed poorly in the joint analysis compared to the HA only analysis due to its sensitivity to gaps in the alignment. 
 These findings affirm our expectations that full genomes are an improvement to the embeddings due to increased information about recombination and history across chromosomes, which both allow for a more holisitic representation of genomic population data than a phylogeny.
 
-![Distribution of scaled Euclidean distances between all pairs of strains in both HA and HA and NA joint analysis of H3N2 Influenza by clade status and dimensionality reduction method.](FinalKDEPlotHACONCAT.png){#fig:HA-NA-within-and-between-group-distances}
 
-  embedding  MCC_ha  MCC_concatenated
-0       mds   0.565             0.625
-1     t-sne   0.579             0.618
-2   genetic   0.592             0.579
-3       pca   0.692             0.351
-4      umap   0.714             0.782
+![Tangle tree comparing the HA and NA trees for H3N2 Influenza from 2016-2018](tangleTreeHaNa.svg){#fig:tree-HaNa}
 
+<iframe src="https://blab.github.io/cartography/HaNaAnalysisFinalChart.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
+![Interactive full chart of all four embeddings with HA only embeddings on the top row and HA and NA embeddings on the bottom row; zoomable with interactive tooltips](HaNaAnalysisFinalChart.png){#fig:HANAFullChart .static-embedding}
+
+![Comparison of UMAP strain points in the HA only and HA + NA concatenated build](UMAPProcrustesHaNa.png){#fig:Procrustes-UMAP}
+
+![KDE plot for genetic, MDS, and UMAP for HA and HA+NA embeddings](KDEDensityFluHaNa.png){#fig:KDE-Ha-Na}
 
 
 # Cross Validation information 2016-2018 H3N2 Influenza ability to predict clade relationships in 2018-2020 Influenza
 
-In the cross-validation analysis, the threshold per method was the mean threshold across all 10 folds, with the MCC values for each folding ranging from .18 to .5.
-The lower MCC values across folds can be attributed to out of sample performance error from training bias, as MCC values are intrinsically higher when trained and tested on the same dataset using the SVM threshold. 
-These thresholds were analyzed alongside the SVM threshold's predict function in order to analyze the loss in accuracy.
-The MCC values for the cross validation were incredibly similar to the MCC values from the Support Vector Machine, with the cross validation threshold improving the accuracy for PCA. 
+In the cross-validation analysis, the threshold per method was the mean threshold across all 10 folds, with the MCC values for each fold ranging from .18 to .55.
+The lower MCC values across folds can be attributed to out of sample performance error from training bias, as MCC values are intrinsically higher when trained and tested on the same dataset using the SVM threshold [@fig:cross-v-values]. 
+These thresholds were analyzed alongside the SVM threshold's predict function trained on the 2018-2020 dataset to further understand the loss in accuracy.
+The MCC values for the cross validation were incredibly similar to the MCC values from the Support Vector Machine, with the cross validation threshold improving the accuracy for PCA[@fig:KDE-cross-v]. 
 This confirms that the same threshold can be used across the same type of embedding and organism for future and past populations to categorize between vs within clade relationships.
-While classifying relationships as within and between clade may not be inherently useful for classification purposes, it can be used for an exporatory analysis of how stable patterns and clade relationships in different pathogen populations over time.  
+While classifying relationships as within and between clade may not be inherently useful for classification purposes, it can be used for an exporatory analysis of how stable patterns and clade relationships in different pathogen populations over time. 
 
-     MCC          test_case   embedding
- 0.700                  NaN   genetic
- 0.706             0.663368       mds
- 0.746             0.759752       pca
- 0.764             0.734402      umap
- 0.771             0.762097     t-sne
+![Full KDE plot for the cross validation with both the SVM and cross validation thresholds plotted](cross_validation_graph.png){#fig:KDE-cross-v}
+
+![MCC values for each fold per embedding plotted against genetic distance](KDEDensityFluHaNa.png){#fig:cross-v-values}
 
 # Outlier Analysis
 
 We expect that MDS, with its focus on global representation of data, can be used as a tool to find outliers before creating a phylogeny. 
-Looking at all 4 embeddings colored by outlier status, MDS clearly is the strongest indicator of outlier status using euclidean distance, seen in the stark separation of values for outlier vs non outlier distances in the distance distribution below (figure ___). 
+Looking at all 4 embeddings colored by outlier status, MDS clearly is the strongest indicator of outlier status using euclidean distance, seen in the stark separation of values for outlier vs non outlier distances in the distance distribution below [@fig:outlier-distance-plot]. 
 
-In figure 3, the circles were determined by the size of the LOF score. 
+In the MDS plot, the circles were determined by the size of the LOF score [@fig:outlier-LOF-scores]. 
 The threshold was fairly accurate at categorizing a strain as an outlier (MCC: 0.67).
 The outliers that were falsely identified as non-outliers by the threshold are consequently not truly outliers.
 The three false negatives were environmental samples, strains that should have been categorized as an outlier that the tool was able to distinguish between.
 The threshold's threshold have be further analyzed in figure 4 (LOF colored by predicted/true outlier status), where the predicted outliers are clearly separated as strains with a score higher than -6, whereas the true outliers have no clear threshold between normal and outlier strains.
 
+
+![LOF Score distribution for the filtered dataset](outlierDistributionHumanSwine.png){#fig:outlier-distance-plot}
+
+![MDS embedding with LOF circles colored by True vs False](main_figure_human_swine.png){#fig:outlier-LOF-scores}
+
 Testing the outlier threshold on the full H3N2 HA flu database spanning over 40 years, almost all of the detected outliers were incredibly old (20+ years on average), close relatives to H3N2 swine influenza, environmental strains, and in the lab's exclude file. These results point to using this as an upstream tool to flag and filter potential outliers from a large set of strains without having to preliminarily build a tree.
+
+![LOF Score distribution for the full influenza H3N2 HA database](outlierDistributionFull.png){#fig:outlier-distance-plot-full}
+
+![MDS embedding with LOF circles colored by True vs False](main_figure_full.png){#fig:outlier-LOF-scores-full}
+
 
 # Discussion
 
@@ -328,15 +331,6 @@ A future direction for this research would be using a semi-supervised learning m
 In this approach, the embedding obeys a certain ground truth, where a subset of expert-reviewed strains are labeled, and that data trains the parameters of the embedding.
 The rest of the unlabeled data would then be projected into this new environment, which has been proven to greatly improve both the accuracy and usefulness of the visualizations. 
 The limitation to this approach is the time and computational work required for researchers to create an expert approved dataset diverse enough for a strong semi-supervised learning approach.
-
-There are many other directions to further test the scope and applicability of these embeddings. 
-One such direction is a cross-validation test, where a threshold of Euclidean distance between relationships is trained on a population from the past, and tested on a population of the same disease from some years later. 
-This could potentially determine the embedding's abilities to understand future trends in present populations.
-Another future direction for this research would be finding parameters for the embeddings that work best across viruses. 
-This research found parameters within influenza that we inferred would work across the rest of the analysis for consistency.
-If these parameters, once calibrated for the best results across all the viruses consistently returned similar values, could mean there is a set of parameters that works best for evolutionary data. 
-This calibration would be useful when defining a Euclidean threshold between outliers and normal strains in order to quickly find outliers within a population.
-As it is common practice to run flu builds all the way through, view them, and find a handful of outliers that should now be excluded from the analysis, this research could potentially be used as an upstream tool to flag potential outliers before building a tree to potentially save scientists hours of work in outlier detection.
 
 Our recommendations for algorithm choices are influenced by the many factors that make up a population. 
 For a population with smaller genomes and very few missing bases, PCA and t-SNE work best for defining clades and conveying useful information. 
