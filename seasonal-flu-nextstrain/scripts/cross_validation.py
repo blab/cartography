@@ -301,9 +301,11 @@ if __name__ == "__main__":
         for i in ['PCA', 'MDS', 't-SNE', 'UMAP']:
             df = cross_v_info[cross_v_info.method == i]
             print(df)
-            val = np.average(df[["matthews_cc"]].to_numpy())
-            list_of_best_method.append(val[["method"]].values.tolist()[0])
-            list_of_best_threshold.append(val[["threshold"]].values.tolist()[0])
+            val = np.average(df["threshold"].values.tolist())
+            print("val is below")
+            print(val)
+            list_of_best_method.append(i)
+            list_of_best_threshold.append(val)
         pd.DataFrame(zip(list_of_best_method, list_of_best_threshold)).to_csv(args.output)
 
     if args.output_total_data is not None:
