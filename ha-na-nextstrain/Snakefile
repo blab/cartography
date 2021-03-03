@@ -1,3 +1,7 @@
+wildcard_constraints:
+    segment="(ha|na)",
+    ha_concatenated="(ha|na|concatenated)"
+
 EMBEDDING_METHODS = [
     "pca",
     "mds",
@@ -79,7 +83,7 @@ rule split:
     output:
         sequences_ha = "results/ncbi-h3n2-ha.fasta",
         sequences_na = "results/ncbi-h3n2-na.fasta"
-    conda: "../cartography/yml"
+    conda: "../cartography.yml"
     shell:
         """
         python3 scripts/split_fasta.py \
@@ -653,21 +657,21 @@ rule create_notebook_docs:
         #Charts, tree:
         node_df = "results/table.tsv",
 
-        pca_df = "results/embed_pca.csv",
-        explained_variance_pca = "results/explained_variance_pca.csv",
+        #pca_df = "results/embed_pca.csv",
+        #explained_variance_pca = "results/explained_variance_pca.csv",
 
-        mds_df = "results/embed_mds.csv",
+        #mds_df = "results/embed_mds.csv",
 
         #KDE Density:
 
-        KDE_mds = "results/KDEDensity_mds.csv",
-        KDE_mds_metadata = "results/KDEDensity_mds_metadata.csv",
+        #KDE_mds = "results/KDEDensity_mds.csv",
+        #KDE_mds_metadata = "results/KDEDensity_mds_metadata.csv",
 
-        KDE_umap = "results/KDEDensity_umap.csv",
-        KDE_umap_metadata = "results/KDEDensity_umap_metadata.csv",
+        #KDE_umap = "results/KDEDensity_umap.csv",
+        #KDE_umap_metadata = "results/KDEDensity_umap_metadata.csv",
 
-        KDE_genetic = "results/KDEDensity_genetic.csv",
-        KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv"
+        #KDE_genetic = "results/KDEDensity_genetic.csv",
+        #KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv"
 
     output:
         KDE_density = "../docs/KDEDensityFluHaNa.png",
@@ -678,7 +682,7 @@ rule create_notebook_docs:
         MDSProcrustes = "../docs/MDSProcrustesHaNa.png",
         UMAPProcrustes = "../docs/UMAPProcrustesHaNa.png",
         UMAPBoxplot = "../docs/UMAPBoxplotHaNA.png",
-        fullChartPNG = "../docs/flu-embeddingsHaNa.png"
+        fullChartPNG_redundant = "../docs/flu-embeddingsHaNa.png"
 
     conda: "../cartography.yml"
     notebook:
