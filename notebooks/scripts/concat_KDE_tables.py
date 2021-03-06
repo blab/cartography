@@ -14,7 +14,7 @@ if __name__ == "__main__":
 
     # Concatenate tables.
     df = pd.concat([
-        pd.read_csv(table_file, sep=args.separator)
+        pd.read_csv(table_file, sep=args.separator).sort_values(by='MCC', ascending=False)
         for table_file in args.tables
     ], ignore_index=True)
 
