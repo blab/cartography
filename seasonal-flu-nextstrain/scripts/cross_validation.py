@@ -272,6 +272,7 @@ if __name__ == "__main__":
 
     if args.output_figure is not None:
 
+        cross_v_means = cross_v_info.groupby("method")["matthews_cc"].mean().reset_index()
         average = []
         for i in cross_v_info["method"].unique().tolist():
             cross_v_info_method = cross_v_info.where(cross_v_info["method"] == i).dropna(how = "all")
@@ -285,12 +286,13 @@ if __name__ == "__main__":
         df["method"] = df.index
         df.columns=['mean', 'method']
         df = df.reset_index(drop=True)
-        cross_v_info = cross_v_info.append(df)
+        #cross_v_info = cross_v_info.append(df)
 
 
         mpl.style.use("seaborn")
         plt.scatter(x=cross_v_info["method"], y=cross_v_info["matthews_cc"])
-        plt.scatter(x=cross_v_info["method"], y=cross_v_info["mean"], marker="_")
+        plt.scatter(x=cross_v_means["method"], y=cross_v_means["matthews_cc"], marker="_")
+        #plt.scatter(x=cross_v_info["method"], y=cross_v_info["mean"], marker="_")
         plt.ylim(0, 1)
 
         plt.savefig(args.output_figure)
@@ -299,14 +301,16 @@ if __name__ == "__main__":
         list_of_best_method = []
         list_of_best_threshold = []
         for i in ['PCA', 'MDS', 't-SNE', 'UMAP']:
-            df = cross_v_info[cross_v_info.method == i]
+            df = cross_v_info[cross_v_info.method == i].dropna(how="all")
             print(df)
             val = np.average(df["threshold"].values.tolist())
             print("val is below")
             print(val)
             list_of_best_method.append(i)
             list_of_best_threshold.append(val)
-        pd.DataFrame(zip(list_of_best_method, list_of_best_threshold)).to_csv(args.output)
+        output_df = pd.DataFrame(zip(list_of_best_method, list_of_best_threshold))
+        output_df.columns = ["method", "threshold"]
+        output_df.to_csv(args.output)
 
     if args.output_total_data is not None:
         visualize_df.to_csv(args.output_total_data)

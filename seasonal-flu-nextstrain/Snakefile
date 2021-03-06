@@ -27,11 +27,11 @@ rule all:
         "../docs/FullScatterplotFlu.png",
         "../docs/FullLinkedChartBrushableFlu.html",
         "../docs/flu-embeddings.png",
-        "../docs/FullMDSBrushSupplementFlu.html",
+        #"../docs/FullMDSBrushSupplementFlu.html",
         "../docs/FullPCABrushSupplementFlu.html",
         #"results/nucleotide_diversity.txt",
         "../docs/explainedVarianceFlu.png",
-        "../docs/cross_validation_thresholds.csv"
+        "results/cross_validation_thresholds.csv"
 
 rule files:
     params:
@@ -628,8 +628,8 @@ rule create_notebook_docs:
         Scatterplot = "../docs/FullScatterplotFlu.png",
         fullChart = "../docs/FullLinkedChartBrushableFlu.html",
         fullChartPNG = "../docs/flu-embeddings.png",
-        MDS_Supplement = "../docs/FullMDSBrushSupplementFlu.html",
-        MDS_Supplement_PNG = "../docs/FullMDSBrushSupplementFlu.png",
+        #MDS_Supplement = "../docs/FullMDSBrushSupplementFlu.html",
+        #MDS_Supplement_PNG = "../docs/FullMDSBrushSupplementFlu.png",
         PCA_Supplement = "../docs/FullPCABrushSupplementFlu.html",
         PCA_Supplement_PNG = "../docs/FullPCABrushSupplementFlu.png",
         Explained_variance_PCA = "../docs/explainedVarianceFlu.png"

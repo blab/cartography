@@ -31,6 +31,7 @@ if __name__ == "__main__":
     parser.add_argument("--output-figure", help="path for outputting as a PNG")
     parser.add_argument("--output-dataframe", help="path for outputting as a dataframe")
     parser.add_argument("--output-metadata", help="return the Matthews Correlation Coefficient, Median within and between thresholds and accuracy values for the KDE density plot")
+    parser.add_argument("--output-metadata-cross-v", help="return the Matthews Correlation Coefficient, Median within and between thresholds and accuracy values for the manual cross-v KDE density plot")
 
     args = parser.parse_args()
 
@@ -147,6 +148,7 @@ if __name__ == "__main__":
 
         cross_v_values.replace({'PCA' : 'pca', 'MDS': 'mds', 't-SNE': 't-sne', "UMAP": "umap"}, inplace=True, regex=True)
 
+        cross_v_values.columns = ["method", "threshold"]
         threshold = cross_v_values.loc[cross_v_values['method'] == args.method]["threshold"].values.tolist()[0]
 
         predict_mine = np.where(KDE_df["scaled_distance"] < threshold, 1, 0)
@@ -155,6 +157,20 @@ if __name__ == "__main__":
         print(matthews_cc_cross_v)
         confusion_matrix_cross_v = confusion_matrix(y, predict_mine)
         print(confusion_matrix_cross_v)
+
+        if args.output_metadata_cross_v is not None:
+            metadata_df = pd.DataFrame([[matthews_cc_cross_v, threshold, args.method, confusion_matrix_cross_v[0][0], confusion_matrix_cross_v[1][0], confusion_matrix_cross_v[1][1], confusion_matrix_cross_v[0][1]]], columns=["MCC", "threshold", "embedding", "TN", "FN", "TP", "FP"]).round(3)
+            metadata_df.to_csv(args.output_metadata_cross_v, index=False)
+            
+        if args.cross_v_values is not None and args.method != "genetic":
+            metadata_df["matthews_cc_cross_v"] = matthews_cc_cross_v
+            metadata_df["TN_cross_v"] = confusion_matrix_val[0][0]
+            metadata_df["FN_cross_v"] = confusion_matrix_val[1][0]
+            metadata_df["TP_cross_v"] = confusion_matrix_val[1][1]
+            metadata_df["FP_cross_v"] = confusion_matrix_val[0][1]
+            metadata_df["threshold_cross_v"] = threshold
+        metadata_df.to_csv(args.output_metadata, index=False)
+        metadata_df = pd.DataFrame(data=[matthews_cc_cross_v, confusion_matrix_cross_v])
 
     #create metadata dataframe
     if args.output_metadata is not None:
