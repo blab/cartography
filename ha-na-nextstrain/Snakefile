@@ -655,7 +655,7 @@ rule create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:
         #Charts, tree:
-        node_df = "results/table.tsv",
+        node_df = "results/table_ha.tsv",
 
         #pca_df = "results/embed_pca.csv",
         #explained_variance_pca = "results/explained_variance_pca.csv",
