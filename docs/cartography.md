@@ -50,39 +50,39 @@ We apply this method to viruses with less samples, lower quality strains, and ge
 
 # Results
 
-+-----------+-------+-------+-------+--------+-------+------------+-------------+----------+-----------+-------------+
-|           |   MCC |    FN |    FP |     TN |    TP |   accuracy | embedding   | between  |   within  |  threshold  |
-+===========+=======+=======+=======+========+=======+============+=============+==========+===========+=============+
-| Influenza | 0.576 | 11237 | 69685 | 516435 | 63318 |      0.878 | mds         |    0.104 |    -1.476 |   -0.868    |
-+-----------+-------+-------+-------+--------+-------+------------+-------------+----------+-----------+-------------+
-|           | 0.604 | 11167 | 61032 | 525088 | 63388 |      0.891 | genetic     |    0.11  |    -1.418 |   -0.88     |
-+-----------+-------+-------+-------+--------+-------+------------+-------------+----------+-----------+-------------+
-|           | 0.664 |  4796 | 60044 | 526076 | 69759 |      0.902 | pca         |    0.28  |    -1.659 |   -1.138    |
-+-----------+-------+-------+-------+--------+-------+------------+-------------+----------+-----------+-------------+
-|           | 0.67  |  1707 | 66501 | 519619 | 72848 |      0.897 | umap        |    0.172 |    -1.481 |   -1.048    |
-+-----------+-------+-------+-------+--------+-------+------------+-------------+----------+-----------+-------------+
-|           | 0.764 |  4268 | 34749 | 551371 | 70287 |      0.941 | t-sne       |    0.159 |    -1.666 |   -1.09     |
-+-----------+-------+-------+-------+--------+-------+------------+-------------+----------+-----------+-------------+
-| Zika      | 0.663 |  3379 | 21376 | 172773 | 29273 |      0.891 | pca         |    0.07  |    -1.434 |   -0.868    |
-+-----------+-------+-------+-------+--------+-------+------------+-------------+----------+-----------+-------------+
-|           | 0.42  |  6450 | 47231 | 146918 | 26202 |      0.763 | mds         |    0.083 |    -1.088 |   -0.622    |
-+-----------+-------+-------+-------+--------+-------+------------+-------------+----------+-----------+-------------+
-|           | 0.54  |  3644 | 36918 | 157231 | 29008 |      0.821 | t-sne       |   -0.201 |    -1.094 |   -0.736    |
-+-----------+-------+-------+-------+--------+-------+------------+-------------+----------+-----------+-------------+
-|           | 0.378 |  7830 | 49454 | 144695 | 24822 |      0.747 | umap        |   -0.551 |    -0.786 |   -0.67     |
-+-----------+-------+-------+-------+--------+-------+------------+-------------+----------+-----------+-------------+
-|           | 0.513 |  5608 | 34603 | 159546 | 27044 |      0.823 | genetic     |   -0.063 |    -1.128 |   -0.694    |
-+-----------+-------+-------+-------+--------+-------+------------+-------------+----------+-----------+-------------+
-| MERS      | 0     |  1388 |     0 |  32803 |     0 |      0.959 | pca         |   -0.489 |    -0.504 |  nan        |
-+-----------+-------+-------+-------+--------+-------+------------+-------------+----------+-----------+-------------+
-|           | 0.625 |   234 |  1163 |  31640 |  1154 |      0.959 | mds         |   -0.117 |    -1.627 |   -1.27     |
-+-----------+-------+-------+-------+--------+-------+------------+-------------+----------+-----------+-------------+
-|           | 0.626 |   135 |  1466 |  31337 |  1253 |      0.953 | t-sne       |    0.02  |    -1.526 |   -1.372    |
-+-----------+-------+-------+-------+--------+-------+------------+-------------+----------+-----------+-------------+
-|           | 0.479 |   309 |  2164 |  30639 |  1079 |      0.928 | umap        |    0.087 |    -1.348 |   -1.234    |
-+-----------+-------+-------+-------+--------+-------+------------+-------------+----------+-----------+-------------+
-|           | 0.712 |   197 |   754 |  32049 |  1191 |      0.972 | genetic     |    0.135 |    -1.865 |   -1.42     |
-+-----------+-------+-------+-------+--------+-------+------------+-------------+----------+-----------+-------------+
++-----------+-------+-------+--------+---------+--------+------------+-------------+------------------+-----------------+-------------+
+|           |   MCC |    FN |     FP |      TN |     TP |   accuracy | embedding   |   median_between |   median_within |   threshold |
++===========+=======+=======+========+=========+========+============+=============+==================+=================+=============+
+| Influenza | 0.68  |  3528 | 184565 | 1438682 | 211628 |      0.898 | umap        |            0.156 |          -1.519 |      -1.036 |
++-----------+-------+-------+--------+---------+--------+------------+-------------+------------------+-----------------+-------------+
+|           | 0.66  | 14924 | 171642 | 1451605 | 200232 |      0.899 | pca         |            0.298 |          -1.626 |      -1.102 |
++-----------+-------+-------+--------+---------+--------+------------+-------------+------------------+-----------------+-------------+
+|           | 0.59  | 25218 | 207483 | 1415764 | 189938 |      0.873 | genetic     |            0.056 |          -1.403 |      -0.862 |
++-----------+-------+-------+--------+---------+--------+------------+-------------+------------------+-----------------+-------------+
+|           | 0.58  | 35111 | 187195 | 1436052 | 180045 |      0.879 | t-sne       |            0.066 |          -1.582 |      -0.862 |
++-----------+-------+-------+--------+---------+--------+------------+-------------+------------------+-----------------+-------------+
+|           | 0.545 | 26674 | 249222 | 1374025 | 188482 |      0.85  | mds         |            0.046 |          -1.348 |      -0.814 |
++-----------+-------+-------+--------+---------+--------+------------+-------------+------------------+-----------------+-------------+
+| Zika      | 0.663 |  3379 |  21376 |  172773 |  29273 |      0.891 | pca         |            0.07  |          -1.434 |      -0.868 |
++-----------+-------+-------+--------+---------+--------+------------+-------------+------------------+-----------------+-------------+
+|           | 0.54  |  3644 |  36918 |  157231 |  29008 |      0.821 | t-sne       |           -0.201 |          -1.094 |      -0.736 |
++-----------+-------+-------+--------+---------+--------+------------+-------------+------------------+-----------------+-------------+
+|           | 0.513 |  5608 |  34603 |  159546 |  27044 |      0.823 | genetic     |           -0.063 |          -1.128 |      -0.694 |
++-----------+-------+-------+--------+---------+--------+------------+-------------+------------------+-----------------+-------------+
+|           | 0.42  |  6450 |  47231 |  146918 |  26202 |      0.763 | mds         |            0.083 |          -1.088 |      -0.622 |
++-----------+-------+-------+--------+---------+--------+------------+-------------+------------------+-----------------+-------------+
+|           | 0.378 |  7830 |  49454 |  144695 |  24822 |      0.747 | umap        |           -0.551 |          -0.786 |      -0.67  |
++-----------+-------+-------+--------+---------+--------+------------+-------------+------------------+-----------------+-------------+
+| MERS      | 0.712 |   197 |    754 |   32049 |   1191 |      0.972 | genetic     |            0.135 |          -1.865 |      -1.42  |
++-----------+-------+-------+--------+---------+--------+------------+-------------+------------------+-----------------+-------------+
+|           | 0.626 |   135 |   1466 |   31337 |   1253 |      0.953 | t-sne       |            0.02  |          -1.526 |      -1.372 |
++-----------+-------+-------+--------+---------+--------+------------+-------------+------------------+-----------------+-------------+
+|           | 0.625 |   234 |   1163 |   31640 |   1154 |      0.959 | mds         |           -0.117 |          -1.627 |      -1.27  |
++-----------+-------+-------+--------+---------+--------+------------+-------------+------------------+-----------------+-------------+
+|           | 0.479 |   309 |   2164 |   30639 |   1079 |      0.928 | umap        |            0.087 |          -1.348 |      -1.234 |
++-----------+-------+-------+--------+---------+--------+------------+-------------+------------------+-----------------+-------------+
+|           | 0     |  1388 |      0 |   32803 |      0 |      0.959 | pca         |           -0.489 |          -0.504 |     nan     |
++-----------+-------+-------+--------+---------+--------+------------+-------------+------------------+-----------------+-------------+
 
 : [All KDE values for each virus. MCC (Matthews Correlation Coefficient), FN (False Negative) FP (False Positive) TN (True Negative) TP (True Positive) accuracy(accuracy of the confusion matrix, TN + TP / total samples) threshold (z-score value the Support Vector Machine picked that best separates within vs between clade relationships) embedding (pca, mds, t-sne, or umap) between and within (z score values of the median of between clade and within clade KDE density curves, respectively)] {#tbl:KDE_full}
 
@@ -204,7 +204,7 @@ Because clades were defined by outbreaks that shared a common host, we expected 
 Clades 20, Clade 21, and Clade 22, camel outbreaks from Saudi Arabia, clustered together in all the distance based embeddings, reaffirming the genetic similarity of these strains. 
 The embeddings clustered between hosts, where disease strains missing a clade membership clustered into the nearest related clade. 
 While t-SNE and UMAP's embeddings are very similar structurally, t-SNE performed exceedingly better at differentiating between intra-host clades highly related in the embedding.
-An example of this is the clear separation in t-SNE of the camel and human outbreaks concentrated in Saudi Arabia and the UAE (Clade 9, Clade 10, Clade 11, and Clade 12) ([@fig:MERS-tsne]). 
+An example of this is the clear separation in t-SNE of the camel and human outbreaks concentrated in Saudi Arabia and the UAE (Clade 9, Clade 10, Clade 11, and Clade 12). 
 This suggests that t-SNE is a strong tool for viewing genetically homogeneous populations. 
 
 MDS had a linear relationship throughout while t-SNE and UMAP exhibited a piecewise linear relationship for pairs of strains that differed by no more than 100 nucleotides ([@fig:MERS-Euclidean-vs-genetic-distance]).
@@ -224,17 +224,14 @@ These results corroborate our conclusion about using t-SNE embeddings for cluste
 <iframe src="https://blab.github.io/cartography/FullLinkedChartBrushableMERS.html" style="width: 1200px; height: 935px;" frameBorder="0"></iframe>
 ![Genetic cartography of MERS strains by dimensionality reduction methods compared to inferred phylogeny.](MERS-embeddings.png){#fig:MERS-embeddings .static-embedding}
 
-<iframe src="https://blab.github.io/cartography/t-SNEInteractiveChartMERS.html" style="width: 400px; height: 400px;" frameBorder="0"></iframe>
-![Interactive t-SNE chart; zoomable with interactive tooltips](t-SNEInteractiveChart.png){#fig:MERS-tsne .static-embedding}
-
 ![Mapping between Euclidean and genetic distances for all pairs of MERS strains by dimensionality reduction method.](FullScatterplotMERS.png){#fig:MERS-Euclidean-vs-genetic-distance}
 
 ![Distribution of scaled Euclidean distances between all pairs of MERS strains by clade status and dimensionality reduction method.](FullKDEDensityMERS.png){#fig:MERS-within-and-between-group-distances}
 
 
-# Analysis of HA and NA joined genomes effects on embedding quality and accuracy
+# Analysis of HA and NA joined genomes positively effect embedding quality and accuracy
 
-While splitting gneomes at recombinant breakpoints is how epidemiologists traditionally handle recombinaton signal in evolutionary trees, because the embeddings are quantitative measures of genomic distance and does not rely on homogeneity in the population strains, we expect that adding genomic information will create a more accurate and quantitatevely stronger graph[@dudas_bedford_2019].
+While splitting genomes at recombinant breakpoints is how epidemiologists traditionally handle recombinaton signal in evolutionary trees, because the embeddings are quantitative measures of genomic distance and does not rely on homogeneity in the population strains, we expect that adding genomic information will create a more accurate and quantitatevely stronger graph[@dudas_bedford_2019].
 In both the MDS and UMAP embeddings, there is obvious improvement from the HA-only analysis to the HA and NA joint analysis. 
 There is visibly better separation of A2 and its recombinant clade A2/re in the HA and NA joint analysis over the HA only embedding in MDS, t-SNE, and UMAP. 
 PC1 in the HA and NA joint analysis seems to randomly partition closely related strains, which is due PCA's sensitivity to gaps in the alignment. 
@@ -274,9 +271,9 @@ The MCC values for the cross validation were incredibly similar to the MCC value
 This confirms that the same threshold can be used across the same type of embedding and organism for future and past populations to categorize between vs within clade relationships.
 While classifying relationships as within and between clade may not be inherently useful for classification purposes, it can be used for an exporatory analysis of how stable patterns and clade relationships in different pathogen populations over time. 
 
-![Full KDE plot for the cross validation with both the SVM and cross validation thresholds plotted](cross_validation_graph.png){#fig:KDE-cross-v}
+![Full KDE plot for the cross validation with both the SVM and cross validation thresholds plotted](KDEDensityFluHaNa.png){#fig:KDE-cross-v}
 
-![MCC values for each fold per embedding plotted against genetic distance](KDEDensityFluHaNa.png){#fig:cross-v-values}
+![MCC values for each fold per embedding plotted against genetic distance](cross_validation_graph.png){#fig:cross-v-values}
 
 # Outlier Analysis
 
@@ -385,7 +382,7 @@ The 3 different dimensionality reduction techniques are ordered below by publica
 - [t-SNE](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html)
 - [UMAP](https://umap-learn.readthedocs.io/en/latest/)
 
-The plots of the full 10 PCs for PCA and the first 6 components for MDS are available in the supplemental figures section.
+The plots of the full 10 PCs for PCA are available in the supplemental figures section.
 
 We tuned hyperparameters for t-SNE and UMAP using an exhaustive grid search, which picked the best parameters by maximizing Matthews Correlation Coefficient for the confusion matrix created from the Supported Vector Machine's classification.
 UMAP's minimum distance and nearest neighbors were tuned, and t-SNEs perplexity and learning rate were tuned.
@@ -479,17 +476,6 @@ I thank the Bedford Lab at the Fred Hutch, specifically Dr. Trevor Bedford, for 
 
 <iframe src="https://blab.github.io/cartography/FullPCABrushSupplementMERS.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
 ![PCA Full Plot - MERS](FullPCABrushSupplementMERS.png){#fig:MERS-supplement .static-embedding}
-
-### MDS Full Plot:
-
-<iframe src="https://blab.github.io/cartography/FullMDSBrushSupplementFlu.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
-![MDS Full Plot - Flu](FullMDSBrushSupplementFlu.png){#fig:flu-supplement-mds .static-embedding}
-
-<iframe src="https://blab.github.io/cartography/FullMDSBrushSupplementZika.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
-![MDS Full Plot - Zika](FullPCABrushSupplementZika.png){#fig:zika-supplement-mds .static-embedding}
-
-<iframe src="https://blab.github.io/cartography/FullMDSBrushSupplementMERS.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
-![MDS Full Plot - MERS](FullPCABrushSupplementMERS.png){#fig:MERS-supplement-mds .static-embedding}
 
 ### Bases Missing VS PC1 Plot:MERS
 
