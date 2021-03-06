@@ -32,19 +32,25 @@ ANALYSIS_ALIGN = [
 ]
 rule all:
     input:
-        expand("results/deduplicated_sequences_{analysis}.fasta", analysis=ANALYSIS_TYPE),
-        expand("results/filtered_{type}.fasta", type=ANALYSIS_TYPE),
+        expand("results/sequences_{analysis}.fasta", analysis=ANALYSIS_TYPE),
         expand("results/metadata_{analysis}.tsv", analysis=ANALYSIS_TYPE),
+        expand("results/filtered_{type}.fasta", type=ANALYSIS_TYPE),
+        expand("results/deduplicated_sequences_{analysis}.fasta", analysis=ANALYSIS_TYPE),
+
+        "results/total_sequences.fasta",
+        "results/total_metadata.tsv",
+
         expand("results/aligned_{analysis}.fasta", analysis=ANALYSIS_ALIGN),
         expand("results/distance_matrix_{analysis}.csv", analysis=ANALYSIS_ALIGN),
         expand("results/embed_mds_{analysis}.csv", analysis=ANALYSIS_ALIGN),
-        #"results/KDEDensity_mds.png",
-        #"results/total_sequences.fasta",
-        #"results/total_metadata.tsv",
-        #"../auspice/cartography_flu-outlier-h3n2-swine-human.json",
-        #"results/table.tsv",
+        
         expand("results/outliers_{analysis}.csv", analysis=["filtered", "human_swine"]),
         "results/outliers_full.csv",
+        "../auspice/cartography_flu-outlier-h3n2-swine-human.json",
+
+        #"results/KDEDensity_mds.png",  
+        
+        #"results/table.tsv",
         #"../docs/FullKDEDensityFluOutlier.png",
         #"../docs/FullScatterplotFluOutlier.png",
         #"../docs/FullLinkedChartBrushableFluOutlier.html",
@@ -74,7 +80,7 @@ files = rules.files.params
 rule parse:
     message: "Parsing fasta into sequences and metadata"
     input:
-        sequences = "data/ncbi-h3n2-human.fa" #_get_path_by_wildcards,
+        sequences = _get_path_by_wildcards,
     output:
         sequences = "results/sequences_{analysis}.fasta",
         metadata = "results/metadata_{analysis}.tsv"
@@ -119,7 +125,7 @@ def _get_group_values_by_wildcards(wildcards):
 def get_dropped_strains_by_wildcards(wildcards):
     method = wildcards.analysis
     if method in ("filtered"):
-        return "config/outliers_h3n2.txt"
+        return "config/outliers_h3n2_full.txt"
     else:
         return "config/exclude.txt"
 
@@ -134,7 +140,7 @@ rule filter:
     input:
         sequences = rules.deduplicate_sequences.output.sequences,
         metadata = rules.parse.output.metadata,
-        exclude = files.dropped_strains
+        exclude = get_dropped_strains_by_wildcards
     output:
         sequences = "results/filtered_{analysis}.fasta"
     params:
@@ -356,6 +362,7 @@ rule export:
         nt_muts = rules.ancestral.output.node_data,
         aa_muts = rules.translate.output.node_data,
         embeddings = expand("results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
+        outliers = "results/outliers_human_swine.csv"
         auspice_config = files.auspice_config,
         colors = "config/colors.tsv",
         clades = rules.clades.output.clade_data
@@ -367,7 +374,7 @@ rule export:
         augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings}\
+            --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} {input.outliers} \
             --auspice-config {input.auspice_config} \
             --colors {input.colors} \
             --output {output.auspice_tree}

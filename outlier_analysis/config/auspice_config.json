@@ -1,6 +1,16 @@
 {
     "title": "Seasonal influenza A/H3N2 phylogeny from 2016-2018",
     "colorings": [
+		{
+            "key": "X_scores",
+            "title": "LOF Scores",
+            "type": "continuous"
+        },
+		{
+            "key": "predicted_outlier_status",
+            "title": "Outlier Status",
+            "type": "categorical"
+        },
         {
             "key": "pca_label",
             "title": "PCA cluster",
