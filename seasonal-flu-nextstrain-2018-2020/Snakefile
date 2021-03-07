@@ -37,7 +37,7 @@ rule all:
         #"../docs/FullPCABrushSupplementFlu.html",
         "results/nucleotide_diversity.txt",
         #"../docs/explainedVarianceFlu.png",
-        #"results/exhaustive_grid_search.png",
+        "results/exhaustive_grid_search.png",
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha.fa",
