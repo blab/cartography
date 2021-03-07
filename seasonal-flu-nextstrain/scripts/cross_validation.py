@@ -176,16 +176,19 @@ if __name__ == "__main__":
             classifier_threshold = x_range[np.argwhere(z > 0)[-1]][0]
 
             # Use a SVM to identify an optimal threshold for genetic distances.
-            genetic_classifier = make_pipeline(
-                StandardScaler(),
-                LinearSVC(
-                    dual=False,
-                    random_state=0,
-                    class_weight={1: 5},
-                    verbose=0
-                )
+            genetic_classifier = LinearSVC(
+                dual=False,
+                random_state=0,
+                class_weight={1: 5},
+                verbose=0
             )
-            genetic_classifier.fit(squareform(training_distance_matrix).reshape(-1, 1), training_clade_status_for_pairs)
+            X = squareform(training_distance_matrix).reshape(-1, 1)
+            y = training_clade_status_for_pairs
+            genetic_classifier.fit(X, y)
+
+            x_range = np.linspace(-3, 3, 1000)
+            z = genetic_classifier.decision_function(x_range.reshape(-1, 1))
+            classifier_threshold_genetic = x_range[np.argwhere(z > 0)[-1]][0]
             
             if(list_of_embedding_strings[i] == "PCA"):
                 #performing PCA on my pandas dataframe

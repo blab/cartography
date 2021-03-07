@@ -31,7 +31,7 @@ rule all:
         "../docs/FullPCABrushSupplementFlu.html",
         #"results/nucleotide_diversity.txt",
         "../docs/explainedVarianceFlu.png",
-        "results/cross_validation_thresholds.csv"
+        "results/cross_validation_thresholds.csv",
 
 rule files:
     params:
@@ -494,7 +494,7 @@ rule cross_validation:
     output:
         output = "results/cross_validation_thresholds.csv",
         metadata = "results/cross_validation_results.csv",
-        figure = "results/cross_validation.png",
+        figure = "../docs/cross_validation_graph.png",
         total_data = "results/full_visualizations.csv"
     params:
         n_repeats = 10,
@@ -628,8 +628,6 @@ rule create_notebook_docs:
         Scatterplot = "../docs/FullScatterplotFlu.png",
         fullChart = "../docs/FullLinkedChartBrushableFlu.html",
         fullChartPNG = "../docs/flu-embeddings.png",
-        #MDS_Supplement = "../docs/FullMDSBrushSupplementFlu.html",
-        #MDS_Supplement_PNG = "../docs/FullMDSBrushSupplementFlu.png",
         PCA_Supplement = "../docs/FullPCABrushSupplementFlu.html",
         PCA_Supplement_PNG = "../docs/FullPCABrushSupplementFlu.png",
         Explained_variance_PCA = "../docs/explainedVarianceFlu.png"
@@ -649,7 +647,7 @@ rule create_cross_v_docs:
         cross_v_thresholds = "../seasonal-flu-nextstrain/results/cross_validation_thresholds.csv"
 
     output:
-        exhaustive_grid_search = "results/exhaustive_grid_search.png",
+        exhaustive_grid_search = "../exhaustive_grid_search.png",
         cross_v_data = "../docs/cross_validation_graph.png"
 
     conda: "../cartography.yml"
