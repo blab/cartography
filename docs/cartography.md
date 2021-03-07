@@ -316,6 +316,8 @@ Across all three viruses, t-SNE pulled out outbreaks as fine as groups of 4 stra
 This level of fine-tuning to groups defined by geographical introductions revealed t-SNE's ability to reference ancestral population structure in structuring the embedding. 
 Of the four embeddings, the best indicator for quantitative determination of clade status (how many relationships are preserved) was t-SNE's Euclidean distance, while genetic distance's MCC was higher than t-SNE's for MERS. 
 As genetic variance and genome length continues to increase, t-SNE continues to work well, even with added noise creating less segmented embeddings. 
+In reassorted genomes, UMAP and MDS are the strongest at showing significant change in euclidean distance based on new reassortment and recombination signal. 
+MDS was the strongest for outlier detection as well, which can be attributed to its focus on global patterns over local patterns, making it the best embedding for the upstream outlier detection tool. 
 
 There are limitations to this research. 
 The inherent flaw of these embeddings is their failure to account for likelihood of ancestry and infer ancestral relation.
