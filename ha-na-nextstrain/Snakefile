@@ -36,16 +36,16 @@ MDS_UMAP = [
 rule all:
     input:
         "results/ncbi-h3n2-ha.fasta",
-        expand("results/KDEDensity_{method}_{ha_concatenated}.png", method=KDE_METHODS, ha_concatenated=HA_CONCATENATED),
         expand("results/deduplicated_sequences_{segment}.fasta", segment=SEGMENTS),
         "results/paired_ha.fasta",
-        expand("results/aligned_{segments}.fasta", segments=SEGMENTS),
+        expand("results/aligned_{segment}.fasta", segment=SEGMENTS),
         expand("results/filtered_{segment}.fasta", segment=SEGMENTS),
         expand("results/metadata_{segment}.tsv", segment=SEGMENTS),
+        expand("results/tree_{segment}.nwk", segment=SEGMENTS),
         "results/aligned_concatenated.fasta",
         expand("results/procrustes_metadata_{mds_umap}.csv", mds_umap = MDS_UMAP),
-        expand("../auspice/cartography_flu-seasonal-h3n2-{segments}-2016-2018-reassort.json", segments=SEGMENTS),
-        expand("results/table_{segments}.tsv", segments=SEGMENTS),
+        expand("../auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json", segment=SEGMENTS),
+        expand("results/table_{segment}.tsv", segment=SEGMENTS),
         expand("results/full_KDE_metadata_{ha_concatenated}.csv", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_pca_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_mds_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
@@ -53,16 +53,15 @@ rule all:
         expand("results/embed_umap_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/procrustes_main_figure_{mds_umap}.png", mds_umap=MDS_UMAP),
         expand("results/procrustes_distance_{mds_umap}.json", mds_umap=MDS_UMAP),
+        expand("results/KDEDensity_{method}_{ha_concatenated}.png", method=KDE_METHODS, ha_concatenated=HA_CONCATENATED),
         "results/ha_concatenated_data.csv",
         "../docs/KDEDensityFluHaNa.png",
         "../docs/FullLinkedChartBrushableFluHaNa.html",
-        "../docs/FullLinkedChartBrushableFluHaNa.png",
+        "../docs/flu-embeddingsHaNa.png",
         "../docs/UMAPHaNa.html",
         "../docs/UMAPHaNa.png",
-        "../docs/MDSProcrustesHaNa.png",
         "../docs/UMAPProcrustesHaNa.png",
-        "../docs/UMAPBoxplotHaNA.png",
-        "../docs/flu-embeddingsHaNa.png"
+        "../docs/UMAPBoxplotHaNA.png"
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha-na.fa",
@@ -208,9 +207,9 @@ rule concat:
 rule tree:
     message: "Building tree"
     input:
-        alignment = "results/aligned_{segments}.fasta"
+        alignment = "results/aligned_{segment}.fasta"
     output:
-        tree = "results/tree_raw_{segments}.nwk"
+        tree = "results/tree_raw_{segment}.nwk"
     conda: "../cartography.yml"
     threads: 4
     shell:
@@ -232,11 +231,11 @@ rule refine:
         """
     input:
         tree = rules.tree.output.tree,
-        alignment = "results/aligned_{segments}.fasta",
-        metadata = "results/metadata_{segments}.tsv",
+        alignment = "results/aligned_{segment}.fasta",
+        metadata = "results/metadata_{segment}.tsv",
     output:
-        tree = "results/tree_{segments}.nwk",
-        node_data = "results/_{segments}.json"
+        tree = "results/tree_{segment}.nwk",
+        node_data = "results/_{segment}.json"
     params:
         coalescent = "opt",
         date_inference = "marginal",
@@ -265,9 +264,9 @@ rule ancestral:
     message: "Reconstructing ancestral sequences and mutations"
     input:
         tree = rules.refine.output.tree,
-        alignment = "results/aligned_{segments}.fasta"
+        alignment = "results/aligned_{segment}.fasta"
     output:
-        node_data = "results/nt_muts_{segments}.json"
+        node_data = "results/nt_muts_{segment}.json"
     params:
         inference = "joint"
     conda: "../cartography.yml"
@@ -287,7 +286,7 @@ rule translate:
         node_data = rules.ancestral.output.node_data,
         reference = files.reference
     output:
-        node_data = "results/aa_muts_{segments}.json"
+        node_data = "results/aa_muts_{segment}.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -306,7 +305,7 @@ rule clades:
         nuc_muts = rules.ancestral.output.node_data,
         clades = files.clades
     output:
-        clade_data = "results/clades_{segments}.json"
+        clade_data = "results/clades_{segment}.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -320,9 +319,9 @@ rule traits:
     message: "Inferring ancestral traits for {params.columns!s}"
     input:
         tree = rules.refine.output.tree,
-        metadata = "results/metadata_{segments}.tsv",
+        metadata = "results/metadata_{segment}.tsv",
     output:
-        node_data = "results/traits_{segments}.json",
+        node_data = "results/traits_{segment}.json",
     params:
         columns = "region country"
     conda: "../cartography.yml"
@@ -340,7 +339,7 @@ rule export:
     message: "Exporting data files for for auspice"
     input:
         tree = rules.refine.output.tree,
-        metadata = "results/metadata_{segments}.tsv",
+        metadata = "results/metadata_{segment}.tsv",
         branch_lengths = rules.refine.output.node_data,
         traits = rules.traits.output.node_data,
         nt_muts = rules.ancestral.output.node_data,
@@ -351,7 +350,7 @@ rule export:
         procrustes_distance = expand("results/procrustes_distance_{mds_umap}.json", mds_umap=MDS_UMAP),
         clades = "results/clades_ha.json"
     output:
-        auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-{segments}-2016-2018-reassort.json"
+        auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -408,7 +407,7 @@ rule tree_to_table:
     input:
         tree = rules.export.output.auspice_tree
     output:
-        table = "results/table_{segments}.tsv"
+        table = "results/table_{segment}.tsv"
     params:
         attributes = "num_date pca1 pca2 pca3 pca4 mds1 mds2 tsne_x tsne_y umap_x umap_y clade_membership pca_label mds_label umap_label t-sne_label"
     conda: "../cartography.yml"
@@ -655,34 +654,45 @@ rule create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:
         #Charts, tree:
-        node_df = "results/table_ha.tsv",
+        node_df_ha = "results/table_ha.tsv",
 
-        #pca_df = "results/embed_pca.csv",
-        #explained_variance_pca = "results/explained_variance_pca.csv",
+        pca_df_ha = "results/embed_pca_ha.csv",
+        explained_variance_pca_ha = "results/explained_variance_pca_ha.csv",
 
-        #mds_df = "results/embed_mds.csv",
+        pca_df_concatenated = "results/embed_pca_concatenated.csv",
+        explained_variance_pca_concatenated = "results/explained_variance_pca_concatenated.csv",
+
+        mds_df_ha = "results/embed_mds_ha.csv",
+        mds_df_concatenated = "results/embed_mds_concatenated.csv",
 
         #KDE Density:
 
-        #KDE_mds = "results/KDEDensity_mds.csv",
-        #KDE_mds_metadata = "results/KDEDensity_mds_metadata.csv",
+        KDE_mds_ha = "results/KDEDensity_mds_ha.csv",
+        KDE_mds_metadata_ha = "results/KDEDensity_mds_metadata_ha.csv",
 
-        #KDE_umap = "results/KDEDensity_umap.csv",
-        #KDE_umap_metadata = "results/KDEDensity_umap_metadata.csv",
+        KDE_mds_concatenated = "results/KDEDensity_mds_concatenated.csv",
+        KDE_mds_metadata_concatenated = "results/KDEDensity_mds_metadata_concatenated.csv",
 
-        #KDE_genetic = "results/KDEDensity_genetic.csv",
-        #KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv"
+        KDE_umap_ha = "results/KDEDensity_umap_ha.csv",
+        KDE_umap_metadata_ha = "results/KDEDensity_umap_metadata_ha.csv",
+
+        KDE_umap_concatenated = "results/KDEDensity_umap_concatenated.csv",
+        KDE_umap_metadata_concatenated = "results/KDEDensity_umap_metadata_concatenated.csv",
+
+        KDE_genetic_ha = "results/KDEDensity_genetic_ha.csv",
+        KDE_genetic_metadata_ha = "results/KDEDensity_genetic_metadata_ha.csv",
+
+        KDE_genetic_concatenated = "results/KDEDensity_genetic_concatenated.csv",
+        KDE_genetic_metadata_concatenated = "results/KDEDensity_genetic_metadata_concatenated.csv"
 
     output:
         KDE_density = "../docs/KDEDensityFluHaNa.png",
         fullChart = "../docs/FullLinkedChartBrushableFluHaNa.html",
-        fullChartPNG = "../docs/FullLinkedChartBrushableFluHaNa.png",
+        fullChartPNG = "../docs/flu-embeddingsHaNa.png",
         umapChart = "../docs/UMAPHaNa.html",
         umapChartPNG = "../docs/UMAPHaNa.png",
-        MDSProcrustes = "../docs/MDSProcrustesHaNa.png",
         UMAPProcrustes = "../docs/UMAPProcrustesHaNa.png",
-        UMAPBoxplot = "../docs/UMAPBoxplotHaNA.png",
-        fullChartPNG_redundant = "../docs/flu-embeddingsHaNa.png"
+        UMAPBoxplot = "../docs/UMAPBoxplotHaNA.png"
 
     conda: "../cartography.yml"
     notebook:
