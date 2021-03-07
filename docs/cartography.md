@@ -287,15 +287,15 @@ The three false negatives were environmental samples, strains that should have b
 The threshold's threshold have be further analyzed in figure 4 (LOF colored by predicted/true outlier status), where the predicted outliers are clearly separated as strains with a score higher than -6, whereas the true outliers have no clear threshold between normal and outlier strains.
 
 
-![LOF Score distribution for the filtered dataset](outlierDistributionHumanSwine.png){#fig:outlier-distance-plot}
+![LOF Score distribution for the filtered dataset](distributionLOFOutlierHumanSwine.png){#fig:outlier-distance-plot}
 
-![MDS embedding with LOF circles colored by True vs False](main_figure_human_swine.png){#fig:outlier-LOF-scores}
+![MDS embedding with LOF circles colored by True vs False](outlierMainFigure_human_swine.png){#fig:outlier-LOF-scores}
 
 Testing the outlier threshold on the full H3N2 HA flu database spanning over 40 years, almost all of the detected outliers were incredibly old (20+ years on average), close relatives to H3N2 swine influenza, environmental strains, and in the lab's exclude file. These results point to using this as an upstream tool to flag and filter potential outliers from a large set of strains without having to preliminarily build a tree.
 
-![LOF Score distribution for the full influenza H3N2 HA database](outlierDistributionFull.png){#fig:outlier-distance-plot-full}
+![LOF Score distribution for the full influenza H3N2 HA database](distributionLOFOutlierFull.png){#fig:outlier-distance-plot-full}
 
-![MDS embedding with LOF circles colored by True vs False](main_figure_full.png){#fig:outlier-LOF-scores-full}
+![MDS embedding with LOF circles colored by True vs False](outlierMainFigure_Full.png){#fig:outlier-LOF-scores-full}
 
 
 # Discussion

@@ -46,20 +46,20 @@ attribution is appreciated. Thanks, broccolini! -->
 <p>We present a novel approach to understanding relationships among viral genomes by transforming genomic data and then using dimensionality reduction methods such as PCA, MDS, t-SNE, and UMAP. We use interactive visualizations of the embeddings for a deeper exploration of patterns between the embeddings and the phylogeny. We investigate the degree to which this method can recapitulate known phylogenetic relationships for viruses whose genomes are phylogenetically tractable, as well as the scope of this approach when considering the intrinsic variety in clade definition and viral transmission (influenza H3N2 HA and Zika). We apply this method to viruses with less samples, lower quality strains, and genomes known to undergo substantial recombination (MERS) to assess how well each method is able to reconstruct previously identified biologically-meaningful clusters.</p>
 <h1 id="results">Results</h1>
 <div id="tbl:KDE_full">
-<table>
+<table style="width:100%;">
 <caption>Table 1. [All KDE values for each virus. MCC (Matthews Correlation Coefficient), FN (False Negative) FP (False Positive) TN (True Negative) TP (True Positive) accuracy(accuracy of the confusion matrix, TN + TP / total samples) threshold (z-score value the Support Vector Machine picked that best separates within vs between clade relationships) embedding (pca, mds, t-sne, or umap) between and within (z score values of the median of between clade and within clade KDE density curves, respectively)]</caption>
 <colgroup>
-<col style="width: 10%" />
-<col style="width: 6%" />
-<col style="width: 6%" />
+<col style="width: 8%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
 <col style="width: 6%" />
 <col style="width: 7%" />
 <col style="width: 6%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
 <col style="width: 9%" />
 <col style="width: 10%" />
-<col style="width: 11%" />
+<col style="width: 14%" />
+<col style="width: 13%" />
+<col style="width: 10%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -71,76 +71,76 @@ attribution is appreciated. Thanks, broccolini! -->
 <th>TP</th>
 <th>accuracy</th>
 <th>embedding</th>
-<th>between</th>
-<th>within</th>
+<th>median_between</th>
+<th>median_within</th>
 <th>threshold</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Influenza</td>
-<td>0.576</td>
-<td>11237</td>
-<td>69685</td>
-<td>516435</td>
-<td>63318</td>
-<td><pre><code> 0.878</code></pre></td>
-<td>mds</td>
-<td>0.104</td>
-<td>-1.476</td>
-<td>-0.868</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>0.604</td>
-<td>11167</td>
-<td>61032</td>
-<td>525088</td>
-<td>63388</td>
-<td><pre><code> 0.891</code></pre></td>
-<td>genetic</td>
-<td>0.11</td>
-<td>-1.418</td>
-<td>-0.88</td>
-</tr>
-<tr class="odd">
-<td></td>
-<td>0.664</td>
-<td>4796</td>
-<td>60044</td>
-<td>526076</td>
-<td>69759</td>
-<td><pre><code> 0.902</code></pre></td>
-<td>pca</td>
-<td>0.28</td>
-<td>-1.659</td>
-<td>-1.138</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>0.67</td>
-<td>1707</td>
-<td>66501</td>
-<td>519619</td>
-<td>72848</td>
-<td><pre><code> 0.897</code></pre></td>
+<td>0.68</td>
+<td>3528</td>
+<td>184565</td>
+<td>1438682</td>
+<td>211628</td>
+<td><pre><code> 0.898</code></pre></td>
 <td>umap</td>
-<td>0.172</td>
-<td>-1.481</td>
-<td>-1.048</td>
+<td><pre><code>       0.156</code></pre></td>
+<td><pre><code>     -1.519</code></pre></td>
+<td><pre><code> -1.036</code></pre></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>0.66</td>
+<td>14924</td>
+<td>171642</td>
+<td>1451605</td>
+<td>200232</td>
+<td><pre><code> 0.899</code></pre></td>
+<td>pca</td>
+<td><pre><code>       0.298</code></pre></td>
+<td><pre><code>     -1.626</code></pre></td>
+<td><pre><code> -1.102</code></pre></td>
 </tr>
 <tr class="odd">
 <td></td>
-<td>0.764</td>
-<td>4268</td>
-<td>34749</td>
-<td>551371</td>
-<td>70287</td>
-<td><pre><code> 0.941</code></pre></td>
+<td>0.59</td>
+<td>25218</td>
+<td>207483</td>
+<td>1415764</td>
+<td>189938</td>
+<td><pre><code> 0.873</code></pre></td>
+<td>genetic</td>
+<td><pre><code>       0.056</code></pre></td>
+<td><pre><code>     -1.403</code></pre></td>
+<td><pre><code> -0.862</code></pre></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>0.58</td>
+<td>35111</td>
+<td>187195</td>
+<td>1436052</td>
+<td>180045</td>
+<td><pre><code> 0.879</code></pre></td>
 <td>t-sne</td>
-<td>0.159</td>
-<td>-1.666</td>
-<td>-1.09</td>
+<td><pre><code>       0.066</code></pre></td>
+<td><pre><code>     -1.582</code></pre></td>
+<td><pre><code> -0.862</code></pre></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>0.545</td>
+<td>26674</td>
+<td>249222</td>
+<td>1374025</td>
+<td>188482</td>
+<td><pre><code> 0.85</code></pre></td>
+<td>mds</td>
+<td><pre><code>       0.046</code></pre></td>
+<td><pre><code>     -1.348</code></pre></td>
+<td><pre><code> -0.814</code></pre></td>
 </tr>
 <tr class="even">
 <td>Zika</td>
@@ -151,24 +151,11 @@ attribution is appreciated. Thanks, broccolini! -->
 <td>29273</td>
 <td><pre><code> 0.891</code></pre></td>
 <td>pca</td>
-<td>0.07</td>
-<td>-1.434</td>
-<td>-0.868</td>
+<td><pre><code>       0.07</code></pre></td>
+<td><pre><code>     -1.434</code></pre></td>
+<td><pre><code> -0.868</code></pre></td>
 </tr>
 <tr class="odd">
-<td></td>
-<td>0.42</td>
-<td>6450</td>
-<td>47231</td>
-<td>146918</td>
-<td>26202</td>
-<td><pre><code> 0.763</code></pre></td>
-<td>mds</td>
-<td>0.083</td>
-<td>-1.088</td>
-<td>-0.622</td>
-</tr>
-<tr class="even">
 <td></td>
 <td>0.54</td>
 <td>3644</td>
@@ -177,22 +164,9 @@ attribution is appreciated. Thanks, broccolini! -->
 <td>29008</td>
 <td><pre><code> 0.821</code></pre></td>
 <td>t-sne</td>
-<td>-0.201</td>
-<td>-1.094</td>
-<td>-0.736</td>
-</tr>
-<tr class="odd">
-<td></td>
-<td>0.378</td>
-<td>7830</td>
-<td>49454</td>
-<td>144695</td>
-<td>24822</td>
-<td><pre><code> 0.747</code></pre></td>
-<td>umap</td>
-<td>-0.551</td>
-<td>-0.786</td>
-<td>-0.67</td>
+<td><pre><code>      -0.201</code></pre></td>
+<td><pre><code>     -1.094</code></pre></td>
+<td><pre><code> -0.736</code></pre></td>
 </tr>
 <tr class="even">
 <td></td>
@@ -203,37 +177,50 @@ attribution is appreciated. Thanks, broccolini! -->
 <td>27044</td>
 <td><pre><code> 0.823</code></pre></td>
 <td>genetic</td>
-<td>-0.063</td>
-<td>-1.128</td>
-<td>-0.694</td>
+<td><pre><code>      -0.063</code></pre></td>
+<td><pre><code>     -1.128</code></pre></td>
+<td><pre><code> -0.694</code></pre></td>
 </tr>
 <tr class="odd">
-<td>MERS</td>
-<td>0</td>
-<td>1388</td>
-<td><pre><code>0</code></pre></td>
-<td>32803</td>
-<td><pre><code>0</code></pre></td>
-<td><pre><code> 0.959</code></pre></td>
-<td>pca</td>
-<td>-0.489</td>
-<td>-0.504</td>
-<td>nan</td>
+<td></td>
+<td>0.42</td>
+<td>6450</td>
+<td>47231</td>
+<td>146918</td>
+<td>26202</td>
+<td><pre><code> 0.763</code></pre></td>
+<td>mds</td>
+<td><pre><code>       0.083</code></pre></td>
+<td><pre><code>     -1.088</code></pre></td>
+<td><pre><code> -0.622</code></pre></td>
 </tr>
 <tr class="even">
 <td></td>
-<td>0.625</td>
-<td>234</td>
-<td>1163</td>
-<td>31640</td>
-<td>1154</td>
-<td><pre><code> 0.959</code></pre></td>
-<td>mds</td>
-<td>-0.117</td>
-<td>-1.627</td>
-<td>-1.27</td>
+<td>0.378</td>
+<td>7830</td>
+<td>49454</td>
+<td>144695</td>
+<td>24822</td>
+<td><pre><code> 0.747</code></pre></td>
+<td>umap</td>
+<td><pre><code>      -0.551</code></pre></td>
+<td><pre><code>     -0.786</code></pre></td>
+<td><pre><code> -0.67</code></pre></td>
 </tr>
 <tr class="odd">
+<td>MERS</td>
+<td>0.712</td>
+<td>197</td>
+<td>754</td>
+<td>32049</td>
+<td>1191</td>
+<td><pre><code> 0.972</code></pre></td>
+<td>genetic</td>
+<td><pre><code>       0.135</code></pre></td>
+<td><pre><code>     -1.865</code></pre></td>
+<td><pre><code> -1.42</code></pre></td>
+</tr>
+<tr class="even">
 <td></td>
 <td>0.626</td>
 <td>135</td>
@@ -242,9 +229,22 @@ attribution is appreciated. Thanks, broccolini! -->
 <td>1253</td>
 <td><pre><code> 0.953</code></pre></td>
 <td>t-sne</td>
-<td>0.02</td>
-<td>-1.526</td>
-<td>-1.372</td>
+<td><pre><code>       0.02</code></pre></td>
+<td><pre><code>     -1.526</code></pre></td>
+<td><pre><code> -1.372</code></pre></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>0.625</td>
+<td>234</td>
+<td>1163</td>
+<td>31640</td>
+<td>1154</td>
+<td><pre><code> 0.959</code></pre></td>
+<td>mds</td>
+<td><pre><code>      -0.117</code></pre></td>
+<td><pre><code>     -1.627</code></pre></td>
+<td><pre><code> -1.27</code></pre></td>
 </tr>
 <tr class="even">
 <td></td>
@@ -255,22 +255,22 @@ attribution is appreciated. Thanks, broccolini! -->
 <td>1079</td>
 <td><pre><code> 0.928</code></pre></td>
 <td>umap</td>
-<td>0.087</td>
-<td>-1.348</td>
-<td>-1.234</td>
+<td><pre><code>       0.087</code></pre></td>
+<td><pre><code>     -1.348</code></pre></td>
+<td><pre><code> -1.234</code></pre></td>
 </tr>
 <tr class="odd">
 <td></td>
-<td>0.712</td>
-<td>197</td>
-<td>754</td>
-<td>32049</td>
-<td>1191</td>
-<td><pre><code> 0.972</code></pre></td>
-<td>genetic</td>
-<td>0.135</td>
-<td>-1.865</td>
-<td>-1.42</td>
+<td>0</td>
+<td>1388</td>
+<td><pre><code> 0</code></pre></td>
+<td>32803</td>
+<td><pre><code> 0</code></pre></td>
+<td><pre><code> 0.959</code></pre></td>
+<td>pca</td>
+<td><pre><code>      -0.489</code></pre></td>
+<td><pre><code>     -0.504</code></pre></td>
+<td><pre><code>nan</code></pre></td>
 </tr>
 </tbody>
 </table>
@@ -357,17 +357,17 @@ attribution is appreciated. Thanks, broccolini! -->
 <p>We expect that MDS, with its focus on global representation of data, can be used as a tool to find outliers before creating a phylogeny. Looking at all 4 embeddings colored by outlier status, MDS clearly is the strongest indicator of outlier status using euclidean distance, seen in the stark separation of values for outlier vs non outlier distances in the distance distribution below Figure 16.</p>
 <p>In the MDS plot, the circles were determined by the size of the LOF score Figure 17. The threshold was fairly accurate at categorizing a strain as an outlier (MCC: 0.67). The outliers that were falsely identified as non-outliers by the threshold are consequently not truly outliers. The three false negatives were environmental samples, strains that should have been categorized as an outlier that the tool was able to distinguish between. The threshold’s threshold have be further analyzed in figure 4 (LOF colored by predicted/true outlier status), where the predicted outliers are clearly separated as strains with a score higher than -6, whereas the true outliers have no clear threshold between normal and outlier strains.</p>
 <figure>
-<img src="outlierDistributionHumanSwine.png" id="fig:outlier-distance-plot" alt="Figure 16. LOF Score distribution for the filtered dataset" /><figcaption aria-hidden="true">Figure 16. LOF Score distribution for the filtered dataset</figcaption>
+<img src="distributionLOFOutlierHumanSwine.png" id="fig:outlier-distance-plot" alt="Figure 16. LOF Score distribution for the filtered dataset" /><figcaption aria-hidden="true">Figure 16. LOF Score distribution for the filtered dataset</figcaption>
 </figure>
 <figure>
-<img src="main_figure_human_swine.png" id="fig:outlier-LOF-scores" alt="Figure 17. MDS embedding with LOF circles colored by True vs False" /><figcaption aria-hidden="true">Figure 17. MDS embedding with LOF circles colored by True vs False</figcaption>
+<img src="outlierMainFigure_human_swine.png" id="fig:outlier-LOF-scores" alt="Figure 17. MDS embedding with LOF circles colored by True vs False" /><figcaption aria-hidden="true">Figure 17. MDS embedding with LOF circles colored by True vs False</figcaption>
 </figure>
 <p>Testing the outlier threshold on the full H3N2 HA flu database spanning over 40 years, almost all of the detected outliers were incredibly old (20+ years on average), close relatives to H3N2 swine influenza, environmental strains, and in the lab’s exclude file. These results point to using this as an upstream tool to flag and filter potential outliers from a large set of strains without having to preliminarily build a tree.</p>
 <figure>
-<img src="outlierDistributionFull.png" id="fig:outlier-distance-plot-full" alt="Figure 18. LOF Score distribution for the full influenza H3N2 HA database" /><figcaption aria-hidden="true">Figure 18. LOF Score distribution for the full influenza H3N2 HA database</figcaption>
+<img src="distributionLOFOutlierFull.png" id="fig:outlier-distance-plot-full" alt="Figure 18. LOF Score distribution for the full influenza H3N2 HA database" /><figcaption aria-hidden="true">Figure 18. LOF Score distribution for the full influenza H3N2 HA database</figcaption>
 </figure>
 <figure>
-<img src="main_figure_full.png" id="fig:outlier-LOF-scores-full" alt="Figure 19. MDS embedding with LOF circles colored by True vs False" /><figcaption aria-hidden="true">Figure 19. MDS embedding with LOF circles colored by True vs False</figcaption>
+<img src="outlierMainFigure_Full.png" id="fig:outlier-LOF-scores-full" alt="Figure 19. MDS embedding with LOF circles colored by True vs False" /><figcaption aria-hidden="true">Figure 19. MDS embedding with LOF circles colored by True vs False</figcaption>
 </figure>
 <h1 id="discussion">Discussion</h1>
 <p>In this paper, we analyzed the usage of PCA, MDS, t-SNE, and UMAP to better understand population structure in varying types of diseases with differing clade assignments. We accomplished this by using interactive visualizations, a novel and important part of the analysis that enables a more in-depth exploration of patterns in the data that would otherwise require more technical expertise. This interactibility makes these charts, along with the public automated code pipelines and scripts from this paper, more accessible to scientists and the public.</p>
