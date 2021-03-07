@@ -252,7 +252,7 @@ PCA performed poorly in the joint analysis compared to the HA only analysis due 
 These findings affirm our expectations that full genomes are an improvement to the embeddings due to increased information about recombination and history across chromosomes, which both allow for a more holisitic representation of genomic population data than a phylogeny.
 
 
-![Tangle tree comparing the HA and NA trees for H3N2 Influenza from 2016-2018](tangleTreeHaNa.svg){#fig:tree-HaNa}
+![Tangle tree comparing the HA and NA trees for H3N2 Influenza from 2016-2018](tangleTreeHaNa.png){#fig:tree-HaNa}
 
 <iframe src="https://blab.github.io/cartography/HaNaAnalysisFinalChart.html" style="width: 1200px; height: 400px;" frameBorder="0"></iframe>
 ![Interactive full chart of all four embeddings with HA only embeddings on the top row and HA and NA embeddings on the bottom row; zoomable with interactive tooltips](HaNaAnalysisFinalChart.png){#fig:HANAFullChart .static-embedding}
