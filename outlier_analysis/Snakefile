@@ -48,16 +48,11 @@ rule all:
         "results/outliers_full.csv",
         "../auspice/cartography_flu-outlier-h3n2-swine-human.json",
 
-        #"results/KDEDensity_mds.png",  
-        
-        #"results/table.tsv",
-        #"../docs/FullKDEDensityFluOutlier.png",
-        #"../docs/FullScatterplotFluOutlier.png",
-        #"../docs/FullLinkedChartBrushableFluOutlier.html",
-        #"../docs/flu-embeddingsOutlier.png",
-        #"../docs/FullMDSBrushSupplementFluOutlier.html",
-        #"../docs/FullPCABrushSupplementFluOutlier.html",
-        #"../docs/explainedVarianceFluOutlier.png"
+        "results/KDEDensity_mds_human_swine.png",  
+        "results/table.tsv",
+        "../docs/distributionLOFOutlierFull.png",
+        "../docs/distributionLOFOutlierHumanSwine.png",
+        "../docs/KDEDensityFluOutlierHumanSwine.png"
 
 def _get_path_by_wildcards(wildcards):
     method = wildcards.analysis
@@ -227,9 +222,9 @@ rule align:
 rule tree:
     message: "Building tree"
     input:
-        alignment = "results/aligned_{analysis}.fasta"
+        alignment = "results/aligned_human_swine.fasta"
     output:
-        tree = "results/tree_raw_{analysis}.nwk"
+        tree = "results/tree_raw_human_swine.nwk"
     conda: "../cartography.yml"
     threads: 4
     shell:
@@ -250,11 +245,11 @@ rule refine:
         """
     input:
         tree = rules.tree.output.tree,
-        alignment = "results/aligned_{analysis}.fasta",
-        metadata = get_metadata_by_wildcards
+        alignment = "results/aligned_human_swine.fasta",
+        metadata = "results/total_metadata.tsv"
     output:
-        tree = "results/tree_{analysis}.nwk",
-        node_data = "results/branch_lengths_{analysis}.json"
+        tree = "results/tree_human_swine.nwk",
+        node_data = "results/branch_lengths_human_swine.json"
     params:
         coalescent = "opt",
         date_inference = "marginal",
@@ -281,7 +276,7 @@ rule ancestral:
     message: "Reconstructing ancestral sequences and mutations"
     input:
         tree = rules.refine.output.tree,
-        alignment = "results/aligned.fasta"
+        alignment = "results/aligned_human_swine.fasta"
     output:
         node_data = "results/nt_muts.json"
     params:
@@ -361,13 +356,13 @@ rule export:
         traits = rules.traits.output.node_data,
         nt_muts = rules.ancestral.output.node_data,
         aa_muts = rules.translate.output.node_data,
-        embeddings = expand("results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
-        outliers = "results/outliers_human_swine.csv"
+        embeddings = "results/embed_mds_human_swine.json",
+        outliers = "results/outliers_human_swine.json",
         auspice_config = files.auspice_config,
         colors = "config/colors.tsv",
         clades = rules.clades.output.clade_data
     output:
-        auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-outlier-2016-2018.json"
+        auspice_tree = "../auspice/cartography_flu-outlier-h3n2-swine-human.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -387,7 +382,7 @@ rule tree_to_table:
     output:
         table = "results/table.tsv"
     params:
-        attributes = "num_date pca1 pca2 pca3 pca4 mds1 mds2 tsne_x tsne_y umap_x umap_y clade_membership pca_label mds_label umap_label t-sne_label"
+        attributes = "num_date mds1 mds2 clade_membership mds_label"
     conda: "../cartography.yml"
     shell:
         """
@@ -409,85 +404,6 @@ rule create_distance_matrix:
         python3 ../notebooks/scripts/hamming_distance_from_fasta.py \
             --alignment {input.alignment} \
             --output {output.output}
-        """
-
-rule embed_pca:
-    message: "Creating the embedding (dataframe, node JSON) for PCA"
-    input:
-        alignment = rules.align.output.alignment
-    output:
-        node_data = "results/embed_pca.json",
-        dataframe = "results/embed_pca.csv",
-        figure = "results/embed_pca.pdf",
-        explained_variance = "results/explained_variance_pca.csv"
-    params:
-        components = 10
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/embed.py \
-            --alignment {input.alignment} \
-            --cluster \
-            --random-seed 314159 \
-            --output-node-data {output.node_data} \
-            --output-dataframe {output.dataframe} \
-            --output-figure {output.figure} \
-            pca \
-            --components {params.components} \
-            --explained-variance {output.explained_variance}
-        """
-
-
-rule embed_tsne:
-    message: "Creating the embedding (dataframe, node JSON) for t-SNE"
-    input:
-        distance_matrix = rules.create_distance_matrix.output.output
-    output:
-        node_data = "results/embed_t-sne.json",
-        dataframe = "results/embed_t-sne.csv",
-        figure = "results/embed_t-sne.pdf"
-    params:
-        perplexity = 25.95,
-        learning_rate = 200
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/embed.py \
-            --distance-matrix {input.distance_matrix} \
-            --cluster \
-            --random-seed 314159 \
-            --output-node-data {output.node_data} \
-            --output-dataframe {output.dataframe} \
-            --output-figure {output.figure} \
-            t-sne \
-            --perplexity {params.perplexity} \
-            --learning-rate {params.learning_rate}
-        """
-
-rule embed_umap:
-    message: "Creating the embedding (dataframe, node JSON) for UMAP"
-    input:
-        distance_matrix = rules.create_distance_matrix.output.output
-    output:
-        node_data = "results/embed_umap.json",
-        dataframe = "results/embed_umap.csv",
-        figure = "results/embed_umap.pdf"
-    params:
-        nearest_neighbors = 200,
-        min_dist = .5
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/embed.py \
-            --distance-matrix {input.distance_matrix} \
-            --cluster \
-            --random-seed 314159 \
-            --output-node-data {output.node_data} \
-            --output-dataframe {output.dataframe} \
-            --output-figure {output.figure} \
-            umap \
-            --nearest-neighbors {params.nearest_neighbors} \
-            --min-dist {params.min_dist}
         """
 
 rule embed_mds:
@@ -535,13 +451,13 @@ def _get_embedding_path_by_wildcards(wildcards):
 rule KDE_density:
     message: "creating the KDE density plot"
     input:
-        embedding = "results/embed_mds.csv",
+        embedding = "results/embed_mds_human_swine.csv",
         clades = "results/clades.json",
         metadata = "results/total_metadata.tsv"
     output:
-        figure = "results/KDEDensity_mds.png",
-        dataframe = "results/KDEDensity_mds.csv",
-        metadata = "results/KDEDensity_mds_metadata.csv"
+        figure = "results/KDEDensity_mds_human_swine.png",
+        dataframe = "results/KDEDensity_mds_human_swine.csv",
+        metadata = "results/KDEDensity_mds_metadata_human_swine.csv"
     params:
         embedding_columns = "mds1 mds2",
         differentiator_column = "outlier"
@@ -590,9 +506,10 @@ rule find_outliers:
        metadata = "results/total_metadata.tsv"
     output:
         outliers = "results/outliers_{analysis}.csv",
-        figure = "../docs/outlierMainFigureFiltered_{analysis}.png",
+        figure = "../docs/outlierMainFigure_{analysis}.png",
         LOF_figure = "../docs/LOF_figure_{analysis}.html",
-        metadata = "../docs/LOF_accuracy_{analysis}.csv"
+        metadata = "../docs/LOF_accuracy_{analysis}.csv",
+        json = "results/outliers_{analysis}.json"
     params:
         method = "MDS",
         columns = "mds1 mds2", 
@@ -607,7 +524,8 @@ rule find_outliers:
             --output-outliers {output.outliers} \
             --output-main-figure {output.figure} \
             --output-LOF-figure {output.LOF_figure} \
-            --output-metadata {output.metadata}
+            --output-metadata {output.metadata} \
+            --output-json {output.json}
         """
 
 rule find_outliers_other:
@@ -617,7 +535,7 @@ rule find_outliers_other:
        metadata = "results/metadata_full.tsv"
     output:
         outliers = "results/outliers_full.csv",
-        figure = "../docs/outlierMainFigureFull.png"
+        figure = "../docs/outlierMainFigure_Full.png"
     params:
         method = "MDS",
         columns = "mds1 mds2", 
@@ -639,47 +557,25 @@ rule create_notebook_docs:
         #Charts, tree:
         node_df = "results/table.tsv",
 
-        pca_df = "results/embed_pca.csv",
-        explained_variance_pca = "results/explained_variance_pca.csv",
+        mds_df_human_swine = "results/embed_mds_human_swine.csv",
+        mds_df_full = "results/embed_mds_full.csv",
 
-        mds_df = "results/embed_mds.csv",
+        outlier_df_human_swine = "results/outliers_human_swine.csv",
+        outlier_df_full = "results/outliers_full.csv",
 
-        #Scatterplot:
-        scatterplot_pca = "results/scatterplot_pca.csv",
-        scatterplot_pca_metadata = "results/scatterplot_pca_metadata.csv",
-
-        scatterplot_mds = "results/scatterplot_mds.csv",
-        scatterplot_mds_metadata = "results/scatterplot_mds_metadata.csv",
-
-        scatterplot_tsne = "results/scatterplot_t-sne.csv",
-        scatterplot_tsne_metadata = "results/scatterplot_t-sne_metadata.csv",
-
-        scatterplot_umap = "results/scatterplot_umap.csv",
-        scatterplot_umap_metadata = "results/scatterplot_umap_metadata.csv",
-
-        #KDE Density:
-        KDE_pca = "results/KDEDensity_pca.csv",
-        KDE_pca_metadata = "results/KDEDensity_pca_metadata.csv",
-
-        KDE_mds = "results/KDEDensity_mds.csv",
-        KDE_mds_metadata = "results/KDEDensity_mds_metadata.csv",
-
-        KDE_tsne = "results/KDEDensity_t-sne.csv",
-        KDE_tsne_metadata = "results/KDEDensity_t-sne_metadata.csv",
-
-        KDE_umap = "results/KDEDensity_umap.csv",
-        KDE_umap_metadata = "results/KDEDensity_umap_metadata.csv",
-
-        KDE_genetic = "results/KDEDensity_genetic.csv",
-        KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv",
+        #KDE Density
+        MDS_KDE_df_human_swine = "results/KDEDensity_mds_human_swine.csv",
+        MDS_KDE_metadata_df_human_swine = "results/KDEDensity_mds_metadata_human_swine.csv",
+        MDS_outlier_metadata_df_human_swine = "../docs/LOF_accuracy_human_swine.csv",
 
     output:
-        KDE_density = "../docs/KDEDensityFluOutlier.png",
-        distribution = "../docs/distributionLOFOutlier.png"
+        distributionFull = "../docs/distributionLOFOutlierFull.png",
+        distributionHumanSwine = "../docs/distributionLOFOutlierHumanSwine.png",
+        KDE_densityHumanSwine = "../docs/KDEDensityFluOutlierHumanSwine.png"
 
     conda: "../cartography.yml"
     notebook:
-        "../notebooks/Outlier.ipynb"
+        "Outlier.ipynb"
 
 rule clean:
     message: "Removing directories: {params}"

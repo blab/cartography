@@ -1,6 +1,7 @@
 import argparse
 import altair as alt
 from altair_saver import save
+from augur.utils import write_json
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
@@ -30,6 +31,7 @@ if __name__ == "__main__":
     parser.add_argument("--output-main-figure", help="PNG with outlier circles describring the LOF score of the points in the graph")
     parser.add_argument("--output-LOF-figure", help="PNG with LOF distances colored by outlier and predicted outlier status")
     parser.add_argument("--output-metadata", help="the path where the outlier accuracy information should be saved. This will only work if both find-outlier and true-outliers are defined.")
+    parser.add_argument("--output-json", help="the path for json file of the LOF data for the tree")
 
     args = parser.parse_args()
 
@@ -66,7 +68,7 @@ if __name__ == "__main__":
         
         estimated_outlier_status = np.where(X_scores < classifier_threshold, -1, 1)
 
-        embedding_df["predicted_outlier_status"] = estimated_outlier_status
+        embedding_df["predicted_outlier_status"] = [float(i) for i in estimated_outlier_status]
 
         embedding_df["predicted_LOF_outlier_status"] = predicted
 
@@ -87,6 +89,11 @@ if __name__ == "__main__":
         
 
         embedding_df.to_csv(args.output_outliers, index=False)
+
+        if args.output_json is not None:
+            embedding_df.index = embedding_df["strain"]
+            embedding_dict = embedding_df[["X_scores", "predicted_outlier_status", "mds_label"]].transpose().to_dict()
+            write_json({"nodes": embedding_dict}, args.output_json)
 
     
 

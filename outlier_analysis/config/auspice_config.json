@@ -9,7 +9,7 @@
 		{
             "key": "predicted_outlier_status",
             "title": "Outlier Status",
-            "type": "categorical"
+            "type": "continuous"
         },
         {
             "key": "pca_label",
@@ -186,6 +186,8 @@
       "mds_label",
       "t-sne_label",
       "umap_label",
+	  "X_scores",
+	  "predicted_outlier_status",
       "clade_membership",
       "region",
       "country"
