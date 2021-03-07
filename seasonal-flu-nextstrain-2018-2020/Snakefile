@@ -37,7 +37,7 @@ rule all:
         #"../docs/FullPCABrushSupplementFlu.html",
         "results/nucleotide_diversity.txt",
         #"../docs/explainedVarianceFlu.png",
-        "results/exhaustive_grid_search.png",
+        "../docs/exhaustive_grid_search.png",
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha.fa",
@@ -455,7 +455,7 @@ rule exhaustive_grid_search:
     output:
         output = "results/best_values.txt",
         metadata = "results/grid_search.csv",
-        figure = "results/exhaustive_grid_search.png"
+        figure = "../docs/exhaustive_grid_search.png"
     params:
         n_repeats = 10,
         perplexity = "15 30 100",
