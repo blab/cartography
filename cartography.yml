@@ -26,6 +26,7 @@ dependencies:
   - snp-sites
   - python-chromedriver-binary
   - reportlab
+  - wget
   - pip:
     - statsmodels
     - statistics
