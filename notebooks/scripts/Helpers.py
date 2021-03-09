@@ -185,7 +185,8 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
                 "date:Q",
                 scale=alt.Scale(
                     domain=(dataFrame["date"].min() - 0.2, dataFrame["date"].max() + 0.2)),
-                title="Date"
+                title="Date",
+                axis=alt.Axis(labels=False, ticks=False)
             ),
             y=alt.Y(
                 "y:Q",
@@ -201,7 +202,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
                 break
             chart = base.mark_circle(size=60).encode(
                 x=alt.X(list_of_data[i], title=list_of_titles[i]),
-                y=alt.X(list_of_data[i + 1], title=list_of_titles[i + 1]),
+                y=alt.X(list_of_data[i + 1], title=list_of_titles[i + 1], axis=alt.Axis(labels=False, ticks=False)),
                 color=alt.condition(brush, if_false=alt.ColorValue('gray'), if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_))),
                 tooltip=ToolTip
             ).add_selection(

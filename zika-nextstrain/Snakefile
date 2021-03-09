@@ -427,7 +427,7 @@ rule embed_mds:
         dataframe = "results/embed_mds.csv",
         figure = "results/embed_mds.pdf"
     params:
-        components = 2
+        components = 10
     conda: "../cartography.yml"
     shell:
         """
@@ -445,7 +445,7 @@ rule embed_mds:
 def _get_embedding_columns_by_wildcards(wildcards):
     method = wildcards.method.replace("-", "")
 
-    if method in ("pca", "mds"):
+    if method in ("pca"):
         return f"{method}1 {method}2 {method}3 {method}4"
     else:
         return f"{method}_x {method}_y"

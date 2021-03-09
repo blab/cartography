@@ -143,7 +143,7 @@ if __name__ == "__main__":
     median_between = np.median(KDE_df.query("clade_status == 0")["scaled_distance"])
 
     # Create KDE plot with threshold information from cross-v if applicable
-    if args.cross_v_values is not None and args.method != "genetic":
+    if args.cross_v_values is not None:
         cross_v_values = pd.read_csv(args.cross_v_values, index_col=0)
 
         cross_v_values.replace({'PCA' : 'pca', 'MDS': 'mds', 't-SNE': 't-sne', "UMAP": "umap"}, inplace=True, regex=True)
@@ -162,7 +162,7 @@ if __name__ == "__main__":
             metadata_df = pd.DataFrame([[matthews_cc_cross_v, threshold, args.method, confusion_matrix_cross_v[0][0], confusion_matrix_cross_v[1][0], confusion_matrix_cross_v[1][1], confusion_matrix_cross_v[0][1]]], columns=["MCC", "threshold", "embedding", "TN", "FN", "TP", "FP"]).round(3)
             metadata_df.to_csv(args.output_metadata_cross_v, index=False)
             
-        if args.cross_v_values is not None and args.method != "genetic":
+        if args.cross_v_values is not None:
             metadata_df["matthews_cc_cross_v"] = matthews_cc_cross_v
             metadata_df["TN_cross_v"] = confusion_matrix_val[0][0]
             metadata_df["FN_cross_v"] = confusion_matrix_val[1][0]

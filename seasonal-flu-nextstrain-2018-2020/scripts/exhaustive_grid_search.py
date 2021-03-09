@@ -56,7 +56,8 @@ if __name__ == "__main__":
     }
     tuned_parameters_TSNE = {
         "perplexity": args.perplexity, #[15, 30, 100],
-        "learning_rate": args.learning_rate #[100.0, 200.0, 500.0, 1000.0]
+        "learning_rate": args.learning_rate, #[100.0, 200.0, 500.0, 1000.0],
+        "square_distances" : [True]
     }
 
     tuned_parameter_values.append(tuned_parameters_TSNE)
@@ -75,17 +76,20 @@ if __name__ == "__main__":
     # reading in the distance matrix and node data
 
     distance_matrix = pd.read_csv(args.distance_matrix, index_col=0)
-    print(distance_matrix)
-    sequence_names = distance_matrix.index.values.tolist() 
-    distance_matrix.reset_index(drop=True)
-    distance_matrix = distance_matrix.to_numpy()
+    sequence_names = distance_matrix.index.values.tolist()
 
-    node_df = pd.read_csv(args.node_data, sep="\t")
-    clade_annotations = node_df[["strain", "clade_membership"]]
+    clade_annotations = pd.read_csv(args.node_data, sep="\t")
+    clade_annotations = clade_annotations[["strain", "clade_membership"]]
+    #clade_annotations = clade_annotations.merge(pd.DataFrame(sequence_names, columns=["strain"]), on="strain")
     
-    #sequence_names = node_df["strain"].values.tolist()
-    print(len(sequence_names))
-    print(len(distance_matrix))
+    distance_matrix.columns = distance_matrix.index
+    indices_to_drop = distance_matrix[~distance_matrix.index.isin(clade_annotations["strain"])].dropna(how = 'all')
+    distance_matrix = distance_matrix[distance_matrix.index.isin(clade_annotations["strain"])].dropna(how = 'all')
+    distance_matrix = distance_matrix.drop(indices_to_drop.index, axis=1)
+    sequence_names = distance_matrix.index.values.tolist()
+    distance_matrix = distance_matrix.to_numpy()
+    #sequence_names = clade_annotations["strain"].values.tolist()
+    
     random_state = 12883823
     rkf = RepeatedKFold(n_splits=2, n_repeats=args.n_repeats, random_state=random_state)
 

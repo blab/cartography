@@ -56,6 +56,7 @@ if __name__ == "__main__":
         "metric": "precomputed",
         "perplexity": 30,
         "learning_rate": 500.0,
+        "square_distances" : True
     }
     default_tuned_values.append(embedding_parameters)
 
@@ -81,7 +82,6 @@ if __name__ == "__main__":
     # reading in the distance matrix and node data
  
     distance_matrix = pd.read_csv(args.distance_matrix, index_col=0)
-    print(distance_matrix)
     distance_matrix.reset_index(drop=True)
     distance_matrix = distance_matrix.to_numpy()
 
@@ -99,8 +99,6 @@ if __name__ == "__main__":
             sequences_by_name[sequence.id] = str(sequence.seq)
 
     sequence_names_val = list(sequences_by_name.keys())
-    print(sequence_names_val)
-    print(len(sequence_names_val))
     #import pdb; pdb.set_trace()
     assert(len(sequence_names_val) == len(sequence_names))
 
@@ -182,7 +180,7 @@ if __name__ == "__main__":
                 class_weight={1: 5},
                 verbose=0
             )
-            X = squareform(training_distance_matrix).reshape(-1, 1)
+            X = scaler.fit_transform(np.reshape([float(x) for x in squareform(training_distance_matrix)], (-1, 1)))
             y = training_clade_status_for_pairs
             genetic_classifier.fit(X, y)
 
@@ -263,7 +261,8 @@ if __name__ == "__main__":
             print(method_dict)
             total_list_methods.append(method_dict)
             i = i + 1
-        total_list_methods.append({"method":"genetic", "matthews_cc": matthews_cc_val_genetic})
+        total_list_methods.append({"method":"genetic", "matthews_cc": matthews_cc_val_genetic, "threshold": classifier_threshold_genetic})
+        print({"method":"genetic", "matthews_cc": matthews_cc_val_genetic, "threshold": classifier_threshold_genetic})
         k = k + 1
 
 
@@ -303,7 +302,7 @@ if __name__ == "__main__":
     if args.output is not None:
         list_of_best_method = []
         list_of_best_threshold = []
-        for i in ['PCA', 'MDS', 't-SNE', 'UMAP']:
+        for i in ['PCA', 'MDS', 't-SNE', 'UMAP', 'genetic']:
             df = cross_v_info[cross_v_info.method == i].dropna(how="all")
             print(df)
             val = np.average(df["threshold"].values.tolist())

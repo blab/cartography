@@ -1,5 +1,5 @@
 wildcard_constraints:
-    method="(pca|mds|t-sne|umap)"
+    method="(pca|mds|t-sne|umap|genetic)"
 
 EMBEDDING_METHODS = [
     "pca",
@@ -12,9 +12,9 @@ KDE_METHODS = [
     "pca",
     "mds",
     "t-sne",
-    "umap"]#,
-    #"genetic"
-#]
+    "umap",#]#,
+    "genetic"
+]
 TYPE = [
     "cross_v",
     "SVM"
@@ -23,8 +23,8 @@ TYPE = [
 rule all:
     input:
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        expand("results/KDEDensity_{method}.png", method=EMBEDDING_METHODS),
-        #"../auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json",
+        expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
+        "../auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json",
         "results/table.tsv",
         expand("results/full_KDE_metadata_{type}.csv",type=TYPE),
         "results/full_Scatterplot_metadata.csv",
@@ -38,6 +38,7 @@ rule all:
         "results/nucleotide_diversity.txt",
         #"../docs/explainedVarianceFlu.png",
         "../docs/exhaustive_grid_search.png",
+        "../docs/FullKDEDensityFluCrossV.png"
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha.fa",
@@ -285,7 +286,7 @@ rule export:
         colors = "config/colors.tsv",
         clades = rules.clades.output.clade_data
     output:
-        auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json"
+        auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -604,56 +605,35 @@ rule create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:
         #Charts, tree:
-        node_df = "results/table.tsv",
-
-        pca_df = "results/embed_pca.csv",
-        explained_variance_pca = "results/explained_variance_pca.csv",
-
-        mds_df = "results/embed_mds.csv",
-
-        #Scatterplot:
-        scatterplot_pca = "results/scatterplot_pca.csv",
-        scatterplot_pca_metadata = "results/scatterplot_pca_metadata.csv",
-
-        scatterplot_mds = "results/scatterplot_mds.csv",
-        scatterplot_mds_metadata = "results/scatterplot_mds_metadata.csv",
-
-        scatterplot_tsne = "results/scatterplot_t-sne.csv",
-        scatterplot_tsne_metadata = "results/scatterplot_t-sne_metadata.csv",
-
-        scatterplot_umap = "results/scatterplot_umap.csv",
-        scatterplot_umap_metadata = "results/scatterplot_umap_metadata.csv",
+        cross_v_thresholds = "../seasonal-flu-nextstrain/results/cross_validation_thresholds.csv",
 
         #KDE Density:
         KDE_pca = "results/KDEDensity_pca.csv",
-        KDE_pca_metadata = "results/KDEDensity_pca_metadata.csv",
+        KDE_pca_metadata_SVM = "results/KDEDensity_pca_metadata_SVM.csv",
+        KDE_pca_metadata_cross_v = "results/KDEDensity_pca_metadata_cross_v.csv",
 
         KDE_mds = "results/KDEDensity_mds.csv",
-        KDE_mds_metadata = "results/KDEDensity_mds_metadata.csv",
+        KDE_mds_metadata_SVM = "results/KDEDensity_mds_metadata_SVM.csv",
+        KDE_mds_metadata_cross_v = "results/KDEDensity_mds_metadata_cross_v.csv",
+
 
         KDE_tsne = "results/KDEDensity_t-sne.csv",
-        KDE_tsne_metadata = "results/KDEDensity_t-sne_metadata.csv",
+        KDE_tsne_metadata_SVM = "results/KDEDensity_t-sne_metadata_SVM.csv",
+        KDE_tsne_metadata_cross_v = "results/KDEDensity_t-sne_metadata_cross_v.csv",
 
         KDE_umap = "results/KDEDensity_umap.csv",
-        KDE_umap_metadata = "results/KDEDensity_umap_metadata.csv",
+        KDE_umap_metadata_SVM = "results/KDEDensity_umap_metadata_SVM.csv",
+        KDE_umap_metadata_cross_v = "results/KDEDensity_umap_metadata_cross_v.csv",
 
         KDE_genetic = "results/KDEDensity_genetic.csv",
-        KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv",
+        KDE_genetic_metadata_SVM = "results/KDEDensity_genetic_metadata_SVM.csv"
 
     output:
-        KDE_density = "../docs/FullKDEDensityFlu.png",
-        Scatterplot = "../docs/FullScatterplotFlu.png",
-        fullChart = "../docs/FullLinkedChartBrushableFlu.html",
-        fullChartPNG = "../docs/flu-embeddings.png",
-        MDS_Supplement = "../docs/FullMDSBrushSupplementFlu.html",
-        MDS_Supplement_PNG = "../docs/FullMDSBrushSupplementFlu.png",
-        PCA_Supplement = "../docs/FullPCABrushSupplementFlu.html",
-        PCA_Supplement_PNG = "../docs/FullPCABrushSupplementFlu.png",
-        Explained_variance_PCA = "../docs/explainedVarianceFlu.png"
+        KDE_density = "../docs/FullKDEDensityFluCrossV.png",
 
     conda: "../cartography.yml"
     notebook:
-        "2019-08-08FinalNotebookFlu.ipynb"
+        "2021-03-09Notebook.ipynb"
 
 rule clean:
     message: "Removing directories: {params}"
