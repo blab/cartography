@@ -13,11 +13,20 @@ KDE_METHODS = [
     "genetic"
 ]
 
-
+INTERNAL_NODE = [
+    "ancestral",
+    "sequences"
+]
 rule all:
     input:
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
         expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
+        expand("results/distance_matrix_{ancestral}.csv", ancestral=INTERNAL_NODE),
+        expand("results/embed_pca_{ancestral}.pdf", ancestral=INTERNAL_NODE),
+        expand("results/embed_t-sne_{ancestral}.pdf", ancestral=INTERNAL_NODE),
+        expand("results/embed_umap_{ancestral}.pdf", ancestral=INTERNAL_NODE),
+        expand("results/embed_mds_{ancestral}.pdf", ancestral=INTERNAL_NODE),
+        expand("results/clusters_{method}.csv", method=EMBEDDING_METHODS),
         "../auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json",
         "results/table.tsv",
         "results/full_KDE_metadata.csv",
@@ -27,7 +36,6 @@ rule all:
         "../docs/FullScatterplotFlu.png",
         "../docs/FullLinkedChartBrushableFlu.html",
         "../docs/flu-embeddings.png",
-        #"../docs/FullMDSBrushSupplementFlu.html",
         "../docs/FullPCABrushSupplementFlu.html",
         #"results/nucleotide_diversity.txt",
         "../docs/explainedVarianceFlu.png",
@@ -122,7 +130,7 @@ rule align:
         sequences = rules.filter.output.sequences,
         reference = files.reference
     output:
-        alignment = "results/aligned.fasta"
+        alignment = "results/aligned_sequences.fasta"
     conda: "../cartography.yml"
     threads: 4
     shell:
@@ -195,7 +203,8 @@ rule ancestral:
         tree = rules.refine.output.tree,
         alignment = rules.align.output.alignment
     output:
-        node_data = "results/nt_muts.json"
+        node_data = "results/nt_muts.json",
+        sequences = "results/aligned_ancestral.fasta"
     params:
         inference = "joint"
     conda: "../cartography.yml"
@@ -205,6 +214,7 @@ rule ancestral:
             --tree {input.tree} \
             --alignment {input.alignment} \
             --output-node-data {output.node_data} \
+            --output-sequences {output.sequences} \
             --inference {params.inference}
         """
 
@@ -272,7 +282,7 @@ rule export:
         traits = rules.traits.output.node_data,
         nt_muts = rules.ancestral.output.node_data,
         aa_muts = rules.translate.output.node_data,
-        embeddings = expand("results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
+        embeddings = expand("results/embed_{embedding}_{ancestral}.json", embedding=EMBEDDING_METHODS, ancestral=INTERNAL_NODE),
         auspice_config = files.auspice_config,
         colors = "config/colors.tsv",
         clades = rules.clades.output.clade_data
@@ -310,7 +320,7 @@ rule tree_to_table:
 rule nucleotide_diversity:
     message: "finding the nucleotide diversity of an aligned FASTA file"
     input:
-        alignment = "results/aligned.fasta"
+        alignment = "results/aligned_sequences.fasta"
     output:
         output = "results/nucleotide_diversity.txt"
     conda: "../cartography.yml"
@@ -324,9 +334,9 @@ rule nucleotide_diversity:
 rule create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
-        alignment = "results/aligned.fasta"
+        alignment = "results/aligned_{ancestral}.fasta"
     output:
-        output = "results/distance_matrix.csv"
+        output = "results/distance_matrix_{ancestral}.csv"
     conda: "../cartography.yml"
     shell:
         """
@@ -338,12 +348,12 @@ rule create_distance_matrix:
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
-        alignment = rules.align.output.alignment
+        alignment = "results/aligned_{ancestral}.fasta"
     output:
-        node_data = "results/embed_pca.json",
-        dataframe = "results/embed_pca.csv",
-        figure = "results/embed_pca.pdf",
-        explained_variance = "results/explained_variance_pca.csv"
+        node_data = "results/embed_pca_{ancestral}.json",
+        dataframe = "results/embed_pca_{ancestral}.csv",
+        figure = "results/embed_pca_{ancestral}.pdf",
+        explained_variance = "results/explained_variance_pca_{ancestral}.csv"
     params:
         components = 10
     conda: "../cartography.yml"
@@ -365,11 +375,11 @@ rule embed_pca:
 rule embed_tsne:
     message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output
+        distance_matrix = "results/distance_matrix_{ancestral}.csv"
     output:
-        node_data = "results/embed_t-sne.json",
-        dataframe = "results/embed_t-sne.csv",
-        figure = "results/embed_t-sne.pdf"
+        node_data = "results/embed_t-sne_{ancestral}.json",
+        dataframe = "results/embed_t-sne_{ancestral}.csv",
+        figure = "results/embed_t-sne_{ancestral}.pdf"
     params:
         perplexity = 25.95,
         learning_rate = 200
@@ -391,11 +401,11 @@ rule embed_tsne:
 rule embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output
+        distance_matrix = "results/distance_matrix_{ancestral}.csv"
     output:
-        node_data = "results/embed_umap.json",
-        dataframe = "results/embed_umap.csv",
-        figure = "results/embed_umap.pdf"
+        node_data = "results/embed_umap_{ancestral}.json",
+        dataframe = "results/embed_umap_{ancestral}.csv",
+        figure = "results/embed_umap_{ancestral}.pdf"
     params:
         nearest_neighbors = 200,
         min_dist = .5
@@ -417,11 +427,11 @@ rule embed_umap:
 rule embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output
+        distance_matrix = "results/distance_matrix_{ancestral}.csv"
     output:
-        node_data = "results/embed_mds.json",
-        dataframe = "results/embed_mds.csv",
-        figure = "results/embed_mds.pdf"
+        node_data = "results/embed_mds_{ancestral}.json",
+        dataframe = "results/embed_mds_{ancestral}.csv",
+        figure = "results/embed_mds_{ancestral}.pdf"
     params:
         components = 2
     conda: "../cartography.yml"
@@ -448,6 +458,30 @@ def _get_embedding_columns_by_wildcards(wildcards):
     else:
         return f"{method}_x {method}_y"
 
+
+rule cluster_embeddings:
+    message: "assigning HDBSCAN clusters to the embeddings"
+    input:
+        embedding_dataframe = "results/embed_{method}_sequences.csv",
+        threshold_dataframe = "results/full_KDE_metadata.csv",
+    output:
+        dataframe = "results/clusters_{method}.csv"
+        #figure = "results/figures_HDBSCAN_{method}.png"
+    params:
+        columns = _get_embedding_columns_by_wildcards,
+        threshold_column = "threshold",
+        method = "{method}"
+    conda: "../cartograpy.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/cluster_results.py \
+            --method {params.method} \
+            --embedding {input.embedding_dataframe} \
+            --columns {params.columns} \
+            --threshold-information {input.threshold_dataframe} \
+            --column-threshold {params.threshold_column} \
+            --output {output.dataframe} \
+        """
 
 rule scatterplot:
     message: "Creating the scatterplot (PNG, dataframe)"
@@ -488,14 +522,14 @@ def _get_embedding_path_by_wildcards(wildcards):
 rule cross_validation:
     message: "do cross validation test to find best distance thresholds per method for between and within relationship status"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output,
-        alignment = rules.align.output.alignment,
+        distance_matrix = "results/distance_matrix_sequences.csv",
+        alignment = "results/aligned_sequences.fasta",
         node_data = rules.tree_to_table.output.table
     output:
         output = "results/cross_validation_thresholds.csv",
         metadata = "results/cross_validation_results.csv",
         figure = "../docs/cross_validation_graph.png",
-        total_data = "results/full_visualizations.csv"
+        #total_data = "results/full_visualizations.csv"
     params:
         n_repeats = 10,
     conda: "../cartography.yml"
@@ -509,7 +543,6 @@ rule cross_validation:
             --output {output.output} \
             --output-metadata {output.metadata} \
             --output-figure {output.figure} \
-            --output-total-data {output.total_data}
         """
 
 rule KDE_density:
