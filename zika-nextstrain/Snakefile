@@ -1,3 +1,7 @@
+wildcard_constraints:
+    method="(pca|mds|t-sne|umap|genetic)",
+    ancestral="(ancestral|sequences)"
+
 EMBEDDING_METHODS = [
     "pca",
     "mds",
@@ -13,14 +17,24 @@ KDE_METHODS = [
     "genetic"
 ]
 
+INTERNAL_NODE = [
+    "ancestral",
+    "sequences"
+]
+
 rule all:
     input:
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
         expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
+        expand("results/distance_matrix_{ancestral}.csv", ancestral=INTERNAL_NODE),
+        expand("results/embed_pca_{ancestral}.pdf", ancestral=INTERNAL_NODE),
+        expand("results/embed_t-sne_{ancestral}.pdf", ancestral=INTERNAL_NODE),
+        expand("results/embed_umap_{ancestral}.pdf", ancestral=INTERNAL_NODE),
+        expand("results/embed_mds_{ancestral}.pdf", ancestral=INTERNAL_NODE),
         "results/table.tsv",
         "results/full_KDE_metadata.csv",
         "results/full_Scatterplot_metadata.csv",
-        "results/imputed_fasta.fasta",
+        expand("results/imputed_{ancestral}.fasta",ancestral=INTERNAL_NODE),
         "../docs/FullKDEDensityZika.png",
         "../docs/FullScatterplotZika.png",
         "../docs/FullLinkedChartBrushableZika.html",
@@ -117,15 +131,18 @@ rule align:
         sequences = rules.filter.output.sequences,
         reference = files.reference
     output:
-        alignment = "results/aligned.fasta"
+        alignment = "results/aligned_sequences.fasta"
     conda: "../cartography.yml"
+    threads: 4
     shell:
         """
         augur align \
             --sequences {input.sequences} \
             --reference-sequence {input.reference} \
             --output {output.alignment} \
-            --fill-gaps
+            --fill-gaps \
+            --remove-reference \
+            --nthreads {threads}
         """
 
 rule tree:
@@ -178,13 +195,15 @@ rule refine:
             --clock-filter-iqd {params.clock_filter_iqd} \
         """
 
+
 rule ancestral:
     message: "Reconstructing ancestral sequences and mutations"
     input:
         tree = rules.refine.output.tree,
-        alignment = rules.align.output
+        alignment = rules.align.output.alignment
     output:
-        node_data = "results/nt_muts.json"
+        node_data = "results/nt_muts.json",
+        sequences = "results/aligned_ancestral.fasta"
     params:
         inference = "joint"
     conda: "../cartography.yml"
@@ -194,8 +213,10 @@ rule ancestral:
             --tree {input.tree} \
             --alignment {input.alignment} \
             --output-node-data {output.node_data} \
+            --output-sequences {output.sequences} \
             --inference {params.inference}
         """
+
 
 rule translate:
     message: "Translating amino acid sequences"
@@ -295,13 +316,28 @@ rule tree_to_table:
             --include-internal-nodes \
             --attributes {params.attributes}
         """
+
+rule nucleotide_diversity:
+    message: "finding the nucleotide diversity of an aligned FASTA file"
+    input:
+        alignment = "results/aligned_sequences.fasta"
+    output:
+        output = "results/nucleotide_diversity.txt"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/nucleotide_diversity.py \
+            --alignment {input.alignment} \
+            --output {output.output}
+        """
+
 rule impute_data:
     message: "creating an imputed dataframe/fasta file"
     input:
-        alignment = rules.align.output.alignment
+        alignment = "results/aligned_{ancestral}.fasta"
     output:
-        dataframe = "results/imputed_dataframe.csv",
-        fasta = "results/imputed_fasta.fasta"
+        dataframe = "results/imputed_{ancestral}.csv",
+        fasta = "results/imputed_{ancestral}.fasta"
     conda: "../cartography.yml"
     shell:
         """
@@ -314,9 +350,9 @@ rule impute_data:
 rule create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
-        alignment = rules.align.output.alignment
+        alignment = "results/imputed_{ancestral}.fasta"
     output:
-        output = "results/distance_matrix.csv"
+        output = "results/distance_matrix_{ancestral}.csv"
     conda: "../cartography.yml"
     shell:
         """
@@ -325,30 +361,15 @@ rule create_distance_matrix:
             --output {output.output}
         """
 
-rule nucleotide_diversity:
-    message: "finding the nucleotide diversity of an aligned FASTA file"
-    input:
-        alignment = "results/aligned.fasta"
-    output:
-        output = "results/nucleotide_diversity.txt"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/nucleotide_diversity.py \
-            --alignment {input.alignment} \
-            --output {output.output}
-        """
-
-
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
-        alignment = rules.impute_data.output.fasta
+        alignment = "results/imputed_{ancestral}.fasta"
     output:
-        node_data = "results/embed_pca.json",
-        dataframe = "results/embed_pca.csv",
-        figure = "results/embed_pca.pdf",
-        explained_variance = "results/explained_variance_pca.csv"
+        node_data = "results/embed_pca_{ancestral}.json",
+        dataframe = "results/embed_pca_{ancestral}.csv",
+        figure = "results/embed_pca_{ancestral}.pdf",
+        explained_variance = "results/explained_variance_pca_{ancestral}.csv"
     params:
         components = 10
     conda: "../cartography.yml"
@@ -366,14 +387,15 @@ rule embed_pca:
             --explained-variance {output.explained_variance}
         """
 
+
 rule embed_tsne:
     message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output
+        distance_matrix = "results/distance_matrix_{ancestral}.csv"
     output:
-        node_data = "results/embed_t-sne.json",
-        dataframe = "results/embed_t-sne.csv",
-        figure = "results/embed_t-sne.pdf"
+        node_data = "results/embed_t-sne_{ancestral}.json",
+        dataframe = "results/embed_t-sne_{ancestral}.csv",
+        figure = "results/embed_t-sne_{ancestral}.pdf"
     params:
         perplexity = 25.95,
         learning_rate = 200
@@ -395,11 +417,11 @@ rule embed_tsne:
 rule embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output
+        distance_matrix = "results/distance_matrix_{ancestral}.csv"
     output:
-        node_data = "results/embed_umap.json",
-        dataframe = "results/embed_umap.csv",
-        figure = "results/embed_umap.pdf"
+        node_data = "results/embed_umap_{ancestral}.json",
+        dataframe = "results/embed_umap_{ancestral}.csv",
+        figure = "results/embed_umap_{ancestral}.pdf"
     params:
         nearest_neighbors = 200,
         min_dist = .5
@@ -421,13 +443,13 @@ rule embed_umap:
 rule embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output
+        distance_matrix = "results/distance_matrix_{ancestral}.csv"
     output:
-        node_data = "results/embed_mds.json",
-        dataframe = "results/embed_mds.csv",
-        figure = "results/embed_mds.pdf"
+        node_data = "results/embed_mds_{ancestral}.json",
+        dataframe = "results/embed_mds_{ancestral}.csv",
+        figure = "results/embed_mds_{ancestral}.pdf"
     params:
-        components = 10
+        components = 2
     conda: "../cartography.yml"
     shell:
         """
@@ -447,6 +469,8 @@ def _get_embedding_columns_by_wildcards(wildcards):
 
     if method in ("pca"):
         return f"{method}1 {method}2 {method}3 {method}4"
+    if method in ("mds"):
+        return f"{method}1 {method}2"
     else:
         return f"{method}_x {method}_y"
 
@@ -454,8 +478,8 @@ def _get_embedding_columns_by_wildcards(wildcards):
 rule scatterplot:
     message: "Creating the scatterplot (PNG, dataframe)"
     input:
-        distance_matrix = "results/distance_matrix.csv",
-        embedding = "results/embed_{method}.csv",
+        distance_matrix = "results/distance_matrix_sequences.csv",
+        embedding = "results/embed_{method}_sequences.csv",
     output:
         figure = "results/scatterplot_{method}.png",
         dataframe = "results/scatterplot_{method}.csv",
@@ -483,9 +507,9 @@ def _get_embedding_path_by_wildcards(wildcards):
     method = wildcards.method
 
     if method in ("pca", "mds", "t-sne", "umap"):
-        return f"results/embed_{method}.csv"
+        return f"results/embed_{method}_sequences.csv"
     else:
-        return "results/distance_matrix.csv"
+        return "results/distance_matrix_sequences.csv"
 
 rule KDE_density:
     message: "creating the KDE density plot"

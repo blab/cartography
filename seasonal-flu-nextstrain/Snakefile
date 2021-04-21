@@ -27,6 +27,7 @@ rule all:
         expand("results/embed_umap_{ancestral}.pdf", ancestral=INTERNAL_NODE),
         expand("results/embed_mds_{ancestral}.pdf", ancestral=INTERNAL_NODE),
         expand("results/clusters_{method}.csv", method=EMBEDDING_METHODS),
+        "results/aligned_ancestral.fasta",
         "../auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json",
         "results/table.tsv",
         "results/full_KDE_metadata.csv",
