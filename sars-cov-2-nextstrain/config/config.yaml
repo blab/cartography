@@ -9,7 +9,7 @@ embed_alignment:
   umap: "--nearest-neighbors 30"
 
 tree:
-  tree-builder-args: "'-ninit 10 -n 4' --polytomy"
+  tree-builder-args: "-ninit 10 -n 4 --polytomy"
 
 # TreeTime settings
 refine:
