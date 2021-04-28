@@ -1,0 +1,32 @@
+# conda environment file to use by default
+# This must be a relative path to the top-level Snakefile directory (e.g., `ncov/`).
+conda_environment: "../cartography.yml"
+
+embed_alignment:
+  methods:
+    - t-sne
+    - umap
+  umap: "--nearest-neighbors 30"
+
+tree:
+  tree-builder-args: "'-ninit 10 -n 4' --polytomy"
+
+# TreeTime settings
+refine:
+  root: "Wuhan/WH01/2019" # EPI_ISL_406798
+  clock_rate: 0.0008
+  clock_std_dev: 0.0004
+  coalescent: "skyline"
+  date_inference: "marginal"
+  divergence_unit: "mutations"
+  clock_filter_iqd: 4
+  keep_polytomies: true
+
+export:
+  color_by_metadata:
+    - region
+    - country
+    - division
+    - location
+    - Nextstrain_clade
+    - pango_lineage

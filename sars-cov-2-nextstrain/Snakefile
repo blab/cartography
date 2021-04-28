@@ -1,0 +1,159 @@
+configfile: "config/config.yaml"
+
+
+rule all:
+    input:
+        "../auspice/cartography_ncov.json"
+
+
+rule decompress_alignment:
+    input:
+        alignment="data/global-xsmall_alignment.fasta.xz"
+    output:
+        alignment="results/global-xsmall_alignment.fasta"
+    conda:
+        config["conda_environment"]
+    shell:
+        """
+        gunzip -c -d {input} > {output}
+        """
+
+
+rule tree:
+    input:
+        alignment="results/global-xsmall_alignment.fasta"
+    output:
+        tree="results/tree_raw.nwk"
+    log:
+        "logs/tree.txt"
+    benchmark:
+        "benchmarks/tree.txt"
+    threads: 4
+    resources:
+        # Multiple sequence alignments can use up to 40 times their disk size in
+        # memory, especially for larger alignments.
+        # Note that Snakemake >5.10.0 supports input.size_mb to avoid converting from bytes to MB.
+        mem_mb=lambda wildcards, input: 40 * int(input.size / 1024 / 1024)
+    conda: config["conda_environment"]
+    params:
+        tree_builder_args=config["tree"]["tree-builder-args"]
+    shell:
+        """
+        augur tree \
+            --alignment {input.alignment} \
+            --tree-builder-args={params.tree_builder_args:q} \
+            --output {output.tree} \
+            --nthreads {threads} 2>&1 | tee {log}
+        """
+
+
+rule refine:
+    message:
+        """
+        Refining tree
+          - estimate timetree
+          - use {params.coalescent} coalescent timescale
+          - estimate {params.date_inference} node dates
+        """
+    input:
+        tree="results/tree_raw.nwk",
+        alignment="results/global-xsmall_alignment.fasta",
+        metadata="data/global-xsmall_metadata.tsv.xz"
+    output:
+        tree = "results/tree.nwk",
+        node_data = "results/branch_lengths.json"
+    log:
+        "logs/refine.txt"
+    benchmark:
+        "benchmarks/refine.txt"
+    threads: 1
+    resources:
+        # Multiple sequence alignments can use up to 15 times their disk size in
+        # memory.
+        # Note that Snakemake >5.10.0 supports input.size_mb to avoid converting from bytes to MB.
+        mem_mb=lambda wildcards, input: 15 * int(input.size / 1024 / 1024)
+    params:
+        root = config["refine"]["root"],
+        clock_rate = config["refine"]["clock_rate"],
+        clock_std_dev = config["refine"]["clock_std_dev"],
+        coalescent = config["refine"]["coalescent"],
+        date_inference = config["refine"]["date_inference"],
+        divergence_unit = config["refine"]["divergence_unit"],
+        clock_filter_iqd = config["refine"]["clock_filter_iqd"],
+        keep_polytomies = "--keep-polytomies" if config["refine"].get("keep_polytomies", False) else "",
+        timetree = "" if config["refine"].get("no_timetree", False) else "--timetree"
+    conda: config["conda_environment"]
+    shell:
+        """
+        augur refine \
+            --tree {input.tree} \
+            --alignment {input.alignment} \
+            --metadata {input.metadata} \
+            --output-tree {output.tree} \
+            --output-node-data {output.node_data} \
+            --root {params.root} \
+            {params.timetree} \
+            {params.keep_polytomies} \
+            --clock-rate {params.clock_rate} \
+            --clock-std-dev {params.clock_std_dev} \
+            --coalescent {params.coalescent} \
+            --date-inference {params.date_inference} \
+            --divergence-unit {params.divergence_unit} \
+            --date-confidence \
+            --no-covariance \
+            --clock-filter-iqd {params.clock_filter_iqd} 2>&1 | tee {log}
+        """
+
+
+rule embed_alignment:
+    input:
+        alignment="results/global-xsmall_alignment.fasta",
+    output:
+        node_data="results/{embedding}.json",
+        figure="results/{embedding}.pdf",
+    conda:
+        config["conda_environment"]
+    params:
+        embedding_params=lambda wildcards: config.get("embed_alignment", {}).get(wildcards.embedding, "")
+    shell:
+        """
+        python3 ../notebooks/scripts/embed.py \
+            --alignment {input.alignment} \
+            --output-node-data {output.node_data} \
+            --output-figure {output.figure} \
+            {wildcards.embedding} {params.embedding_params}
+        """
+
+
+rule export:
+    input:
+        tree="results/tree.nwk",
+        metadata="data/global-xsmall_metadata.tsv.xz",
+        branch_lengths="results/branch_lengths.json",
+        embeddings=expand("results/{embedding}.json", embedding=config["embed_alignment"]["methods"]),
+        auspice_config="config/auspice_config.json",
+        lat_longs="config/lat_longs.tsv",
+    output:
+        auspice_json="../auspice/cartography_ncov.json",
+    log:
+        "logs/export.txt"
+    benchmark:
+        "benchmarks/export.txt"
+    resources:
+        # Memory use scales primarily with the size of the metadata file.
+        mem_mb=lambda wildcards, input: 15 * int(input.metadata.size / 1024 / 1024)
+    conda:
+        config["conda_environment"]
+    params:
+        color_by_metadata=config["export"]["color_by_metadata"]
+    shell:
+        """
+        augur export v2 \
+            --tree {input.tree} \
+            --metadata {input.metadata} \
+            --node-data {input.branch_lengths} {input.embeddings} \
+            --auspice-config {input.auspice_config} \
+            --color-by-metadata {params.color_by_metadata} \
+            --lat-longs {input.lat_longs} \
+            --output {output.auspice_json} 2>&1 | tee {log}
+        """
