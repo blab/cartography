@@ -1,0 +1,743 @@
+{
+  "generated_by": {
+    "program": "augur",
+    "version": "10.0.2"
+  },
+  "nodes": {
+    "AbuDhabi/Gayathi_UAE_2_2014|KP209310|human|2014-03-07": {
+      "multihost_clade_membership": "clade_12"
+    },
+    "AbuDhabi_UAE_16_2014|KP209308|human|2014-04-10": {
+      "multihost_clade_membership": "clade_12"
+    },
+    "AbuDhabi_UAE_18_2014|KP209307|human|2014-04-10": {
+      "multihost_clade_membership": "clade_12"
+    },
+    "AbuDhabi_UAE_26_2014|KP209313|human|2014-04-13": {
+      "multihost_clade_membership": "clade_12"
+    },
+    "AbuDhabi_UAE_30_2014|KP209309|human|2014-04-19": {
+      "multihost_clade_membership": "clade_12"
+    },
+    "AbuDhabi_UAE_33_2014|KP209311|human|2014-04-17": {
+      "multihost_clade_membership": "clade_12"
+    },
+    "AbuDhabi_UAE_8_2014|KP209306|human|2014-04-07": {
+      "multihost_clade_membership": "clade_12"
+    },
+    "AbuDhabi_UAE_9_2013|KP209312|human|2013-11-15": {
+      "multihost_clade_membership": "clade_8"
+    },
+    "Al-Hasa_11_2013|KF600629|human|2013-05-03": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_12_2013|KF600627|human|2013-05-07": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_14_2013|KF600615|human|2013-05-08": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_15_2013|KF600645|human|2013-05-11": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_16_2013|KF600644|human|2013-05-12": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_17_2013|KF600647|human|2013-05-15": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_18_2013|KF600651|human|2013-05-23": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_19_2013|KF600632|human|2013-05-23": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_1_2013|KF186567|human|2013-05-09": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_21_2013|KF600634|human|2013-05-30": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_23_2013|KJ156860|human|2013-05-13": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_25_2013|KJ156866|human|2013-05-02": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_26_2013|KJ156882|human|2013-06-18": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_27_2013|KJ156943|human|2013-06-19": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_28_2013|KJ156887|human|2013-06-22": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_2_2013|KF186566|human|2013-04-21": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_3_2013|KF186565|human|2013-04-22": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_4_2013|KF186564|human|2013-05-01": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_7_2013|KF600623|human|2013-05-01": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Al-Hasa_8_2013|KF600618|human|2013-05-01": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Camel_Egypt_NRCE-HKU270||camel|2013-12-30": {
+      "multihost_clade_membership": "clade_1"
+    },
+    "Camel_Egypt_NRCE-HKU271||camel|2013-12-30": {
+      "multihost_clade_membership": "clade_1"
+    },
+    "ChinaGD01|KT036372|human|2015-05-28": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "D1164.1/14|KX108937|camel|2014-06-02": {
+      "multihost_clade_membership": "clade_9"
+    },
+    "D252/15|KX108939|camel|2015-01-30": {
+      "multihost_clade_membership": "clade_11"
+    },
+    "D2597.2/14|KX108938|camel|2014-12-13": {
+      "multihost_clade_membership": "clade_11"
+    },
+    "D374/15|KX108940|camel|2015-02-12": {
+      "multihost_clade_membership": "clade_11"
+    },
+    "D383/15|KX108941|camel|2015-02-14": {
+      "multihost_clade_membership": "clade_11"
+    },
+    "D389/15|KX108942|camel|2015-02-15": {
+      "multihost_clade_membership": "clade_11"
+    },
+    "D998/15|KX108943|camel|2015-04-23": {
+      "multihost_clade_membership": "clade_1"
+    },
+    "EMC/2012|JX869059|human|2012-06-13": {
+      "multihost_clade_membership": "clade_0"
+    },
+    "Egypt_NRCE-NC163/2014|KU740200|camel|2014-12-17": {
+      "multihost_clade_membership": "clade_1"
+    },
+    "England/2/2013|KM015348|human|2013-02-10": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "England/3/2013|KM210278|human|2013-02-10": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "England/4/2013|KM210277|human|2013-02-13": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Florida/USA-2_SaudiArabia_2014|KJ829365|human|2014-05-10": {
+      "multihost_clade_membership": "clade_5"
+    },
+    "Germany3/UAE-Dubai/Abu-Dhabi||human|2015-03-11": {
+      "multihost_clade_membership": "clade_13"
+    },
+    "Hafr-Al-Batin_2_2013|KJ156910|human|2013-08-05": {
+      "multihost_clade_membership": "clade_14"
+    },
+    "Hafr-Al-Batin_4_2013|KJ156931|human|2013-08-25": {
+      "multihost_clade_membership": "clade_14"
+    },
+    "Hafr-Al-Batin_5_2013|KJ156951|human|2013-08-25": {
+      "multihost_clade_membership": "clade_14"
+    },
+    "Hafr-Al-Batin_6_2013|KJ156874|human|2013-08-28": {
+      "multihost_clade_membership": "clade_14"
+    },
+    "Hufuf-KSA-11002/2015|KT806046|human|2015-05-10": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "Indiana/USA-1_SaudiArabia_2014|KJ813439|human|2014-04-30": {
+      "multihost_clade_membership": "clade_13"
+    },
+    "Jeddah-KFH-285TA||human|2014-06-03": {
+      "multihost_clade_membership": "clade_5"
+    },
+    "Jeddah-KFH-605TD||human|2014-06-09": {
+      "multihost_clade_membership": "clade_5"
+    },
+    "Jeddah-KFH-668TD||human|2014-06-09": {
+      "multihost_clade_membership": "clade_5"
+    },
+    "Jeddah-KFH-899NF||human|2014-06-16": {
+      "multihost_clade_membership": "clade_5"
+    },
+    "Jeddah-KFH-949NSG1||human|2014-06-18": {
+      "multihost_clade_membership": "clade_5"
+    },
+    "Jeddah-KSA-C20843/2015|KT806044|human|2015-02-09": {
+      "multihost_clade_membership": "clade_30"
+    },
+    "Jeddah-KSA-C21271/2015|KT806045|human|2015-02-22": {
+      "multihost_clade_membership": "clade_30"
+    },
+    "Jeddah/401/2014|KT368827|camel|2014-09": {
+      "multihost_clade_membership": "clade_21"
+    },
+    "Jeddah/D100/2014|KT368828|camel|2014-12": {
+      "multihost_clade_membership": "clade_22"
+    },
+    "Jeddah/D33b/2014|KT368829|camel|2014-12": {
+      "multihost_clade_membership": "clade_4"
+    },
+    "Jeddah/D34/2014|KT368830|camel|2014-12": {
+      "multihost_clade_membership": "clade_4"
+    },
+    "Jeddah/D35/2014|KT368831|camel|2014-12": {
+      "multihost_clade_membership": "clade_4"
+    },
+    "Jeddah/D36/2014|KT368832|camel|2014-12": {
+      "multihost_clade_membership": "clade_4"
+    },
+    "Jeddah/D38b/2014|KT368833|camel|2014-12": {
+      "multihost_clade_membership": "clade_28"
+    },
+    "Jeddah/D40/2014|KT368834|camel|2014-12": {
+      "multihost_clade_membership": "clade_28"
+    },
+    "Jeddah/D42/2014|KT368835|camel|2014-12": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/D43b/2014|KT368836|camel|2014-12": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/D45/2014|KT368837|camel|2014-12": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/D46b/2014|KT368838|camel|2014-12": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/D47/2014|KT368839|camel|2014-12": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/D48/2014|KT368840|camel|2014-12": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/D49/2014|KT368841|camel|2014-12": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/D50b/2014|KT368842|camel|2014-12": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/D88/2014|KT368843|camel|2014-12": {
+      "multihost_clade_membership": "clade_22"
+    },
+    "Jeddah/D90/2014|KT368844|camel|2014-12": {
+      "multihost_clade_membership": "clade_22"
+    },
+    "Jeddah/D92/2014|KT368845|camel|2014-12": {
+      "multihost_clade_membership": "clade_22"
+    },
+    "Jeddah/Jd175/2015|KT368866|camel|2015-02": {
+      "multihost_clade_membership": "clade_23"
+    },
+    "Jeddah/Jd199/2015|KT368867|camel|2015-02": {
+      "multihost_clade_membership": "clade_23"
+    },
+    "Jeddah/Jd1b/2015|KT368858|camel|2015-01": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/Jd4/2015|KT368859|camel|2015-01": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/Jd6b/2015|KT368860|camel|2015-01": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/Jd7/2015|KT368861|camel|2015-01": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/Jd85/2015|KT368862|camel|2015-01": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/Jd86/2015|KT368863|camel|2015-01": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/Jd87/2015|KT368864|camel|2015-01": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/Jd90/2015|KT368865|camel|2015-01": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/N51/2014|KT368846|camel|2014-11": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/N62b/2014|KT368847|camel|2014-11": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/N68b/2014|KT368848|camel|2014-11": {
+      "multihost_clade_membership": "clade_27"
+    },
+    "Jeddah/O23b/2014|KT368849|camel|2014-10": {
+      "multihost_clade_membership": "clade_20"
+    },
+    "Jeddah/O24/2014|KT368850|camel|2014-10": {
+      "multihost_clade_membership": "clade_20"
+    },
+    "Jeddah/O30/2014|KT368851|camel|2014-10": {
+      "multihost_clade_membership": "clade_20"
+    },
+    "Jeddah/S100/2014|KT368853|camel|2014-09": {
+      "multihost_clade_membership": "clade_20"
+    },
+    "Jeddah/S73/2014|KT368854|camel|2014-09": {
+      "multihost_clade_membership": "clade_20"
+    },
+    "Jeddah/S93/2014|KT368855|camel|2014-09": {
+      "multihost_clade_membership": "clade_20"
+    },
+    "Jeddah/S94/2014|KT368856|camel|2014-09": {
+      "multihost_clade_membership": "clade_21"
+    },
+    "Jeddah/S99/2014|KT368857|camel|2014-09": {
+      "multihost_clade_membership": "clade_21"
+    },
+    "Jeddah_C10306/KSA|KM027260|human|2014-04-21": {
+      "multihost_clade_membership": "clade_5"
+    },
+    "Jeddah_C7149/KSA|KM027255|human|2014-04-05": {
+      "multihost_clade_membership": "clade_5"
+    },
+    "Jeddah_C7569/KSA|KM027256|human|2014-04-03": {
+      "multihost_clade_membership": "clade_5"
+    },
+    "Jeddah_C7770/KSA|KM027257|human|2014-04-07": {
+      "multihost_clade_membership": "clade_5"
+    },
+    "Jeddah_C8826/KSA|KM027258|human|2014-04-12": {
+      "multihost_clade_membership": "clade_5"
+    },
+    "Jeddah_C9055/KSA|KM027259|human|2014-04-14": {
+      "multihost_clade_membership": "clade_5"
+    },
+    "Jordan-N3/2012|KC776174|human|2012-04-15": {
+      "multihost_clade_membership": "clade_0"
+    },
+    "Jordan_10_2015|KU233362|human|2015-09-17": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Jordan_1_2015|KU233363|human|2015-09-17": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "KFMC-10|KT121578|human|2014-05-01": {
+      "multihost_clade_membership": "clade_13"
+    },
+    "KFMC-1|KT121580|human|2014-04-28": {
+      "multihost_clade_membership": "clade_13"
+    },
+    "KFMC-2|KT121577|human|2014-05-11": {
+      "multihost_clade_membership": "clade_13"
+    },
+    "KFMC-3|KT121573|human|2014-05-09": {
+      "multihost_clade_membership": "clade_13"
+    },
+    "KFMC-4|KT121575|human|2014-05-12": {
+      "multihost_clade_membership": "clade_13"
+    },
+    "KFMC-5|KT121572|human|2014-05-12": {
+      "multihost_clade_membership": "clade_13"
+    },
+    "KFMC-6|KT121576|human|2014-05-18": {
+      "multihost_clade_membership": "clade_13"
+    },
+    "KFMC-7|KT121581|human|2014-05-03": {
+      "multihost_clade_membership": "clade_13"
+    },
+    "KFMC-8|KT121579|human|2014-04-30": {
+      "multihost_clade_membership": "clade_13"
+    },
+    "KFMC-9|KT121574|human|2014-05-07": {
+      "multihost_clade_membership": "clade_13"
+    },
+    "KFU-HKU13|KJ650295|camel|2013-12-30": {
+      "multihost_clade_membership": "clade_7"
+    },
+    "KFU-HKU19Dam|KJ650296|camel|2013-12-30": {
+      "multihost_clade_membership": "clade_7"
+    },
+    "KFU-HKU1|KJ650297|camel|2013-11-30": {
+      "multihost_clade_membership": "clade_7"
+    },
+    "KOR/CNUH_SNU/016_06_2015|KT868865|human|2015-06-11": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/CNUH_SNU/023_06_2015|KT868866|human|2015-06-11": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/CNUH_SNU/024_06_2015|KT868867|human|2015-06-08": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/CNUH_SNU/030_06_2015|KT868868|human|2015-06-08": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/CNUH_SNU/031_06_2015|KT868869|human|2015-06-11": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/CNUH_SNU/038_06_2015|KT868870|human|2015-06-10": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/CNUH_SNU/054_06_2015|KT868871|human|2015-06-09": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/CNUH_SNU/082_06_2015|KT868872|human|2015-06-10": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/CNUH_SNU/085_06_2015|KT868873|human|2015-06-10": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/CNUH_SNU/110_06_2015|KT868874|human|2015-06-11": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/CNUH_SNU/122_06_2015|KT868875|human|2015-06-10": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/CNUH_SNU/148_06_2015|KT868876|human|2015-06-10": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/CNUH_SNU/172_06_2015|KT868877|human|2015-06-22": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/KNIH/002_05_2015|KT029139|human|2015-05-20": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/Seoul/014-2015|KX034093|human|2015-05-30": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/Seoul/050-1-2015|KX034094|human|2015-06-11": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/Seoul/066-2015|KX034095|human|2015-06-04": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/Seoul/077-2-2015|KX034096|human|2015-06-17": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/Seoul/080-3-2015|KX034097|human|2015-06-17": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/Seoul/162-1-2015|KX034098|human|2015-06-22": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/Seoul/169-2015|KX034099|human|2015-06-26": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOR/Seoul/177-3-2015|KX034100|human|2015-07-03": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOREA/Seoul/014-1-2015|KT374052|human|2015-05-31": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOREA/Seoul/035-1-2015|KT374054|human|2015-06-03": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOREA/Seoul/163-1-2015|KT374051|human|2015-06-19": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "KOREA/Seoul/168-1-2015|KT374056|human|2015-06-21": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "Korea/Seoul/SNU1-035/2015|KU308549|human|2015-06-08": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "Madinah_3b_2013|KJ156916|human|2013-09-11": {
+      "multihost_clade_membership": "clade_16"
+    },
+    "Makkah_C9355/KSA/Makkah|KM027261|human|2014-04-15": {
+      "multihost_clade_membership": "clade_5"
+    },
+    "NRCE-HKU205|KJ477102|camel|2013-11-15": {
+      "multihost_clade_membership": "clade_1"
+    },
+    "Najran-KSA-C20915/2015|KT806054|human|2015-02-13": {
+      "multihost_clade_membership": "clade_30"
+    },
+    "Oman_2285_2013|KT156560|human|2013-10-28": {
+      "multihost_clade_membership": "clade_8"
+    },
+    "Qatar3|KF961221|human|2013-10-13": {
+      "multihost_clade_membership": "clade_15"
+    },
+    "Qatar4|KF961222|human|2013-10-17": {
+      "multihost_clade_membership": "clade_15"
+    },
+    "Riyadh-KKUH-104||human|2014-04-25": {
+      "multihost_clade_membership": "clade_19"
+    },
+    "Riyadh-KKUH-105||human|2014-04-25": {
+      "multihost_clade_membership": "clade_19"
+    },
+    "Riyadh-KKUH-291||human|2014-05-06": {
+      "multihost_clade_membership": "clade_13"
+    },
+    "Riyadh-KKUH-368||human|2014-05-13": {
+      "multihost_clade_membership": "clade_13"
+    },
+    "Riyadh-KKUH-643||human|2014-11-02": {
+      "multihost_clade_membership": "clade_18"
+    },
+    "Riyadh-KKUH-665||human|2014-11-19": {
+      "multihost_clade_membership": "clade_18"
+    },
+    "Riyadh-KKUH-90b||human|2014-04-24": {
+      "multihost_clade_membership": "clade_13"
+    },
+    "Riyadh-KSA-16098/2015|KU851864|human|2015-08-24": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh-KSA-16117/2015|KU851862|human|2015-08-24": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh-KSA-16120/2015|KU851861|human|2015-08-24": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh-KSA-16121/2015|KU851860|human|2015-08-24": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh-KSA-2049/2015|KR011266|human|2015-01-06": {
+      "multihost_clade_membership": "clade_3"
+    },
+    "Riyadh-KSA-2343/2015|KR011264|human|2015-01-21": {
+      "multihost_clade_membership": "clade_3"
+    },
+    "Riyadh-KSA-2345/2015|KR011263|human|2015-01-21": {
+      "multihost_clade_membership": "clade_3"
+    },
+    "Riyadh-KSA-2466/2015|KR011265|human|2015-01-26": {
+      "multihost_clade_membership": "clade_3"
+    },
+    "Riyadh-KSA-3181/2015|KT806049|human|2015-02-15": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh/Ry136/2015|KT368868|camel|2015-03": {
+      "multihost_clade_membership": "clade_31"
+    },
+    "Riyadh/Ry137/2015|KT368869|camel|2015-03": {
+      "multihost_clade_membership": "clade_24"
+    },
+    "Riyadh/Ry173/2015|KT368872|camel|2015-03": {
+      "multihost_clade_membership": "clade_25"
+    },
+    "Riyadh/Ry177/2015|KT368873|camel|2015-03": {
+      "multihost_clade_membership": "clade_25"
+    },
+    "Riyadh/Ry178/2015|KT368874|camel|2015-03": {
+      "multihost_clade_membership": "clade_25"
+    },
+    "Riyadh/Ry179/2015|KT368875|camel|2015-03": {
+      "multihost_clade_membership": "clade_4"
+    },
+    "Riyadh/Ry63/2015|KT368876|camel|2015-03": {
+      "multihost_clade_membership": "clade_31"
+    },
+    "Riyadh/Ry64/2015|KT368877|camel|2015-03": {
+      "multihost_clade_membership": "clade_31"
+    },
+    "Riyadh/Ry86/2015|KT368879|camel|2015-03": {
+      "multihost_clade_membership": "clade_24"
+    },
+    "Riyadh_10_2013|KJ156891|human|2013-09-05": {
+      "multihost_clade_membership": "clade_16"
+    },
+    "Riyadh_11_2013|KJ156946|human|2013-08-06": {
+      "multihost_clade_membership": "clade_16"
+    },
+    "Riyadh_12_2013|KJ156926|human|2013-08-08": {
+      "multihost_clade_membership": "clade_14"
+    },
+    "Riyadh_13_2013|KJ156888|human|2013-08-13": {
+      "multihost_clade_membership": "clade_17"
+    },
+    "Riyadh_14_2013|KJ156934|human|2013-08-15": {
+      "multihost_clade_membership": "clade_17"
+    },
+    "Riyadh_17_2013|KJ156918|human|2013-08-26": {
+      "multihost_clade_membership": "clade_16"
+    },
+    "Riyadh_2014KSA_683/KSA/2014|KM027262|human|2014-04-22": {
+      "multihost_clade_membership": "clade_13"
+    },
+    "Riyadh_2_2012|KF600652|human|2012-10-30": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Riyadh_7_2013|KJ156937|human|2013-07-15": {
+      "multihost_clade_membership": "clade_17"
+    },
+    "Riyadh_8_2013|KJ156880|human|2013-07-17": {
+      "multihost_clade_membership": "clade_16"
+    },
+    "Riyadh_9_2013|KJ156869|human|2013-07-17": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Riyadh_KKUH_0734||human|2015-02-18": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh_KKUH_0755||human|2015-02-23": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh_KKUH_0756||human|2015-02-23": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh_KKUH_0780||human|2015-02-25": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh_KKUH_0801||human|2015-02-27": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh_KKUH_0818||human|2015-02-28": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh_KKUH_0826||human|2015-02-28": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh_KKUH_0939||human|2015-03-02": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh_KKUH_0944||human|2015-03-02": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh_KKUH_1066||human|2015-03-03": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh_KKUH_1080||human|2015-03-03": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh_KKUH_1145||human|2015-03-04": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh_KKUH_1217||human|2015-03-04": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh_KKUH_1461||human|2015-03-08": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh_KKUH_1470||human|2015-03-08": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh_KKUH_1522||human|2015-03-09": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Riyadh_KSA_2959_2015|KT026453|human|2015-02-10": {
+      "multihost_clade_membership": "clade_29"
+    },
+    "Taif/T150/2015|KT368889|camel|2015-03": {
+      "multihost_clade_membership": "clade_28"
+    },
+    "Taif/T16/2015|KT368882|camel|2015-04": {
+      "multihost_clade_membership": "clade_26"
+    },
+    "Taif/T22/2015|KT368883|camel|2015-04": {
+      "multihost_clade_membership": "clade_26"
+    },
+    "Taif/T3/2015|KT368880|camel|2015-04": {
+      "multihost_clade_membership": "clade_26"
+    },
+    "Taif/T68/2015|KT368884|camel|2015-04": {
+      "multihost_clade_membership": "clade_26"
+    },
+    "Taif/T7/2015|KT368881|camel|2015-04": {
+      "multihost_clade_membership": "clade_26"
+    },
+    "Taif/T89/2015|KT368885|camel|2015-04": {
+      "multihost_clade_membership": "clade_26"
+    },
+    "Taif/T91b/2015|KT368886|camel|2015-04": {
+      "multihost_clade_membership": "clade_26"
+    },
+    "Taif_1_2013|KJ156949|human|2013-06-12": {
+      "multihost_clade_membership": "clade_2"
+    },
+    "Taif_3_2013|KJ156938|human|2013-06-13": {
+      "multihost_clade_membership": "clade_2"
+    },
+    "UAE/D1164.10/2014|KP719928|camel|2014-06": {
+      "multihost_clade_membership": "clade_9"
+    },
+    "UAE/D1164.11/2014|KP719929|camel|2014-06": {
+      "multihost_clade_membership": "clade_9"
+    },
+    "UAE/D1164.14/2014|KP719930|camel|2014-06": {
+      "multihost_clade_membership": "clade_9"
+    },
+    "UAE/D1164.9/2014|KP719927|camel|2014-06": {
+      "multihost_clade_membership": "clade_9"
+    },
+    "UAE/D1209/2014|KP719933|camel|2014-06": {
+      "multihost_clade_membership": "clade_11"
+    },
+    "UAE/D1243.12/2014|KP719932|camel|2014-06": {
+      "multihost_clade_membership": "clade_10"
+    },
+    "UAE/D1339.2/2014|KP719931|camel|2014-06": {
+      "multihost_clade_membership": "clade_10"
+    },
+    "UAE/D469-14|KU242424|camel|2014-03-04": {
+      "multihost_clade_membership": "clade_10"
+    },
+    "UAE/D511-14|KU242423|camel|2014-03-12": {
+      "multihost_clade_membership": "clade_10"
+    },
+    "D1157/15|KX108944|camel|2015-05-12": {
+      "multihost_clade_membership": "clade_3"
+    },
+    "Qatar_2_2014|KJ650098|camel|2014-02-16": {
+      "multihost_clade_membership": "clade_5"
+    },
+    "Riyadh_1_2012|KF600612|human|2012-10-23": {
+      "multihost_clade_membership": "clade_6"
+    },
+    "Oman_2874_2013|KT156561|human|2013-12-28": {
+      "multihost_clade_membership": "clade_7"
+    },
+    "Jeddah-KSA-C20860/2015|KT806055|human|2015-02-10": {
+      "multihost_clade_membership": "clade_23"
+    },
+    "Jeddah-KSA-3RS2702/2015|KU851859|human|2015-07-12": {
+      "multihost_clade_membership": "clade_26"
+    },
+    "Riyadh/Ry79/2015|KT368878|camel|2015-03": {
+      "multihost_clade_membership": "clade_30"
+    },
+    "Riyadh_KSA_4050_2015|KT026454|human|2015-03-01": {
+      "multihost_clade_membership": "clade_31"
+    },
+    "Riyadh/Ry159b/2015|KT368870|camel|2015-03": {
+      "multihost_clade_membership": "clade_32"
+    },
+    "Jeddah-1|KF958702|human|2013-11-05": {
+      "multihost_clade_membership": "clade_33"
+    },
+    "Jeddah-1|KF917527|camel|2013-11-08": {
+      "multihost_clade_membership": "clade_33"
+    },
+    "KSA-505|KJ713295|camel|2013-11": {
+      "multihost_clade_membership": "clade_34"
+    },
+    "KSA-378|KJ713296|camel|2013-11": {
+      "multihost_clade_membership": "clade_34"
+    },
+    "KSA-376|KJ713299|camel|2013-11": {
+      "multihost_clade_membership": "clade_35"
+    },
+    "Asir_2_2013|KJ156863|human|2013-08-05": {
+      "multihost_clade_membership": "clade_35"
+    },
+    "THA/CU/17_06_2015|KT225476|human|2015-06-17": {
+      "multihost_clade_membership": "clade_36"
+    },
+    "D1189.1/15|KX108946|camel|2015-05-18": {
+      "multihost_clade_membership": "clade_36"
+    },
+    "D1271/15|KX108945|camel|2015-05-29": {
+      "multihost_clade_membership": "clade_36"
+    },
+    "Hufuf-KSA-9158/2015|KT806047|human|2015-03-27": {
+      "multihost_clade_membership": "clade_36"
+    }
+  }
+}

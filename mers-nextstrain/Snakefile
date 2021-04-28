@@ -391,6 +391,7 @@ rule export:
         branch_lengths = "results/node_data.json",
         embeddings = expand("results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
         clades = "results/clades.json",
+        multihost_clades = "data/manual_multihost_clades.json",
         auspice_config = "config/auspice_config.json",
         colors = "config/colors.tsv"
     output:
@@ -401,7 +402,7 @@ rule export:
         augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.embeddings} {input.clades} \
+            --node-data {input.branch_lengths} {input.embeddings} {input.clades} {input.multihost_clades} \
             --auspice-config {input.auspice_config} \
             --colors {input.colors} \
             --output {output.auspice_tree}
