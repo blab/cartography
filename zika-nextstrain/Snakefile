@@ -152,11 +152,14 @@ rule tree:
     output:
         tree = "results/tree_raw.nwk"
     conda: "../cartography.yml"
+    threads: 4
     shell:
         """
         augur tree \
             --alignment {input.alignment} \
-            --output {output.tree}
+            --tree-builder-args="--polytomy" \
+            --output {output.tree} \
+            --nthreads {threads}
         """
 
 rule refine:
@@ -188,6 +191,7 @@ rule refine:
             --metadata {input.metadata} \
             --output-tree {output.tree} \
             --output-node-data {output.node_data} \
+            --keep-polytomies \
             --timetree \
             --coalescent {params.coalescent} \
             --date-confidence \
@@ -282,7 +286,7 @@ rule export:
         traits = rules.traits.output.node_data,
         nt_muts = rules.ancestral.output.node_data,
         aa_muts = rules.translate.output.node_data,
-        embeddings = expand("results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
+        embeddings = expand("results/embed_{embedding}_ancestral.json", embedding=EMBEDDING_METHODS),
         colors = files.colors,
         auspice_config = files.auspice_config,
         clades = rules.clades.output.clade_data

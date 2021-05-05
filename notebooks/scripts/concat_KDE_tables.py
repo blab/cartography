@@ -33,7 +33,9 @@ if __name__ == "__main__":
     df.index = flatten(table_index)
 
     if args.output_csv:
-        df.to_csv(args.output_csv, sep=args.separator, header=True, index=True, columns=["embedding", "MCC", "accuracy", "TN", "FN", "TP", "FP", "threshold", "median_within", "median_between"])
+        df.columns = ['MCC', 'FN', 'FP', 'TN', 'TP', 'accuracy', 'embedding',
+       'medbetween', 'medwithin', 'threshold']
+        df.to_csv(args.output_csv, sep=args.separator, header=True, index=True, columns=["embedding", "MCC", "accuracy", "TN", "FN", "TP", "FP", "threshold", "medwithin", "medbetween"])
     if args.output_table:
         with open(args.output_table, 'w') as f:
             f.write(df.to_markdown(index=True, tablefmt="grid"))

@@ -348,7 +348,7 @@ rule export:
         auspice_config = files.auspice_config,
         colors = "config/colors.tsv",
         procrustes_distance = expand("results/procrustes_distance_{mds_umap}.json", mds_umap=MDS_UMAP),
-        clades = "results/clades_ha.json"
+        clades = "results/clades_{segment}.json"
     output:
         auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json"
     conda: "../cartography.yml"

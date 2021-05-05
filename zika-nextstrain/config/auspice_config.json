@@ -178,6 +178,7 @@
   "filters": [
     "country",
     "region",
+	"clade_membership",
     "author"
   ]
 }

@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import re
-from scipy.spatial.distance import squareform
+from scipy.spatial.distance import squareform, pdist
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE, MDS
 import sys

@@ -82,14 +82,25 @@ if __name__ == "__main__":
     # reading in the distance matrix and node data
  
     distance_matrix = pd.read_csv(args.distance_matrix, index_col=0)
-    distance_matrix.reset_index(drop=True)
-    distance_matrix = distance_matrix.to_numpy()
+    strain = distance_matrix.index.values.tolist()
+    #distance_matrix.reset_index(drop=True)
+    #distance_matrix = distance_matrix.to_numpy()
 
+    
     node_df = pd.read_csv(args.node_data, sep="\t")
     clade_annotations = node_df[["strain", "clade_membership"]]
-    
+    strains_df = pd.DataFrame(strain, columns=["strain"])
+    clade_annotations = clade_annotations.merge(strains_df, on="strain")
+    node_df = node_df.merge(strains_df, on="strain")
 
-    sequence_names = node_df["strain"].values.tolist()
+    distance_matrix.columns = distance_matrix.index
+    indices_to_drop = distance_matrix[~distance_matrix.index.isin(clade_annotations["strain"])].dropna(how = 'all')
+    distance_matrix = distance_matrix[distance_matrix.index.isin(clade_annotations["strain"])].dropna(how = 'all')
+    distance_matrix = distance_matrix.drop(indices_to_drop.index, axis=1)
+    sequence_names = distance_matrix.index.values.tolist()
+    distance_matrix = distance_matrix.to_numpy()
+
+    #sequence_names = node_df["strain"].values.tolist()
     # getting PCA values
 
     sequences_by_name = OrderedDict()
@@ -131,6 +142,8 @@ if __name__ == "__main__":
             if(list_of_embedding_strings[i] == "PCA"):
                 #performing PCA on my pandas dataframe
                 numbers_subset = numbers[training_index]
+                print(numbers_subset)
+                print(set(training_index))
                 pca = PCA(**embed) #can specify n, since with no prior knowledge, I use None
                 training_embedding = pca.fit_transform(numbers_subset)
             else:
@@ -165,6 +178,7 @@ if __name__ == "__main__":
                 class_weight={1: 5},
                 verbose=0
             )
+            
             X = np.array(training_embedding_distances).reshape(-1,1)
             y = training_clade_status_for_pairs
             classifier.fit(X, y)
@@ -180,7 +194,7 @@ if __name__ == "__main__":
                 class_weight={1: 5},
                 verbose=0
             )
-            X = scaler.fit_transform(np.reshape([float(x) for x in squareform(training_distance_matrix)], (-1, 1)))
+            X = scaler.fit_transform(squareform(training_distance_matrix).reshape(-1, 1))
             y = training_clade_status_for_pairs
             genetic_classifier.fit(X, y)
 
@@ -261,6 +275,7 @@ if __name__ == "__main__":
             print(method_dict)
             total_list_methods.append(method_dict)
             i = i + 1
+        
         total_list_methods.append({"method":"genetic", "matthews_cc": matthews_cc_val_genetic, "threshold": classifier_threshold_genetic})
         print({"method":"genetic", "matthews_cc": matthews_cc_val_genetic, "threshold": classifier_threshold_genetic})
         k = k + 1
