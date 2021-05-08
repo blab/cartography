@@ -1,9 +1,45 @@
 configfile: "config/config.yaml"
 
+EMBEDDING_METHODS = [
+    "pca",
+    "mds",
+    "t-sne",
+    "umap"
+]
+
+KDE_METHODS = [
+    "pca",
+    "mds",
+    "t-sne",
+    "umap",
+    "genetic"
+]
+
 
 rule all:
     input:
-        "../auspice/cartography_ncov.json"
+        "../auspice/cartography_ncov.json",
+        expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
+        expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
+        "results/distance_matrix.csv",
+        "results/embed_pca.pdf",
+        "results/embed_t-sne.pdf",
+        "results/embed_umap.pdf",
+        "results/embed_mds.pdf",
+        "results/clades.json",
+        #expand("results/clusters_{method}.csv", method=EMBEDDING_METHODS),
+        "results/global-xsmall_alignment.fasta",
+        "results/table.tsv",
+        "results/full_KDE_metadata.csv",
+        "results/full_Scatterplot_metadata.csv",
+        "results/explained_variance_pca.csv",
+        #"../docs/FullKDEDensitySars-cov-2.png",
+        #"../docs/FullScatterplotSars-cov-2.png",
+        #"../docs/FullLinkedChartBrushableSars-cov-2.html",
+        #"../docs/sars-cov-2-embeddings.png",
+        #"../docs/FullPCABrushSupplementSars-cov-2.html",
+        #"results/nucleotide_diversity.txt",
+        #"../docs/explainedVarianceSars-cov-2.png",
 
 
 rule decompress_alignment:
@@ -15,9 +51,20 @@ rule decompress_alignment:
         config["conda_environment"]
     shell:
         """
-        gunzip -c -d {input} > {output}
+        xz -c -d {input} > {output}
         """
 
+rule decompress_metadata:
+    input:
+        metadata="data/global-xsmall_metadata.tsv.xz" 
+    output:
+        metadata="results/global-xsmall_metadata.tsv"
+    conda:
+        config["conda_environment"]
+    shell:
+        """
+        xz -c -d {input} > {output}
+        """
 
 rule tree:
     input:
@@ -105,36 +152,200 @@ rule refine:
         """
 
 
-rule embed_alignment:
+rule nucleotide_diversity:
+    message: "finding the nucleotide diversity of an aligned FASTA file"
     input:
-        alignment="results/global-xsmall_alignment.fasta",
+        alignment = "results/global-xsmall_alignment.fasta",
     output:
-        node_data="results/{embedding}.json",
-        figure="results/{embedding}.pdf",
-    conda:
-        config["conda_environment"]
+        output = "results/nucleotide_diversity.txt"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/nucleotide_diversity.py \
+            --alignment {input.alignment} \
+            --output {output.output}
+        """
+
+rule make_clades:
+    message: "creating the clades file to be used in the rest of the analysis"
+    input:
+        metadata = "results/global-xsmall_metadata.tsv"
+    output:
+        output = "results/clades.json"
     params:
-        embedding_params=lambda wildcards: config.get("embed_alignment", {}).get(wildcards.embedding, "")
+        col_name = "Nextstrain_clade"
+    shell:
+        """
+        python3 scripts/make_clades.py \
+            --metadata {input.metadata} \
+            --output {output.output} \
+            --col-name {params.col_name}
+        """
+
+rule create_distance_matrix:
+    message: "creating the distance matrix to be used in the rest of the analysis"
+    input:
+        alignment = "results/global-xsmall_alignment.fasta",
+    output:
+        output = "results/distance_matrix.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/hamming_distance_from_fasta.py \
+            --alignment {input.alignment} \
+            --output {output.output}
+        """
+
+rule embed_pca:
+    message: "Creating the embedding (dataframe, node JSON) for PCA"
+    input:
+        alignment = "results/global-xsmall_alignment.fasta",
+    output:
+        node_data = "results/embed_pca.json",
+        dataframe = "results/embed_pca.csv",
+        figure = "results/embed_pca.pdf",
+        explained_variance = "results/explained_variance_pca.csv"
+    params:
+        components = 10
+    conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/embed.py \
             --alignment {input.alignment} \
+            --cluster \
+            --random-seed 314159 \
             --output-node-data {output.node_data} \
+            --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            {wildcards.embedding} {params.embedding_params}
+            pca \
+            --components {params.components} \
+            --explained-variance {output.explained_variance}
         """
 
+
+rule embed_tsne:
+    message: "Creating the embedding (dataframe, node JSON) for t-SNE"
+    input:
+        distance_matrix = "results/distance_matrix.csv"
+    output:
+        node_data = "results/embed_t-sne.json",
+        dataframe = "results/embed_t-sne.csv",
+        figure = "results/embed_t-sne.pdf"
+    params:
+        perplexity = 25.95,
+        learning_rate = 200
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/embed.py \
+            --distance-matrix {input.distance_matrix} \
+            --cluster \
+            --random-seed 314159 \
+            --output-node-data {output.node_data} \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
+            t-sne \
+            --perplexity {params.perplexity} \
+            --learning-rate {params.learning_rate}
+        """
+
+rule embed_umap:
+    message: "Creating the embedding (dataframe, node JSON) for UMAP"
+    input:
+        distance_matrix = "results/distance_matrix.csv"
+    output:
+        node_data = "results/embed_umap.json",
+        dataframe = "results/embed_umap.csv",
+        figure = "results/embed_umap.pdf"
+    params:
+        nearest_neighbors = 200,
+        min_dist = .5
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/embed.py \
+            --distance-matrix {input.distance_matrix} \
+            --cluster \
+            --random-seed 314159 \
+            --output-node-data {output.node_data} \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
+            umap \
+            --nearest-neighbors {params.nearest_neighbors} \
+            --min-dist {params.min_dist}
+        """
+
+rule embed_mds:
+    message: "Creating the embedding (dataframe, node JSON) for MDS"
+    input:
+        distance_matrix = "results/distance_matrix.csv"
+    output:
+        node_data = "results/embed_mds.json",
+        dataframe = "results/embed_mds.csv",
+        figure = "results/embed_mds.pdf"
+    params:
+        components = 2
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/embed.py \
+            --distance-matrix {input.distance_matrix} \
+            --cluster \
+            --random-seed 314159 \
+            --output-node-data {output.node_data} \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
+            mds \
+            --components {params.components} \
+        """
+
+def _get_embedding_columns_by_wildcards(wildcards):
+    method = wildcards.method.replace("-", "")
+
+    if method in ("pca"):
+        return f"{method}1 {method}2 {method}3 {method}4"
+    if method in ("mds"):
+        return f"{method}1 {method}2"
+    else:
+        return f"{method}_x {method}_y"
+
+
+rule cluster_embeddings:
+    message: "assigning HDBSCAN clusters to the embeddings"
+    input:
+        embedding_dataframe = "results/embed_{method}.csv",
+        threshold_dataframe = "results/full_KDE_metadata.csv",
+    output:
+        dataframe = "results/clusters_{method}.csv"
+        #figure = "results/figures_HDBSCAN_{method}.png"
+    params:
+        columns = _get_embedding_columns_by_wildcards,
+        threshold_column = "threshold",
+        method = "{method}"
+    conda: "../cartograpy.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/cluster_results.py \
+            --method {params.method} \
+            --embedding {input.embedding_dataframe} \
+            --columns {params.columns} \
+            --threshold-information {input.threshold_dataframe} \
+            --column-threshold {params.threshold_column} \
+            --output {output.dataframe} \
+        """
 
 rule export:
     input:
         tree="results/tree.nwk",
         metadata="data/global-xsmall_metadata.tsv.xz",
         branch_lengths="results/branch_lengths.json",
-        embeddings=expand("results/{embedding}.json", embedding=config["embed_alignment"]["methods"]),
+        embeddings=expand("results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
+        clades = "results/clades.json",
+        #clusters = expand("results/clusters_{method}.csv")
         auspice_config="config/auspice_config.json",
         lat_longs="config/lat_longs.tsv",
     output:
-        auspice_json="../auspice/cartography_ncov.json",
+        auspice_tree="../auspice/cartography_ncov.json",
     log:
         "logs/export.txt"
     benchmark:
@@ -151,9 +362,215 @@ rule export:
         augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.embeddings} \
+            --node-data {input.branch_lengths} {input.embeddings} {input.clades} \
             --auspice-config {input.auspice_config} \
             --color-by-metadata {params.color_by_metadata} \
             --lat-longs {input.lat_longs} \
-            --output {output.auspice_json} 2>&1 | tee {log}
+            --output {output.auspice_tree} 2>&1 | tee {log}
         """
+
+rule tree_to_table:
+    message: "creating a table of node data values from the tree attributes"
+    input: 
+        tree = rules.export.output.auspice_tree
+    output:
+        table = "results/table.tsv"
+    params:
+        attributes = "num_date pca1 pca2 pca3 pca4 mds1 mds2 tsne_x tsne_y umap_x umap_y clade_membership pca_label mds_label umap_label t-sne_label"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/auspice_tree_to_table.py \
+            {input.tree} \
+            {output.table} \
+            --attributes {params.attributes}
+        """
+
+rule scatterplot:
+    message: "Creating the scatterplot (PNG, dataframe)"
+    input:
+        distance_matrix = "results/distance_matrix.csv",
+        embedding = "results/embed_{method}.csv",
+    output:
+        figure = "results/scatterplot_{method}.png",
+        dataframe = "results/scatterplot_{method}.csv",
+        metadata = "results/scatterplot_{method}_metadata.csv"
+    params:
+        bootstrap = 1000,
+        nucleotides = 1701.0,
+        columns = _get_embedding_columns_by_wildcards
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/scatterplot.py \
+            --distance {input.distance_matrix} \
+            --embedding {input.embedding} \
+            --method {wildcards.method} \
+            --columns {params.columns} \
+            --bootstrapping-sample {params.bootstrap} \
+            --output-figure {output.figure} \
+            --output-dataframe {output.dataframe} \
+            --output-metadata {output.metadata} \
+            --nucleotide {params.nucleotides}
+        """
+
+def _get_embedding_path_by_wildcards(wildcards):
+    method = wildcards.method
+
+    if method in ("pca", "mds", "t-sne", "umap"):
+        return f"results/embed_{method}.csv"
+    else:
+        return "results/distance_matrix.csv"
+
+rule KDE_density:
+    message: "creating the KDE density plot"
+    input:
+        embedding = _get_embedding_path_by_wildcards,
+        clades = "results/clades.json",
+    output:
+        figure = "results/KDEDensity_{method}.png",
+        dataframe = "results/KDEDensity_{method}.csv",
+        metadata = "results/KDEDensity_{method}_metadata.csv"
+    params:
+        embedding_columns = _get_embedding_columns_by_wildcards,
+        differentiator_column = "clade_membership"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/within_vs_between_status.py \
+            --embedding {input.embedding} \
+            --clades {input.clades} \
+            --method {wildcards.method} \
+            --embedding-columns {params.embedding_columns} \
+            --differentiator-column {params.differentiator_column} \
+            --output-figure {output.figure} \
+            --output-dataframe {output.dataframe} \
+            --output-metadata {output.metadata}
+        """
+
+rule concat_KDE_table:
+    message: "concatenating all the KDE data into one csv dataframe"
+    input:
+       dataframe_pca = "results/KDEDensity_pca_metadata.csv",
+       dataframe_mds = "results/KDEDensity_mds_metadata.csv", 
+       dataframe_tsne = "results/KDEDensity_t-sne_metadata.csv", 
+       dataframe_umap = "results/KDEDensity_umap_metadata.csv",
+       dataframe_genetic = "results/KDEDensity_genetic_metadata.csv"
+    output:
+        metadata = "results/full_KDE_metadata.csv"
+    params:
+        column = "MCC",
+        dataframes = "results/KDEDensity_pca_metadata.csv results/KDEDensity_mds_metadata.csv results/KDEDensity_t-sne_metadata.csv results/KDEDensity_umap_metadata.csv results/KDEDensity_genetic_metadata.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/concatenate_tables.py \
+            --tables {params.dataframes} \
+            --separator ',' \
+            --sort-by {params.column} \
+            --output {output.metadata}
+        """
+
+rule concat_scatterplot_table:
+    message: "concatenating all the scatterplot metadata into one csv dataframe"
+    input:
+       dataframe_pca = "results/scatterplot_pca_metadata.csv",
+       dataframe_mds = "results/scatterplot_mds_metadata.csv", 
+       dataframe_tsne = "results/scatterplot_t-sne_metadata.csv", 
+       dataframe_umap = "results/scatterplot_umap_metadata.csv"
+    output:
+        metadata = "results/full_Scatterplot_metadata.csv"
+    params:
+        column = "pearson_coef",
+        dataframes = "results/scatterplot_pca_metadata.csv results/scatterplot_mds_metadata.csv results/scatterplot_t-sne_metadata.csv results/scatterplot_umap_metadata.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/concatenate_tables.py \
+            --tables {params.dataframes} \
+            --separator ',' \
+            --sort-by {params.column} \
+            --output {output.metadata}
+        """
+
+rule create_notebook_docs:
+    message: "creating linked and grouped charts using the jupyter notebook"
+    input:
+        #Charts, tree:
+        node_df = "results/table.tsv",
+
+        pca_df = "results/embed_pca.csv",
+        explained_variance_pca = "results/explained_variance_pca.csv",
+
+        mds_df = "results/embed_mds.csv",
+
+        #Scatterplot:
+        scatterplot_pca = "results/scatterplot_pca.csv",
+        scatterplot_pca_metadata = "results/scatterplot_pca_metadata.csv",
+
+        scatterplot_mds = "results/scatterplot_mds.csv",
+        scatterplot_mds_metadata = "results/scatterplot_mds_metadata.csv",
+
+        scatterplot_tsne = "results/scatterplot_t-sne.csv",
+        scatterplot_tsne_metadata = "results/scatterplot_t-sne_metadata.csv",
+
+        scatterplot_umap = "results/scatterplot_umap.csv",
+        scatterplot_umap_metadata = "results/scatterplot_umap_metadata.csv",
+
+        #KDE Density:
+        KDE_pca = "results/KDEDensity_pca.csv",
+        KDE_pca_metadata = "results/KDEDensity_pca_metadata.csv",
+
+        KDE_mds = "results/KDEDensity_mds.csv",
+        KDE_mds_metadata = "results/KDEDensity_mds_metadata.csv",
+
+        KDE_tsne = "results/KDEDensity_t-sne.csv",
+        KDE_tsne_metadata = "results/KDEDensity_t-sne_metadata.csv",
+
+        KDE_umap = "results/KDEDensity_umap.csv",
+        KDE_umap_metadata = "results/KDEDensity_umap_metadata.csv",
+
+        KDE_genetic = "results/KDEDensity_genetic.csv",
+        KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv",
+
+    output:
+        KDE_density = "../docs/FullKDEDensitySars-cov-2.png",
+        Scatterplot = "../docs/FullScatterplotSars-cov-2.png",
+        fullChart = "../docs/FullLinkedChartBrushableSars-cov-2.html",
+        fullChartPNG = "../docs/sars-cov-2-embeddings.png",
+        PCA_Supplement = "../docs/FullPCABrushSupplementSars-cov-2.html",
+        PCA_Supplement_PNG = "../docs/FullPCABrushSupplementSars-cov-2.png",
+        Explained_variance_PCA = "../docs/explainedVarianceSars-cov-2.png"
+
+    conda: "../cartography.yml"
+    notebook:
+        "2019-08-08FinalNotebookSars-cov-2.ipynb"
+
+rule clean:
+    message: "Removing directories: {params}"
+    params:
+        "results ",
+        "auspice"
+    conda: "../cartography.yml"
+    shell:
+        "rm -rfv {params}"
+
+#rule embed_alignment:
+#    input:
+#        alignment="results/global-xsmall_alignment.fasta",
+#    output:
+#        node_data="results/{embedding}.json",
+#        figure="results/{embedding}.pdf",
+#    conda:
+#        config["conda_environment"]
+#    params:
+#        embedding_params=lambda wildcards: config.get("embed_alignment", {}).get(wildcards.embedding, "")
+#    shell:
+#        """
+#        python3 ../notebooks/scripts/embed.py \
+#            --alignment {input.alignment} \
+#            --output-node-data {output.node_data} \
+#            --output-figure {output.figure} \
+#            {wildcards.embedding} {params.embedding_params}
+#        """
+

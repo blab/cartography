@@ -1,5 +1,5 @@
 {
-    "title": "Seasonal influenza A/H3N2 phylogeny from 2016-2018",
+    "title": "Seasonal influenza A/H3N2 phylogeny from 2018-2020",
     "colorings": [
         {
             "key": "pca_label",
@@ -39,6 +39,11 @@
         {
             "key": "region",
             "title": "Region",
+            "type": "categorical"
+        },
+		{
+            "key": "HDBSCAN_clusters",
+            "title": "HDBSCAN_clusters",
             "type": "categorical"
         },
         {
