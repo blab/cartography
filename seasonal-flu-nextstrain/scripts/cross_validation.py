@@ -13,7 +13,6 @@ import seaborn as sns
 from scipy.spatial.distance import pdist, squareform
 from sklearn.manifold import TSNE, MDS
 from sklearn.decomposition import PCA
-from sklearn.manifold import MDS, TSNE
 from sklearn.metrics import confusion_matrix, matthews_corrcoef
 from sklearn.model_selection import RepeatedKFold
 from sklearn.preprocessing import StandardScaler

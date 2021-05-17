@@ -117,6 +117,39 @@ def concatenate_results_with_strain_data(principal_Df, result_metadata, fields):
     finalDf = pd.concat([principal_Df, result_metadata[fields]], axis=1)
     return finalDf
 
+def scatterplot_with_tooltip(finalDf, x, y, Titlex, Titley, ToolTip, color):
+    """Creates an interactive scatterplot in altair
+    
+    Parameters
+    -----------
+    finalDf: Pandas Dataframe
+        the data that is used to generate the scatter plot
+    x: string
+        the data for the x axis
+    y: string
+        the data for the y axis
+    Titlex: string
+        the name for the x axis
+    Titley: string
+        the name for the y axis
+    Tooltip: list
+        the data available when scanning over a plot
+    Color: string
+        what the scatterplot is colored by
+    
+    Returns
+    --------
+    an Altair chart 
+    """
+    brush = alt.selection(type='interval', resolve='global')
+    chart = alt.Chart(finalDf).mark_circle(size=60).encode(
+        x=alt.X(x, title=Titlex),
+        y=alt.X(y, title=Titley),
+        color=color,
+        tooltip=ToolTip
+    ).interactive()
+    # chart.display()
+    return chart
 
 def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip, color, domain=None, range_=None):
     """Creates an interactive scatterplot in altair

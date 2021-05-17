@@ -362,7 +362,8 @@ rule create_distance_matrix:
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
-        alignment = "results/aligned_{ancestral}.fasta"
+        alignment = "results/aligned_{ancestral}.fasta",
+        cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv",
     output:
         node_data = "results/embed_pca_{ancestral}.json",
         dataframe = "results/embed_pca_{ancestral}.csv",
@@ -375,7 +376,7 @@ rule embed_pca:
         """
         python3 ../notebooks/scripts/embed.py \
             --alignment {input.alignment} \
-            --cluster \
+            --cluster {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -389,7 +390,8 @@ rule embed_pca:
 rule embed_tsne:
     message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
-        distance_matrix = "results/distance_matrix_{ancestral}.csv"
+        distance_matrix = "results/distance_matrix_{ancestral}.csv",
+        cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv",
     output:
         node_data = "results/embed_t-sne_{ancestral}.json",
         dataframe = "results/embed_t-sne_{ancestral}.csv",
@@ -402,7 +404,7 @@ rule embed_tsne:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster \
+            --cluster {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -415,7 +417,8 @@ rule embed_tsne:
 rule embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
-        distance_matrix = "results/distance_matrix_{ancestral}.csv"
+        distance_matrix = "results/distance_matrix_{ancestral}.csv",
+        cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv",
     output:
         node_data = "results/embed_umap_{ancestral}.json",
         dataframe = "results/embed_umap_{ancestral}.csv",
@@ -428,7 +431,7 @@ rule embed_umap:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster \
+            --cluster {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -441,7 +444,8 @@ rule embed_umap:
 rule embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
-        distance_matrix = "results/distance_matrix_{ancestral}.csv"
+        distance_matrix = "results/distance_matrix_{ancestral}.csv",
+        cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv",
     output:
         node_data = "results/embed_mds_{ancestral}.json",
         dataframe = "results/embed_mds_{ancestral}.csv",
@@ -453,7 +457,7 @@ rule embed_mds:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster \
+            --cluster {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -471,85 +475,6 @@ def _get_embedding_columns_by_wildcards(wildcards):
         return f"{method}1 {method}2"
     else:
         return f"{method}_x {method}_y"
-
-rule cluster_embeddings:
-    message: "assigning HDBSCAN clusters to the embeddings"
-    input:
-        embedding_dataframe = "results/embed_{method}.csv",
-        threshold_dataframe = "results/full_KDE_metadata_SVM.csv",
-    output:
-        dataframe = "results/clusters_{method}.csv"
-        #figure = "results/figures_HDBSCAN_{method}.png"
-    params:
-        columns = _get_embedding_columns_by_wildcards,
-        threshold_column = "threshold",
-        method = "{method}"
-    conda: "../cartograpy.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/cluster_results.py \
-            --method {params.method} \
-            --embedding {input.embedding_dataframe} \
-            --columns {params.columns} \
-            --threshold-information {input.threshold_dataframe} \
-            --column-threshold {params.threshold_column} \
-            --output {output.dataframe} \
-        """
-        
-rule cluster_embeddings_cross_v:
-    message: "assigning HDBSCAN clusters to the embeddings"
-    input:
-        embedding_dataframe = "results/embed_{method}.csv",
-        threshold_dataframe = "results/full_KDE_metadata_cross_v.csv",
-    output:
-        dataframe = "results/clusters_{method}_cross_v.csv"
-        #figure = "results/figures_HDBSCAN_{method}.png"
-    params:
-        columns = _get_embedding_columns_by_wildcards,
-        threshold_column = "threshold",
-        method = "{method}"
-    conda: "../cartograpy.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/cluster_results.py \
-            --method {params.method} \
-            --embedding {input.embedding_dataframe} \
-            --columns {params.columns} \
-            --threshold-information {input.threshold_dataframe} \
-            --column-threshold {params.threshold_column} \
-            --output {output.dataframe} \
-        """
-
-rule exhaustive_grid_search:
-    message: "does exhastive grid search to find the best values to set for tsne and umap"
-    input:
-        distance_matrix = "results/distance_matrix_sequences.csv",
-        node_data = rules.tree_to_table.output.table,
-    output:
-        output = "results/best_values.txt",
-        metadata = "results/grid_search.csv",
-        figure = "../docs/exhaustive_grid_search.png"
-    params:
-        n_repeats = 10,
-        perplexity = "15 30 100",
-        learning_rate = "100.0 200.0 500.0 1000.0",
-        n_neighbors = "25 100 200",
-        min_dist = ".05 .5"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 scripts/exhaustive_grid_search.py \
-            --distance-matrix {input.distance_matrix} \
-            --node-data {input.node_data} \
-            --n-neighbors {params.n_neighbors} \
-            --min-dist {params.min_dist} \
-            --perplexity {params.perplexity} \
-            --learning-rate {params.learning_rate} \
-            --n-repeats {params.n_repeats} \
-            --output {output.output} \
-            --output-metadata {output.metadata} \
-            --output-figure {output.figure}
-        """
 
 def _get_embedding_columns_by_wildcards(wildcards):
     method = wildcards.method.replace("-", "")

@@ -27,19 +27,20 @@ rule all:
         "results/embed_umap.pdf",
         "results/embed_mds.pdf",
         "results/clades.json",
-        #expand("results/clusters_{method}.csv", method=EMBEDDING_METHODS),
+        "results/accuracy_figure_HDBSCAN.png",
         "results/global-xsmall_alignment.fasta",
         "results/table.tsv",
         "results/full_KDE_metadata.csv",
         "results/full_Scatterplot_metadata.csv",
         "results/explained_variance_pca.csv",
-        #"../docs/FullKDEDensitySars-cov-2.png",
-        #"../docs/FullScatterplotSars-cov-2.png",
-        #"../docs/FullLinkedChartBrushableSars-cov-2.html",
-        #"../docs/sars-cov-2-embeddings.png",
-        #"../docs/FullPCABrushSupplementSars-cov-2.html",
-        #"results/nucleotide_diversity.txt",
-        #"../docs/explainedVarianceSars-cov-2.png",
+        "../docs/FullKDEDensitySars-cov-2.png",
+        "../docs/FullScatterplotSars-cov-2.png",
+        "../docs/FullLinkedChartBrushableSars-cov-2.html",
+        "../docs/sars-cov-2-embeddings.png",
+        "../docs/FullPCABrushSupplementSars-cov-2.html",
+        "results/nucleotide_diversity.txt",
+        "../docs/explainedVarianceSars-cov-2.png",
+        "../docs/bases_missing_vs_pc1_Sars.png"
 
 
 rule decompress_alignment:
@@ -64,6 +65,57 @@ rule decompress_metadata:
     shell:
         """
         xz -c -d {input} > {output}
+        """
+
+rule embed_pca_before:
+    message: "Creating the embedding for PCA bases missing analysis"
+    input:
+        alignment = "results/global-xsmall_alignment.fasta",
+    output:
+        dataframe = "results/embed_pca_before.csv",
+    params:
+        components = 10
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/embed.py \
+            --alignment {input.alignment} \
+            --random-seed 314159 \
+            --output-dataframe {output.dataframe} \
+            pca \
+            --components {params.components} \
+        """
+
+rule bases_missing_vs_pc1:
+    message: "creating a bases_missing vs PC1 graph"
+    input:
+        alignment = "results/global-xsmall_alignment.fasta",
+        pca = "results/embed_pca_before.csv"
+    output:
+        figure = "../docs/bases_missing_vs_pc1_Sars.png"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/pc1_vs_bases_missing.py \
+            --alignment {input.alignment} \
+            --pca {input.pca} \
+            --output {output.figure}
+        """
+
+rule impute_data:
+    message: "creating an imputed dataframe/fasta file"
+    input:
+        alignment = "results/global-xsmall_alignment.fasta"
+    output:
+        dataframe = "results/imputed_alignment.csv",
+        fasta = "results/imputed_alignment.fasta"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/impute_data.py \
+            --alignment {input.alignment} \
+            --output-dataframe {output.dataframe} \
+            --output-fasta {output.fasta}
         """
 
 rule tree:
@@ -199,7 +251,7 @@ rule create_distance_matrix:
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
-        alignment = "results/global-xsmall_alignment.fasta",
+        alignment = "results/imputed_alignment.fasta",
     output:
         node_data = "results/embed_pca.json",
         dataframe = "results/embed_pca.csv",
@@ -212,7 +264,6 @@ rule embed_pca:
         """
         python3 ../notebooks/scripts/embed.py \
             --alignment {input.alignment} \
-            --cluster \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -309,31 +360,6 @@ def _get_embedding_columns_by_wildcards(wildcards):
     else:
         return f"{method}_x {method}_y"
 
-
-rule cluster_embeddings:
-    message: "assigning HDBSCAN clusters to the embeddings"
-    input:
-        embedding_dataframe = "results/embed_{method}.csv",
-        threshold_dataframe = "results/full_KDE_metadata.csv",
-    output:
-        dataframe = "results/clusters_{method}.csv"
-        #figure = "results/figures_HDBSCAN_{method}.png"
-    params:
-        columns = _get_embedding_columns_by_wildcards,
-        threshold_column = "threshold",
-        method = "{method}"
-    conda: "../cartograpy.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/cluster_results.py \
-            --method {params.method} \
-            --embedding {input.embedding_dataframe} \
-            --columns {params.columns} \
-            --threshold-information {input.threshold_dataframe} \
-            --column-threshold {params.threshold_column} \
-            --output {output.dataframe} \
-        """
-
 rule export:
     input:
         tree="results/tree.nwk",
@@ -344,6 +370,7 @@ rule export:
         #clusters = expand("results/clusters_{method}.csv")
         auspice_config="config/auspice_config.json",
         lat_longs="config/lat_longs.tsv",
+        clusters = expand("results/clusters_{embedding}.json", embedding=EMBEDDING_METHODS)
     output:
         auspice_tree="../auspice/cartography_ncov.json",
     log:
@@ -362,7 +389,7 @@ rule export:
         augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.embeddings} {input.clades} \
+            --node-data {input.branch_lengths} {input.embeddings} {input.clades} {input.clusters} \
             --auspice-config {input.auspice_config} \
             --color-by-metadata {params.color_by_metadata} \
             --lat-longs {input.lat_longs} \
@@ -493,6 +520,33 @@ rule concat_scatterplot_table:
             --output {output.metadata}
         """
 
+
+rule cluster_embeddings:
+    message: "finding the optimal HDBSCAN distance thresholds for the embeddings"
+    input:
+        alignment = "results/aligned.fasta",
+        metadata = "results/clades.json",
+        distance_matrix = "results/distance_matrix.csv"
+    output:
+        dataframe_full = "results/full_output_HDBSCAN.csv",
+        dataframe = "results/output_HDBSCAN.csv",
+        figure = "results/accuracy_figure_HDBSCAN.png",
+    params:
+        clade_column = "clade_membership"
+    conda: "../cartography.yml"
+    threads: 4
+    shell:
+        """
+        python3 ../notebooks/scripts/cluster_results.py \
+            --distance-matrix {input.distance_matrix} \
+            --alignment {input.alignment} \
+            --clades {input.metadata} \
+            --column-metadata {params.clade_column} \
+            --output {output.dataframe} \
+            --output-full {output.dataframe_full} \
+            --output-figure {output.figure} \
+        """
+
 rule create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:
@@ -544,7 +598,7 @@ rule create_notebook_docs:
 
     conda: "../cartography.yml"
     notebook:
-        "2019-08-08FinalNotebookSars-cov-2.ipynb"
+        "2021-05-11FinalNotebookSars.ipynb"
 
 rule clean:
     message: "Removing directories: {params}"
