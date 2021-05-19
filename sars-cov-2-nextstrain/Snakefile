@@ -19,8 +19,8 @@ KDE_METHODS = [
 rule all:
     input:
         "../auspice/cartography_ncov.json",
-        expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
+        #expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
+        #expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
         "results/distance_matrix.csv",
         "results/embed_pca.pdf",
         "results/embed_t-sne.pdf",
@@ -30,17 +30,17 @@ rule all:
         "results/accuracy_figure_HDBSCAN.png",
         "results/global-xsmall_alignment.fasta",
         "results/table.tsv",
-        "results/full_KDE_metadata.csv",
-        "results/full_Scatterplot_metadata.csv",
+        #"results/full_KDE_metadata.csv",
+        #"results/full_Scatterplot_metadata.csv",
         "results/explained_variance_pca.csv",
-        "../docs/FullKDEDensitySars-cov-2.png",
-        "../docs/FullScatterplotSars-cov-2.png",
-        "../docs/FullLinkedChartBrushableSars-cov-2.html",
-        "../docs/sars-cov-2-embeddings.png",
-        "../docs/FullPCABrushSupplementSars-cov-2.html",
-        "results/nucleotide_diversity.txt",
-        "../docs/explainedVarianceSars-cov-2.png",
-        "../docs/bases_missing_vs_pc1_Sars.png"
+        #"../docs/FullKDEDensitySars-cov-2.png",
+        #"../docs/FullScatterplotSars-cov-2.png",
+        #"../docs/FullLinkedChartBrushableSars-cov-2.html",
+        #"../docs/sars-cov-2-embeddings.png",
+        #"../docs/FullPCABrushSupplementSars-cov-2.html",
+        #"results/nucleotide_diversity.txt",
+        #"../docs/explainedVarianceSars-cov-2.png",
+        #"../docs/bases_missing_vs_pc1_Sars.png"
 
 
 rule decompress_alignment:
@@ -252,6 +252,7 @@ rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
         alignment = "results/imputed_alignment.fasta",
+        cluster = "results/output_HDBSCAN.csv"
     output:
         node_data = "results/embed_pca.json",
         dataframe = "results/embed_pca.csv",
@@ -264,6 +265,7 @@ rule embed_pca:
         """
         python3 ../notebooks/scripts/embed.py \
             --alignment {input.alignment} \
+            --cluster {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -277,7 +279,8 @@ rule embed_pca:
 rule embed_tsne:
     message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
-        distance_matrix = "results/distance_matrix.csv"
+        distance_matrix = "results/distance_matrix.csv",
+        cluster = "results/output_HDBSCAN.csv"
     output:
         node_data = "results/embed_t-sne.json",
         dataframe = "results/embed_t-sne.csv",
@@ -290,7 +293,7 @@ rule embed_tsne:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster \
+            --cluster {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -303,7 +306,8 @@ rule embed_tsne:
 rule embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
-        distance_matrix = "results/distance_matrix.csv"
+        distance_matrix = "results/distance_matrix.csv",
+        cluster = "results/output_HDBSCAN.csv"
     output:
         node_data = "results/embed_umap.json",
         dataframe = "results/embed_umap.csv",
@@ -316,7 +320,7 @@ rule embed_umap:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster \
+            --cluster {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -329,7 +333,8 @@ rule embed_umap:
 rule embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
-        distance_matrix = "results/distance_matrix.csv"
+        distance_matrix = "results/distance_matrix.csv",
+        cluster = "results/output_HDBSCAN.csv"
     output:
         node_data = "results/embed_mds.json",
         dataframe = "results/embed_mds.csv",
@@ -341,7 +346,7 @@ rule embed_mds:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster \
+            --cluster {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -367,10 +372,8 @@ rule export:
         branch_lengths="results/branch_lengths.json",
         embeddings=expand("results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
         clades = "results/clades.json",
-        #clusters = expand("results/clusters_{method}.csv")
         auspice_config="config/auspice_config.json",
         lat_longs="config/lat_longs.tsv",
-        clusters = expand("results/clusters_{embedding}.json", embedding=EMBEDDING_METHODS)
     output:
         auspice_tree="../auspice/cartography_ncov.json",
     log:
@@ -389,7 +392,7 @@ rule export:
         augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.embeddings} {input.clades} {input.clusters} \
+            --node-data {input.branch_lengths} {input.embeddings} {input.clades} \
             --auspice-config {input.auspice_config} \
             --color-by-metadata {params.color_by_metadata} \
             --lat-longs {input.lat_longs} \
@@ -403,7 +406,7 @@ rule tree_to_table:
     output:
         table = "results/table.tsv"
     params:
-        attributes = "num_date pca1 pca2 pca3 pca4 mds1 mds2 tsne_x tsne_y umap_x umap_y clade_membership pca_label mds_label umap_label t-sne_label"
+        attributes = "num_date pca1 pca2 pca3 pca4 mds1 mds2 tsne_x tsne_y umap_x umap_y clade_membership pca_label mds_label umap_label t-sne_label pca_label_default mds_label_default umap_label_default t-sne_label_default"
     conda: "../cartography.yml"
     shell:
         """
@@ -524,7 +527,7 @@ rule concat_scatterplot_table:
 rule cluster_embeddings:
     message: "finding the optimal HDBSCAN distance thresholds for the embeddings"
     input:
-        alignment = "results/aligned.fasta",
+        alignment = "results/global-xsmall_alignment.fasta",
         metadata = "results/clades.json",
         distance_matrix = "results/distance_matrix.csv"
     output:
