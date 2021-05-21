@@ -19,8 +19,8 @@ KDE_METHODS = [
 rule all:
     input:
         "../auspice/cartography_ncov.json",
-        #expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        #expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
+        expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
+        expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
         "results/distance_matrix.csv",
         "results/embed_pca.pdf",
         "results/embed_t-sne.pdf",
@@ -30,17 +30,18 @@ rule all:
         "results/accuracy_figure_HDBSCAN.png",
         "results/global-xsmall_alignment.fasta",
         "results/table.tsv",
-        #"results/full_KDE_metadata.csv",
-        #"results/full_Scatterplot_metadata.csv",
+        "results/full_KDE_metadata.csv",
+        "results/full_Scatterplot_metadata.csv",
         "results/explained_variance_pca.csv",
-        #"../docs/FullKDEDensitySars-cov-2.png",
-        #"../docs/FullScatterplotSars-cov-2.png",
-        #"../docs/FullLinkedChartBrushableSars-cov-2.html",
-        #"../docs/sars-cov-2-embeddings.png",
-        #"../docs/FullPCABrushSupplementSars-cov-2.html",
-        #"results/nucleotide_diversity.txt",
-        #"../docs/explainedVarianceSars-cov-2.png",
-        #"../docs/bases_missing_vs_pc1_Sars.png"
+        "../docs/FullKDEDensitySars-cov-2.png",
+        "../docs/FullScatterplotSars-cov-2.png",
+        "../docs/FullLinkedChartBrushableSars-cov-2.html",
+        "../docs/sars-cov-2-embeddings.png",
+        "../docs/FullPCABrushSupplementSars-cov-2.html",
+        "results/nucleotide_diversity.txt",
+        "../docs/explainedVarianceSars-cov-2.png",
+        "../docs/bases_missing_vs_pc1_Sars.png",
+        "../docs/fullHDBSCANChartSars-cov-2.png"
 
 
 rule decompress_alignment:
@@ -553,6 +554,8 @@ rule cluster_embeddings:
 rule create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:
+        colors = "../notebooks/config/color_schemes.tsv",
+
         #Charts, tree:
         node_df = "results/table.tsv",
 
@@ -560,6 +563,8 @@ rule create_notebook_docs:
         explained_variance_pca = "results/explained_variance_pca.csv",
 
         mds_df = "results/embed_mds.csv",
+        tsne_df = "results/embed_t-sne.csv",
+        umap_df = "results/embed_umap.csv",
 
         #Scatterplot:
         scatterplot_pca = "results/scatterplot_pca.csv",
@@ -597,7 +602,9 @@ rule create_notebook_docs:
         fullChartPNG = "../docs/sars-cov-2-embeddings.png",
         PCA_Supplement = "../docs/FullPCABrushSupplementSars-cov-2.html",
         PCA_Supplement_PNG = "../docs/FullPCABrushSupplementSars-cov-2.png",
-        Explained_variance_PCA = "../docs/explainedVarianceSars-cov-2.png"
+        Explained_variance_PCA = "../docs/explainedVarianceSars-cov-2.png",
+        fullChartHDBSCAN = "../docs/fullHDBSCANChartSars-cov-2.html",
+        fullChartHDBSCANPNG = "../docs/fullHDBSCANChartSars-cov-2.png"
 
     conda: "../cartography.yml"
     notebook:
