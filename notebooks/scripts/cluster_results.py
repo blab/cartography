@@ -4,6 +4,7 @@ import Bio.SeqIO
 from collections import OrderedDict
 import hdbscan
 import matplotlib.pyplot as plt
+import math
 import matplotlib as mpl
 import numpy as np
 import pandas as pd
@@ -24,7 +25,7 @@ if __name__ == "__main__":
     parser.add_argument("--distance-matrix", help="csv file with the distance matrix")
     parser.add_argument("--alignment", help="FASTA file with the alignment")
     parser.add_argument("--clades", help="json file containing information about clade membership")
-    parser.add_argument("--column-metadata", nargs="+", default="clade_membership", help="the column which contains the clade information")
+    parser.add_argument("--column-metadata", default="clade_membership", help="the column which contains the clade information")
     parser.add_argument("--threshold-information", nargs="+", help="the distance threshold values to be used on HDBSCAN. if not provided, it will run without.")
     parser.add_argument("--output", help="the csv path where the best label of the data and strain name per method will be saved.")
     parser.add_argument("--output-full", help="the csv path where the full list of accuracy data per threshold will be saved")
@@ -57,6 +58,12 @@ if __name__ == "__main__":
     list_of_embedding_strings = ["t-sne", "umap", "mds", "pca"] #["t-SNE","UMAP","MDS", "PCA"]
     embedding_class = [TSNE, UMAP, MDS, PCA]
 
+    # reading in the distance matrix and node data
+
+    distance_matrix = pd.read_csv(args.distance_matrix, index_col=0)
+    sequence_names = distance_matrix.index.values.tolist()
+
+
     # parameters for the methods taken from the exhaustive grid search 
     embedding_parameters = {
         "metric": "precomputed",
@@ -68,7 +75,7 @@ if __name__ == "__main__":
 
     embedding_parameters = {
         "init": "spectral",
-        'n_neighbors': 200, 
+        'n_neighbors': 25, 
         "min_dist": 0.05
     }
     default_tuned_values.append(embedding_parameters)
@@ -85,17 +92,13 @@ if __name__ == "__main__":
     }
     default_tuned_values.append(embedding_parameters)
     
-    # reading in the distance matrix and node data
-
-    distance_matrix = pd.read_csv(args.distance_matrix, index_col=0)
-    sequence_names = distance_matrix.index.values.tolist()
-
+    
     # creating dataframe of clade information 
     
     node_data = read_node_data(args.clades)
     clade_annotations = pd.DataFrame([
-    {"strain": sequence_name, "clade_membership": node_data["nodes"][sequence_name]["clade_membership"]}
-    for sequence_name in sequence_names
+    {"strain": sequence_name, "clade_membership": node_data["nodes"][sequence_name][args.column_metadata]}
+    for sequence_name in sequence_names if sequence_name in node_data["nodes"]
     ])
     
     strains_df = pd.DataFrame(distance_matrix.index.values.tolist(), columns=["strain"])
@@ -129,7 +132,8 @@ if __name__ == "__main__":
     rkf = RepeatedKFold(n_splits=2,  n_repeats=3, random_state=random_state)
     k = 0
     total_list_methods = []
-    for training_index, validation_index in rkf.split(sequence_names): 
+    for training_index, validation_index in rkf.split(clade_annotations["strain"].values.tolist()): 
+        print(len(training_index))
         i = 0
         print("here " + str(k))
         for embed in default_tuned_values:
