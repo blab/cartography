@@ -19,8 +19,8 @@ INTERNAL_NODE = [
 ]
 rule all:
     input:
-        #expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        #expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
+        expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
+        expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
         expand("results/distance_matrix_{ancestral}.csv", ancestral=INTERNAL_NODE),
         expand("results/embed_pca_{ancestral}.pdf", ancestral=INTERNAL_NODE),
         expand("results/embed_t-sne_{ancestral}.pdf", ancestral=INTERNAL_NODE),
@@ -30,18 +30,19 @@ rule all:
         "results/aligned_ancestral.fasta",
         "../auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json",
         "results/table.tsv",
-        #"results/full_KDE_metadata.csv",
-        #"results/full_Scatterplot_metadata.csv",
+        "results/full_KDE_metadata.csv",
+        "results/full_Scatterplot_metadata.csv",
         "results/explained_variance_pca_sequences.csv",
-        #"../docs/FullKDEDensityFlu.png",
-        #"../docs/FullScatterplotFlu.png",
-        #"../docs/FullLinkedChartBrushableFlu.html",
-        #"../docs/flu-embeddings.png",
-        #"../docs/FullPCABrushSupplementFlu.html",
+        "../docs/FullKDEDensityFlu.png",
+        "../docs/FullScatterplotFlu.png",
+        "../docs/FullLinkedChartBrushableFlu.html",
+        "../docs/flu-embeddings.png",
+        "../docs/FullPCABrushSupplementFlu.html",
         "results/accuracy_figure_HDBSCAN.png",
-        #"results/nucleotide_diversity.txt",
-        #"../docs/explainedVarianceFlu.png",
-        #"results/cross_validation_thresholds.csv",
+        "results/nucleotide_diversity.txt",
+        "../docs/explainedVarianceFlu.png",
+        "results/cross_validation_thresholds.csv",
+        "../docs/exhaustive_grid_search.png"
 
 rule files:
     params:
@@ -658,6 +659,7 @@ rule concat_scatterplot_table:
 rule create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:
+        colors = "../notebooks/config/color_schemes.tsv",
         #Charts, tree:
         node_df = "results/table.tsv",
 
@@ -665,6 +667,8 @@ rule create_notebook_docs:
         explained_variance_pca = "results/explained_variance_pca_sequences.csv",
 
         mds_df = "results/embed_mds_sequences.csv",
+        tsne_df = "results/embed_t-sne_sequences.csv",
+        umap_df = "results/embed_umap_sequences.csv",
 
         #Scatterplot:
         scatterplot_pca = "results/scatterplot_pca.csv",
@@ -702,7 +706,11 @@ rule create_notebook_docs:
         fullChartPNG = "../docs/flu-embeddings.png",
         PCA_Supplement = "../docs/FullPCABrushSupplementFlu.html",
         PCA_Supplement_PNG = "../docs/FullPCABrushSupplementFlu.png",
-        Explained_variance_PCA = "../docs/explainedVarianceFlu.png"
+        Explained_variance_PCA = "../docs/explainedVarianceFlu.png",
+        fullChartHDBSCAN = "../docs/fullHDBSCANChartFlu.html",
+        fullChartHDBSCANPNG = "../docs/fullHDBSCANChartFlu.png",
+        SupplementalTSNEHDBSCAN = "../docs/tsneSupplementHDBSCANFlu.html",
+        SupplementalTSNEHDBSCANPNG = "../docs/tsneSupplementHDBSCANFlu.png"
 
     conda: "../cartography.yml"
     notebook:
@@ -719,7 +727,7 @@ rule create_cross_v_docs:
         cross_v_thresholds = "../seasonal-flu-nextstrain/results/cross_validation_thresholds.csv"
 
     output:
-        exhaustive_grid_search = "../exhaustive_grid_search.png",
+        exhaustive_grid_search = "../docs/exhaustive_grid_search.png",
         cross_v_data = "../docs/cross_validation_graph.png"
 
     conda: "../cartography.yml"
