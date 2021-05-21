@@ -368,15 +368,16 @@ We hope scientists will now be able to use these embeddings with confidence to f
 
 # Materials and Methods
 
-The analysis environment can be recreated using conda and all installation instructions are available on [this paper's github](https://github.com/blab/cartography) .
+The analysis environment can be recreated using conda and all installation instructions are available on [this paper's github](https://github.com/blab/cartography).
 
 The genome data we used for H3N2 HA influenza is from the NCBI influenza database.
 We used [this search](https://www.ncbi.nlm.nih.gov/genomes/FLU/Database/nph-select.cgi?cdate_has_day=true&cdate_has_month=true&cmd=show_query&collapse=on&country=any&defline_saved=%3E%7Baccession%7D%20%7Bstrain%7D%20%7Byear%7D/%7Bmonth%7D/%7Bday%7D%20%7Bsegname%7D&fyear=2015&go=database&host=Human&lab=exclude&lineage=include&niaid=include&qcollapse=on&searchin=strain&segment=4&sequence=N&showfilters=true&sonly=on&subtype_h=3&subtype_mix=include&subtype_n=2&swine=include&tyear=2020&type=a&vac_strain=include). Clades were defined by reasonable phylogenetic signal.
 The Zika data was curated by Allison Black, with sequences from Genbank and the Bedford Lab. Clades were defined by regionally important introductions and reasonable phylogenetic signal.
 The MERS data was downloaded from [e-life](https://elifesciences.org/download/aHR0cHM6Ly9jZG4uZWxpZmVzY2llbmNlcy5vcmcvYXJ0aWNsZXMvMzEyNTcvZWxpZmUtMzEyNTctZmlnMS1kYXRhNS12My56aXA-/elife-31257-fig1-data5-v3.zip?_hash=YhuQfm%2BGO%2BY6MsWLZB4WrPQvYtSlHOhLnzwnvTaesws%3D). [@dudas_carvalho_rambaut_bedford_2018]
-The COVID data was curated by Dr. John Huddleston, with sequences from Genbank and __________. Clades were defined by __________.
+The Sars-CoV-2 data was curated by the Nextstrain team, with sequences from Genbank. Clades were defined by __________.
 
 Clades and host were used in the MERS analysis, as the hosts (camel and human) are scientifically useful and phylogenetically accurate to the Newick tree.
+# (monophyletic status, manually refined clades to look for monophyletic groups with 1+ strain from another host that grouped closely to another clade)
 The clade assignments were defined based on multihost status that were created manually to ____________.
 We analyzed influenza A/H3N2 and Zika by creating a FASTA file of multiple sequence alignments with MAFFT v7.407 [@Katoh2002] via augur align [@Hadfield2018] and phylogenies with IQ-TREE v1.6.10 [@Nguyen2014] via augur tree version 9.0.0.
 
