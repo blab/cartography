@@ -36,6 +36,7 @@ rule all:
         "../docs/FullLinkedChartBrushableHostMERS.html",
         "../docs/bases_missing_vs_pc1_MERS.png",
         "results/nucleotide_diversity.txt",
+        "../docs/fullHDBSCANChartMERS.png"
 
 
 rule files:
@@ -169,6 +170,33 @@ rule subset_data:
             --output-fasta {output.fasta} 
         """
 
+
+rule cluster_embeddings:
+    message: "finding the optimal HDBSCAN distance thresholds for the embeddings"
+    input:
+        alignment = "results/aligned.fasta",
+        metadata = "data/manual_multihost_clades.json",
+        distance_matrix = "results/distance_matrix.csv"
+    output:
+        dataframe_full = "results/full_output_HDBSCAN.csv",
+        dataframe = "results/output_HDBSCAN.csv",
+        figure = "results/accuracy_figure_HDBSCAN.png"
+    params:
+        clade_column = "multihost_clade_membership"
+    conda: "../cartography.yml"
+    threads: 4
+    shell:
+        """
+        python3 ../notebooks/scripts/cluster_results.py \
+            --distance-matrix {input.distance_matrix} \
+            --alignment {input.alignment} \
+            --clades {input.metadata} \
+            --column-metadata {params.clade_column} \
+            --output {output.dataframe} \
+            --output-full {output.dataframe_full} \
+            --output-figure {output.figure} \
+        """
+
 rule create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
@@ -201,7 +229,8 @@ rule nucleotide_diversity:
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
-        alignment = rules.subset_data.output.fasta
+        alignment = rules.subset_data.output.fasta,
+        cluster = "results/output_HDBSCAN.csv"
     output:
         node_data = "results/embed_pca.json",
         dataframe = "results/embed_pca.csv",
@@ -214,7 +243,7 @@ rule embed_pca:
         """
         python3 ../notebooks/scripts/embed.py \
             --alignment {input.alignment} \
-            --cluster \
+            --cluster {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -227,7 +256,8 @@ rule embed_pca:
 rule embed_tsne:
     message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output
+        distance_matrix = rules.create_distance_matrix.output.output,
+        cluster = "results/output_HDBSCAN.csv"
     output:
         node_data = "results/embed_t-sne.json",
         dataframe = "results/embed_t-sne.csv",
@@ -240,7 +270,7 @@ rule embed_tsne:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster \
+            --cluster {input.cluster} \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -252,7 +282,8 @@ rule embed_tsne:
 rule embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output
+        distance_matrix = rules.create_distance_matrix.output.output,
+        cluster = "results/output_HDBSCAN.csv"
     output:
         node_data = "results/embed_umap.json",
         dataframe = "results/embed_umap.csv",
@@ -265,7 +296,7 @@ rule embed_umap:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster \
+            --cluster {input.cluster} \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -277,7 +308,8 @@ rule embed_umap:
 rule embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output
+        distance_matrix = rules.create_distance_matrix.output.output,
+        cluster = "results/output_HDBSCAN.csv"
     output:
         node_data = "results/embed_mds.json",
         dataframe = "results/embed_mds.csv",
@@ -289,7 +321,7 @@ rule embed_mds:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster \
+            --cluster {input.cluster} \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -472,6 +504,7 @@ rule concat_scatterplot_table:
 rule create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:
+        colors = "../notebooks/config/color_schemes.tsv",
         #Charts, tree:
         node_df = "results/table.tsv",
 
@@ -479,6 +512,8 @@ rule create_notebook_docs:
         explained_variance_pca = "results/explained_variance_pca.csv",
 
         mds_df = "results/embed_mds.csv",
+        tsne_df = "results/embed_t-sne.csv",
+        umap_df = "results/embed_umap.csv",
 
         #Scatterplot:
         scatterplot_pca = "results/scatterplot_pca.csv",
@@ -520,8 +555,8 @@ rule create_notebook_docs:
         PCA_Supplement_PNG = "../docs/FullPCABrushSupplementMERS.png",
         Explained_variance_PCA = "../docs/explainedVarianceMERS.png",
         fullChartHost = "../docs/FullLinkedChartBrushableHostMERS.html",
-        TSNE_Supplement = "../docs/t-SNEInteractiveChart.html",
-        TSNE_Supplement_png = "../docs/t-SNEInteractiveChart.png",
+        fullChartHDBSCAN = "../docs/fullHDBSCANChartMERS.html",
+        fullChartHDBSCANPNG = "../docs/fullHDBSCANChartMERS.png"
 
     conda: "../cartography.yml"
     notebook:
