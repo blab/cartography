@@ -229,7 +229,7 @@ rule make_clades:
         col_name = "Nextstrain_clade"
     shell:
         """
-        python3 scripts/make_clades.py \
+        python3 ../notebooks/scripts/make_clades.py \
             --metadata {input.metadata} \
             --output {output.output} \
             --col-name {params.col_name}

@@ -371,24 +371,24 @@ We hope scientists will now be able to use these embeddings with confidence to f
 The analysis environment can be recreated using conda and all installation instructions are available on [this paper's github](https://github.com/blab/cartography).
 
 The genome data we used for H3N2 HA influenza is from the NCBI influenza database.
-We used [this search](https://www.ncbi.nlm.nih.gov/genomes/FLU/Database/nph-select.cgi?cdate_has_day=true&cdate_has_month=true&cmd=show_query&collapse=on&country=any&defline_saved=%3E%7Baccession%7D%20%7Bstrain%7D%20%7Byear%7D/%7Bmonth%7D/%7Bday%7D%20%7Bsegname%7D&fyear=2015&go=database&host=Human&lab=exclude&lineage=include&niaid=include&qcollapse=on&searchin=strain&segment=4&sequence=N&showfilters=true&sonly=on&subtype_h=3&subtype_mix=include&subtype_n=2&swine=include&tyear=2020&type=a&vac_strain=include). Clades were defined by reasonable phylogenetic signal.
+We used [this search](https://www.ncbi.nlm.nih.gov/genomes/FLU/Database/nph-select.cgi?cdate_has_day=true&cdate_has_month=true&cmd=show_query&collapse=on&country=any&defline_saved=%3E%7Baccession%7D%20%7Bstrain%7D%20%7Byear%7D/%7Bmonth%7D/%7Bday%7D%20%7Bsegname%7D&fyear=2015&go=database&host=Human&lab=exclude&lineage=include&niaid=include&qcollapse=on&searchin=strain&segment=4&sequence=N&showfilters=true&sonly=on&subtype_h=3&subtype_mix=include&subtype_n=2&swine=include&tyear=2020&type=a&vac_strain=include). 
+Clades were defined by reasonable phylogenetic signal.
 The Zika data was curated by Allison Black, with sequences from Genbank and the Bedford Lab. Clades were defined by regionally important introductions and reasonable phylogenetic signal.
 The MERS data was downloaded from [e-life](https://elifesciences.org/download/aHR0cHM6Ly9jZG4uZWxpZmVzY2llbmNlcy5vcmcvYXJ0aWNsZXMvMzEyNTcvZWxpZmUtMzEyNTctZmlnMS1kYXRhNS12My56aXA-/elife-31257-fig1-data5-v3.zip?_hash=YhuQfm%2BGO%2BY6MsWLZB4WrPQvYtSlHOhLnzwnvTaesws%3D). [@dudas_carvalho_rambaut_bedford_2018]
-The Sars-CoV-2 data was curated by the Nextstrain team, with sequences from Genbank. Clades were defined by __________.
+Clades and host were used in the MERS analysis, as the hosts (camel and human) are scientifically useful and phylogenetically accurate to the Newick tree. 
+Clades were automatically defined by monophyletic host status, with manual refining of clades where monphyletic groups had one or more strains from another host that grouped closely with another clade.
+The Sars-CoV-2 data was curated by the Nextstrain team, with sequences from Genbank. Clades were defined by patterns of larger scale diversity that persisted for more than a month and had significant geographic spread.
 
-Clades and host were used in the MERS analysis, as the hosts (camel and human) are scientifically useful and phylogenetically accurate to the Newick tree.
-# (monophyletic status, manually refined clades to look for monophyletic groups with 1+ strain from another host that grouped closely to another clade)
-The clade assignments were defined based on multihost status that were created manually to ____________.
 We analyzed influenza A/H3N2 and Zika by creating a FASTA file of multiple sequence alignments with MAFFT v7.407 [@Katoh2002] via augur align [@Hadfield2018] and phylogenies with IQ-TREE v1.6.10 [@Nguyen2014] via augur tree version 9.0.0.
 
 We used two different methods of transforming the data; Scaling and centering the data, and a Hamming distance similarity matrix.
 For Scaling and Centering the data, we performed PCA on the matrix of nucleotides from the multiple sequence alignment using scikit-learn [@jolliffe_cadima_2016].
 An explained variance plot was created to determine the amount of PCs used for distance calculations and visualization, which is in the supplementary figures section.
-A separate bases missing vs PC1 was also created to help reveal the level of relation between missing bases and outliers in PCA; this is available for MERS in the supplemental section.
+A separate bases missing vs PC1 was also created to help reveal the level of relation between missing bases and outliers in PCA; this is available for MERS and Sars-CoV-2 in the supplemental section.
 
 We dropped around 4 strains in the H3N2 analysis, as they were direct animal-to-human transmissions where the genomes resembled swine flu (seen through NCBI's BLAST).
 We dropped around 5 strains in the Zika analysis that were exceedingly low quality.
-Due to the amount of missing data within the zika genome, we also imputed the data using scikit-learn's simple imputer for PCA for a better embedding result. 
+Due to the amount of missing data within the zika and Sars-CoV-2 genome, we imputed the data using scikit-learn's simple imputer for PCA for a better embedding result. 
 This was only applied to PCA, as the hamming distance algorithm used with the distance based methods disregards missing bases.
 Imputation was tested for MERS, but due to entire columns of missing data for MERS, we dropped all strains with over 3 standard deviations of missing bases in its genome from the MERS analysis.
 
@@ -400,7 +400,7 @@ We only counted a difference between the main nucleotide pairs (AGCT) - gaps (N,
 This is because some sequences were significantly shorter than others, and a shorter strain does not necessarily correspond to genetic dissimilarity, which is what counting gaps implied.
 
 We reduced the similarity distance matrix through MDS, t-SNE, and UMAP, plotted using [Altair](https://altair-viz.github.io/) [@VanderPlas2018], and colored by clade assignment.
-Clade membership metadata was provided by a .json build of the influenza H3N2 tree and Zika trees. For MERS, the host data was given via the Newick tree, and clade membership was defined using [BioPython](https://biopython.org/) as outbreaks with a monophyletic host status (strictly camel or human).
+Clade membership metadata was provided by a .json build of the influenza H3N2, Zika, and Sars-CoV-2 trees. For MERS, the host data was given via the Newick tree, and clade membership was defined using [BioPython](https://biopython.org/) as outbreaks with a monophyletic host status (strictly camel or human).
 
 The 3 different dimensionality reduction techniques are ordered below by publication date:
 - [MDS](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.MDS.html)
@@ -409,18 +409,17 @@ The 3 different dimensionality reduction techniques are ordered below by publica
 
 The plots of the full 10 PCs for PCA are available in the supplemental figures section.
 
-We tuned hyperparameters for t-SNE and UMAP using an exhaustive grid search, which picked the best parameters by maximizing MCC for the confusion matrix created from the Supported Vector Machine's classification.
+We tuned hyperparameters for t-SNE and UMAP using an exhaustive grid search, which picked the best parameters by maximizing MCC for the confusion matrix created from the Support Vector Machine's classification.
 UMAP's minimum distance and nearest neighbors were tuned, and t-SNEs perplexity and learning rate were tuned.
 As nearest neighbors fluctuates depending on the amount of samples, we took the best nearest neighbor value from the cross validation and the total number of samples given per fold.
 This proportion was used to determine the nearest neighbors value for the UMAP plots.
 t-SNE performed best with a perplexity of 15.0 and a learning rate of 100.0.
 UMAP performed best with a minimum distance of .05 between clusters.
 While tuning these parameters does not change qualitative results, it can help make patterns easier to identify.
-The exhaustive grid search data is summarized in the below chart. 
+The exhaustive grid search results are summarized in the below chart. 
 
 ![Exhaustive Grid Search data for t-SNE and UMAP](exhaustive_grid_search.png){#fig:exhaustive-grid-search}
 
-We ran the raw embedding distances through the clustering algorithm Hierarchical Density-Based Spatial Clustering of Applications with Noise (HDBSCAN) to understand the usage of the embeddings to cluster data without the phylogenetic tree.
 
 To further analyze these embeddings’ ability to accurately capture the multidimensional data, we made two separate plots: Hamming vs Euclidean distance scatterplots with a LOESS best fit line, and within vs between clade KDE density plots per embedding.
 
@@ -446,6 +445,18 @@ To create this plot, the matrix of Euclidean distances for each embedding was fl
 KDE plots were made using [seaborn](https://seaborn.pydata.org/), separated by clade status and Euclidean distance on the y axis.
 A Supported Vector Machine was run to optimize for clade relationships by Euclidean distance, and the MCC, accuracy value, and classifier thresholds were calculated and captured along with the confusion matrix of values.
 
+#### Cross Validation for optimal distance thresholds using HDBSCAN
+
+We ran the raw embedding distances through the clustering algorithm Hierarchical Density-Based Spatial Clustering of Applications with Noise (HDBSCAN) to understand the usage of the embeddings to cluster data without the phylogenetic tree. We ran the algorithm both with its default settings and with the best distance threshold found through cross validation. 
+
+The cross validation test finds the Euclidean distance threshold that most accurately classifies within and between clade relationships.
+This threshold is tested and analyzed on a population from the past, and then applied to a population of the same disease from some years later. 
+This test determines the embeddings’ abilities to understand future trends in present populations, which further analyses the uses and applicability of this research to other disciplines.
+2016 to 2018 H3N2 Influenza data was used for the initial cross validation, with a repeated K fold analysis with 3 repeats used from scikit-learn [@jolliffe_cadima_2016]. 
+Each of these folds were fit to each embedding method (PCA, MDS, t-SNE, UMAP) and ran through HDBSCAN with various distance thresholds to identify an optimal Euclidean distance threshold to accurately classify pairs of strains from the same clade within these clusters. 
+The most optimal threshold was used on Influenza H3N2 data from 2018 to 2020 to test the embeddings’ ability to classify future strain pairs accurately on the same virus. 
+A confusion matrix, plots colored by HDBSCAN label, and accuracy values were recorded using functions from scikit-learn [@jolliffe_cadima_2016] in order to further analyze the results of the test. 
+
 ### HA and NA Full Genomes:
 
 The HA and NA analysis tests the embedding's ability to create accurate embeddings with recombinant genomes, and analyzes the impact the added chromosome sequence has on the embeddings’ ability to visually separate recombinant clades from their parent clade.
@@ -454,7 +465,7 @@ The joined FASTA was then used as input for the embeddings, and the HA vs HA and
 The distances between the points in the HA and HA and NA embedding were studied to further quantify the level of reassortment within HA clades by creating a boolean reassortment indicator that uses the distance between a strain in the HA-only and HA and NA joint analysis UMAP embedding and takes all values 3 standard deviations above the mean as reassorted. 
 A full interactive visualization plot was created to analyze the differences between the HA and HA and NA joint analysis plots, as well as an HA and NA tangle tree comparing the two phylogenies and colored by the boolean reassortment indicator, a Procrustes UMAP embedding with HA-only and HA and NA joint analysis points connected and colored by clade status, and a KDE density plots with MCC values to further assess the efficacy of using full genomes for this approach.
 
-### Cross Validation 
+### Cross Validation using a Support Vector Machine 
 
 The cross validation test creates a Euclidean distance threshold between clade relationships from a population from the past, and the threshold is tested on a population of the same disease from some years later. 
 This test determines the embeddings’ abilities to understand future trends in present populations, which further analyses the uses and applicability of this research to other disciplines.
