@@ -491,16 +491,18 @@ rule cluster_embeddings:
             --output-figure {output.figure} \
         """
 
-
 rule exhaustive_grid_search:
     message: "does exhastive grid search to find the best values to set for tsne and umap"
     input:
         distance_matrix = "results/distance_matrix_sequences.csv",
         node_data = rules.tree_to_table.output.table,
+        alignment = "results/aligned_sequences.fasta"
     output:
         output = "results/best_values.txt",
+        outputHDBSCAN = "results/output_HDBSCAN.csv",
         metadata = "results/grid_search.csv",
-        figure = "../docs/exhaustive_grid_search.png"
+        figureGridSearch = "../docs/exhaustive_grid_search.png",
+        figureHDBSCAN = "results/accuracy_figure_HDBSCAN.png"
     params:
         n_repeats = 10,
         perplexity = "15 30 100",
@@ -512,15 +514,17 @@ rule exhaustive_grid_search:
         """
         python3 scripts/exhaustive_grid_search.py \
             --distance-matrix {input.distance_matrix} \
+            --alignment {input.alignment} \
             --node-data {input.node_data} \
             --n-neighbors {params.n_neighbors} \
             --min-dist {params.min_dist} \
             --perplexity {params.perplexity} \
             --learning-rate {params.learning_rate} \
             --n-repeats {params.n_repeats} \
-            --output {output.output} \
+            --output {output.output} {output.outputHDBSCAN} \
             --output-metadata {output.metadata} \
-            --output-figure {output.figure}
+            --output-figure-HDBSCAN {output.figureHDBSCAN} \
+            --output-figure-grid-search {output.figureGridSearch}
         """
 
 rule scatterplot:

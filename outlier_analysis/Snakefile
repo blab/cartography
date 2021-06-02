@@ -1,23 +1,3 @@
-EMBEDDING_METHODS = [
-    "pca",
-    "mds",
-    "t-sne",
-    "umap"
-]
-
-KDE_METHODS = [
-    "pca",
-    "mds",
-    "t-sne",
-    "umap",
-    "genetic"
-]
-
-OUTLIER = [
-    "swine",
-    "human"
-    ]
-
 ANALYSIS_TYPE = [
     "filtered",
     "human",
@@ -43,7 +23,6 @@ rule all:
         expand("results/aligned_{analysis}.fasta", analysis=ANALYSIS_ALIGN),
         expand("results/distance_matrix_{analysis}.csv", analysis=ANALYSIS_ALIGN),
         expand("results/embed_mds_{analysis}.csv", analysis=ANALYSIS_ALIGN),
-        
         expand("results/outliers_{analysis}.csv", analysis=["filtered", "human_swine"]),
         "results/outliers_full.csv",
         "../auspice/cartography_flu-outlier-h3n2-swine-human.json",
@@ -52,7 +31,8 @@ rule all:
         "results/table.tsv",
         "../docs/distributionLOFOutlierFull.png",
         "../docs/distributionLOFOutlierHumanSwine.png",
-        "../docs/KDEDensityFluOutlierHumanSwine.png"
+        "../docs/KDEDensityFluOutlierHumanSwine.png",
+        "results/accuracy_figure_HDBSCAN_human_swine.png"
 
 def _get_path_by_wildcards(wildcards):
     method = wildcards.analysis
@@ -406,10 +386,61 @@ rule create_distance_matrix:
             --output {output.output}
         """
 
+rule make_clades:
+    message: "creating the clades file to be used in the rest of the analysis"
+    input:
+        metadata = "results/total_metadata.tsv"
+    output:
+        output = "results/outlier_status.json"
+    params:
+        col_name = "outlier"
+    shell:
+        """
+        python3 ../notebooks/scripts/make_clades.py \
+            --metadata {input.metadata} \
+            --output {output.output} \
+            --col-name {params.col_name}
+        """
+
+def _create_distance_thresholds(wildcards):
+    import numpy as np
+    thresholds = list(np.arange(0,40,4))
+    string_values = " ".join([str(i) for i in thresholds])
+    return string_values
+    
+rule cluster_embeddings:
+    message: "finding the optimal HDBSCAN distance thresholds for the embeddings"
+    input:
+        alignment = "results/aligned_human_swine.fasta",
+        metadata = "results/outlier_status.json",
+        distance_matrix = "results/distance_matrix_human_swine.csv"
+    output:
+        dataframe_full = "results/full_output_HDBSCAN_human_swine.csv",
+        dataframe = "results/output_HDBSCAN_human_swine.csv",
+        figure = "results/accuracy_figure_HDBSCAN_human_swine.png"
+    params:
+        clade_column = "clade_membership",
+        threshold_information = _create_distance_thresholds
+    conda: "../cartography.yml"
+    threads: 4
+    shell:
+        """
+        python3 scripts/cluster_results_outlier.py \
+            --distance-matrix {input.distance_matrix} \
+            --alignment {input.alignment} \
+            --clades {input.metadata} \
+            --column-metadata {params.clade_column} \
+            --threshold-information {params.threshold_information} \
+            --output {output.dataframe} \
+            --output-full {output.dataframe_full} \
+            --output-figure {output.figure} \
+        """
+
 rule embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output
+        distance_matrix = "results/distance_matrix_human_swine.csv",
+        cluster = "results/output_HDBSCAN_human_swine.csv"
     output:
         node_data = "results/embed_mds_{analysis}.json",
         dataframe = "results/embed_mds_{analysis}.csv",
@@ -421,7 +452,7 @@ rule embed_mds:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster \
+            --cluster {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -550,7 +581,7 @@ rule find_outliers_other:
             --output-outliers {output.outliers} \
             --output-main-figure {output.figure} 
         """
-
+#get this rule working 
 rule create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:

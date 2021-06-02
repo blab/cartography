@@ -18,7 +18,7 @@ from sklearn.model_selection import RepeatedKFold
 import sys
 from umap import UMAP
 
-from Helpers import get_euclidean_data_frame
+from Helpers import get_euclidean_data_frame, get_PCA_feature_matrix
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -52,7 +52,7 @@ if __name__ == "__main__":
         #threshold_df = pd.read_csv(args.threshold_information)    threshold_df.loc[threshold_df['embedding'] == args.method][args.column_threshold].values.tolist()[0]
         distance_thresholds = args.threshold_information 
     else:
-        distance_thresholds = np.arange(0,22,2)
+        distance_thresholds = np.arange(0,20,2)
 
     default_tuned_values = []
     list_of_embedding_strings = ["t-sne", "umap", "mds", "pca"] #["t-SNE","UMAP","MDS", "PCA"]
@@ -82,7 +82,8 @@ if __name__ == "__main__":
 
     embedding_parameters = {
         "dissimilarity": "precomputed",
-        "n_components" : 2
+        "n_components" : 2,
+        "n_init" : 2
     }
     default_tuned_values.append(embedding_parameters)
 
@@ -110,22 +111,7 @@ if __name__ == "__main__":
     distance_matrix = distance_matrix.drop(indices_to_drop.index, axis=1)
     distance_matrix = distance_matrix.to_numpy()
 
-    sequences_by_name = OrderedDict()
-
-    for sequence in Bio.SeqIO.parse(args.alignment, "fasta"):
-        if sequence.id in sequence_names:
-            sequences_by_name[sequence.id] = str(sequence.seq)
-
-    sequence_names_val = list(sequences_by_name.keys())
-    assert(len(sequence_names_val) == len(sequence_names))
-
-    numbers = list(sequences_by_name.values())[:]
-    for i in range(0,len(list(sequences_by_name.values()))):
-        numbers[i] = re.sub(r'[^AGCT]', '5', numbers[i])
-        numbers[i] = list(numbers[i].replace('A','1').replace('G','2').replace('C', '3').replace('T','4'))
-        numbers[i] = [int(j) for j in numbers[i]]
-
-    numbers = np.array(numbers)
+    numbers = get_PCA_feature_matrix(args.alignment, sequence_names)
 
 # k fold analysis with thresholds
     random_state = 12883823
@@ -162,7 +148,7 @@ if __name__ == "__main__":
                 
                 distance_threshold = float(distance_threshold)
                 
-                clusterer = hdbscan.HDBSCAN(min_cluster_size=15, cluster_selection_epsilon=distance_threshold)
+                clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=distance_threshold)
                 clusterer.fit(val_df[_get_embedding_columns_by_method(list_of_embedding_strings[i])])
                 val_df[f"{list_of_embedding_strings[i]}_label_{k}"] = clusterer.labels_.astype(str)
                 list_columns = _get_embedding_columns_by_method(list_of_embedding_strings[i])
@@ -200,7 +186,7 @@ if __name__ == "__main__":
                 
                 distance_threshold = float(distance_threshold)
                 
-                clusterer = hdbscan.HDBSCAN(min_cluster_size=15, cluster_selection_epsilon=distance_threshold)
+                clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=distance_threshold)
                 clusterer.fit(val_df[_get_embedding_columns_by_method(list_of_embedding_strings[i])])
                 val_df[f"{list_of_embedding_strings[i]}_label_{k}"] = clusterer.labels_.astype(str)
                 list_columns = _get_embedding_columns_by_method(list_of_embedding_strings[i])

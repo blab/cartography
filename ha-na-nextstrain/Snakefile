@@ -61,7 +61,8 @@ rule all:
         "../docs/UMAPHaNa.html",
         "../docs/UMAPHaNa.png",
         "../docs/UMAPProcrustesHaNa.png",
-        "../docs/UMAPBoxplotHaNA.png"
+        "../docs/UMAPBoxplotHaNA.png",
+         "results/nucleotide_diversity_na.txt"
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha-na.fa",
@@ -370,6 +371,19 @@ def _get_embedding_columns_by_wildcards_mds_umap(wildcards):
     else:
         return f"{method}_x {method}_y"
 
+rule nucleotide_diversity:
+    message: "finding the nucleotide diversity of an aligned FASTA file"
+    input:
+        alignment = "results/aligned_na.fasta"
+    output:
+        output = "results/nucleotide_diversity_na.txt"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/nucleotide_diversity.py \
+            --alignment {input.alignment} \
+            --output {output.output}
+        """
 rule procrustes_distance:
     message: "performing procrustes analysis and distance metric calculation on embeddings of choice"
     input:

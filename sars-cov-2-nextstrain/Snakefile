@@ -65,7 +65,21 @@ rule decompress_metadata:
         config["conda_environment"]
     shell:
         """
-        xz -c -d {input} > {output}
+        xz -c -d {input} > {output} \
+        """
+
+rule get_low_quality:
+    input:
+        metadata="results/global-xsmall_metadata.tsv" 
+    output:
+        output ="results/global-xsmall_metadata_low_quality.tsv"
+    conda:
+        config["conda_environment"]
+    shell:
+        """
+        python3 scripts/bad_samples.py \
+            --metadata {input.metadata} \
+            --output {output.output}
         """
 
 rule embed_pca_before:
@@ -91,15 +105,20 @@ rule bases_missing_vs_pc1:
     message: "creating a bases_missing vs PC1 graph"
     input:
         alignment = "results/global-xsmall_alignment.fasta",
-        pca = "results/embed_pca_before.csv"
+        pca = "results/embed_pca_before.csv",
+        metadata = "results/global-xsmall_metadata_low_quality.tsv"
     output:
         figure = "../docs/bases_missing_vs_pc1_Sars.png"
+    params:
+        color = "low_quality"
     conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/pc1_vs_bases_missing.py \
             --alignment {input.alignment} \
+            --metadata {input.metadata} \
             --pca {input.pca} \
+            --color {params.color} \
             --output {output.figure}
         """
 

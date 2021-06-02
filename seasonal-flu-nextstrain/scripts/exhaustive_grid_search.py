@@ -1,6 +1,7 @@
 """Exhastuve grid search for parameters for TSNE and UMAP"""
 import argparse
 import itertools
+import hdbscan
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import matplotlib.gridspec as gridspec
@@ -8,7 +9,8 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from scipy.spatial.distance import pdist, squareform
-from sklearn.manifold import TSNE
+from sklearn.manifold import TSNE, MDS
+from sklearn.decomposition import PCA
 from sklearn.metrics import confusion_matrix, matthews_corrcoef
 from sklearn.model_selection import RepeatedKFold
 from sklearn.preprocessing import StandardScaler
@@ -16,44 +18,95 @@ from sklearn.pipeline import make_pipeline
 from sklearn.svm import LinearSVC
 from umap import UMAP
 
+import sys
+sys.path.append("../notebooks/scripts/")
+
+from Helpers import get_PCA_feature_matrix, get_euclidean_data_frame
+
 if __name__ == "__main__":
+
+    #add together these argument sets to do what you need to happen (from cluster results - some of the args aren't defined)
+    """
+    parser.add_argument("--distance-matrix", help="csv file with the distance matrix")
+    
+    parser.add_argument("--clades", help="json file containing information about clade membership")
+    parser.add_argument("--column-metadata", default="clade_membership", help="the column which contains the clade information")
+    
+    parser.add_argument("--output", help="the csv path where the best label of the data and strain name per method will be saved.")
+    parser.add_argument("--output-full", help="the csv path where the full list of accuracy data per threshold will be saved")
+    parser.add_argument("--output-figure", help="PNG with the MCC values displayed graphically per method")
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--distance-matrix", help="csv file with the distance matrix")
+    parser.add_argument("--alignment", help="FASTA file with the alignment")
     parser.add_argument("--node-data", help="csv file with the clade_membership - that MUST be the name of the column.")
     parser.add_argument("--n-neighbors", nargs="+", type=int, help="list of values that the search should use")
     parser.add_argument("--min-dist", nargs="+", type=float, help="list of values that the search should use")
     parser.add_argument("--perplexity", nargs="+", type=float, help="list of values that the search should use")
+    parser.add_argument("--threshold-information", nargs="+", help="the distance threshold values to be used on HDBSCAN. if not provided, it will run without.")
     parser.add_argument("--learning-rate", nargs="+", type=float, help="list of values that the search should use")
     parser.add_argument("--n-repeats", type=int, help="the number of times the k fold generator should repeat the k fold")
-    parser.add_argument("--output", help="the path where the best parameters will be saved.")
+    parser.add_argument("--output", nargs=2, help="the path where the best parameters and thresholds will be saved. Text file first and csv next.")
     parser.add_argument("--output-metadata", help="the path where the grid search data will be saved.")
-    parser.add_argument("--output-figure", help="PNG with the results displayed graphically")
-
+    parser.add_argument("--output-figure-HDBSCAN", help="PNG with the results displayed graphically for HDBSCAN thresholds")
+    parser.add_argument("--output-figure-grid-search", help="PNG with the results displayed graphically for grid search")
 
     args = parser.parse_args()
 
-    def assign_clade_status_to_pairs(clade_annotations, index):
-        """Assign clade status to all pairs in the given list of indices and the given data frame of clade annotations.
-        
-        Outputs a vector in condensed distance matrix format such that all nonredundant pairs of strains are represented.
-        
-        """
-        clade_statuses = []
-        for i in range(len(index)):
-            for j in range(i + 1, len(index)):
-                same_clade = clade_annotations.loc[index[i], "clade_membership"] == clade_annotations.loc[index[j], "clade_membership"]
-                clade_statuses.append(int(same_clade))
-                
-        return np.array(clade_statuses)
+    def _get_embedding_columns_by_method(method):
+        if method in ("pca"):
+            return list(f"{method}1 {method}2 {method}3 {method}4 {method}5 {method}6 {method}7 {method}8 {method}9 {method}10".split())
+        if method in ("mds"):
+            return list(f"{method}1 {method}2".split())
+        if method in ("t-sne"):
+            return list("tsne_x tsne_y".split())
+        else:
+            return list(f"{method}_x {method}_y".split())
 
-    tuned_parameter_values = []
-    list_of_embeddings = [TSNE, UMAP]
+
+    if(args.threshold_information is not None):
+        #threshold_df = pd.read_csv(args.threshold_information)    threshold_df.loc[threshold_df['embedding'] == args.method][args.column_threshold].values.tolist()[0]
+        distance_thresholds = args.threshold_information 
+    else:
+        distance_thresholds = np.arange(0,20,2)
+
     default_tuned_values = []
-    list_of_embeddings_strings = ["t-SNE", "UMAP"]
+    list_of_embedding_strings = ["t-sne", "umap", "mds", "pca"] #["t-SNE","UMAP","MDS", "PCA"]
+    embedding_class = [TSNE, UMAP, MDS, PCA]
+    tuned_parameter_values = []
 
+    # reading in the distance matrix and node data
+
+    distance_matrix = pd.read_csv(args.distance_matrix, index_col=0)
+    sequence_names = distance_matrix.index.values.tolist()
+
+    
+    # parameters for the methods taken from the exhaustive grid search 
     embedding_parameters = {
         "metric": "precomputed",
+        "square_distances" : True
     }
+    default_tuned_values.append(embedding_parameters)
+
+    embedding_parameters = {
+        "init": "spectral",
+    }
+    default_tuned_values.append(embedding_parameters)
+
+    embedding_parameters = {
+        "dissimilarity": "precomputed",
+        "n_components" : 2,
+        "n_init" : 2
+    }
+    default_tuned_values.append(embedding_parameters)
+
+    embedding_parameters = {
+        "n_components" : 10,
+        "svd_solver" : "full"
+    }
+    default_tuned_values.append(embedding_parameters)
+    
+    
     tuned_parameters_TSNE = {
         "perplexity": args.perplexity, #[15, 30, 100],
         "learning_rate": args.learning_rate, #[100.0, 200.0, 500.0, 1000.0],
@@ -61,17 +114,22 @@ if __name__ == "__main__":
     }
 
     tuned_parameter_values.append(tuned_parameters_TSNE)
-    default_tuned_values.append(embedding_parameters)
 
-    embedding_parameters = {
-        "init": "spectral",
-    }
     tuned_parameters_UMAP = {
         "n_neighbors" : args.n_neighbors, #[25, 100, 200],
         "min_dist" : args.min_dist #[.05, .5]
     }
     tuned_parameter_values.append(tuned_parameters_UMAP)
-    default_tuned_values.append(embedding_parameters)
+
+        
+    tuned_parameters_MDS = {
+    }
+
+    tuned_parameter_values.append(tuned_parameters_MDS)
+
+    tuned_parameters_PCA = {
+    }
+    tuned_parameter_values.append(tuned_parameters_PCA)
 
     # reading in the distance matrix and node data
 
@@ -90,122 +148,120 @@ if __name__ == "__main__":
     distance_matrix = distance_matrix.to_numpy()
     #sequence_names = clade_annotations["strain"].values.tolist()
     
+    numbers = get_PCA_feature_matrix(args.alignment, sequence_names)
+
     random_state = 12883823
     rkf = RepeatedKFold(n_splits=2, n_repeats=args.n_repeats, random_state=random_state)
-
-    grid_search_results = []
-    for training_index, validation_index in rkf.split(sequence_names): 
-        i = 0
-        scaler = StandardScaler()
+    k=0
+    total_list_methods = []
+    for training_index, validation_index in rkf.split(clade_annotations["strain"].values.tolist()): 
+        print(len(training_index))
+        print("here " + str(k))
         for embed in tuned_parameter_values:
             keys, values = zip(*embed.items())
             experiments = [dict(zip(keys, v)) for v in itertools.product(*values)]
-            
+            i = 0
             for experiment in experiments:
                 method_dict = default_tuned_values[i].copy()
                 experiment_tuple = [(k, v) for k, v in experiment.items()]
                 method_dict.update(experiment_tuple)
 
-                embedder = list_of_embeddings[i](**method_dict)
+                for distance_threshold in distance_thresholds:
 
-                training_distance_matrix = distance_matrix[training_index][:, training_index]
-                training_embedding = embedder.fit_transform(training_distance_matrix)
+                    if(list_of_embedding_strings[i] == "pca"):
+                        #performing PCA on my pandas dataframe
+                        numbers_subset = numbers[training_index]
+                        pca = PCA(**method_dict) #can specify n, since with no prior knowledge, I use None
+                        training_embedding = pca.fit_transform(numbers_subset)
+                    else:
+                        # Subset distance matrix to training indices.
+                        training_distance_matrix = distance_matrix[training_index][:, training_index]
 
-                training_embedding_distances = pdist(training_embedding).reshape(-1, 1)
-                training_embedding_distances = scaler.fit_transform(training_embedding_distances).flatten().reshape(-1,1)
+                        # Embed training distance matrix.
+                        print(method_dict)
+                        embedder = embedding_class[i](**method_dict)
+                        training_embedding = embedder.fit_transform(training_distance_matrix)
 
-                # Assign a binary class to each pair of samples based on their clade memberships.
-                # Samples from different clades are assigned 0, samples from the same clade as assigned 1.
-                # This vector of binary values will be the output to fit a classifier to.
-                # These pairs should be in the same order as the embedding distances above.
-                training_clade_status_for_pairs = assign_clade_status_to_pairs(
-                    clade_annotations,
-                    training_index
-                )
-                # Use a support vector machine classifier to identify an optimal threshold
-                # to distinguish between within and between class pairs.
-                # See also: https://scikit-learn.org/stable/modules/svm.html#svm-classification
-                classifier = LinearSVC(
-                    dual=False,
-                    random_state=0,
-                    class_weight={1: 5},
-                    verbose=0
-                )
-                X = np.array(training_embedding_distances).reshape(-1,1)
-                y = training_clade_status_for_pairs
-                classifier.fit(X, y)
+                    list_columns_val = _get_embedding_columns_by_method(list_of_embedding_strings[i])
+                    val_df = pd.DataFrame(training_embedding, columns=list_columns_val)
+                    val_df[["strain", "clade_membership"]] = pd.DataFrame(clade_annotations[["strain", "clade_membership"]].values[training_index].tolist())
 
-                x_range = np.linspace(-3, 3, 1000)
-                z = classifier.decision_function(x_range.reshape(-1, 1))
-                classifier_threshold = x_range[np.argwhere(z > 0)[-1]][0]
+                    KDE_df_normal = get_euclidean_data_frame(sampled_df=val_df, column_for_analysis="clade_membership", embedding="method", column_list=_get_embedding_columns_by_method(list_of_embedding_strings[i]))
+                    
+                    
+                    distance_threshold = float(distance_threshold)
+                    
+                    clusterer = hdbscan.HDBSCAN(min_cluster_size=15, cluster_selection_epsilon=distance_threshold)
+                    clusterer.fit(val_df[_get_embedding_columns_by_method(list_of_embedding_strings[i])])
+                    val_df[f"{list_of_embedding_strings[i]}_label_{k}"] = clusterer.labels_.astype(str)
+                    list_columns = _get_embedding_columns_by_method(list_of_embedding_strings[i])
+                    list_columns.extend(["strain", f"{list_of_embedding_strings[i]}_label_{k}"])
+                    
+                    KDE_df_cluster = get_euclidean_data_frame(sampled_df=val_df[list_columns], column_for_analysis=f"{list_of_embedding_strings[i]}_label_{k}", embedding=list_of_embedding_strings[i], column_list=_get_embedding_columns_by_method(list_of_embedding_strings[i]))
 
-                # Use a SVM to identify an optimal threshold for genetic distances.
-                genetic_classifier = make_pipeline(
-                    StandardScaler(),
-                    LinearSVC(
-                        dual=False,
-                        random_state=0,
-                        class_weight={1: 5},
-                        verbose=0
-                    )
-                )
-                genetic_classifier.fit(squareform(training_distance_matrix).reshape(-1, 1), training_clade_status_for_pairs)
+                    confusion_matrix_val = confusion_matrix(KDE_df_normal["clade_status"], KDE_df_cluster["clade_status"])
+                    matthews_cc_val = matthews_corrcoef(KDE_df_normal["clade_status"], KDE_df_cluster["clade_status"])
+                    
 
-                # Subset distance matrix to validation indices.
-                validation_distance_matrix = distance_matrix[validation_index][:, validation_index]
+                    if(list_of_embedding_strings[i] == "pca"):
+                        #performing PCA on my pandas dataframe
+                        numbers_subset = numbers[validation_index]
+                        pca = PCA(**embed) #can specify n, since with no prior knowledge, I use None
+                        validation_embedding = pca.fit_transform(numbers_subset)
+                    else:
+                        # Subset distance matrix to validation indices.
+                        validation_distance_matrix = distance_matrix[validation_index][:, validation_index]
 
-                # Embed validation distance matrix.
-                validation_embedding = embedder.fit_transform(validation_distance_matrix)
+                        # Embed validation distance matrix.
+                        validation_embedding = embedder.fit_transform(validation_distance_matrix)
 
-                # Calculate Euclidean distance between pairs of samples in the embedding.
-                # The output should be a data frame of distances between pairs.
-                validation_embedding_distances = pdist(validation_embedding).reshape(-1, 1)
-                validation_embedding_distances = scaler.fit_transform(validation_embedding_distances).flatten().reshape(-1,1)
+                    val_df = pd.DataFrame(validation_embedding, columns=list_columns_val)
+                    val_df[["strain", "clade_membership"]] = pd.DataFrame(clade_annotations[["strain", "clade_membership"]].values[validation_index].tolist())
 
-                # Assign a binary class to each pair of samples based on their clade memberships.
-                # Samples from different clades are assigned 0, samples from the same clade as assigned 1.
-                # This vector of binary values will be the output to fit a classifier to.
-                # These pairs should be in the same order as the embedding distances above.
-                validation_clade_status_for_pairs = assign_clade_status_to_pairs(
-                    clade_annotations,
-                    validation_index
-                )
+                    KDE_df_normal = get_euclidean_data_frame(sampled_df=val_df, column_for_analysis="clade_membership", embedding="method", column_list=_get_embedding_columns_by_method(list_of_embedding_strings[i]))
+                    
+                    distance_threshold = float(distance_threshold)
+                    
+                    clusterer = hdbscan.HDBSCAN(min_cluster_size=15, cluster_selection_epsilon=distance_threshold)
+                    clusterer.fit(val_df[_get_embedding_columns_by_method(list_of_embedding_strings[i])])
+                    val_df[f"{list_of_embedding_strings[i]}_label_{k}"] = clusterer.labels_.astype(str)
+                    list_columns = _get_embedding_columns_by_method(list_of_embedding_strings[i])
+                    list_columns.extend(["strain", f"{list_of_embedding_strings[i]}_label_{k}"])
+                    
+                    KDE_df_cluster = get_euclidean_data_frame(sampled_df=val_df[list_columns], column_for_analysis=f"{list_of_embedding_strings[i]}_label_{k}", embedding=list_of_embedding_strings[i], column_list=_get_embedding_columns_by_method(list_of_embedding_strings[i]))
 
-                # Predict and score clade status from embedding distances and the trained classifier.
-                # The first argument is the set to predict classifier labels for. The second argument
-                # is the list of true labels. The return argument is the mean accuracy of the predicted
-                # labels.
-                # https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC.score
+                    confusion_matrix_val = confusion_matrix(KDE_df_normal["clade_status"], KDE_df_cluster["clade_status"])
+                    matthews_cc_val = matthews_corrcoef(KDE_df_normal["clade_status"], KDE_df_cluster["clade_status"])
 
-                confusion_matrix_val = confusion_matrix(validation_clade_status_for_pairs, classifier.predict(validation_embedding_distances))
-                matthews_cc_val = matthews_corrcoef(validation_clade_status_for_pairs, classifier.predict(validation_embedding_distances))
+                   # method_dict = {}
+                    CV_dict = default_tuned_values[i].copy()
+                    CV_dict["method"] = list_of_embedding_strings[i]
+                    CV_dict["distance_threshold_number"] = f"{list_of_embedding_strings[i]}_label_{k}"
+                    CV_dict["distance_threshold"] = distance_threshold
+                    CV_dict["confusion_matrix_training"] = confusion_matrix_val
+                    CV_dict["matthews_cc_training"] = matthews_cc_val
+                    CV_dict["num_undefined_training"] = (val_df[f"{list_of_embedding_strings[i]}_label_{k}"].values == '-1').sum()
+                    CV_dict["confusion_matrix"] = confusion_matrix_val
+                    CV_dict["matthews_cc"] = matthews_cc_val
 
-                accuracy = classifier.score(
-                    validation_embedding_distances,
-                    validation_clade_status_for_pairs
-                )
-
-                genetic_accuracy = genetic_classifier.score(
-                    squareform(validation_distance_matrix).reshape(-1, 1),
-                    validation_clade_status_for_pairs
-                )
-
-                method_dict["method"] = list_of_embeddings_strings[i]
-
-                method_dict["confusion_matrix"] = confusion_matrix_val
-                method_dict["matthews_cc"] = matthews_cc_val
-                method_dict["threshold"] = classifier_threshold
-                method_dict["accuracy"] = accuracy
-                print(method_dict)
-                grid_search_results.append(method_dict)
-            i = i + 1
+                    print(CV_dict)
+                    total_list_methods.append(CV_dict)
+                i = i + 1
+        k = k+1
 
         
-    df = pd.DataFrame(grid_search_results)
+    df = pd.DataFrame(total_list_methods)
+    
     if args.output_metadata is not None:
         df.to_csv(args.output_metadata)
+    if(args.output_full):
+        df.to_csv(args.output_full)
 
-    if args.output_figure is not None:
+    if args.output_figure_HDBSCAN:
+        sns.relplot(data=df, x="threshold", y="matthews_cc_validation", col="method", kind="scatter")
+        plt.savefig(args.output_figure)
+        
+    if args.output_figure_grid_search is not None:
 
         sns.set_theme()
 
@@ -246,6 +302,18 @@ if __name__ == "__main__":
         plt.savefig(args.output_figure)
 
     if args.output is not None:
+
+        max_values = []
+        for method in list_of_embedding_strings:
+            method_dict = dict(df.groupby("method").get_group(method).iloc[df.groupby("method").get_group(method).groupby("threshold")["matthews_cc_validation"].mean().argmax()])
+            max_values.append(method_dict)
+                
+        max_df = pd.DataFrame(max_values)
+        max_index = max_df["method"].values.tolist()
+        max_thresholds = max_df["threshold"].values.tolist()
+        
+        max_df.to_csv(args.output[1])
+
         df_TSNE = df[df.method == 't-SNE'].dropna(axis = 1)
         df_UMAP = df[df.method == 'UMAP'].dropna(axis = 1)
 
@@ -255,11 +323,13 @@ if __name__ == "__main__":
         UMAP_grouped = pd.DataFrame(df_UMAP.groupby(["n_neighbors", "min_dist"])['matthews_cc'].mean())
         umap_val = UMAP_grouped.iloc[UMAP_grouped["matthews_cc"].argmax()]
 
-        file = open(args.output, "w")
+        file = open(args.output[0], "w")
 
         file.write("tsne perplexity: " + str(tsne_val.name[0]) + "\n" + "tsne learning_rate: " + str(tsne_val.name[1]) + "\n" + "mcc best value: " + str(tsne_val.values[0]) + "\n")
 
         file.write("umap nearest_neighbors: " + str(umap_val.name[0]) + "\n" + "umap min_dist: " + str(umap_val.name[1]) + "\n" + "mcc best value: " + str(umap_val.values[0]))
+
+        file.write([str(max_index[i]) + " best threshold is " + str(max_thresholds[i]) + "\n" for i in range(0,len(max_thresholds))])
 
         file.close()
 

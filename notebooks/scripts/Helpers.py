@@ -1,12 +1,44 @@
 """Functions for manipulating and plotting pairwise distances and reduced
 dimensionality embeddings of distance matrices.
 """
+import Bio.SeqIO
+from collections import OrderedDict
 import numpy as np
 import altair as alt
 import pandas as pd
+import re
 from scipy.spatial.distance import squareform, pdist
 from scipy.stats import linregress
 import statsmodels
+
+def get_PCA_feature_matrix(alignment, sequence_names):
+    """Calculate PCA feature matrix from the alignment and the strains that should be kept
+    within the analysis
+    Parameters
+    ----------
+    alignment : string
+        string corresponding to the address of the alignment file (local or global)
+    Returns
+    -------
+    numpy array feature map of PCA
+    """
+    sequences_by_name = OrderedDict()
+
+    for sequence in Bio.SeqIO.parse(alignment, "fasta"):
+        if sequence.id in sequence_names:
+            sequences_by_name[sequence.id] = str(sequence.seq)
+
+    sequence_names_val = list(sequences_by_name.keys())
+    assert(len(sequence_names_val) == len(sequence_names))
+
+    numbers = list(sequences_by_name.values())[:]
+    for i in range(0,len(list(sequences_by_name.values()))):
+        numbers[i] = re.sub(r'[^AGCT]', '5', numbers[i])
+        numbers[i] = list(numbers[i].replace('A','1').replace('G','2').replace('C', '3').replace('T','4'))
+        numbers[i] = [int(j) for j in numbers[i]]
+
+    numbers = np.array(numbers)
+
 
 def get_hamming_distances(genomes):
     """Calculate pairwise Hamming distances between the given list of genomes
