@@ -468,9 +468,9 @@ def _get_embedding_columns_by_wildcards(wildcards):
 rule cluster_embeddings:
     message: "finding the optimal HDBSCAN distance thresholds for the embeddings"
     input:
-        alignment = "results/aligned_ancestral.fasta",
+        alignment = "results/aligned_sequences.fasta",
         metadata = "results/clades.json",
-        distance_matrix = "results/distance_matrix_ancestral.csv"
+        distance_matrix = "results/distance_matrix_sequences.csv"
     output:
         dataframe_full = "results/full_output_HDBSCAN.csv",
         dataframe = "results/output_HDBSCAN.csv",
