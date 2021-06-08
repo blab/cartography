@@ -83,7 +83,8 @@ if __name__ == "__main__":
     embedding_parameters = {
         "dissimilarity": "precomputed",
         "n_components" : 2,
-        "n_init" : 2
+        "n_jobs": 1,
+        "n_init": 2,
     }
     default_tuned_values.append(embedding_parameters)
 

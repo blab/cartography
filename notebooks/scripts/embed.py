@@ -136,7 +136,9 @@ if __name__ == "__main__":
         embedding_class = MDS
         embedding_parameters = {
             "dissimilarity": "precomputed",
-            "n_components": args.components
+            "n_components": args.components,
+            "n_jobs": 1,
+            "n_init": 2
         }
 
     if args.command != "pca":
