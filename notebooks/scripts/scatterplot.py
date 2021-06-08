@@ -85,12 +85,20 @@ if __name__ == "__main__":
             ax.plot(total_df["genetic"], total_df["euclidean"], "o", alpha=0.25)
             ax.plot(PD_Y_values["LOWESS_x"], PD_Y_values["LOWESS_y"], label="LOESS")
 
+            ax.text(
+                0.05,
+                0.95,
+                f"$R^2={mean:.3f} +/- {std:.3f}$",
+                horizontalalignment='left',
+                verticalalignment='center',
+                transform=ax.transAxes,
+            )
             ax.set_xlabel("Genetic distance")
-            ax.set_ylabel(f"Euclidean distance ({args.method})")
-            ax.set_title(f"Euclidean distance ({args.method}) vs. genetic distance ($R^2={mean:.3f} +/- {std:.3f}$)")
+            ax.set_ylabel(f"Euclidean distance ({args.method.upper()})")
 
             sns.despine()
-            
+
+            plt.tight_layout()
             plt.savefig(args.output_figure)
             
     if args.output_dataframe is not None:
