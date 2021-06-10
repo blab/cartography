@@ -47,11 +47,11 @@ if __name__ == "__main__":
         sns.scatterplot(data=new_merged, x="bases_missing", y="pca1", alpha=0.25, ax=ax)
     else:
         sns.scatterplot(data=new_merged, x="bases_missing", y="pca1", hue=args.color, alpha=0.25)
+    if args.color is not None:
+        ax.legend(title="low quality", loc="upper left")
 
-    ax.legend(loc="upper left")
     ax.set_xlabel("Bases Missing")
-    ax.set_ylabel(f"Euclidean distance (PCA1)")
-    ax.set_title(f"Euclidean distance (PCA1) vs. Bases Missing")
+    ax.set_ylabel(f"PC1")
 
     plt.savefig(args.output, dpi=300)
 

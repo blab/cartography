@@ -24,7 +24,8 @@ if __name__ == "__main__":
 
     parser.add_argument("--distance-matrix", help="a csv distance matrix that can be read in by pandas, index column as row 0")
     parser.add_argument("--alignment", help="an aligned FASTA file to create a distance matrix with")
-    parser.add_argument("--cluster", help="cluster data from embedding and assign labels given via HDBSCAN")
+    parser.add_argument("--cluster-data", help="cluster data from embedding and assign labels given via HDBSCAN")
+    parser.add_argument("--cluster-threshold", type=float, help="cluster data from embedding and assign labels given via HDBSCAN. Pass in a threshold.")
     parser.add_argument("--random-seed", default = 314159, type=int, help="an integer used as the random seed for reproducible results")
     parser.add_argument("--output-node-data", help="outputting a node data JSON file")
     parser.add_argument("--output-dataframe", help="outputting a csv file")
@@ -162,14 +163,14 @@ if __name__ == "__main__":
         explained_variance["principal components"] = [i for i in range(1, args.components + 1)]
         explained_variance.to_csv(args.explained_variance, index=False)
 
-    if args.cluster is not None:
-        try:
-            cluster = float(args.cluster)
-            clusterer = hdbscan.HDBSCAN(min_cluster_size=15, cluster_selection_epsilon=float(cluster))
-        except:
-            max_df = pd.read_csv(args.cluster)
+    if args.cluster_threshold is not None:
+        cluster = float(args.cluster_threshold)
+        clusterer = hdbscan.HDBSCAN(min_cluster_size=15, cluster_selection_epsilon=float(cluster))
+    if args.cluster_data is not None:
+            max_df = pd.read_csv(args.cluster_data)
             clusterer = hdbscan.HDBSCAN(min_cluster_size=15, cluster_selection_epsilon=float(max_df.where(max_df["method"] == args.command).dropna()[["threshold"]].values.tolist()[0][0]))
-        
+    
+    if clusterer is not None:
         clusterer_default = hdbscan.HDBSCAN(min_cluster_size=15)
         clusterer.fit(embedding_df)
         clusterer_default.fit(embedding_df)

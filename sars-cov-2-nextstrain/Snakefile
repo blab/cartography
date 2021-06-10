@@ -100,7 +100,7 @@ rule embed_pca_before:
             pca \
             --components {params.components} \
         """
-
+#"QC_missing_data", "QC_mixed_sites", "QC_rare_mutations", "QC_snp_clusters"
 rule bases_missing_vs_pc1:
     message: "creating a bases_missing vs PC1 graph"
     input:
@@ -110,7 +110,7 @@ rule bases_missing_vs_pc1:
     output:
         figure = "../docs/bases_missing_vs_pc1_Sars.png"
     params:
-        color = "low_quality"
+        color = "QC_snp_clusters"
     conda: "../cartography.yml"
     shell:
         """
@@ -285,7 +285,7 @@ rule embed_pca:
         """
         python3 ../notebooks/scripts/embed.py \
             --alignment {input.alignment} \
-            --cluster {input.cluster} \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -313,7 +313,7 @@ rule embed_tsne:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster {input.cluster} \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -340,7 +340,7 @@ rule embed_umap:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster {input.cluster} \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -366,7 +366,7 @@ rule embed_mds:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster {input.cluster} \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -446,8 +446,7 @@ rule scatterplot:
         dataframe = "results/scatterplot_{method}.csv",
         metadata = "results/scatterplot_{method}_metadata.csv"
     params:
-        bootstrap = 1000,
-        nucleotides = 1701.0,
+        bootstrap = 100,
         columns = _get_embedding_columns_by_wildcards
     conda: "../cartography.yml"
     shell:
@@ -460,8 +459,7 @@ rule scatterplot:
             --bootstrapping-sample {params.bootstrap} \
             --output-figure {output.figure} \
             --output-dataframe {output.dataframe} \
-            --output-metadata {output.metadata} \
-            --nucleotide {params.nucleotides}
+            --output-metadata {output.metadata}
         """
 
 def _get_embedding_path_by_wildcards(wildcards):

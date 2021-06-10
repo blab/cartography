@@ -25,17 +25,6 @@ from Helpers import get_PCA_feature_matrix, get_euclidean_data_frame
 
 if __name__ == "__main__":
 
-    #add together these argument sets to do what you need to happen (from cluster results - some of the args aren't defined)
-    """
-    parser.add_argument("--distance-matrix", help="csv file with the distance matrix")
-    
-    parser.add_argument("--clades", help="json file containing information about clade membership")
-    parser.add_argument("--column-metadata", default="clade_membership", help="the column which contains the clade information")
-    
-    parser.add_argument("--output", help="the csv path where the best label of the data and strain name per method will be saved.")
-    parser.add_argument("--output-full", help="the csv path where the full list of accuracy data per threshold will be saved")
-    parser.add_argument("--output-figure", help="PNG with the MCC values displayed graphically per method")
-    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--distance-matrix", help="csv file with the distance matrix")
     parser.add_argument("--alignment", help="FASTA file with the alignment")
@@ -46,7 +35,8 @@ if __name__ == "__main__":
     parser.add_argument("--threshold-information", nargs="+", help="the distance threshold values to be used on HDBSCAN. if not provided, it will run without.")
     parser.add_argument("--learning-rate", nargs="+", type=float, help="list of values that the search should use")
     parser.add_argument("--n-repeats", type=int, help="the number of times the k fold generator should repeat the k fold")
-    parser.add_argument("--output", nargs=2, help="the path where the best parameters and thresholds will be saved. Text file first and csv next.")
+    parser.add_argument("--output", help="the path where the best thresholds will be saved.")
+    parser.add_argument("--output-hyperparameters", help="the path where the best parameters will be saved. ")
     parser.add_argument("--output-metadata", help="the path where the grid search data will be saved.")
     parser.add_argument("--output-figure-HDBSCAN", help="PNG with the results displayed graphically for HDBSCAN thresholds")
     parser.add_argument("--output-figure-grid-search", help="PNG with the results displayed graphically for grid search")
@@ -96,7 +86,8 @@ if __name__ == "__main__":
     embedding_parameters = {
         "dissimilarity": "precomputed",
         "n_components" : 2,
-        "n_init" : 2
+        "n_init" : 2,
+        "n_jobs" : 1
     }
     default_tuned_values.append(embedding_parameters)
 
@@ -254,10 +245,9 @@ if __name__ == "__main__":
     
     if args.output_metadata is not None:
         df.to_csv(args.output_metadata)
-    if(args.output_full):
-        df.to_csv(args.output_full)
 
     if args.output_figure_HDBSCAN:
+        #TODO: filter dataframe to best set of parameters for t-sne and umap 
         sns.relplot(data=df, x="threshold", y="matthews_cc_validation", col="method", kind="scatter")
         plt.savefig(args.output_figure)
         

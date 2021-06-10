@@ -364,7 +364,7 @@ rule embed_pca:
         """
         python3 ../notebooks/scripts/embed.py \
             --alignment {input.alignment} \
-            --cluster {input.cluster} \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -392,7 +392,7 @@ rule embed_tsne:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster {input.cluster} \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -419,7 +419,7 @@ rule embed_umap:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster {input.cluster} \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -445,7 +445,7 @@ rule embed_mds:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster {input.cluster} \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -464,7 +464,7 @@ def _get_embedding_columns_by_wildcards(wildcards):
     else:
         return f"{method}_x {method}_y"
 
-
+"""
 rule cluster_embeddings:
     message: "finding the optimal HDBSCAN distance thresholds for the embeddings"
     input:
@@ -480,7 +480,7 @@ rule cluster_embeddings:
     conda: "../cartography.yml"
     threads: 4
     shell:
-        """
+        
         python3 ../notebooks/scripts/cluster_results.py \
             --distance-matrix {input.distance_matrix} \
             --alignment {input.alignment} \
@@ -489,8 +489,8 @@ rule cluster_embeddings:
             --output {output.dataframe} \
             --output-full {output.dataframe_full} \
             --output-figure {output.figure} \
-        """
-
+        
+"""
 rule exhaustive_grid_search:
     message: "does exhastive grid search to find the best values to set for tsne and umap"
     input:
@@ -521,7 +521,8 @@ rule exhaustive_grid_search:
             --perplexity {params.perplexity} \
             --learning-rate {params.learning_rate} \
             --n-repeats {params.n_repeats} \
-            --output {output.output} {output.outputHDBSCAN} \
+            --output {output.outputHDBSCAN} \
+            --output-hyperparameters {output.output} \
             --output-metadata {output.metadata} \
             --output-figure-HDBSCAN {output.figureHDBSCAN} \
             --output-figure-grid-search {output.figureGridSearch}
@@ -537,8 +538,7 @@ rule scatterplot:
         dataframe = "results/scatterplot_{method}.csv",
         metadata = "results/scatterplot_{method}_metadata.csv"
     params:
-        bootstrap = 1000,
-        nucleotides = 1701.0,
+        bootstrap = 100,
         columns = _get_embedding_columns_by_wildcards
     conda: "../cartography.yml"
     shell:
@@ -551,8 +551,7 @@ rule scatterplot:
             --bootstrapping-sample {params.bootstrap} \
             --output-figure {output.figure} \
             --output-dataframe {output.dataframe} \
-            --output-metadata {output.metadata} \
-            --nucleotide {params.nucleotides}
+            --output-metadata {output.metadata}
         """
 
 def _get_embedding_path_by_wildcards(wildcards):

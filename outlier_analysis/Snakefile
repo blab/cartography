@@ -452,7 +452,7 @@ rule embed_mds:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster {input.cluster} \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \

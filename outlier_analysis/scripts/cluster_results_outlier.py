@@ -56,7 +56,7 @@ if __name__ == "__main__":
         distance_thresholds = np.arange(0,20,2)
 
     default_tuned_values = []
-    list_of_embedding_strings = "mds" #["t-SNE","UMAP","MDS", "PCA"]
+    list_of_embedding_strings = "MDS" #["t-SNE","UMAP","MDS", "PCA"]
     embedding_class = MDS
 
     # reading in the distance matrix and node data
@@ -70,7 +70,8 @@ if __name__ == "__main__":
     embedding_parameters = {
         "dissimilarity": "precomputed",
         "n_components" : 2,
-        "n_init" : 2
+        "n_init" : 2,
+        "n_jobs" : 1
     }
 
     # creating dataframe of clade information 
@@ -92,6 +93,8 @@ if __name__ == "__main__":
     
 
 # k fold analysis with thresholds
+
+#find main cluster (not_outliers), the rest are outliers
     random_state = 12883823
     rkf = RepeatedKFold(n_splits=2,  n_repeats=3, random_state=random_state)
     k = 0
@@ -120,8 +123,10 @@ if __name__ == "__main__":
             val_df[f"{list_of_embedding_strings}_label_{k}"] = clusterer.labels_.astype(str)
             list_columns = _get_embedding_columns_by_method(list_of_embedding_strings)
             list_columns.extend(["strain", f"{list_of_embedding_strings}_label_{k}"])
+
+            index_max = val_df[f"{list_of_embedding_strings}_label_{k}"].value_counts().idxmax()
             
-            val_df["outlier_status_predicted"] = val_df[f"{list_of_embedding_strings}_label_{k}"].apply(lambda label: "outlier" if label==-1 else "not_outlier")
+            val_df["outlier_status_predicted"] = val_df[f"{list_of_embedding_strings}_label_{k}"].apply(lambda label: "outlier" if label!=index_max else "not_outlier")
             
 
             confusion_matrix_val = confusion_matrix(training_annotations["clade_membership"], val_df["outlier_status_predicted"])
@@ -129,7 +134,6 @@ if __name__ == "__main__":
             method_dict = {}
 
             method_dict["method"] = list_of_embedding_strings
-            method_dict["distance_threshold_number"] = f"{list_of_embedding_strings}_label_{k}"
             method_dict["confusion_matrix_training"] = confusion_matrix_val
             method_dict["matthews_cc_training"] = matthews_cc_val
             method_dict["num_undefined_training"] = (val_df[f"{list_of_embedding_strings}_label_{k}"].values == '-1').sum()
@@ -153,7 +157,9 @@ if __name__ == "__main__":
             list_columns = _get_embedding_columns_by_method(list_of_embedding_strings)
             list_columns.extend(["strain", f"{list_of_embedding_strings}_label_{k}"])
             
-            val_df["outlier_status_predicted"] = val_df[f"{list_of_embedding_strings}_label_{k}"].apply(lambda label: "outlier" if label==-1 else "not_outlier")
+            index_max = val_df[f"{list_of_embedding_strings}_label_{k}"].value_counts().idxmax()
+            
+            val_df["outlier_status_predicted"] = val_df[f"{list_of_embedding_strings}_label_{k}"].apply(lambda label: "outlier" if label!=index_max else "not_outlier")
             
 
             confusion_matrix_val = confusion_matrix(validation_annotations["clade_membership"], val_df["outlier_status_predicted"])
@@ -162,6 +168,7 @@ if __name__ == "__main__":
 
             method_dict["method"] = list_of_embedding_strings
             method_dict["distance_threshold_number"] = f"{list_of_embedding_strings}_label_{k}"
+            method_dict["distance_threshold"] = distance_threshold
             method_dict["confusion_matrix_validation"] = confusion_matrix_val
             method_dict["matthews_cc_validation"] = matthews_cc_val
             method_dict["num_undefined_validation"] = (val_df[f"{list_of_embedding_strings}_label_{k}"].values == '-1').sum()
@@ -171,25 +178,27 @@ if __name__ == "__main__":
             i=i+1
         k = k + 1
 
-        full_output_df = pd.DataFrame(total_list_methods)
+    full_output_df = pd.DataFrame(total_list_methods)
             
-        if(args.output_full):
-            full_output_df.to_csv(args.output_full)
+    if(args.output_full):
+        full_output_df.to_csv(args.output_full)
 
-        if args.output_figure:
-            sns.relplot(data=full_output_df, x="threshold", y="matthews_cc_validation", col="method", kind="scatter")
-            plt.savefig(args.output_figure)
+    if args.output_figure:
+        sns.relplot(data=full_output_df, x="distance_threshold", y="matthews_cc_validation", col="method", kind="scatter")
+        plt.savefig(args.output_figure)
 
-        if args.output:
-            max_values = []
-            for method in list_of_embedding_strings:
-                method_dict = dict(full_output_df.groupby("method").get_group(method).iloc[full_output_df.groupby("method").get_group(method).groupby("threshold")["matthews_cc_validation"].mean().argmax()])
-                max_values.append(method_dict)
-                
-            max_df = pd.DataFrame(max_values)
-            max_df.to_csv(args.output)
-            print(max_df)
-            max_thresholds = max_df["threshold"].values.tolist()
+    if args.output:
+        max_values = []
+        for method in list_of_embedding_strings:
+            # method_val: groups the full dataframe by method, returns the dataframes grouped by method
+            method_val = full_output_df.groupby("method").get_group(method)
+            method_dict = dict(method_val.iloc[method_val.groupby("distance_threshold")["matthews_cc_validation"].mean().argmax()])
+            max_values.append(method_dict)
+            
+        max_df = pd.DataFrame(max_values)
+        max_df.to_csv(args.output)
+        print(max_df)
+        max_thresholds = max_df["distance_threshold"].values.tolist()
         
 
 

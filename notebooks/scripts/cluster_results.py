@@ -218,6 +218,7 @@ if __name__ == "__main__":
 
         if args.output_figure:
             sns.relplot(data=full_output_df, x="threshold", y="matthews_cc_validation", col="method", kind="scatter")
+            #seaborn, tight layout (more whitespace), larger font, plot mean value as sep mark (compare across thresholds and across method)
             plt.savefig(args.output_figure)
 
         if args.output:
