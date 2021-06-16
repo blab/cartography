@@ -124,6 +124,7 @@ all_results = []
 for cv_iteration, (training_index, validation_index) in enumerate(folds.split(strains)):
     print(f"Iteration: {cv_iteration}")
     results = method_parameters.copy()
+    results["method"] = method
     results["cv_iteration"] = cv_iteration
     results["distance_threshold"] = distance_threshold
 
@@ -146,6 +147,7 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
 
     plt.plot(training_embedding[:, 0], training_embedding[:, 1], "o")
     plt.savefig(snakemake.output.table.replace(".tsv", f"_{cv_iteration}_training_embedding.pdf"))
+    plt.close()
 
     # Calculate fit of clustering to trained embedding.
     clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=distance_threshold)
@@ -173,9 +175,43 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
     results["training_fp"] = training_fp
     results["training_mcc"] = training_mcc
 
+    # Validate the embedding method.
+    embedder = method_class(**method_parameters)
+    validation_embedding = embedder.fit_transform(validation_matrix)
+
+    plt.plot(validation_embedding[:, 0], validation_embedding[:, 1], "o")
+    plt.savefig(snakemake.output.table.replace(".tsv", f"_{cv_iteration}_validation_embedding.pdf"))
+    plt.close()
+
+    # Calculate fit of clustering to trained embedding.
+    clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=distance_threshold)
+    clusterer.fit(validation_embedding)
+    clusters = clusterer.labels_.astype(str)
+    validation_predicted_clade_status = get_pairwise_clade_status(clusters)
+
+    validation_confusion_matrix = confusion_matrix(
+        validation_observed_clade_status,
+        validation_predicted_clade_status
+    )
+    validation_tn = validation_confusion_matrix[0, 0]
+    validation_fn = validation_confusion_matrix[1, 0]
+    validation_tp = validation_confusion_matrix[1, 1]
+    validation_fp = validation_confusion_matrix[0, 1]
+
+    validation_mcc = matthews_corrcoef(
+        validation_observed_clade_status,
+        validation_predicted_clade_status
+    )
+
+    results["validation_tn"] = validation_tn
+    results["validation_fn"] = validation_fn
+    results["validation_tp"] = validation_tp
+    results["validation_fp"] = validation_fp
+    results["validation_mcc"] = validation_mcc
+
     all_results.append(results)
-    print(f"confusion matrix: {training_confusion_matrix}")
-    print(f"MCC: {training_mcc}")
+    print(f"confusion matrix: {validation_confusion_matrix}")
+    print(f"MCC: {validation_mcc}")
 
 df = pd.DataFrame(all_results)
 df.to_csv(

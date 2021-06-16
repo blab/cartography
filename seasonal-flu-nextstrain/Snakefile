@@ -753,7 +753,16 @@ rule create_cross_v_docs:
 
 rule aggregate_clusters_by_parameters:
     input:
-        expand("results/gridsearch/{params}.tsv", params=METHOD_PARAMETERS.instance_patterns)
+        tables=expand("results/gridsearch/{params}.tsv", params=METHOD_PARAMETERS.instance_patterns)
+    output:
+        table="results/gridsearch.tsv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/concatenate_tables.py \
+            --tables {input.tables} \
+            --output {output.table}
+        """
 
 
 rule cluster_by_parameters:
