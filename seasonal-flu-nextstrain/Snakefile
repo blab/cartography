@@ -1,3 +1,6 @@
+from snakemake.utils import min_version
+min_version("6.0")
+
 from snakemake.utils import Paramspace
 import pandas as pd
 
@@ -490,7 +493,7 @@ rule cluster_embeddings:
     conda: "../cartography.yml"
     threads: 4
     shell:
-        
+
         python3 ../notebooks/scripts/cluster_results.py \
             --distance-matrix {input.distance_matrix} \
             --alignment {input.alignment} \
@@ -499,7 +502,7 @@ rule cluster_embeddings:
             --output {output.dataframe} \
             --output-full {output.dataframe_full} \
             --output-figure {output.figure} \
-        
+
 """
 rule exhaustive_grid_search:
     message: "does exhastive grid search to find the best values to set for tsne and umap"
@@ -759,7 +762,7 @@ rule cluster_by_parameters:
         distance_matrix="results/distance_matrix_sequences.csv",
         clades="results/clades.json",
     output:
-        table=f"results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv"
+        table=f"results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
     params:
         method_parameters=METHOD_PARAMETERS.instance
     script:

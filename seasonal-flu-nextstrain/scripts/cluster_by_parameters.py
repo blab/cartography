@@ -14,6 +14,25 @@ sys.path.append("../notebooks/scripts/")
 
 from Helpers import get_PCA_feature_matrix
 
+
+def get_pairwise_clade_status(clades):
+    """Traverse pairs of samples from left-to-right, top-to-bottom along the upper
+    triangle of the pairwise matrix and collect the clade status of each pair as
+    either within- or between-clades. This traversal excludes self-self
+    comparisons along the diagonal.
+
+    """
+    clade_status = []
+    for i in range(len(clades) - 1):
+        for j in range(i + 1, len(clades)):
+            if clades[i] == clades[j]:
+                clade_status.append(1)
+            else:
+                clade_status.append(0)
+
+    return np.array(clade_status)
+
+
 N_SPLITS = 2
 N_REPEATS = 3
 RANDOM_STATE = 12883823
@@ -37,6 +56,8 @@ DEFAULT_PARAMETERS_BY_METHOD = {
     "t-sne": {
         "metric": "precomputed",
         "square_distances": True,
+        "learning_rate": 200,
+        "perplexity": 26.0,
     },
     "umap": {
         "init": "spectral",
@@ -89,20 +110,26 @@ else:
 
 print(input_matrix)
 
-df = pd.DataFrame(snakemake.params)
-
 folds = RepeatedKFold(
     n_splits=N_SPLITS,
     n_repeats=N_REPEATS,
     random_state=RANDOM_STATE
 )
 
+all_results = []
 for cv_iteration, (training_index, validation_index) in enumerate(folds.split(strains)):
     print(f"Iteration: {cv_iteration}")
+    results = method_parameters.copy()
+    results["cv_iteration"] = cv_iteration
+    results["distance_threshold"] = distance_threshold
+
     training_matrix = input_matrix[training_index]
     training_clades = clades.iloc[training_index]["clade_membership"].values
+    training_observed_clade_status = get_pairwise_clade_status(training_clades)
+
     validation_matrix = input_matrix[validation_index]
     validation_clades = clades.iloc[validation_index]["clade_membership"].values
+    validation_observed_clade_status = get_pairwise_clade_status(validation_clades)
 
     # Distance matrix is square and needs to be sliced two ways.
     if is_distance_matrix:
@@ -117,19 +144,34 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
     clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=distance_threshold)
     clusterer.fit(training_embedding)
     clusters = clusterer.labels_.astype(str)
+    training_predicted_clade_status = get_pairwise_clade_status(clusters)
 
+    training_confusion_matrix = confusion_matrix(
+        training_observed_clade_status,
+        training_predicted_clade_status
+    )
+    training_tn = training_confusion_matrix[0, 0]
+    training_fn = training_confusion_matrix[1, 0]
+    training_tp = training_confusion_matrix[1, 1]
+    training_fp = training_confusion_matrix[0, 1]
+
+    training_mcc = matthews_corrcoef(
+        training_observed_clade_status,
+        training_predicted_clade_status
+    )
+
+    results["training_tn"] = training_tn
+    results["training_fn"] = training_fn
+    results["training_tp"] = training_tp
+    results["training_fp"] = training_fp
+    results["training_mcc"] = training_mcc
+
+    all_results.append(results)
+    print(f"confusion matrix: {training_confusion_matrix}")
+    print(f"MCC: {training_mcc}")
     #import ipdb; ipdb.set_trace()
-    confusion_matrix_training = confusion_matrix(
-        training_clades,
-        clusters
-    )
-    matthews_correlation_coefficient = matthews_corrcoef(
-        training_clades,
-        clusters
-    )
-    print(f"confusion matrix: {confusion_matrix_training}")
-    print(f"MCC: {matthews_correlation_coefficient}")
 
+df = pd.DataFrame(all_results)
 df.to_csv(
     snakemake.output.table,
     sep="\t",
