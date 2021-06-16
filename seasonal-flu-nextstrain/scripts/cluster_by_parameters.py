@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from augur.utils import read_node_data
 import hdbscan
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import PCA
@@ -99,8 +100,11 @@ else:
     # Load distance matrix.
     input_matrix = pd.read_csv(snakemake.input.distance_matrix, index_col=0)
 
+    # Name columns to match the strains in the index.
+    input_matrix.columns = input_matrix.index.values
+
     # Reorder its rows to match the clades above.
-    input_matrix = input_matrix.loc[strains]
+    input_matrix = input_matrix.loc[strains, strains]
     input_matrix_strains = input_matrix.index.values
     assert np.array_equal(strains, input_matrix_strains)
 
@@ -140,6 +144,9 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
     embedder = method_class(**method_parameters)
     training_embedding = embedder.fit_transform(training_matrix)
 
+    plt.plot(training_embedding[:, 0], training_embedding[:, 1], "o")
+    plt.savefig(snakemake.output.table.replace(".tsv", f"_{cv_iteration}_training_embedding.pdf"))
+
     # Calculate fit of clustering to trained embedding.
     clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=distance_threshold)
     clusterer.fit(training_embedding)
@@ -169,7 +176,6 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
     all_results.append(results)
     print(f"confusion matrix: {training_confusion_matrix}")
     print(f"MCC: {training_mcc}")
-    #import ipdb; ipdb.set_trace()
 
 df = pd.DataFrame(all_results)
 df.to_csv(
