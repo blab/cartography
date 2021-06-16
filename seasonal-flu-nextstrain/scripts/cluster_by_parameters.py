@@ -57,8 +57,6 @@ DEFAULT_PARAMETERS_BY_METHOD = {
     "t-sne": {
         "metric": "precomputed",
         "square_distances": True,
-        "learning_rate": 200,
-        "perplexity": 26.0,
     },
     "umap": {
         "init": "spectral",
@@ -75,10 +73,11 @@ method_class = CLASS_BY_METHOD[method]
 distance_threshold = float(snakemake.params.method_parameters.pop("distance_threshold"))
 method_parameters = {
     key: value
-    for key, value in snakemake.params.method_parameters
+    for key, value in snakemake.params.method_parameters.items()
     if value != "NA"
 }
 method_parameters.update(DEFAULT_PARAMETERS_BY_METHOD[method])
+print(method_parameters)
 
 # Load clade annotations.
 clades = read_node_data(snakemake.input.clades)["nodes"]
@@ -155,25 +154,20 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
     clusters = clusterer.labels_.astype(str)
     training_predicted_clade_status = get_pairwise_clade_status(clusters)
 
-    training_confusion_matrix = confusion_matrix(
-        training_observed_clade_status,
-        training_predicted_clade_status
-    )
-    training_tn = training_confusion_matrix[0, 0]
-    training_fn = training_confusion_matrix[1, 0]
-    training_tp = training_confusion_matrix[1, 1]
-    training_fp = training_confusion_matrix[0, 1]
-
     training_mcc = matthews_corrcoef(
         training_observed_clade_status,
         training_predicted_clade_status
     )
-
-    results["training_tn"] = training_tn
-    results["training_fn"] = training_fn
-    results["training_tp"] = training_tp
-    results["training_fp"] = training_fp
     results["training_mcc"] = training_mcc
+
+    training_confusion_matrix = confusion_matrix(
+        training_observed_clade_status,
+        training_predicted_clade_status
+    )
+    results["training_tn"] = training_confusion_matrix[0, 0]
+    results["training_fn"] = training_confusion_matrix[1, 0]
+    results["training_tp"] = training_confusion_matrix[1, 1]
+    results["training_fp"] = training_confusion_matrix[0, 1]
 
     # Validate the embedding method.
     embedder = method_class(**method_parameters)
@@ -193,25 +187,17 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
         validation_observed_clade_status,
         validation_predicted_clade_status
     )
-    validation_tn = validation_confusion_matrix[0, 0]
-    validation_fn = validation_confusion_matrix[1, 0]
-    validation_tp = validation_confusion_matrix[1, 1]
-    validation_fp = validation_confusion_matrix[0, 1]
+    results["validation_tn"] = validation_confusion_matrix[0, 0]
+    results["validation_fn"] = validation_confusion_matrix[1, 0]
+    results["validation_tp"] = validation_confusion_matrix[1, 1]
+    results["validation_fp"] = validation_confusion_matrix[0, 1]
 
-    validation_mcc = matthews_corrcoef(
+    results["validation_mcc"] = matthews_corrcoef(
         validation_observed_clade_status,
         validation_predicted_clade_status
     )
 
-    results["validation_tn"] = validation_tn
-    results["validation_fn"] = validation_fn
-    results["validation_tp"] = validation_tp
-    results["validation_fp"] = validation_fp
-    results["validation_mcc"] = validation_mcc
-
     all_results.append(results)
-    print(f"confusion matrix: {validation_confusion_matrix}")
-    print(f"MCC: {validation_mcc}")
 
 df = pd.DataFrame(all_results)
 df.to_csv(
