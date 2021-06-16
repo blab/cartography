@@ -1,3 +1,13 @@
+from snakemake.utils import Paramspace
+import pandas as pd
+
+METHOD_PARAMETERS = Paramspace(
+    pd.read_csv(
+        "config/method_parameters.tsv",
+        sep="\t"
+    )
+)
+
 EMBEDDING_METHODS = [
     "pca",
     "mds",
@@ -236,7 +246,7 @@ rule translate:
             --tree {input.tree} \
             --ancestral-sequences {input.node_data} \
             --reference-sequence {input.reference} \
-            --output {output.node_data} 
+            --output {output.node_data}
         """
 rule clades:
     message: " Labeling clades as specified in config/clades.tsv"
@@ -304,7 +314,7 @@ rule export:
 
 rule tree_to_table:
     message: "creating a table of node data values from the tree attributes"
-    input: 
+    input:
         tree = rules.export.output.auspice_tree
     output:
         table = "results/table.tsv"
@@ -618,8 +628,8 @@ rule concat_KDE_table:
     message: "concatenating all the KDE data into one csv dataframe"
     input:
        dataframe_pca = "results/KDEDensity_pca_metadata.csv",
-       dataframe_mds = "results/KDEDensity_mds_metadata.csv", 
-       dataframe_tsne = "results/KDEDensity_t-sne_metadata.csv", 
+       dataframe_mds = "results/KDEDensity_mds_metadata.csv",
+       dataframe_tsne = "results/KDEDensity_t-sne_metadata.csv",
        dataframe_umap = "results/KDEDensity_umap_metadata.csv",
        dataframe_genetic = "results/KDEDensity_genetic_metadata.csv"
     output:
@@ -641,8 +651,8 @@ rule concat_scatterplot_table:
     message: "concatenating all the scatterplot metadata into one csv dataframe"
     input:
        dataframe_pca = "results/scatterplot_pca_metadata.csv",
-       dataframe_mds = "results/scatterplot_mds_metadata.csv", 
-       dataframe_tsne = "results/scatterplot_t-sne_metadata.csv", 
+       dataframe_mds = "results/scatterplot_mds_metadata.csv",
+       dataframe_tsne = "results/scatterplot_t-sne_metadata.csv",
        dataframe_umap = "results/scatterplot_umap_metadata.csv"
     output:
         metadata = "results/full_Scatterplot_metadata.csv"
@@ -736,6 +746,25 @@ rule create_cross_v_docs:
     conda: "../cartography.yml"
     notebook:
         "../notebooks/2020-07-28-cross-validation-outline.ipynb"
+
+
+rule aggregate_clusters_by_parameters:
+    input:
+        expand("results/gridsearch/{params}.tsv", params=METHOD_PARAMETERS.instance_patterns)
+
+
+rule cluster_by_parameters:
+    input:
+        alignment="results/aligned_sequences.fasta",
+        distance_matrix="results/distance_matrix_sequences.csv",
+        clades="results/clades.json",
+    output:
+        table=f"results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv"
+    params:
+        method_parameters=METHOD_PARAMETERS.instance
+    script:
+        "scripts/cluster_by_parameters.py"
+
 
 rule clean:
     message: "Removing directories: {params}"
