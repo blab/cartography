@@ -773,7 +773,8 @@ rule cluster_by_parameters:
     output:
         table=f"results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
     params:
-        method_parameters=METHOD_PARAMETERS.instance
+        method_parameters=METHOD_PARAMETERS.instance,
+    conda: "../cartography.yml"
     script:
         "scripts/cluster_by_parameters.py"
 

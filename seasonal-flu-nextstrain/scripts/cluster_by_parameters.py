@@ -4,6 +4,7 @@ import hdbscan
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE, MDS
 from sklearn.metrics import confusion_matrix, matthews_corrcoef
@@ -47,26 +48,29 @@ DEFAULT_PARAMETERS_BY_METHOD = {
     "pca": {
         "n_components": 10,
         "svd_solver": "full",
+        "random_state": RANDOM_STATE,
     },
     "mds": {
         "dissimilarity": "precomputed",
         "n_components": 2,
         "n_init": 2,
         "n_jobs": 1,
+        "random_state": RANDOM_STATE,
     },
     "t-sne": {
         "metric": "precomputed",
+        "random_state": RANDOM_STATE,
         "square_distances": True,
     },
     "umap": {
         "init": "spectral",
+        "random_state": RANDOM_STATE,
     },
 }
+TYPE_BY_PARAMETER = {
+    "n_neighbors": int,
+}
 
-
-print(snakemake.input)
-print(snakemake.output)
-print(snakemake.params)
 
 method = snakemake.params.method_parameters.pop("method")
 method_class = CLASS_BY_METHOD[method]
@@ -74,9 +78,14 @@ distance_threshold = float(snakemake.params.method_parameters.pop("distance_thre
 method_parameters = {
     key: value
     for key, value in snakemake.params.method_parameters.items()
-    if value != "NA"
+    if not pd.isna(value)
 }
 method_parameters.update(DEFAULT_PARAMETERS_BY_METHOD[method])
+
+for parameter, parameter_value in method_parameters.items():
+    if parameter in TYPE_BY_PARAMETER:
+        method_parameters[parameter] = TYPE_BY_PARAMETER[parameter](parameter_value)
+
 print(method_parameters)
 
 # Load clade annotations.
@@ -88,8 +97,6 @@ clades = [
 ]
 clades = pd.DataFrame(clades)
 strains = clades["strain"].values
-print(clades)
-print(strains)
 
 if method == "pca":
     # Load alignment.
@@ -110,8 +117,6 @@ else:
     # Extract the numpy arrays corresponding to the distance matrix data frame.
     input_matrix = input_matrix.values
     is_distance_matrix = True
-
-print(input_matrix)
 
 folds = RepeatedKFold(
     n_splits=N_SPLITS,
@@ -144,9 +149,6 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
     embedder = method_class(**method_parameters)
     training_embedding = embedder.fit_transform(training_matrix)
 
-    plt.plot(training_embedding[:, 0], training_embedding[:, 1], "o")
-    plt.savefig(snakemake.output.table.replace(".tsv", f"_{cv_iteration}_training_embedding.pdf"))
-    plt.close()
 
     # Calculate fit of clustering to trained embedding.
     clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=distance_threshold)
@@ -169,13 +171,25 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
     results["training_tp"] = training_confusion_matrix[1, 1]
     results["training_fp"] = training_confusion_matrix[0, 1]
 
+    training_df = pd.DataFrame({
+        "x": training_embedding[:, 0],
+        "y": training_embedding[:, 1],
+        "clade": training_clades,
+        "cluster": clusters,
+    })
+    ax = sns.scatterplot(
+        data=training_df,
+        x="x",
+        y="y",
+        hue="cluster",
+        alpha=0.5,
+    )
+    plt.savefig(snakemake.output.table.replace(".tsv", f"_{cv_iteration}_training_embedding.pdf"))
+    plt.close()
+
     # Validate the embedding method.
     embedder = method_class(**method_parameters)
     validation_embedding = embedder.fit_transform(validation_matrix)
-
-    plt.plot(validation_embedding[:, 0], validation_embedding[:, 1], "o")
-    plt.savefig(snakemake.output.table.replace(".tsv", f"_{cv_iteration}_validation_embedding.pdf"))
-    plt.close()
 
     # Calculate fit of clustering to trained embedding.
     clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=distance_threshold)
@@ -196,6 +210,22 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
         validation_observed_clade_status,
         validation_predicted_clade_status
     )
+
+    validation_df = pd.DataFrame({
+        "x": validation_embedding[:, 0],
+        "y": validation_embedding[:, 1],
+        "clade": validation_clades,
+        "cluster": clusters,
+    })
+    ax = sns.scatterplot(
+        data=validation_df,
+        x="x",
+        y="y",
+        hue="cluster",
+        alpha=0.5,
+    )
+    plt.savefig(snakemake.output.table.replace(".tsv", f"_{cv_iteration}_validation_embedding.pdf"))
+    plt.close()
 
     all_results.append(results)
 
