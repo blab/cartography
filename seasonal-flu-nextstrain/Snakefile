@@ -55,7 +55,7 @@ rule all:
         "results/nucleotide_diversity.txt",
         "../docs/explainedVarianceFlu.png",
         "results/cross_validation_thresholds.csv",
-        "../docs/exhaustive_grid_search.png"
+        "results/mcc_by_method_and_distance_threshold.pdf",
 
 rule files:
     params:
@@ -504,42 +504,6 @@ rule cluster_embeddings:
             --output-figure {output.figure} \
 
 """
-rule exhaustive_grid_search:
-    message: "does exhastive grid search to find the best values to set for tsne and umap"
-    input:
-        distance_matrix = "results/distance_matrix_sequences.csv",
-        node_data = rules.tree_to_table.output.table,
-        alignment = "results/aligned_sequences.fasta"
-    output:
-        output = "results/best_values.txt",
-        outputHDBSCAN = "results/output_HDBSCAN.csv",
-        metadata = "results/grid_search.csv",
-        figureGridSearch = "../docs/exhaustive_grid_search.png",
-        figureHDBSCAN = "results/accuracy_figure_HDBSCAN.png"
-    params:
-        n_repeats = 10,
-        perplexity = "15 30 100",
-        learning_rate = "100.0 200.0 500.0 1000.0",
-        n_neighbors = "25 100 200",
-        min_dist = ".05 .5"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 scripts/exhaustive_grid_search.py \
-            --distance-matrix {input.distance_matrix} \
-            --alignment {input.alignment} \
-            --node-data {input.node_data} \
-            --n-neighbors {params.n_neighbors} \
-            --min-dist {params.min_dist} \
-            --perplexity {params.perplexity} \
-            --learning-rate {params.learning_rate} \
-            --n-repeats {params.n_repeats} \
-            --output {output.outputHDBSCAN} \
-            --output-hyperparameters {output.output} \
-            --output-metadata {output.metadata} \
-            --output-figure-HDBSCAN {output.figureHDBSCAN} \
-            --output-figure-grid-search {output.figureGridSearch}
-        """
 
 rule scatterplot:
     message: "Creating the scatterplot (PNG, dataframe)"
@@ -733,22 +697,18 @@ rule create_notebook_docs:
         "2019-08-08FinalNotebookFlu.ipynb"
 
 
-rule create_cross_v_docs:
-    message: "creating linked and grouped charts using the jupyter notebook"
+rule cluster_by_parameters:
     input:
-        node_df = "../seasonal-flu-nextstrain/results/table.tsv",
-        grid_search = "../seasonal-flu-nextstrain-2018-2020/results/grid_search.csv",
-        full_visualizations = "../seasonal-flu-nextstrain/results/full_visualizations.csv",
-        cross_v_results = "../seasonal-flu-nextstrain/results/cross_validation_results.csv",
-        cross_v_thresholds = "../seasonal-flu-nextstrain/results/cross_validation_thresholds.csv"
-
+        alignment="results/aligned_sequences.fasta",
+        distance_matrix="results/distance_matrix_sequences.csv",
+        clades="results/clades.json",
     output:
-        exhaustive_grid_search = "../docs/exhaustive_grid_search.png",
-        cross_v_data = "../docs/cross_validation_graph.png"
-
+        table=f"results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
+    params:
+        method_parameters=METHOD_PARAMETERS.instance,
     conda: "../cartography.yml"
-    notebook:
-        "../notebooks/2020-07-28-cross-validation-outline.ipynb"
+    script:
+        "scripts/cluster_by_parameters.py"
 
 
 rule aggregate_clusters_by_parameters:
@@ -765,18 +725,16 @@ rule aggregate_clusters_by_parameters:
         """
 
 
-rule cluster_by_parameters:
+rule summarize_grid_search:
     input:
-        alignment="results/aligned_sequences.fasta",
-        distance_matrix="results/distance_matrix_sequences.csv",
-        clades="results/clades.json",
+        table="results/gridsearch.tsv",
     output:
-        table=f"results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
-    params:
-        method_parameters=METHOD_PARAMETERS.instance,
+        mcc_by_method_and_distance_threshold="results/mcc_by_method_and_distance_threshold.pdf",
     conda: "../cartography.yml"
-    script:
-        "scripts/cluster_by_parameters.py"
+    log:
+        "logs/summarize-grid-search.ipynb"
+    notebook:
+        "2021-06-23-summarize-grid-search.ipynb"
 
 
 rule clean:
