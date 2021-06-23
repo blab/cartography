@@ -1,97 +1,145 @@
-method	distance_threshold	perplexity	learning_rate
-t-sne	0	15	100
-t-sne	0	15	200
-t-sne	0	15	500
-t-sne	0	15	1000
-t-sne	0	30	100
-t-sne	0	30	200
-t-sne	0	30	500
-t-sne	0	30	1000
-t-sne	0	100	100
-t-sne	0	100	200
-t-sne	0	100	500
-t-sne	0	100	1000
-t-sne	2	15	100
-t-sne	2	15	200
-t-sne	2	15	500
-t-sne	2	15	1000
-t-sne	2	30	100
-t-sne	2	30	200
-t-sne	2	30	500
-t-sne	2	30	1000
-t-sne	2	100	100
-t-sne	2	100	200
-t-sne	2	100	500
-t-sne	2	100	1000
-t-sne	4	15	100
-t-sne	4	15	200
-t-sne	4	15	500
-t-sne	4	15	1000
-t-sne	4	30	100
-t-sne	4	30	200
-t-sne	4	30	500
-t-sne	4	30	1000
-t-sne	4	100	100
-t-sne	4	100	200
-t-sne	4	100	500
-t-sne	4	100	1000
-t-sne	6	15	100
-t-sne	6	15	200
-t-sne	6	15	500
-t-sne	6	15	1000
-t-sne	6	30	100
-t-sne	6	30	200
-t-sne	6	30	500
-t-sne	6	30	1000
-t-sne	6	100	100
-t-sne	6	100	200
-t-sne	6	100	500
-t-sne	6	100	1000
-t-sne	8	15	100
-t-sne	8	15	200
-t-sne	8	15	500
-t-sne	8	15	1000
-t-sne	8	30	100
-t-sne	8	30	200
-t-sne	8	30	500
-t-sne	8	30	1000
-t-sne	8	100	100
-t-sne	8	100	200
-t-sne	8	100	500
-t-sne	8	100	1000
-t-sne	10	15	100
-t-sne	10	15	200
-t-sne	10	15	500
-t-sne	10	15	1000
-t-sne	10	30	100
-t-sne	10	30	200
-t-sne	10	30	500
-t-sne	10	30	1000
-t-sne	10	100	100
-t-sne	10	100	200
-t-sne	10	100	500
-t-sne	10	100	1000
-t-sne	12	15	100
-t-sne	12	15	200
-t-sne	12	15	500
-t-sne	12	15	1000
-t-sne	12	30	100
-t-sne	12	30	200
-t-sne	12	30	500
-t-sne	12	30	1000
-t-sne	12	100	100
-t-sne	12	100	200
-t-sne	12	100	500
-t-sne	12	100	1000
-t-sne	14	15	100
-t-sne	14	15	200
-t-sne	14	15	500
-t-sne	14	15	1000
-t-sne	14	30	100
-t-sne	14	30	200
-t-sne	14	30	500
-t-sne	14	30	1000
-t-sne	14	100	100
-t-sne	14	100	200
-t-sne	14	100	500
-t-sne	14	100	1000
+distance_threshold	perplexity	learning_rate	method	n_neighbors	min_dist
+0	15.0	100.0	t-sne	N/A	N/A
+0	15.0	200.0	t-sne	N/A	N/A
+0	15.0	500.0	t-sne	N/A	N/A
+0	30.0	100.0	t-sne	N/A	N/A
+0	30.0	200.0	t-sne	N/A	N/A
+0	30.0	500.0	t-sne	N/A	N/A
+0	100.0	100.0	t-sne	N/A	N/A
+0	100.0	200.0	t-sne	N/A	N/A
+0	100.0	500.0	t-sne	N/A	N/A
+2	15.0	100.0	t-sne	N/A	N/A
+2	15.0	200.0	t-sne	N/A	N/A
+2	15.0	500.0	t-sne	N/A	N/A
+2	30.0	100.0	t-sne	N/A	N/A
+2	30.0	200.0	t-sne	N/A	N/A
+2	30.0	500.0	t-sne	N/A	N/A
+2	100.0	100.0	t-sne	N/A	N/A
+2	100.0	200.0	t-sne	N/A	N/A
+2	100.0	500.0	t-sne	N/A	N/A
+4	15.0	100.0	t-sne	N/A	N/A
+4	15.0	200.0	t-sne	N/A	N/A
+4	15.0	500.0	t-sne	N/A	N/A
+4	30.0	100.0	t-sne	N/A	N/A
+4	30.0	200.0	t-sne	N/A	N/A
+4	30.0	500.0	t-sne	N/A	N/A
+4	100.0	100.0	t-sne	N/A	N/A
+4	100.0	200.0	t-sne	N/A	N/A
+4	100.0	500.0	t-sne	N/A	N/A
+6	15.0	100.0	t-sne	N/A	N/A
+6	15.0	200.0	t-sne	N/A	N/A
+6	15.0	500.0	t-sne	N/A	N/A
+6	30.0	100.0	t-sne	N/A	N/A
+6	30.0	200.0	t-sne	N/A	N/A
+6	30.0	500.0	t-sne	N/A	N/A
+6	100.0	100.0	t-sne	N/A	N/A
+6	100.0	200.0	t-sne	N/A	N/A
+6	100.0	500.0	t-sne	N/A	N/A
+8	15.0	100.0	t-sne	N/A	N/A
+8	15.0	200.0	t-sne	N/A	N/A
+8	15.0	500.0	t-sne	N/A	N/A
+8	30.0	100.0	t-sne	N/A	N/A
+8	30.0	200.0	t-sne	N/A	N/A
+8	30.0	500.0	t-sne	N/A	N/A
+8	100.0	100.0	t-sne	N/A	N/A
+8	100.0	200.0	t-sne	N/A	N/A
+8	100.0	500.0	t-sne	N/A	N/A
+10	15.0	100.0	t-sne	N/A	N/A
+10	15.0	200.0	t-sne	N/A	N/A
+10	15.0	500.0	t-sne	N/A	N/A
+10	30.0	100.0	t-sne	N/A	N/A
+10	30.0	200.0	t-sne	N/A	N/A
+10	30.0	500.0	t-sne	N/A	N/A
+10	100.0	100.0	t-sne	N/A	N/A
+10	100.0	200.0	t-sne	N/A	N/A
+10	100.0	500.0	t-sne	N/A	N/A
+12	15.0	100.0	t-sne	N/A	N/A
+12	15.0	200.0	t-sne	N/A	N/A
+12	15.0	500.0	t-sne	N/A	N/A
+12	30.0	100.0	t-sne	N/A	N/A
+12	30.0	200.0	t-sne	N/A	N/A
+12	30.0	500.0	t-sne	N/A	N/A
+12	100.0	100.0	t-sne	N/A	N/A
+12	100.0	200.0	t-sne	N/A	N/A
+12	100.0	500.0	t-sne	N/A	N/A
+14	15.0	100.0	t-sne	N/A	N/A
+14	15.0	200.0	t-sne	N/A	N/A
+14	15.0	500.0	t-sne	N/A	N/A
+14	30.0	100.0	t-sne	N/A	N/A
+14	30.0	200.0	t-sne	N/A	N/A
+14	30.0	500.0	t-sne	N/A	N/A
+14	100.0	100.0	t-sne	N/A	N/A
+14	100.0	200.0	t-sne	N/A	N/A
+14	100.0	500.0	t-sne	N/A	N/A
+0	N/A	N/A	umap	25.0	0.05
+0	N/A	N/A	umap	25.0	0.1
+0	N/A	N/A	umap	25.0	0.25
+0	N/A	N/A	umap	50.0	0.05
+0	N/A	N/A	umap	50.0	0.1
+0	N/A	N/A	umap	50.0	0.25
+0	N/A	N/A	umap	100.0	0.05
+0	N/A	N/A	umap	100.0	0.1
+0	N/A	N/A	umap	100.0	0.25
+2	N/A	N/A	umap	25.0	0.05
+2	N/A	N/A	umap	25.0	0.1
+2	N/A	N/A	umap	25.0	0.25
+2	N/A	N/A	umap	50.0	0.05
+2	N/A	N/A	umap	50.0	0.1
+2	N/A	N/A	umap	50.0	0.25
+2	N/A	N/A	umap	100.0	0.05
+2	N/A	N/A	umap	100.0	0.1
+2	N/A	N/A	umap	100.0	0.25
+4	N/A	N/A	umap	25.0	0.05
+4	N/A	N/A	umap	25.0	0.1
+4	N/A	N/A	umap	25.0	0.25
+4	N/A	N/A	umap	50.0	0.05
+4	N/A	N/A	umap	50.0	0.1
+4	N/A	N/A	umap	50.0	0.25
+4	N/A	N/A	umap	100.0	0.05
+4	N/A	N/A	umap	100.0	0.1
+4	N/A	N/A	umap	100.0	0.25
+6	N/A	N/A	umap	25.0	0.05
+6	N/A	N/A	umap	25.0	0.1
+6	N/A	N/A	umap	25.0	0.25
+6	N/A	N/A	umap	50.0	0.05
+6	N/A	N/A	umap	50.0	0.1
+6	N/A	N/A	umap	50.0	0.25
+6	N/A	N/A	umap	100.0	0.05
+6	N/A	N/A	umap	100.0	0.1
+6	N/A	N/A	umap	100.0	0.25
+8	N/A	N/A	umap	25.0	0.05
+8	N/A	N/A	umap	25.0	0.1
+8	N/A	N/A	umap	25.0	0.25
+8	N/A	N/A	umap	50.0	0.05
+8	N/A	N/A	umap	50.0	0.1
+8	N/A	N/A	umap	50.0	0.25
+8	N/A	N/A	umap	100.0	0.05
+8	N/A	N/A	umap	100.0	0.1
+8	N/A	N/A	umap	100.0	0.25
+10	N/A	N/A	umap	25.0	0.05
+10	N/A	N/A	umap	25.0	0.1
+10	N/A	N/A	umap	25.0	0.25
+10	N/A	N/A	umap	50.0	0.05
+10	N/A	N/A	umap	50.0	0.1
+10	N/A	N/A	umap	50.0	0.25
+10	N/A	N/A	umap	100.0	0.05
+10	N/A	N/A	umap	100.0	0.1
+10	N/A	N/A	umap	100.0	0.25
+12	N/A	N/A	umap	25.0	0.05
+12	N/A	N/A	umap	25.0	0.1
+12	N/A	N/A	umap	25.0	0.25
+12	N/A	N/A	umap	50.0	0.05
+12	N/A	N/A	umap	50.0	0.1
+12	N/A	N/A	umap	50.0	0.25
+12	N/A	N/A	umap	100.0	0.05
+12	N/A	N/A	umap	100.0	0.1
+12	N/A	N/A	umap	100.0	0.25
+14	N/A	N/A	umap	25.0	0.05
+14	N/A	N/A	umap	25.0	0.1
+14	N/A	N/A	umap	25.0	0.25
+14	N/A	N/A	umap	50.0	0.05
+14	N/A	N/A	umap	50.0	0.1
+14	N/A	N/A	umap	50.0	0.25
+14	N/A	N/A	umap	100.0	0.05
+14	N/A	N/A	umap	100.0	0.1
+14	N/A	N/A	umap	100.0	0.25
