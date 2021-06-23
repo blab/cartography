@@ -31,13 +31,17 @@ def get_PCA_feature_matrix(alignment, sequence_names):
     sequence_names_val = list(sequences_by_name.keys())
     assert(len(sequence_names_val) == len(sequence_names))
 
-    numbers = list(sequences_by_name.values())[:]
-    for i in range(0,len(list(sequences_by_name.values()))):
+    # Create a matrix representation of sequences with one row per sequence and
+    # one integer value per character state in the sequence. Order rows to match
+    # the order of strain names in the `sequence_names` input.
+    numbers = [sequences_by_name[strain] for strain in sequence_names]
+    for i, strain in enumerate(sequence_names):
         numbers[i] = re.sub(r'[^AGCT]', '5', numbers[i])
         numbers[i] = list(numbers[i].replace('A','1').replace('G','2').replace('C', '3').replace('T','4'))
         numbers[i] = [int(j) for j in numbers[i]]
 
     numbers = np.array(numbers)
+    return numbers
 
 
 def get_hamming_distances(genomes):
@@ -131,7 +135,7 @@ def get_y_positions(tree):
 
 def concatenate_results_with_strain_data(principal_Df, result_metadata, fields):
     """Takes the data from data reductions (T-SNE, MDS, etc) and pairs up each strain's euclidean plotpoints with its metadata
-    
+
     Parameters
     ----------
     principal_Df: Pandas Dataframe
@@ -140,7 +144,7 @@ def concatenate_results_with_strain_data(principal_Df, result_metadata, fields):
         the metadata that is being read in (Pandas DataFrame)
     fields: list
         the parts of metadata that should be concatenated with princiapl_Df (eg. "strain", "region", "country")
-        
+
     Returns
     --------
     finalDf: Pandas Dataframe
@@ -151,7 +155,7 @@ def concatenate_results_with_strain_data(principal_Df, result_metadata, fields):
 
 def scatterplot_with_tooltip(finalDf, x, y, Titlex, Titley, ToolTip, color):
     """Creates an interactive scatterplot in altair
-    
+
     Parameters
     -----------
     finalDf: Pandas Dataframe
@@ -168,10 +172,10 @@ def scatterplot_with_tooltip(finalDf, x, y, Titlex, Titley, ToolTip, color):
         the data available when scanning over a plot
     Color: string
         what the scatterplot is colored by
-    
+
     Returns
     --------
-    an Altair chart 
+    an Altair chart
     """
     brush = alt.selection(type='interval', resolve='global')
     chart = alt.Chart(finalDf).mark_circle(size=60).encode(
@@ -185,7 +189,7 @@ def scatterplot_with_tooltip(finalDf, x, y, Titlex, Titley, ToolTip, color):
 
 def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip, color, domain=None, range_=None):
     """Creates an interactive scatterplot in altair
-    
+
     Parameters
     -----------
     finalDf: Pandas Dataframe
@@ -202,10 +206,10 @@ def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip,
         the data available when scanning over a plot
     Color: string
         what the scatterplot is colored by
-    
+
     Returns
     --------
-    an Altair chart 
+    an Altair chart
     """
     brush = alt.selection(type='interval', resolve='global')
     chart = alt.Chart(finalDf).mark_circle(size=60).encode(
@@ -223,7 +227,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
     Parameters
     -----------
     dataframe: Pandas Dataframe
-        dataframe including node data and dimensionality reduction data 
+        dataframe including node data and dimensionality reduction data
     list_of_data: list
         list of all the names of the columns in the dataframe for which you want graphs: goes in the order of [x1,y1,x2,y2,x3,y3] etc.
     list_of_titles: list
@@ -232,12 +236,12 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
         what the data should be colored by (ex. by clade, by region)
     ToolTip: list
         when hovering over the data, what data should be shown
-        
+
     Returns
     ---------
     A brushable altair plot combining the tree with the plots of columns passed in
     """
-    
+
     list_of_chart = []
     if(len(list_of_data) % 2 != 0 or len(list_of_titles) % 2 != 0):
         raise Exception(
@@ -286,7 +290,7 @@ def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, c
     Parameters
     -----------
     dataframe: Pandas Dataframe
-        dataframe including node data and dimensionality reduction data 
+        dataframe including node data and dimensionality reduction data
     list_of_data: list
         list of all the names of the columns in the dataframe for which you want graphs: goes in the order of [x1,y1,x2,y2,x3,y3] etc.
     list_of_titles: list
@@ -295,7 +299,7 @@ def linking_tree_with_plots_clickable(dataFrame, list_of_data, list_of_titles, c
         what the data should be colored by (ex. by clade, by region)
     ToolTip: list
         when hovering over the data, what data should be shown
-        
+
     Returns
     ---------
     A clickable altair plot combining the tree with the plots of columns passed in
@@ -405,7 +409,7 @@ def scatterplot_xyvalues(strains, similarity_matrix, embedding_df, column_list, 
 
 def scatterplot_tooltips(strains, similarity_matrix, df_merged, column1, column2, type_of_embedding, n_sample):
     """uses scatterplot_xyvalues, returns a pairwise vs euclidean scatterplot
-    
+
     Parameters
     -----------
     strains: list
@@ -422,7 +426,7 @@ def scatterplot_tooltips(strains, similarity_matrix, df_merged, column1, column2
         "MDS", "PCA", "TSNE", or "UMAP"
     n_sample:
         how many strains to sample (altair cannot currently run with that many strains, sample around 1000 - 2000)
-    
+
     Returns
     ----------
     An altair pairwise vs Euclidean scatterplot with tooltips
