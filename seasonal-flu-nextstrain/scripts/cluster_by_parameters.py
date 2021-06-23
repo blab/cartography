@@ -71,7 +71,6 @@ TYPE_BY_PARAMETER = {
     "n_neighbors": int,
 }
 
-
 method = snakemake.params.method_parameters.pop("method")
 method_class = CLASS_BY_METHOD[method]
 distance_threshold = float(snakemake.params.method_parameters.pop("distance_threshold"))
@@ -148,7 +147,6 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
     # Train the embedding method.
     embedder = method_class(**method_parameters)
     training_embedding = embedder.fit_transform(training_matrix)
-
 
     # Calculate fit of clustering to trained embedding.
     clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=distance_threshold)
