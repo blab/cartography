@@ -42,7 +42,9 @@ rule all:
         "results/nucleotide_diversity.txt",
         "../docs/FullKDEDensityFluCrossV.png",
         "../docs/fullHDBSCANChartFlu2018-2020.html",
-        "../docs/fullHDBSCANChartFlu2018-2020.png"
+        "../docs/fullHDBSCANChartFlu2018-2020.png",
+        expand("results/HDBSCAN_metadata_{method}.csv", method=EMBEDDING_METHODS),
+        "results/full_HDBSCAN_metadata.csv"
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha.fa",
@@ -367,7 +369,7 @@ rule embed_pca:
         """
         python3 ../notebooks/scripts/embed.py \
             --alignment {input.alignment} \
-            --cluster {input.cluster} \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -395,7 +397,7 @@ rule embed_tsne:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster {input.cluster} \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -422,7 +424,7 @@ rule embed_umap:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster {input.cluster} \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -448,7 +450,7 @@ rule embed_mds:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster {input.cluster} \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -456,6 +458,51 @@ rule embed_mds:
             mds \
             --components {params.components} \
         """
+
+
+rule cluster_metadata:
+    message: "Creating the metadata dataframe for HDBSCAN results for main paper"
+    input:
+        embedding = "results/embed_{method}_sequences.csv",
+        metadata = "results/table.tsv",
+        cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv",
+    output:
+        dataframe = "results/HDBSCAN_metadata_{method}.csv",
+    conda: "../cartography.yml"
+    params:
+        method = "{method}"
+    shell:
+        """
+        python3 ../notebooks/scripts/metadata_HDBSCAN.py \
+            --method {params.method} \
+            --embedding {input.embedding} \
+            --metadata {input.metadata} \
+            --cluster-data {input.cluster} \
+            --output {output.dataframe}
+        """
+
+rule concat_HDBSCAN_table:
+    message: "concatenating all the KDE data into one csv dataframe"
+    input:
+       dataframe_pca = "results/HDBSCAN_metadata_pca.csv",
+       dataframe_mds = "results/HDBSCAN_metadata_mds.csv", 
+       dataframe_tsne = "results/HDBSCAN_metadata_t-sne.csv", 
+       dataframe_umap = "results/HDBSCAN_metadata_umap.csv",
+    output:
+        metadata = "results/full_HDBSCAN_metadata.csv"
+    params:
+        column = "MCC",
+        dataframes = "results/HDBSCAN_metadata_pca.csv results/HDBSCAN_metadata_mds.csv results/HDBSCAN_metadata_t-sne.csv results/HDBSCAN_metadata_umap.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/concatenate_tables.py \
+            --tables {params.dataframes} \
+            --separator ',' \
+            --sort-by {params.column} \
+            --output {output.metadata}
+        """
+
 
 def _get_embedding_columns_by_wildcards(wildcards):
     method = wildcards.method.replace("-", "")
@@ -488,8 +535,7 @@ rule scatterplot:
         dataframe = "results/scatterplot_{method}.csv",
         metadata = "results/scatterplot_{method}_metadata.csv"
     params:
-        bootstrap = 1000,
-        nucleotides = 1701.0,
+        bootstrap = 100,
         columns = _get_embedding_columns_by_wildcards
     conda: "../cartography.yml"
     shell:
@@ -502,8 +548,7 @@ rule scatterplot:
             --bootstrapping-sample {params.bootstrap} \
             --output-figure {output.figure} \
             --output-dataframe {output.dataframe} \
-            --output-metadata {output.metadata} \
-            --nucleotide {params.nucleotides}
+            --output-metadata {output.metadata}
         """
 
 def _get_embedding_path_by_wildcards(wildcards):
