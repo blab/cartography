@@ -414,7 +414,7 @@ rule export:
         embeddings_concat = expand("results/embed_{embedding}_concatenated.json", embedding=EMBEDDING_METHODS),
         auspice_config = files.auspice_config,
         colors = "config/colors.tsv",
-        clades = "results/clades_{segment}.json"
+        clades = "results/clades_ha.json"
     output:
         auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json"
     conda: "../cartography.yml"
