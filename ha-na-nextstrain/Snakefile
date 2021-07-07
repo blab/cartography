@@ -1,6 +1,21 @@
+
+from snakemake.utils import min_version
+min_version("6.0")
+
+from snakemake.utils import Paramspace
+import pandas as pd
+
+METHOD_PARAMETERS = Paramspace(
+    pd.read_csv(
+        "config/method_parameters.tsv",
+        sep="\t"
+    )
+)
+
 wildcard_constraints:
     segment="(ha|na|ma)",
-    ha_concatenated="(ha|na|ma|concatenated|ma_concatenated)"
+    ha_concatenated="(ha|na|ma|concatenated|ma_concatenated)",
+    method="(pca|mds|t-sne|umap)"
 
 EMBEDDING_METHODS = [
     "pca",
@@ -23,6 +38,10 @@ SEGMENTS = [
     "ma"
 ]
 
+SEG = [
+    "ha",
+    "na"
+]
 HA_CONCATENATED = [
     "concatenated",
     "ha",
@@ -31,9 +50,10 @@ HA_CONCATENATED = [
     "ma_concatenated"
 ]
 
-MDS_UMAP = [
-    "mds",
-    "umap"
+HA_CONCAT = [
+    "concatenated",
+    "ha",
+    "na",
 ]
 
 rule all:
@@ -46,28 +66,30 @@ rule all:
         expand("results/metadata_{segment}.tsv", segment=SEGMENTS),
         "results/aligned_concatenated.fasta",
         "results/aligned_ma_concatenated.fasta",
-        #expand("results/tree_{segment}.nwk", segment=SEGMENTS),
-        #"results/aligned_concatenated.fasta",
-        #expand("results/procrustes_metadata_{mds_umap}.csv", mds_umap = MDS_UMAP),
-        #expand("../auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json", segment=SEGMENTS),
-        #expand("results/table_{segment}.tsv", segment=SEGMENTS),
+        expand("results/tree_{segment}.nwk", segment=SEG),
+        expand("../auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json", segment=SEG),
+        expand("results/table_{segment}.tsv", segment=SEG),
         #expand("results/full_KDE_metadata_{ha_concatenated}.csv", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_pca_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_mds_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_t-sne_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_umap_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
-        #expand("results/procrustes_main_figure_{mds_umap}.png", mds_umap=MDS_UMAP),
-        #expand("results/procrustes_distance_{mds_umap}.json", mds_umap=MDS_UMAP),
-        #expand("results/KDEDensity_{method}_{ha_concatenated}.png", method=KDE_METHODS, ha_concatenated=HA_CONCATENATED),
-        #"results/ha_concatenated_data.csv",
-        #"../docs/KDEDensityFluHaNa.png",
-        #"../docs/FullLinkedChartBrushableFluHaNa.html",
-        #"../docs/flu-embeddingsHaNa.png",
-        #"../docs/UMAPHaNa.html",
-        #"../docs/UMAPHaNa.png",
-        #"../docs/UMAPProcrustesHaNa.png",
-        #"../docs/UMAPBoxplotHaNA.png",
-        # "results/nucleotide_diversity_na.txt"
+        expand("results/KDEDensity_{method}_{ha_concatenated}.png", method=KDE_METHODS, ha_concatenated=HA_CONCAT),
+        "results/ha_concatenated_data.csv",
+        HANAMAFullChartBrushableMDSHTML = "../docs/HANAMAFullChartBrushableMDS.html",
+        HANAMAFullChartBrushableMDSPNG = "../docs/HANAMAFullChartBrushableMDS.png",
+        HANAFullChartBrushableMDSHTML = "../docs/HANAFullChartBrushableMDS.html",
+        HANAFullChartBrushableMDSPNG = "../docs/HANAFullChartBrushableMDS.png",
+        HANAMAFullChartBrushableTSNEHTML = "../docs/HANAMAFullChartBrushableTSNE.html",
+        HANAMAFullChartBrushableTSNEPNG = "../docs/HANAMAFullChartBrushableTSNE.png",
+        HANAFullChartBrushableTSNEHTML = "../docs/HANAFullChartBrushableTSNE.html",
+        HANAFullChartBrushableTSNEPNG = "../docs/HANAFullChartBrushableTSNE.png",
+        fullChartPNG = "../docs/flu-embeddingsHaNa.png",
+        fullChartHTML = "../docs/flu-embeddingsHaNa.html",
+        KDE_density = "../docs/FinalKDEPlotHANA.png",
+        umapChartPNG = "../docs/UMAPHaNa.png",
+        UMAPProcrustes = "../docs/UMAPProcrustesHaNa.png",
+        UMAPBoxplot = "../docs/UMAPBoxplotHaNA.png"
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha-na.fa",
@@ -389,9 +411,9 @@ rule export:
         nt_muts = rules.ancestral.output.node_data,
         aa_muts = rules.translate.output.node_data,
         embeddings = expand("results/embed_{embedding}_ha.json", embedding=EMBEDDING_METHODS),
+        embeddings_concat = expand("results/embed_{embedding}_concatenated.json", embedding=EMBEDDING_METHODS),
         auspice_config = files.auspice_config,
         colors = "config/colors.tsv",
-        procrustes_distance = expand("results/procrustes_distance_{mds_umap}.json", mds_umap=MDS_UMAP),
         clades = "results/clades_{segment}.json"
     output:
         auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json"
@@ -401,7 +423,7 @@ rule export:
         augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} {input.procrustes_distance} \
+            --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} \
             --auspice-config {input.auspice_config} \
             --colors {input.colors} \
             --output {output.auspice_tree}
@@ -427,37 +449,6 @@ rule nucleotide_diversity:
             --alignment {input.alignment} \
             --output {output.output}
         """
-rule procrustes_distance:
-    message: "performing procrustes analysis and distance metric calculation on embeddings of choice"
-    input:
-        embedding_1 = "results/embed_{mds_umap}_ha.csv",
-        embedding_2 = "results/embed_{mds_umap}_concatenated.csv",
-        metadata = "results/clades_ha.json"
-    output:
-        procrustes_distance = "results/procrustes_distance_{mds_umap}.json",
-        figure_boxplot = "results/boxplot_{mds_umap}_procrustes.png",
-        figure_procrustes = "results/procrustes_main_figure_{mds_umap}.png",
-        metadata = "results/procrustes_metadata_{mds_umap}.csv"
-    params:
-        colors = "#4e38d5 #6626d4 #4138c3 #4c89e8 #4e70ff #5499ff #79c9a1 #61b8f0 #5499ff #87dfb3 #a0e994 #bdee78 #ddee64 #f8e957 #ffdb4e #ffc348 #ff9e40 #ff6e36 #f93529",
-        columns = _get_embedding_columns_by_wildcards_mds_umap,
-        method = "{mds_umap}"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 scripts/pairwise_distance_metric.py \
-            --method {params.method} \
-            --embeddings {input.embedding_1} {input.embedding_2} \
-            --columns {params.columns} \
-            --metadata {input.metadata} \
-            --colors "#4e38d5" "#6626d4" "#4138c3" "#4c89e8" "#4e70ff" "#5499ff" "#79c9a1" "#61b8f0" "#5499ff" "#87dfb3" "#a0e994" "#bdee78" "#ddee64" "#f8e957" "#ffdb4e" "#ffc348" "#ff9e40" "#ff6e36" "#f93529" \
-            --domain '3c' '3c2' '3c2.A' '3c3' '3c3.A' 'A1' 'A1a' 'A1b' 'A1b/131K' 'A1b/135K' 'A1b/135N' 'A1b/137F' 'A1b/186D' 'A1b/197R' 'A1b/94N' 'A2' 'A2/re' 'A3' 'A4' \
-            --output-distance-metric {output.procrustes_distance} \
-            --output-figure {output.figure_procrustes} \
-            --output-boxplot {output.figure_boxplot} \
-            --output-metadata {output.metadata}
-        """
-
 
 rule tree_to_table:
     message: "creating a table of node data values from the tree attributes"
@@ -716,7 +707,7 @@ rule create_notebook_docs:
     input:
         #Charts, tree:
         node_df_ha = "results/table_ha.tsv",
-
+        
         pca_df_ha = "results/embed_pca_ha.csv",
         explained_variance_pca_ha = "results/explained_variance_pca_ha.csv",
 
@@ -725,7 +716,16 @@ rule create_notebook_docs:
 
         mds_df_ha = "results/embed_mds_ha.csv",
         mds_df_concatenated = "results/embed_mds_concatenated.csv",
+        mds_df_ma_concatenated = "results/embed_mds_ma_concatenated.csv",
 
+        tsne_df_ha = "results/embed_t-sne_ha.csv",
+        tsne_df_concatenated = "results/embed_t-sne_concatenated.csv",
+        tsne_df_ma_concatenated = "results/embed_t-sne_ma_concatenated.csv",
+
+        umap_df_ha = "results/embed_umap_ha.csv",
+        umap_df_concatenated = "results/embed_umap_concatenated.csv",
+
+        threshold_information = "../seasonal-flu-nextstrain/results/full_output_HDBSCAN.csv",
         #KDE Density:
 
         KDE_mds_ha = "results/KDEDensity_mds_ha.csv",
@@ -747,10 +747,17 @@ rule create_notebook_docs:
         KDE_genetic_metadata_concatenated = "results/KDEDensity_genetic_metadata_concatenated.csv"
 
     output:
-        KDE_density = "../docs/KDEDensityFluHaNa.png",
-        fullChart = "../docs/FullLinkedChartBrushableFluHaNa.html",
+        HANAMAFullChartBrushableMDSHTML = "../docs/HANAMAFullChartBrushableMDS.html",
+        HANAMAFullChartBrushableMDSPNG = "../docs/HANAMAFullChartBrushableMDS.png",
+        HANAFullChartBrushableMDSHTML = "../docs/HANAFullChartBrushableMDS.html",
+        HANAFullChartBrushableMDSPNG = "../docs/HANAFullChartBrushableMDS.png",
+        HANAMAFullChartBrushableTSNEHTML = "../docs/HANAMAFullChartBrushableTSNE.html",
+        HANAMAFullChartBrushableTSNEPNG = "../docs/HANAMAFullChartBrushableTSNE.png",
+        HANAFullChartBrushableTSNEHTML = "../docs/HANAFullChartBrushableTSNE.html",
+        HANAFullChartBrushableTSNEPNG = "../docs/HANAFullChartBrushableTSNE.png",
         fullChartPNG = "../docs/flu-embeddingsHaNa.png",
-        umapChart = "../docs/UMAPHaNa.html",
+        fullChartHTML = "../docs/flu-embeddingsHaNa.html",
+        KDE_density = "../docs/FinalKDEPlotHANA.png",
         umapChartPNG = "../docs/UMAPHaNa.png",
         UMAPProcrustes = "../docs/UMAPProcrustesHaNa.png",
         UMAPBoxplot = "../docs/UMAPBoxplotHaNA.png"
@@ -758,6 +765,46 @@ rule create_notebook_docs:
     conda: "../cartography.yml"
     notebook:
         "2020-12-21NotebookFluHaNa.ipynb"
+
+
+rule cluster_by_parameters:
+    input:
+        alignment="results/aligned_sequences.fasta",
+        distance_matrix="results/distance_matrix_sequences.csv",
+        clades="results/clades.json",
+    output:
+        table=f"results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
+    params:
+        method_parameters=METHOD_PARAMETERS.instance,
+    conda: "../cartography.yml"
+    script:
+        "../notebooks/scripts/cluster_by_parameters.py"
+
+
+rule aggregate_clusters_by_parameters:
+    input:
+        tables=expand("results/gridsearch/{params}.tsv", params=METHOD_PARAMETERS.instance_patterns)
+    output:
+        table="results/gridsearch.tsv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/concatenate_tables.py \
+            --tables {input.tables} \
+            --output {output.table}
+        """
+
+
+rule summarize_grid_search:
+    input:
+        table="results/gridsearch.tsv",
+    output:
+        mcc_by_method_and_distance_threshold="results/mcc_by_method_and_distance_threshold.pdf",
+    conda: "../cartography.yml"
+    log:
+        "logs/summarize-grid-search.ipynb"
+    notebook:
+        "../notebooks/2021-06-23-summarize-grid-search.ipynb"
 
 rule clean:
     message: "Removing directories: {params}"

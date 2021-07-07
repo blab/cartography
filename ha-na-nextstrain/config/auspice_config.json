@@ -1,16 +1,6 @@
 {
     "title": "Seasonal influenza A/H3N2 phylogeny from 2016-2018",
     "colorings": [
-		{
-            "key": "distance_mds",
-            "title": "Procrustes Distance MDS",
-            "type": "categorical"
-        },
-		{
-            "key": "distance_umap",
-            "title": "Procrustes Distance UMAP",
-            "type": "categorical"
-        },
         {
             "key": "pca_label",
             "title": "PCA cluster",

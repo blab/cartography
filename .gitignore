@@ -122,9 +122,11 @@ seasonal-flu-nextstrain/results-outlier/
 seasonal-flu-nextstrain/auspice-outlier/
 seasonal-flu-nextstrain/results-20182020/
 seasonal-flu-nextstrain-2018-2020/results/
+seasonal-flu-nextstrain/logs/
 seasonal-flu-nextstrain/auspice-20182020/
 zika-nextstrain/results-20182020/
 zika-nextstrain/auspice/
+zika-nextstrain/logs/
 mers-nextstrain/results/
 outlier_analysis/results/
 ha-na-nextstrain/results/

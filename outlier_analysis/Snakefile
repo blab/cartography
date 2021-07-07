@@ -1,3 +1,16 @@
+from snakemake.utils import min_version
+min_version("6.0")
+
+from snakemake.utils import Paramspace
+import pandas as pd
+    
+METHOD_PARAMETERS = Paramspace(
+    pd.read_csv(
+        "config/method_parameters.tsv",
+        sep="\t"
+    )
+)
+
 ANALYSIS_TYPE = [
     "filtered",
     "human",
@@ -10,6 +23,7 @@ ANALYSIS_ALIGN = [
     "human_swine",
     "full"
 ]
+
 rule all:
     input:
         expand("results/sequences_{analysis}.fasta", analysis=ANALYSIS_TYPE),
@@ -29,19 +43,14 @@ rule all:
 
         "results/KDEDensity_mds_human_swine.png",  
         "results/table.tsv",
-        "../docs/distributionLOFOutlierFull.png",
-        "../docs/distributionLOFOutlierHumanSwine.png",
-        "../docs/KDEDensityFluOutlierHumanSwine.png",
-        "results/accuracy_figure_HDBSCAN_human_swine.png"
+        #"../docs/distributionLOFOutlierFull.png",
+        #"../docs/distributionLOFOutlierHumanSwine.png",
+        #"../docs/KDEDensityFluOutlierHumanSwine.png",
+        #"results/accuracy_figure_HDBSCAN_human_swine.png",
+        "results/mcc_by_method_and_distance_threshold.pdf",
+        "results/full_HDBSCAN_metadata.csv",
+        "results/HDBSCAN_metadata_mds.csv",
 
-def _get_path_by_wildcards(wildcards):
-    method = wildcards.analysis
-    if method in ("human", "filtered"):
-        return "data/ncbi-h3n2-human.fa"
-    if method in ("full"):
-        return "data/ncbi-h3n2-full.fa"
-    if method in ("swine"):
-        return "data/ncbi-h3n2-swine.fa"
 
 rule files:
     params:
@@ -51,6 +60,15 @@ rule files:
         clades = "config/clades_h3n2_ha.tsv"
 
 files = rules.files.params
+
+def _get_path_by_wildcards(wildcards):
+    method = wildcards.analysis
+    if method in ("human", "filtered"):
+        return "data/ncbi-h3n2-human.fa"
+    if method in ("full"):
+        return "data/ncbi-h3n2-full.fa"
+    if method in ("swine"):
+        return "data/ncbi-h3n2-swine.fa"
 
 rule parse:
     message: "Parsing fasta into sequences and metadata"
@@ -506,27 +524,67 @@ rule KDE_density:
             --output-metadata {output.metadata}
         """
 
-rule concat_KDE_table:
-    message: "concatenating all the KDE data into one csv dataframe"
+
+rule cluster_by_parameters:
     input:
-       dataframe_pca = "results/KDEDensity_pca_metadata.csv",
-       dataframe_mds = "results/KDEDensity_mds_metadata.csv", 
-       dataframe_tsne = "results/KDEDensity_t-sne_metadata.csv", 
-       dataframe_umap = "results/KDEDensity_umap_metadata.csv",
-       dataframe_genetic = "results/KDEDensity_genetic_metadata.csv"
+        alignment="results/aligned_sequences.fasta",
+        distance_matrix="results/distance_matrix_sequences.csv",
+        clades="results/clades.json",
     output:
-        metadata = "results/full_KDE_metadata.csv"
+        table=f"results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
     params:
-        column = "MCC",
-        dataframes = "results/KDEDensity_pca_metadata.csv results/KDEDensity_mds_metadata.csv results/KDEDensity_t-sne_metadata.csv results/KDEDensity_umap_metadata.csv results/KDEDensity_genetic_metadata.csv"
+        method_parameters=METHOD_PARAMETERS.instance,
+    conda: "../cartography.yml"
+    script:
+        "../notebooks/scripts/cluster_by_parameters_outliers.py"
+
+
+rule aggregate_clusters_by_parameters:
+    input:
+        tables=expand("results/gridsearch/{params}.tsv", params=METHOD_PARAMETERS.instance_patterns)
+    output:
+        table="results/gridsearch.tsv"
     conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/concatenate_tables.py \
-            --tables {params.dataframes} \
-            --separator ',' \
-            --sort-by {params.column} \
-            --output {output.metadata}
+            --tables {input.tables} \
+            --output {output.table}
+        """
+
+rule summarize_grid_search:
+    input:
+        table="results/gridsearch.tsv",
+    output:
+        mcc_by_method_and_distance_threshold="results/mcc_by_method_and_distance_threshold.pdf",
+    conda: "../cartography.yml"
+    log:
+        "logs/summarize-grid-search.ipynb"
+    notebook:
+        "../notebooks/2021-06-23-summarize-grid-search.ipynb"
+
+rule output_grid_search:
+    input:
+        table= "results/gridsearch.tsv",
+    output:
+        output_ = "results/output_HDBSCAN.csv",
+        output_txt = "results/output_HDBSCAN.txt",
+        output_hyperparameters = "results/grid_search_parameters.csv",
+        output_hyperparameters_txt = "results/grid_search_parameters.txt",
+        output_figure_HDBSCAN = "results/accuracy_figure_HDBSCAN.png",
+        output_figure_grid_search = "results/accuracy_figure_grid_search.png"
+    conda: "../cartography.yml"
+    params:
+        method = "pca mds t-sne umap"
+    shell:
+        """
+        python3 ../notebooks/scripts/output_grid_search.py \
+            --methods {params.method} \
+            --grid-search-total {input.table} \
+            --output {output.output_} {output.output_txt} \
+            --output-hyperparameters {output.output_hyperparameters} {output.output_hyperparameters_txt} \
+            --output-figure-HDBSCAN {output.output_figure_HDBSCAN} \
+            --output-figure-grid-search {output.output_figure_grid_search}
         """
 
 
