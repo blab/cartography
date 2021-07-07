@@ -126,8 +126,10 @@ if __name__ == "__main__":
 
             index_max = val_df[f"{list_of_embedding_strings}_label_{k}"].value_counts().idxmax()
             
-            val_df["outlier_status_predicted"] = val_df[f"{list_of_embedding_strings}_label_{k}"].apply(lambda label: "outlier" if label!=index_max else "not_outlier")
-            
+            print("training")
+            print(val_df[f"{list_of_embedding_strings}_label_{k}"].value_counts())
+            val_df["outlier_status_predicted"] = val_df[f"{list_of_embedding_strings}_label_{k}"].apply(lambda label: "outlier" if label=='-1' else "not_outlier")
+            print(val_df["outlier_status_predicted"].value_counts())
 
             confusion_matrix_val = confusion_matrix(training_annotations["clade_membership"], val_df["outlier_status_predicted"])
             matthews_cc_val = matthews_corrcoef(training_annotations["clade_membership"], val_df["outlier_status_predicted"])
@@ -158,9 +160,10 @@ if __name__ == "__main__":
             list_columns.extend(["strain", f"{list_of_embedding_strings}_label_{k}"])
             
             index_max = val_df[f"{list_of_embedding_strings}_label_{k}"].value_counts().idxmax()
-            
-            val_df["outlier_status_predicted"] = val_df[f"{list_of_embedding_strings}_label_{k}"].apply(lambda label: "outlier" if label!=index_max else "not_outlier")
-            
+            print("validation")
+            print(val_df[f"{list_of_embedding_strings}_label_{k}"].value_counts())
+            val_df["outlier_status_predicted"] = val_df[f"{list_of_embedding_strings}_label_{k}"].apply(lambda label: "outlier" if label=='-1' else "not_outlier")
+            print(val_df["outlier_status_predicted"].value_counts())
 
             confusion_matrix_val = confusion_matrix(validation_annotations["clade_membership"], val_df["outlier_status_predicted"])
             matthews_cc_val = matthews_corrcoef(validation_annotations["clade_membership"], val_df["outlier_status_predicted"])
@@ -189,11 +192,10 @@ if __name__ == "__main__":
 
     if args.output:
         max_values = []
-        for method in list_of_embedding_strings:
-            # method_val: groups the full dataframe by method, returns the dataframes grouped by method
-            method_val = full_output_df.groupby("method").get_group(method)
-            method_dict = dict(method_val.iloc[method_val.groupby("distance_threshold")["matthews_cc_validation"].mean().argmax()])
-            max_values.append(method_dict)
+        # method_val: groups the full dataframe by method, returns the dataframes grouped by method
+        method_val = full_output_df.groupby("method").get_group(list_of_embedding_strings)
+        method_dict = dict(method_val.iloc[method_val.groupby("distance_threshold")["matthews_cc_validation"].mean().argmax()])
+        max_values.append(method_dict)
             
         max_df = pd.DataFrame(max_values)
         max_df.to_csv(args.output)

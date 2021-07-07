@@ -1,6 +1,6 @@
 wildcard_constraints:
-    segment="(ha|na)",
-    ha_concatenated="(ha|na|concatenated)"
+    segment="(ha|na|ma)",
+    ha_concatenated="(ha|na|ma|concatenated|ma_concatenated)"
 
 EMBEDDING_METHODS = [
     "pca",
@@ -19,13 +19,16 @@ KDE_METHODS = [
 
 SEGMENTS = [
     "ha",
-    "na"
+    "na",
+    "ma"
 ]
 
 HA_CONCATENATED = [
     "concatenated",
     "ha",
-    "na"
+    "na",
+    "ma",
+    "ma_concatenated"
 ]
 
 MDS_UMAP = [
@@ -41,28 +44,30 @@ rule all:
         expand("results/aligned_{segment}.fasta", segment=SEGMENTS),
         expand("results/filtered_{segment}.fasta", segment=SEGMENTS),
         expand("results/metadata_{segment}.tsv", segment=SEGMENTS),
-        expand("results/tree_{segment}.nwk", segment=SEGMENTS),
         "results/aligned_concatenated.fasta",
-        expand("results/procrustes_metadata_{mds_umap}.csv", mds_umap = MDS_UMAP),
-        expand("../auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json", segment=SEGMENTS),
-        expand("results/table_{segment}.tsv", segment=SEGMENTS),
-        expand("results/full_KDE_metadata_{ha_concatenated}.csv", ha_concatenated=HA_CONCATENATED),
+        "results/aligned_ma_concatenated.fasta",
+        #expand("results/tree_{segment}.nwk", segment=SEGMENTS),
+        #"results/aligned_concatenated.fasta",
+        #expand("results/procrustes_metadata_{mds_umap}.csv", mds_umap = MDS_UMAP),
+        #expand("../auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json", segment=SEGMENTS),
+        #expand("results/table_{segment}.tsv", segment=SEGMENTS),
+        #expand("results/full_KDE_metadata_{ha_concatenated}.csv", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_pca_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_mds_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_t-sne_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_umap_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
-        expand("results/procrustes_main_figure_{mds_umap}.png", mds_umap=MDS_UMAP),
-        expand("results/procrustes_distance_{mds_umap}.json", mds_umap=MDS_UMAP),
-        expand("results/KDEDensity_{method}_{ha_concatenated}.png", method=KDE_METHODS, ha_concatenated=HA_CONCATENATED),
-        "results/ha_concatenated_data.csv",
-        "../docs/KDEDensityFluHaNa.png",
-        "../docs/FullLinkedChartBrushableFluHaNa.html",
-        "../docs/flu-embeddingsHaNa.png",
-        "../docs/UMAPHaNa.html",
-        "../docs/UMAPHaNa.png",
-        "../docs/UMAPProcrustesHaNa.png",
-        "../docs/UMAPBoxplotHaNA.png",
-         "results/nucleotide_diversity_na.txt"
+        #expand("results/procrustes_main_figure_{mds_umap}.png", mds_umap=MDS_UMAP),
+        #expand("results/procrustes_distance_{mds_umap}.json", mds_umap=MDS_UMAP),
+        #expand("results/KDEDensity_{method}_{ha_concatenated}.png", method=KDE_METHODS, ha_concatenated=HA_CONCATENATED),
+        #"results/ha_concatenated_data.csv",
+        #"../docs/KDEDensityFluHaNa.png",
+        #"../docs/FullLinkedChartBrushableFluHaNa.html",
+        #"../docs/flu-embeddingsHaNa.png",
+        #"../docs/UMAPHaNa.html",
+        #"../docs/UMAPHaNa.png",
+        #"../docs/UMAPProcrustesHaNa.png",
+        #"../docs/UMAPBoxplotHaNA.png",
+        # "results/nucleotide_diversity_na.txt"
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha-na.fa",
@@ -73,22 +78,41 @@ rule files:
 
 files = rules.files.params
 
-rule split:
+#rule split:
+#    message:
+#        """
+#        Split the ha and na file into separate files
+#        """
+#    input:
+#        sequences =  "data/ncbi-h3n2-ha-na.fa",
+#    output:
+#        sequences_ha = "results/ncbi-h3n2-ha.fasta",
+#        sequences_na = "results/ncbi-h3n2-na.fasta"
+#    conda: "../cartography.yml"
+#    shell:
+#        """
+#        python3 scripts/split_fasta.py \
+#            --sequence {input.sequences} \
+#            --output_fastas {output.sequences_ha} {output.sequences_na}\
+#        """
+
+rule split_ma:
     message:
         """
         Split the ha and na file into separate files
         """
     input:
-        sequences =  "data/ncbi-h3n2-ha-na.fa",
+        sequences =  "data/ncbi-h3n2-ha-na-ma.fa"
     output:
         sequences_ha = "results/ncbi-h3n2-ha.fasta",
-        sequences_na = "results/ncbi-h3n2-na.fasta"
+        sequences_na = "results/ncbi-h3n2-na.fasta",
+        sequences_ma = "results/ncbi-h3n2-ma.fasta"
     conda: "../cartography.yml"
     shell:
         """
-        python3 scripts/split_fasta.py \
+        python3 scripts/split_fasta_mp.py \
             --sequence {input.sequences} \
-            --output_fastas {output.sequences_ha} {output.sequences_na}\
+            --output_fastas {output.sequences_ha} {output.sequences_na} {output.sequences_ma}\
         """
 
 rule parse:
@@ -153,16 +177,18 @@ rule pair_ha_strains:
     message: "making ha strains same as na strains"
     input:
         sequences_ha = "results/filtered_ha.fasta",
-        sequences_na = "results/filtered_na.fasta"
+        sequences_na = "results/filtered_na.fasta",
+        sequences_ma = "results/filtered_ma.fasta"
     output:
         output_ha = "results/paired_ha.fasta",
-        output_na = "results/paired_na.fasta"
+        output_na = "results/paired_na.fasta",
+        output_ma = "results/paired_ma.fasta"
     conda: "../cartography.yml"
     shell:
         """
-        python3 scripts/filter_ha.py \
-            --sequence {input.sequences_ha} {input.sequences_na} \
-            --output_fasta {output.output_ha} {output.output_na}
+        python3 scripts/filter_ha_ma.py \
+            --sequence {input.sequences_ha} {input.sequences_na} {input.sequences_ma}\
+            --output_fasta {output.output_ha} {output.output_na} {output.output_ma}
         """
 
 rule align:
@@ -194,7 +220,7 @@ rule concat:
         """putting the na strains with the ha strains"""
     input:
         sequence_ha = "results/aligned_ha.fasta",
-        sequence_na = "results/aligned_na.fasta"
+        sequence_na = "results/aligned_na.fasta",
     output:
         fasta = "results/aligned_concatenated.fasta"
     conda: "../cartography.yml"
@@ -202,6 +228,23 @@ rule concat:
         """
         python3 scripts/concat_sequences.py \
             --sequences {input.sequence_ha} {input.sequence_na}\
+            --output {output.fasta} \
+        """
+
+rule concat_ma:
+    message:
+        """putting the na strains with the ha strains"""
+    input:
+        sequence_ha = "results/aligned_ha.fasta",
+        sequence_na = "results/aligned_na.fasta",
+        sequence_ma = "results/aligned_ma.fasta"
+    output:
+        fasta = "results/aligned_ma_concatenated.fasta"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 scripts/concat_seq_mp.py \
+            --sequences {input.sequence_ha} {input.sequence_na} {input.sequence_ma} \
             --output {output.fasta} \
         """
 
@@ -450,7 +493,8 @@ rule create_distance_matrix:
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
-        alignment = "results/aligned_{ha_concatenated}.fasta"
+        alignment = "results/aligned_{ha_concatenated}.fasta",
+        #cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv"
     output:
         node_data = "results/embed_pca_{ha_concatenated}.json",
         dataframe = "results/embed_pca_{ha_concatenated}.csv",
@@ -463,7 +507,7 @@ rule embed_pca:
         """
         python3 ../notebooks/scripts/embed.py \
             --alignment {input.alignment} \
-            --cluster \
+            --cluster-threshold 2.0 \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -477,7 +521,8 @@ rule embed_pca:
 rule embed_tsne:
     message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output
+        distance_matrix = rules.create_distance_matrix.output.output,
+        #cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv"
     output:
         node_data = "results/embed_t-sne_{ha_concatenated}.json",
         dataframe = "results/embed_t-sne_{ha_concatenated}.csv",
@@ -490,7 +535,7 @@ rule embed_tsne:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster \
+            --cluster-threshold 6.0 \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -503,7 +548,8 @@ rule embed_tsne:
 rule embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output
+        distance_matrix = rules.create_distance_matrix.output.output,
+        #cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv"
     output:
         node_data = "results/embed_umap_{ha_concatenated}.json",
         dataframe = "results/embed_umap_{ha_concatenated}.csv",
@@ -516,7 +562,7 @@ rule embed_umap:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster \
+            --cluster-threshold 4.0 \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -529,7 +575,8 @@ rule embed_umap:
 rule embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output
+        distance_matrix = rules.create_distance_matrix.output.output,
+        #cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv"
     output:
         node_data = "results/embed_mds_{ha_concatenated}.json",
         dataframe = "results/embed_mds_{ha_concatenated}.csv",
@@ -541,7 +588,7 @@ rule embed_mds:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster \
+            --cluster-threshold 2.0 \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \

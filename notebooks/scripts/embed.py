@@ -15,7 +15,7 @@ from sklearn.manifold import TSNE, MDS
 import sys
 from umap import UMAP
 
-from Helpers import get_hamming_distances
+from Helpers import get_hamming_distances, get_euclidean_data_frame
 
 
 if __name__ == "__main__":
@@ -170,7 +170,7 @@ if __name__ == "__main__":
         clusterer = hdbscan.HDBSCAN(min_cluster_size=15, cluster_selection_epsilon=float(cluster))
     if args.cluster_data is not None:
             max_df = pd.read_csv(args.cluster_data)
-            clusterer = hdbscan.HDBSCAN(min_cluster_size=15, cluster_selection_epsilon=float(max_df.where(max_df["method"] == args.command).dropna()[["threshold"]].values.tolist()[0][0]))
+            clusterer = hdbscan.HDBSCAN(min_cluster_size=15, cluster_selection_epsilon=float(max_df.where(max_df["method"] == args.command).dropna(subset = ['distance_threshold'])[["distance_threshold"]].values.tolist()[0][0]))
     
     if clusterer is not None:
         clusterer_default = hdbscan.HDBSCAN(min_cluster_size=15)

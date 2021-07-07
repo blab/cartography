@@ -100,7 +100,7 @@ rule embed_pca_before:
             pca \
             --components {params.components} \
         """
-#"QC_missing_data", "QC_mixed_sites", "QC_rare_mutations", "QC_snp_clusters"
+
 rule bases_missing_vs_pc1:
     message: "creating a bases_missing vs PC1 graph"
     input:
@@ -110,15 +110,16 @@ rule bases_missing_vs_pc1:
     output:
         figure = "../docs/bases_missing_vs_pc1_Sars.png"
     params:
-        color = "QC_snp_clusters"
+        bootstrap = 100
     conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/pc1_vs_bases_missing.py \
             --alignment {input.alignment} \
+            --embedding {input.pca} \
+            --method pca \
             --metadata {input.metadata} \
-            --pca {input.pca} \
-            --color {params.color} \
+            --bootstrapping-sample {params.bootstrap} \
             --output {output.figure}
         """
 

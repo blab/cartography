@@ -142,19 +142,24 @@ rule pca_before:
 rule bases_missing_vs_pc1:
     message: "creating a bases_missing vs PC1 graph"
     input:
-        alignment = rules.extract_sequences.output.sequences,
-        pca = "results/embed_pca_before.csv"
+        alignment = "results/aligned.fasta",
+        pca = "results/embed_pca_before.csv",
+        metadata = "results/metadata.tsv"
     output:
         figure = "../docs/bases_missing_vs_pc1_MERS.png"
+    params:
+        bootstrap = 100
     conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/pc1_vs_bases_missing.py \
             --alignment {input.alignment} \
-            --pca {input.pca} \
+            --embedding {input.pca} \
+            --method pca \
+            --metadata {input.metadata} \
+            --bootstrapping-sample {params.bootstrap} \
             --output {output.figure}
         """
-
 
 rule subset_data:
     message: "creating a new dataframe/fasta file"

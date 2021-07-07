@@ -148,10 +148,11 @@ if __name__ == "__main__":
     for training_index, validation_index in rkf.split(clade_annotations["strain"].values.tolist()): 
         print(len(training_index))
         print("here " + str(k))
+        i = 0
         for embed in tuned_parameter_values:
             keys, values = zip(*embed.items())
             experiments = [dict(zip(keys, v)) for v in itertools.product(*values)]
-            i = 0
+            
             for experiment in experiments:
                 method_dict = default_tuned_values[i].copy()
                 experiment_tuple = [(k, v) for k, v in experiment.items()]
@@ -170,6 +171,8 @@ if __name__ == "__main__":
 
                         # Embed training distance matrix.
                         print(method_dict)
+                        print(i)
+                        print(embedding_class[i])
                         embedder = embedding_class[i](**method_dict)
                         training_embedding = embedder.fit_transform(training_distance_matrix)
 
@@ -237,7 +240,7 @@ if __name__ == "__main__":
 
                     print(CV_dict)
                     total_list_methods.append(CV_dict)
-                i = i + 1
+            i = i + 1
         k = k+1
 
         
@@ -248,7 +251,7 @@ if __name__ == "__main__":
 
     if args.output_figure_HDBSCAN:
         #TODO: filter dataframe to best set of parameters for t-sne and umap 
-        sns.relplot(data=df, x="threshold", y="matthews_cc_validation", col="method", kind="scatter")
+        sns.relplot(data=df, x="distance_threshold", y="matthews_cc_validation", col="method", kind="scatter")
         plt.savefig(args.output_figure)
         
     if args.output_figure_grid_search is not None:

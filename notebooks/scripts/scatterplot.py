@@ -52,6 +52,9 @@ if __name__ == "__main__":
     
     r_value_arr = np.array(r_value_arr)
 
+    mean = np.mean(r_value_arr)
+    std = np.std(r_value_arr)
+    
     mean_euclidean = np.mean(total_df["euclidean"], axis=0)
     std_euclidean  = np.std(total_df["euclidean"], axis=0)
     max_euclidean = max(total_df["euclidean"].values.tolist())
@@ -106,5 +109,5 @@ if __name__ == "__main__":
         total_df.to_csv(args.output_dataframe)
 
     if args.output_metadata is not None:
-        metadata_df = pd.DataFrame([[args.method, r_value ** 2, mean, std, variation_percent, mean_genetic, std_genetic, max_genetic, mean_euclidean, std_euclidean, max_euclidean]], columns=["embedding", "pearson_coef", "mean", "std", "genetic_variation", "genetic_mean", "genetic_std", "genetic_max", "euclidean_mean", "euclidean_std", "euclidean_max"])
+        metadata_df = pd.DataFrame([[args.method, r_value ** 2, mean, std, mean_genetic, std_genetic, max_genetic, mean_euclidean, std_euclidean, max_euclidean]], columns=["embedding", "pearson_coef", "mean", "std", "genetic_mean", "genetic_std", "genetic_max", "euclidean_mean", "euclidean_std", "euclidean_max"])
         metadata_df.to_csv(args.output_metadata)

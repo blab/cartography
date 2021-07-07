@@ -91,16 +91,55 @@ We then expand the scope of the project with supplementary analyses that target 
 
 We have used four different methods commonly used in viral epidemiology for reducing our data, picked because of their varying ways of displaying data. 
 Principal Component Analysis (PCA) reduces multidimensional data, increasing interpretability while minimizing information loss [@jolliffe_cadima_2016].
-PCA relies on linear assumptions and does not affect the scale of the data.
-Because PCA is almost entirely focused on retaining the global structure and variance of the data, one of its limitations is revealing patterns locally.
 PCA is a matrix analysis method, while the other three methods reduce distance based comparisons. 
 Multidimensional Scaling (MDS) refers to statistical techniques that increase the interpretability of local relational structures mired in the dataset [@hout_papesh_goldinger_2012].
-The MDS algorithm places a higher importance on translating dissimilarity to distance than displaying local patterns.
-t-distributed Stochastic Neighbor Embedding (t-SNE) projects clusters and distances between clusters that are not analogous to dissimilarity - in other words, t-SNE focuses more heavily on projecting similarity rather than dissimilarity [@maaten2008visualizing].
-Because t-SNE reduces dimensionality based on the local properties of data, data with intrinsically high dimensional structure will not be projected accurately.
+t-distributed Stochastic Neighbor Embedding (t-SNE) projects clusters and distances between clusters that are not analogous to dissimilarity, as t-SNE focuses on projecting similarity over dissimilarity [@maaten2008visualizing].
 Uniform Manifold Approximation and Projection (UMAP) is a manifold learning technique for dimension reduction [@lel2018umap].
-UMAP results in low dimensional neighborhoods that group genetically similar strains together on a local scale while still preserving relationships between distantly related strains.
-A limitation for UMAP is its novelty, as there are no firmly established practices and robust libraries to aid users.
+
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-0lax{text-align:left;vertical-align:top}
+</style>
+<table class="tg">
+<thead>
+  <tr>
+    <th class="tg-0lax">Method</th>
+    <th class="tg-0lax">Benefits</th>
+    <th class="tg-0lax">Disadvantages</th>
+    <th class="tg-0lax">Sources/Citations</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg-0lax">PCA</td>
+    <td class="tg-0lax">- relies on linear assumptions, does not affect the scale of the data</td>
+    <td class="tg-0lax">- focuses completely on global patterns<br>- does not reveal local structure/patterns </td>
+    <td class="tg-0lax">[@jolliffe_cadima_2016]</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">MDS</td>
+    <td class="tg-0lax">- distance based comparison method that strongly recapitulates global structure</td>
+    <td class="tg-0lax">- does not reveal local structure</td>
+    <td class="tg-0lax">[@hout_papesh_goldinger_2012]</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">t-SNE</td>
+    <td class="tg-0lax">- extrapolates local patterns from dataset, reveals local structure</td>
+    <td class="tg-0lax">- does not project intrinsically high dimensional datasets accurately<br>-does not preserve global structure</td>
+    <td class="tg-0lax">[@maaten2008visualizing]</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">UMAP</td>
+    <td class="tg-0lax">- preserves both global and local structure</td>
+    <td class="tg-0lax">- a novel technique with few firmly established practices to aid users</td>
+    <td class="tg-0lax">[@lel2018umap]</td>
+  </tr>
+</tbody>
+</table>
 
 # Expectations for influenza, Zika, and MERS
 
@@ -122,6 +161,77 @@ MERS is a recombinant virus that affects both camels and humans, with camel to h
 While influenza's clades are defined by mutations and Zika's by significant geographical introductions, MERS clades were assigned to internal nodes and tips in the tree based on monophyletic host status (strictly camel or human) to reveal patterns within host outbreaks.
 The genomes are 30130 bases long, with a mean bases missing of 889.781 and median of 42.5.
 MERS population is relatively homogenous, as the majority of human infections were collected from the same outbreaks. 
+
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-hrrh{background-color:#ffffff;border-color:#000000;color:#333333;text-align:left;vertical-align:top}
+.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+.tg .tg-0lax{text-align:left;vertical-align:top}
+</style>
+<table class="tg">
+<thead>
+  <tr>
+    <th class="tg-hrrh">Pathogen</th>
+    <th class="tg-0pky">Hosts</th>
+    <th class="tg-0pky">Timespan of data used</th>
+    <th class="tg-0pky"># of genomes used</th>
+    <th class="tg-0lax">Average +/- std genome length (AGCT)</th>
+    <th class="tg-0lax">Average +/- std genome length (N)</th>
+    <th class="tg-0lax">Nucleotide Diversity (pi)</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg-0pky">H3N2 HA Influenza</td>
+    <td class="tg-0pky">Human, Swine</td>
+    <td class="tg-0pky">2016-2018, 2018-2020</td>
+    <td class="tg-0pky">1918</td>
+    <td class="tg-0lax">1700.94 +/- 0.289</td>
+    <td class="tg-0lax">0.060 +/- 0.289</td>
+    <td class="tg-0lax">0.01490</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">Zika</td>
+    <td class="tg-0pky">Human</td>
+    <td class="tg-0pky">2013-2018</td>
+    <td class="tg-0pky">689</td>
+    <td class="tg-0lax">9854.061 +/- 1635.581</td>
+    <td class="tg-0lax">914.939 +/- 1635.5</td>
+    <td class="tg-0lax">0.00535</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">MERS</td>
+    <td class="tg-0pky">Human, Camel</td>
+    <td class="tg-0pky">2012-2016</td>
+    <td class="tg-0pky">274</td>
+    <td class="tg-0lax">29240.219 +/- 2546.237</td>
+    <td class="tg-0lax">889.781 +/- 2546.237</td>
+    <td class="tg-0lax">0.00235</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">Sars-CoV-2</td>
+    <td class="tg-0pky">Human</td>
+    <td class="tg-0pky">2020-2021</td>
+    <td class="tg-0pky">799</td>
+    <td class="tg-0lax">29578.183 +/- 376.663</td>
+    <td class="tg-0lax">324.817 +/- 376.663</td>
+    <td class="tg-0lax">0.00109</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">H3N2 NA Influenza</td>
+    <td class="tg-0lax">Human, Swine</td>
+    <td class="tg-0lax">2016-2018</td>
+    <td class="tg-0lax">1643</td>
+    <td class="tg-0lax">1430.531 +/- 10.300<br></td>
+    <td class="tg-0lax">5.469 +/- 10.300</td>
+    <td class="tg-0lax">0.01287</td>
+  </tr>
+</tbody>
+</table>
 
 ## Embedding clusters recapitulate phylogenetic clades for seasonal influenza A/H3N2
 
@@ -159,6 +269,26 @@ These results show the potential benefits of using t-SNE embeddings for cluster 
 
 ![Distribution of scaled Euclidean distances between all pairs of H3N2 strains visually represents the efficacy of Euclidean distances for distinguishing virus genomes from different clades by clade status, with the genetic KDE plot (far upper right) used as a comparison for the dimensionality reducing methods PCA (upper middle), MDS (upper left), t-SNE (lower left), and UMAP (lower right).](FullKDEDensityFlu.png){#fig:flu-within-and-between-group-distances}
 
+### Future clade relationships in 2018-2020 H3N2 Influenza predicted with Cross Validation information from 2016-2018 H3N2 Influenza
+
+We aimed to understand how generalizable the results from the within versus between clade status analysis was to future datasets. 
+In order to test this, we fit thresholds from past data to data later in the pathogen population's evolution by performing cross validation to find the optimal threshold, applying that threshold to new test data, and evaluating its accuracy.
+
+The 2016-2018 H3N2 influenza within versus between clade relationships distance information was fitted using an SVM.
+Within the cross validation analysis, the accuracy (MCC) values ranged from 0.22 to 0.4 ([@fig:cross-v-values]).
+The mean threshold value per method for all folds were applied to 2018-2020 data to classify within versus between clade relationships ([@fig:KDE-cross-v]).
+
+The lower MCC values across folds can be attributed to out of sample performance error from training bias, as MCC values are intrinsically higher when trained and tested on the same dataset using the SVM threshold ([@fig:cross-v-values]). 
+The thresholds from the 2016-2018 cross validation analysis were analyzed alongside the SVM threshold's predict function trained on the 2018-2020 dataset to further understand the loss in accuracy.
+The MCC values resulting from the cross validation thresholds were incredibly similar to the SVM thresholds, with the cross validation threshold improving the accuracy for PCA (MCC: 0.76 to 0.79) ([@fig:KDE-cross-v]). 
+This confirms that the same threshold can be used across the same type of embedding and organism for future and past populations to categorize within vs between clade relationships.
+
+Classifying relationships as within and between clade can be used for an exploratory analysis of how stable patterns and clade relationships are in different pathogen populations over time. 
+The generalizability of the results from the between versus within clade analysis means thresholds from past data within a pathogen population can be used to define and bin future populations into clades in a more automated way than the manual binning that is common in epidemiology. 
+
+![Full KDE plot of Genetic (Upper Right), PCA (Upper middle), MDS (Upper left), t-SNE (Lower left), and UMAP (Lower right) with the SVM threshold and 2016-2018 cross validation thresholds plotted. The MCC values are the 2016-2018 cross validation values (first value) and the 2018-2020 SVM values (last value).](FullKDEDensityFluCrossV.png){#fig:KDE-cross-v}
+
+![MCC values for each fold per embedding plotted against genetic distance, ranging from 0.22 to 0.4](cross_validation_graph.png){#fig:cross-v-values}
 ## Embedding clusters reveal outbreak and geographical patterns within Zika
 
 All four dimensionality reduction methods recapitulated phylogenetic patterns observed in the phylogeny ([@fig:zika-embeddings]).
@@ -271,26 +401,6 @@ These findings affirm our expectations that full genomes and multiple chromosome
 ![KDE plot (HA-only: first row ; HA and NA: second row) for genetic (HA-only: Upper left ; HA and NA joint analysis: Lower left), MDS (HA-only: Upper middle ; HA and NA joint analysis: Lower middle), and UMAP (HA-only: Upper right ; HA and NA joint analysis: Lower right) for HA and HA and NA joint analysis embeddings. ](KDEDensityFluHaNa.png){#fig:KDE-Ha-Na}
 
 
-# Future clade relationships in 2018-2020 H3N2 Influenza predicted with Cross Validation information from 2016-2018 H3N2 Influenza
-
-We aimed to understand how generalizable the results from the within versus between clade status analysis was to future datasets. 
-In order to test this, we fit thresholds from past data to data later in the pathogen population's evolution by performing cross validation to find the optimal threshold, applying that threshold to new test data, and evaluating its accuracy.
-
-The 2016-2018 H3N2 influenza within versus between clade relationships distance information was fitted using an SVM.
-Within the cross validation analysis, the accuracy (MCC) values ranged from 0.22 to 0.4 ([@fig:cross-v-values]).
-The mean threshold value per method for all folds were applied to 2018-2020 data to classify within versus between clade relationships ([@fig:KDE-cross-v]).
-
-The lower MCC values across folds can be attributed to out of sample performance error from training bias, as MCC values are intrinsically higher when trained and tested on the same dataset using the SVM threshold ([@fig:cross-v-values]). 
-The thresholds from the 2016-2018 cross validation analysis were analyzed alongside the SVM threshold's predict function trained on the 2018-2020 dataset to further understand the loss in accuracy.
-The MCC values resulting from the cross validation thresholds were incredibly similar to the SVM thresholds, with the cross validation threshold improving the accuracy for PCA (MCC: 0.76 to 0.79) ([@fig:KDE-cross-v]). 
-This confirms that the same threshold can be used across the same type of embedding and organism for future and past populations to categorize within vs between clade relationships.
-
-Classifying relationships as within and between clade can be used for an exploratory analysis of how stable patterns and clade relationships are in different pathogen populations over time. 
-The generalizability of the results from the between versus within clade analysis means thresholds from past data within a pathogen population can be used to define and bin future populations into clades in a more automated way than the manual binning that is common in epidemiology. 
-
-![Full KDE plot of Genetic (Upper Right), PCA (Upper middle), MDS (Upper left), t-SNE (Lower left), and UMAP (Lower right) with the SVM threshold and 2016-2018 cross validation thresholds plotted. The MCC values are the 2016-2018 cross validation values (first value) and the 2018-2020 SVM values (last value).](FullKDEDensityFluCrossV.png){#fig:KDE-cross-v}
-
-![MCC values for each fold per embedding plotted against genetic distance, ranging from 0.22 to 0.4](cross_validation_graph.png){#fig:cross-v-values}
 
 # MDS reveals a stark separation between outliers and non outliers 
 

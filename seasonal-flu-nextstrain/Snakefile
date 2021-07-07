@@ -4,6 +4,11 @@ min_version("6.0")
 from snakemake.utils import Paramspace
 import pandas as pd
 
+wildcard_constraints:
+    methods="(pca|mds|t-sne|umap)",
+    KDE_methods="(pca|mds|t-sne|umap|genetic)",
+    internal_node= "(ancestral|sequences)"
+
 METHOD_PARAMETERS = Paramspace(
     pd.read_csv(
         "config/method_parameters.tsv",
@@ -39,11 +44,13 @@ rule all:
         expand("results/embed_t-sne_{ancestral}.pdf", ancestral=INTERNAL_NODE),
         expand("results/embed_umap_{ancestral}.pdf", ancestral=INTERNAL_NODE),
         expand("results/embed_mds_{ancestral}.pdf", ancestral=INTERNAL_NODE),
+        expand("results/HDBSCAN_metadata_{method}.csv", method=EMBEDDING_METHODS),
+        "results/mcc_by_method_and_distance_threshold.pdf",
+        "results/full_HDBSCAN_metadata.csv",
         "results/accuracy_figure_HDBSCAN.png",
         "results/aligned_ancestral.fasta",
         "../auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json",
         "results/table.tsv",
-        "results/full_KDE_metadata.csv",
         "results/full_Scatterplot_metadata.csv",
         "results/explained_variance_pca_sequences.csv",
         "../docs/FullKDEDensityFlu.png",
@@ -56,6 +63,8 @@ rule all:
         "../docs/explainedVarianceFlu.png",
         "results/cross_validation_thresholds.csv",
         "results/mcc_by_method_and_distance_threshold.pdf",
+         "results/full_HDBSCAN_metadata.csv",
+        expand("results/HDBSCAN_metadata_{method}.csv", method=EMBEDDING_METHODS)
 
 rule files:
     params:
@@ -467,6 +476,8 @@ rule embed_mds:
             --components {params.components} \
         """
 
+
+
 def _get_embedding_columns_by_wildcards(wildcards):
     method = wildcards.method.replace("-", "")
 
@@ -539,32 +550,6 @@ def _get_embedding_path_by_wildcards(wildcards):
     else:
         return "results/distance_matrix_sequences.csv"
 
-rule cross_validation:
-    message: "do cross validation test to find best distance thresholds per method for between and within relationship status"
-    input:
-        distance_matrix = "results/distance_matrix_sequences.csv",
-        alignment = "results/aligned_sequences.fasta",
-        node_data = rules.tree_to_table.output.table
-    output:
-        output = "results/cross_validation_thresholds.csv",
-        metadata = "results/cross_validation_results.csv",
-        figure = "../docs/cross_validation_graph.png",
-        #total_data = "results/full_visualizations.csv"
-    params:
-        n_repeats = 10,
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 scripts/cross_validation.py \
-            --distance-matrix {input.distance_matrix} \
-            --alignment {input.alignment} \
-            --node-data {input.node_data} \
-            --n-repeats {params.n_repeats} \
-            --output {output.output} \
-            --output-metadata {output.metadata} \
-            --output-figure {output.figure} \
-        """
-
 rule KDE_density:
     message: "creating the KDE density plot"
     input:
@@ -572,8 +557,7 @@ rule KDE_density:
         clades = "results/clades.json",
     output:
         figure = "results/KDEDensity_{method}.png",
-        dataframe = "results/KDEDensity_{method}.csv",
-        metadata = "results/KDEDensity_{method}_metadata.csv"
+        dataframe = "results/KDEDensity_{method}.csv"
     params:
         embedding_columns = _get_embedding_columns_by_wildcards,
         differentiator_column = "clade_membership"
@@ -587,23 +571,104 @@ rule KDE_density:
             --embedding-columns {params.embedding_columns} \
             --differentiator-column {params.differentiator_column} \
             --output-figure {output.figure} \
-            --output-dataframe {output.dataframe} \
-            --output-metadata {output.metadata}
+            --output-dataframe {output.dataframe} 
         """
 
-rule concat_KDE_table:
+rule cluster_by_parameters:
+    input:
+        alignment="results/aligned_sequences.fasta",
+        distance_matrix="results/distance_matrix_sequences.csv",
+        clades="results/clades.json",
+    output:
+        table=f"results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
+    params:
+        method_parameters=METHOD_PARAMETERS.instance,
+    conda: "../cartography.yml"
+    script:
+        "../notebooks/scripts/cluster_by_parameters.py"
+
+
+rule aggregate_clusters_by_parameters:
+    input:
+        tables=expand("results/gridsearch/{params}.tsv", params=METHOD_PARAMETERS.instance_patterns)
+    output:
+        table="results/gridsearch.tsv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/concatenate_tables.py \
+            --tables {input.tables} \
+            --output {output.table}
+        """
+
+rule summarize_grid_search:
+    input:
+        table="results/gridsearch.tsv",
+    output:
+        mcc_by_method_and_distance_threshold="results/mcc_by_method_and_distance_threshold.pdf",
+    conda: "../cartography.yml"
+    log:
+        "logs/summarize-grid-search.ipynb"
+    notebook:
+        "../notebooks/2021-06-23-summarize-grid-search.ipynb"
+
+rule output_grid_search:
+    input:
+        table= "results/gridsearch.tsv",
+    output:
+        output_ = "results/output_HDBSCAN.csv",
+        output_txt = "results/output_HDBSCAN.txt",
+        output_hyperparameters = "results/grid_search_parameters.csv",
+        output_hyperparameters_txt = "results/grid_search_parameters.txt",
+        output_figure_HDBSCAN = "results/accuracy_figure_HDBSCAN.png",
+        output_figure_grid_search = "results/accuracy_figure_grid_search.png"
+    conda: "../cartography.yml"
+    params:
+        method = "pca mds t-sne umap"
+    shell:
+        """
+        python3 ../notebooks/scripts/output_grid_search.py \
+            --methods {params.method} \
+            --grid-search-total {input.table} \
+            --output {output.output_} {output.output_txt} \
+            --output-hyperparameters {output.output_hyperparameters} {output.output_hyperparameters_txt} \
+            --output-figure-HDBSCAN {output.output_figure_HDBSCAN} \
+            --output-figure-grid-search {output.output_figure_grid_search}
+        """
+
+rule cluster_metadata:
+    message: "Creating the metadata dataframe for HDBSCAN results for main paper"
+    input:
+        embedding = "results/embed_{method}_sequences.csv",
+        metadata = "results/table.tsv",
+        cluster = "results/output_HDBSCAN.csv",
+    output:
+        dataframe = "results/HDBSCAN_metadata_{method}.csv",
+    conda: "../cartography.yml"
+    params:
+        method = "{method}"
+    shell:
+        """
+        python3 ../notebooks/scripts/metadata_HDBSCAN.py \
+            --method {params.method} \
+            --embedding {input.embedding} \
+            --metadata {input.metadata} \
+            --cluster-data {input.cluster} \
+            --output {output.dataframe}
+        """
+
+rule concat_HDBSCAN_table:
     message: "concatenating all the KDE data into one csv dataframe"
     input:
-       dataframe_pca = "results/KDEDensity_pca_metadata.csv",
-       dataframe_mds = "results/KDEDensity_mds_metadata.csv",
-       dataframe_tsne = "results/KDEDensity_t-sne_metadata.csv",
-       dataframe_umap = "results/KDEDensity_umap_metadata.csv",
-       dataframe_genetic = "results/KDEDensity_genetic_metadata.csv"
+       dataframe_pca = "results/HDBSCAN_metadata_pca.csv",
+       dataframe_mds = "results/HDBSCAN_metadata_mds.csv", 
+       dataframe_tsne = "results/HDBSCAN_metadata_t-sne.csv", 
+       dataframe_umap = "results/HDBSCAN_metadata_umap.csv",
     output:
-        metadata = "results/full_KDE_metadata.csv"
+        metadata = "results/full_HDBSCAN_metadata.csv"
     params:
         column = "MCC",
-        dataframes = "results/KDEDensity_pca_metadata.csv results/KDEDensity_mds_metadata.csv results/KDEDensity_t-sne_metadata.csv results/KDEDensity_umap_metadata.csv results/KDEDensity_genetic_metadata.csv"
+        dataframes = "results/HDBSCAN_metadata_pca.csv results/HDBSCAN_metadata_mds.csv results/HDBSCAN_metadata_t-sne.csv results/HDBSCAN_metadata_umap.csv"
     conda: "../cartography.yml"
     shell:
         """
@@ -695,46 +760,6 @@ rule create_notebook_docs:
     conda: "../cartography.yml"
     notebook:
         "2019-08-08FinalNotebookFlu.ipynb"
-
-
-rule cluster_by_parameters:
-    input:
-        alignment="results/aligned_sequences.fasta",
-        distance_matrix="results/distance_matrix_sequences.csv",
-        clades="results/clades.json",
-    output:
-        table=f"results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
-    params:
-        method_parameters=METHOD_PARAMETERS.instance,
-    conda: "../cartography.yml"
-    script:
-        "scripts/cluster_by_parameters.py"
-
-
-rule aggregate_clusters_by_parameters:
-    input:
-        tables=expand("results/gridsearch/{params}.tsv", params=METHOD_PARAMETERS.instance_patterns)
-    output:
-        table="results/gridsearch.tsv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/concatenate_tables.py \
-            --tables {input.tables} \
-            --output {output.table}
-        """
-
-
-rule summarize_grid_search:
-    input:
-        table="results/gridsearch.tsv",
-    output:
-        mcc_by_method_and_distance_threshold="results/mcc_by_method_and_distance_threshold.pdf",
-    conda: "../cartography.yml"
-    log:
-        "logs/summarize-grid-search.ipynb"
-    notebook:
-        "2021-06-23-summarize-grid-search.ipynb"
 
 
 rule clean:
