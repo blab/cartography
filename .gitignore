@@ -128,6 +128,7 @@ zika-nextstrain/results-20182020/
 zika-nextstrain/auspice/
 zika-nextstrain/logs/
 mers-nextstrain/results/
+mers-nextstrain/logs/
 outlier_analysis/results/
 ha-na-nextstrain/results/
 sars-cov-2-nextstrain/results/

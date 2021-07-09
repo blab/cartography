@@ -11,6 +11,8 @@ from sklearn.metrics import confusion_matrix, matthews_corrcoef
 from sklearn.model_selection import RepeatedKFold
 from umap import UMAP
 
+import ipdb
+
 import sys
 sys.path.append("../notebooks/scripts/")
 
@@ -71,6 +73,10 @@ TYPE_BY_PARAMETER = {
     "n_neighbors": int,
 }
 
+clade_attribute = "clade_membership"
+if snakemake.params.clade_attribute:
+    clade_attribute = snakemake.params.clade_attribute
+
 method = snakemake.params.method_parameters.pop("method")
 method_class = CLASS_BY_METHOD[method]
 distance_threshold = float(snakemake.params.method_parameters.pop("distance_threshold"))
@@ -90,7 +96,7 @@ print(method_parameters)
 # Load clade annotations.
 clades = read_node_data(snakemake.input.clades)["nodes"]
 clades = [
-    {"strain": strain, "clade_membership": values["clade_membership"]}
+    {"strain": strain, "clade_membership": values[clade_attribute]}
     for strain, values in clades.items()
     if not strain.startswith("NODE")
 ]
@@ -109,6 +115,7 @@ else:
     input_matrix.columns = input_matrix.index.values
 
     # Reorder its rows to match the clades above.
+    #ipdb.set_trace()
     input_matrix = input_matrix.loc[strains, strains]
     input_matrix_strains = input_matrix.index.values
     assert np.array_equal(strains, input_matrix_strains)

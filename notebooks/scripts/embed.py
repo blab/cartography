@@ -165,12 +165,13 @@ if __name__ == "__main__":
         explained_variance["principal components"] = [i for i in range(1, args.components + 1)]
         explained_variance.to_csv(args.explained_variance, index=False)
 
+    clusterer = None
     if args.cluster_threshold is not None:
         cluster = float(args.cluster_threshold)
         clusterer = hdbscan.HDBSCAN(min_cluster_size=15, cluster_selection_epsilon=float(cluster))
-    if args.cluster_data is not None:
-            max_df = pd.read_csv(args.cluster_data)
-            clusterer = hdbscan.HDBSCAN(min_cluster_size=15, cluster_selection_epsilon=float(max_df.where(max_df["method"] == args.command).dropna(subset = ['distance_threshold'])[["distance_threshold"]].values.tolist()[0][0]))
+    elif args.cluster_data is not None:
+        max_df = pd.read_csv(args.cluster_data)
+        clusterer = hdbscan.HDBSCAN(min_cluster_size=15, cluster_selection_epsilon=float(max_df.where(max_df["method"] == args.command).dropna(subset = ['distance_threshold'])[["distance_threshold"]].values.tolist()[0][0]))
     
     if clusterer is not None:
         clusterer_default = hdbscan.HDBSCAN(min_cluster_size=15)

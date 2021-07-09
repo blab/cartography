@@ -48,8 +48,6 @@ rule all:
         #"../docs/KDEDensityFluOutlierHumanSwine.png",
         #"results/accuracy_figure_HDBSCAN_human_swine.png",
         "results/mcc_by_method_and_distance_threshold.pdf",
-        "results/full_HDBSCAN_metadata.csv",
-        "results/HDBSCAN_metadata_mds.csv",
 
 
 rule files:
@@ -527,8 +525,8 @@ rule KDE_density:
 
 rule cluster_by_parameters:
     input:
-        alignment="results/aligned_sequences.fasta",
-        distance_matrix="results/distance_matrix_sequences.csv",
+        alignment="results/aligned_human_swine.fasta",
+        distance_matrix="results/distance_matrix_human_swine.csv",
         clades="results/clades.json",
     output:
         table=f"results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
@@ -543,7 +541,7 @@ rule aggregate_clusters_by_parameters:
     input:
         tables=expand("results/gridsearch/{params}.tsv", params=METHOD_PARAMETERS.instance_patterns)
     output:
-        table="results/gridsearch.tsv"
+        table="results/gridsearch_human_swine.tsv"
     conda: "../cartography.yml"
     shell:
         """
@@ -554,7 +552,7 @@ rule aggregate_clusters_by_parameters:
 
 rule summarize_grid_search:
     input:
-        table="results/gridsearch.tsv",
+        table="results/gridsearch_human_swine.tsv",
     output:
         mcc_by_method_and_distance_threshold="results/mcc_by_method_and_distance_threshold.pdf",
     conda: "../cartography.yml"
