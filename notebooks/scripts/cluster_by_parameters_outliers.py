@@ -160,10 +160,11 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
     clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=distance_threshold)
     clusterer.fit(training_embedding)
     clusters = clusterer.labels_.astype(str)
-    val_df = pd.DataFrame(clusters, col=["clusters"])
+    val_df = pd.DataFrame(clusters, columns=["clusters"])
     val_df["outlier_status_predicted"] = val_df["clusters"].apply(lambda label: "outlier" if label=='-1' else "not_outlier")
     clusters = val_df["outlier_status_predicted"].values.tolist()
-
+    print(clusters)
+    print(training_clades)
     training_mcc = matthews_corrcoef(
         training_clades,
         clusters
@@ -204,7 +205,7 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
     clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=distance_threshold)
     clusterer.fit(validation_embedding)
     clusters = clusterer.labels_.astype(str)
-    val_df = pd.DataFrame(clusters, col=["clusters"])
+    val_df = pd.DataFrame(clusters, columns=["clusters"])
     val_df["outlier_status_predicted"] = val_df["clusters"].apply(lambda label: "outlier" if label=='-1' else "not_outlier")
     clusters = val_df["outlier_status_predicted"].values.tolist()
 
