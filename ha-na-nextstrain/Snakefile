@@ -86,10 +86,7 @@ rule all:
         HANAFullChartBrushableTSNEPNG = "../docs/HANAFullChartBrushableTSNE.png",
         fullChartPNG = "../docs/flu-embeddingsHaNa.png",
         fullChartHTML = "../docs/flu-embeddingsHaNa.html",
-        KDE_density = "../docs/FinalKDEPlotHANA.png",
-        umapChartPNG = "../docs/UMAPHaNa.png",
-        UMAPProcrustes = "../docs/UMAPProcrustesHaNa.png",
-        UMAPBoxplot = "../docs/UMAPBoxplotHaNA.png"
+        KDE_density = "../docs/FinalKDEPlotHANA.png"
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha-na.fa",
@@ -411,7 +408,7 @@ rule export:
         nt_muts = rules.ancestral.output.node_data,
         aa_muts = rules.translate.output.node_data,
         embeddings = expand("results/embed_{embedding}_ha.json", embedding=EMBEDDING_METHODS),
-        embeddings_concat = expand("results/embed_{embedding}_concatenated.json", embedding=EMBEDDING_METHODS),
+        embeddings_concat = expand("results/embed_{embedding}_concatenated_renamed.json", embedding=EMBEDDING_METHODS),
         auspice_config = files.auspice_config,
         colors = "config/colors.tsv",
         clades = "results/clades_ha.json"
@@ -423,7 +420,7 @@ rule export:
         augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} \
+            --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} {input.embeddings_concat} \
             --auspice-config {input.auspice_config} \
             --colors {input.colors} \
             --output {output.auspice_tree}
@@ -587,6 +584,27 @@ rule embed_mds:
             mds \
             --components {params.components} \
         """
+
+rule rename_columns:
+    message: "renaming columns for the concat so it can be exported to aupice (concat and ha colorbys)"
+    input:
+        clades = "results/embed_{method}_concatenated.json",
+        embedding = "results/embed_{method}_concatenated.csv"
+    output:
+        node_data = "results/embed_{method}_concatenated_renamed.json"
+    params:
+        rename_column = "{method}_label_ha_na",
+        differentiator_column = "{method}_label"
+    shell: 
+        """
+        python3 scripts/rename_columns.py \
+            --clades {input.clades} \
+            --embedding {input.embedding} \
+            --differentiator-column {params.differentiator_column} \
+            --rename-column {params.rename_column} \
+            --output {output.node_data}
+        """
+
 
 def _get_embedding_columns_by_wildcards(wildcards):
     method = wildcards.method.replace("-", "")
