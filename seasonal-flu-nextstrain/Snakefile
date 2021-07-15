@@ -6,7 +6,7 @@ import pandas as pd
 
 wildcard_constraints:
     methods="(pca|mds|t-sne|umap)",
-    KDE_methods="(pca|mds|t-sne|umap|genetic)",
+    KDE_METHODS="(pca|mds|t-sne|umap|genetic)",
     internal_node= "(ancestral|sequences)"
 
 METHOD_PARAMETERS = Paramspace(
@@ -47,7 +47,6 @@ rule all:
         expand("results/HDBSCAN_metadata_{method}.csv", method=EMBEDDING_METHODS),
         "results/mcc_by_method_and_distance_threshold.pdf",
         "results/full_HDBSCAN_metadata.csv",
-        "results/accuracy_figure_HDBSCAN.png",
         "results/aligned_ancestral.fasta",
         "../auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json",
         "results/table.tsv",
@@ -58,11 +57,8 @@ rule all:
         "../docs/FullLinkedChartBrushableFlu.html",
         "../docs/flu-embeddings.png",
         "../docs/FullPCABrushSupplementFlu.html",
-        "results/accuracy_figure_HDBSCAN.png",
         "results/nucleotide_diversity.txt",
         "../docs/explainedVarianceFlu.png",
-        "results/cross_validation_thresholds.csv",
-        "results/mcc_by_method_and_distance_threshold.pdf",
          "results/full_HDBSCAN_metadata.csv",
         expand("results/HDBSCAN_metadata_{method}.csv", method=EMBEDDING_METHODS)
 
@@ -373,7 +369,7 @@ rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
         alignment = "results/aligned_{ancestral}.fasta",
-        cluster = "results/output_HDBSCAN.csv",
+        cluster = "results/pca_parameters.csv",
     output:
         node_data = "results/embed_pca_{ancestral}.json",
         dataframe = "results/embed_pca_{ancestral}.csv",
@@ -401,7 +397,7 @@ rule embed_tsne:
     message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "results/output_HDBSCAN.csv",
+        cluster = "results/t-sne_parameters.csv",
     output:
         node_data = "results/embed_t-sne_{ancestral}.json",
         dataframe = "results/embed_t-sne_{ancestral}.csv",
@@ -428,7 +424,7 @@ rule embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "results/output_HDBSCAN.csv",
+        cluster = "results/umap_parameters.csv",
     output:
         node_data = "results/embed_umap_{ancestral}.json",
         dataframe = "results/embed_umap_{ancestral}.csv",
@@ -455,7 +451,7 @@ rule embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "results/output_HDBSCAN.csv",
+        cluster = "results/mds_parameters.csv",
     output:
         node_data = "results/embed_mds_{ancestral}.json",
         dataframe = "results/embed_mds_{ancestral}.csv",
@@ -488,34 +484,6 @@ def _get_embedding_columns_by_wildcards(wildcards):
     else:
         return f"{method}_x {method}_y"
 
-"""
-rule cluster_embeddings:
-    message: "finding the optimal HDBSCAN distance thresholds for the embeddings"
-    input:
-        alignment = "results/aligned_sequences.fasta",
-        metadata = "results/clades.json",
-        distance_matrix = "results/distance_matrix_sequences.csv"
-    output:
-        dataframe_full = "results/full_output_HDBSCAN.csv",
-        dataframe = "results/output_HDBSCAN.csv",
-        figure = "results/accuracy_figure_HDBSCAN.png"
-    params:
-        clade_column = "clade_membership"
-    conda: "../cartography.yml"
-    threads: 4
-    shell:
-
-        python3 ../notebooks/scripts/cluster_results.py \
-            --distance-matrix {input.distance_matrix} \
-            --alignment {input.alignment} \
-            --clades {input.metadata} \
-            --column-metadata {params.clade_column} \
-            --output {output.dataframe} \
-            --output-full {output.dataframe_full} \
-            --output-figure {output.figure} \
-
-"""
-
 rule scatterplot:
     message: "Creating the scatterplot (PNG, dataframe)"
     input:
@@ -527,14 +495,15 @@ rule scatterplot:
         metadata = "results/scatterplot_{method}_metadata.csv"
     params:
         bootstrap = 100,
-        columns = _get_embedding_columns_by_wildcards
+        columns = _get_embedding_columns_by_wildcards,
+        method = "{method}"
     conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/scatterplot.py \
             --distance {input.distance_matrix} \
             --embedding {input.embedding} \
-            --method {wildcards.method} \
+            --method {params.method} \
             --columns {params.columns} \
             --bootstrapping-sample {params.bootstrap} \
             --output-figure {output.figure} \
@@ -560,14 +529,15 @@ rule KDE_density:
         dataframe = "results/KDEDensity_{method}.csv"
     params:
         embedding_columns = _get_embedding_columns_by_wildcards,
-        differentiator_column = "clade_membership"
+        differentiator_column = "clade_membership",
+        method = "{method}"
     conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/within_vs_between_status.py \
             --embedding {input.embedding} \
             --clades {input.clades} \
-            --method {wildcards.method} \
+            --method {params.method} \
             --embedding-columns {params.embedding_columns} \
             --differentiator-column {params.differentiator_column} \
             --output-figure {output.figure} \
@@ -600,7 +570,7 @@ rule aggregate_clusters_by_parameters:
             --tables {input.tables} \
             --output {output.table}
         """
-
+"""
 rule summarize_grid_search:
     input:
         table="results/gridsearch.tsv",
@@ -611,37 +581,28 @@ rule summarize_grid_search:
         "logs/summarize-grid-search.ipynb"
     notebook:
         "../notebooks/2021-06-23-summarize-grid-search.ipynb"
-
+"""
 rule output_grid_search:
     input:
         table= "results/gridsearch.tsv",
     output:
-        output_ = "results/output_HDBSCAN.csv",
-        output_txt = "results/output_HDBSCAN.txt",
-        output_hyperparameters = "results/grid_search_parameters.csv",
-        output_hyperparameters_txt = "results/grid_search_parameters.txt",
-        output_figure_HDBSCAN = "results/accuracy_figure_HDBSCAN.png",
-        output_figure_grid_search = "results/accuracy_figure_grid_search.png"
+        pca_parameters = "results/pca_parameters.csv",
+        mds_parameters = "results/mds_parameters.csv",
+        tsne_parameters = "results/t-sne_parameters.csv",
+        umap_parameters = "results/umap_parameters.csv",
+        mcc_by_method_and_distance_threshold = "results/mcc_by_method_and_distance_threshold.pdf"
     conda: "../cartography.yml"
-    params:
-        method = "pca mds t-sne umap"
-    shell:
-        """
-        python3 ../notebooks/scripts/output_grid_search.py \
-            --methods {params.method} \
-            --grid-search-total {input.table} \
-            --output {output.output_} {output.output_txt} \
-            --output-hyperparameters {output.output_hyperparameters} {output.output_hyperparameters_txt} \
-            --output-figure-HDBSCAN {output.output_figure_HDBSCAN} \
-            --output-figure-grid-search {output.output_figure_grid_search}
-        """
+    log:
+        "logs/summarize-grid-search.ipynb"
+    notebook:
+        "../notebooks/2021-06-23-summarize-grid-search.ipynb"
 
 rule cluster_metadata:
     message: "Creating the metadata dataframe for HDBSCAN results for main paper"
     input:
         embedding = "results/embed_{method}_sequences.csv",
         metadata = "results/table.tsv",
-        cluster = "results/output_HDBSCAN.csv",
+        cluster = "results/{method}_parameters.csv",
     output:
         dataframe = "results/HDBSCAN_metadata_{method}.csv",
     conda: "../cartography.yml"
