@@ -73,9 +73,10 @@ TYPE_BY_PARAMETER = {
     "n_neighbors": int,
 }
 
-clade_attribute = "clade_membership"
-if snakemake.params.clade_attribute:
+try:
     clade_attribute = snakemake.params.clade_attribute
+except:
+    clade_attribute = "clade_membership"
 
 method = snakemake.params.method_parameters.pop("method")
 method_class = CLASS_BY_METHOD[method]

@@ -31,6 +31,8 @@ if __name__ == "__main__":
     parser.add_argument("--output-dataframe", help="outputting a csv file")
     parser.add_argument("--output-figure", help="plot of the embedding, for debugging purposes")
 
+    #parser.add_argument("--method-params" help="csv file from grid search")
+        #if method params exists and command line exists, command line overrides it
     subparsers = parser.add_subparsers(
         dest="command",
         required=True

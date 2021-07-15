@@ -50,5 +50,5 @@ if __name__ == "__main__":
                 output_df.to_csv(args.output)
             if args.cluster_data is not None:
                 max_df = pd.read_csv(args.cluster_data)
-                output_df = pd.DataFrame([[args.method, matthews_cc_val, float(max_df.where(max_df["method"] == args.method).dropna(subset = ['distance_threshold'])[["distance_threshold"]].values.tolist()[0][0]), confusion_matrix_val[0][0], confusion_matrix_val[1][0], confusion_matrix_val[1][1], confusion_matrix_val[0][1]]], columns=["embedding", "MCC", "threshold", "TN", "FN", "TP", "FP"]).round(3)
+                output_df = pd.DataFrame([[args.method, matthews_cc_val, float(max_df['distance_threshold'].values.tolist()[0]), confusion_matrix_val[0][0], confusion_matrix_val[1][0], confusion_matrix_val[1][1], confusion_matrix_val[0][1]]], columns=["embedding", "MCC", "threshold", "TN", "FN", "TP", "FP"]).round(3)
                 output_df.to_csv(args.output, index=False)

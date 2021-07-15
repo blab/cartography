@@ -118,9 +118,12 @@ else:
     # Name columns to match the strains in the index.
     input_matrix.columns = input_matrix.index.values
 
+
     # Reorder its rows to match the clades above.
     input_matrix = input_matrix.loc[strains, strains]
     input_matrix_strains = input_matrix.index.values
+    print(len(strains))
+    print(len(input_matrix_strains))
     assert np.array_equal(strains, input_matrix_strains)
 
     # Extract the numpy arrays corresponding to the distance matrix data frame.
@@ -152,7 +155,6 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
         training_matrix = training_matrix[:, training_index]
         validation_matrix = validation_matrix[:, validation_index]
 
-    # Train the embedding method.
     embedder = method_class(**method_parameters)
     training_embedding = embedder.fit_transform(training_matrix)
 
@@ -161,10 +163,12 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
     clusterer.fit(training_embedding)
     clusters = clusterer.labels_.astype(str)
     val_df = pd.DataFrame(clusters, columns=["clusters"])
-    val_df["outlier_status_predicted"] = val_df["clusters"].apply(lambda label: "outlier" if label=='-1' else "not_outlier")
+    val_df["outlier_status_predicted"] = val_df["clusters"].apply(lambda label: 1 if label=='-1' else 0)
+    training_clades = pd.DataFrame(training_clades, columns=["clades"])
+    training_clades["clades_num"] = training_clades["clades"].apply(lambda label: 1 if label=='outlier' else 0)
     clusters = val_df["outlier_status_predicted"].values.tolist()
-    print(clusters)
-    print(training_clades)
+    training_clades = training_clades["clades_num"].values.tolist()
+
     training_mcc = matthews_corrcoef(
         training_clades,
         clusters
