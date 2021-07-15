@@ -442,7 +442,8 @@ rule create_distance_matrix_full:
 rule make_clades:
     message: "creating the clades file to be used in the rest of the analysis"
     input:
-        metadata = "results/total_metadata.tsv"
+        metadata = "results/total_metadata.tsv",
+        sequences = "results/aligned_human_swine.fasta"
     output:
         output = "results/outlier_status.json"
     params:
@@ -451,6 +452,7 @@ rule make_clades:
         """
         python3 ../notebooks/scripts/make_clades.py \
             --metadata {input.metadata} \
+            --sequences {input.sequences} \
             --output {output.output} \
             --col-name {params.col_name}
         """
