@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import re
 from scipy.spatial.distance import squareform, pdist
+import seaborn as sns
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE, MDS
 import sys
@@ -191,11 +192,23 @@ if __name__ == "__main__":
         embedding_df.to_csv(args.output_dataframe, index_label="strain")
 
     if args.output_figure:
-        fig, ax = plt.subplots(1, 1, figsize=(6, 6))
-        ax.plot(
-            embedding[:, 0],
-            embedding[:, 1],
-            "o",
-            alpha=0.5
+        plot_data = {
+            "x": embedding[:, 0],
+            "y": embedding[:, 1],
+        }
+
+        if clusterer is not None:
+            plot_data["cluster"] = clusterer.labels_.astype(str)
+        else:
+            plot_data["cluster"] = "0"
+
+        plot_df = pd.DataFrame(plot_data)
+        ax = sns.scatterplot(
+            data=plot_df,
+            x="x",
+            y="y",
+            hue="cluster",
+            alpha=0.5,
         )
         plt.savefig(args.output_figure)
+        plt.close()
