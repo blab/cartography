@@ -403,7 +403,7 @@ rule embed_tsne:
         dataframe = "results/embed_t-sne_{ancestral}.csv",
         figure = "results/embed_t-sne_{ancestral}.pdf"
     params:
-        perplexity = 25.95,
+        perplexity = 30,
         learning_rate = 200
     conda: "../cartography.yml"
     shell:
