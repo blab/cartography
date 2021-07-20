@@ -5,7 +5,7 @@ from snakemake.utils import Paramspace
 import pandas as pd
 
 wildcard_constraints:
-    methods="(pca|mds|t-sne|umap)",
+    method="(pca|mds|t-sne|umap)",
     KDE_METHODS="(pca|mds|t-sne|umap|genetic)",
     internal_node= "(ancestral|sequences)"
 
