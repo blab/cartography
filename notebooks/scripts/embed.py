@@ -172,13 +172,13 @@ if __name__ == "__main__":
     clusterer = None
     if args.cluster_threshold is not None:
         cluster = float(args.cluster_threshold)
-        clusterer = hdbscan.HDBSCAN(min_cluster_size=15, cluster_selection_epsilon=float(cluster))
+        clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=float(cluster))
     elif args.cluster_data is not None:
         max_df = pd.read_csv(args.cluster_data)
-        clusterer = hdbscan.HDBSCAN(min_cluster_size=15, cluster_selection_epsilon=float(max_df.where(max_df["method"] == args.command).dropna(subset = ['distance_threshold'])[["distance_threshold"]].values.tolist()[0][0]))
+        clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=float(max_df.where(max_df["method"] == args.command).dropna(subset = ['distance_threshold'])[["distance_threshold"]].values.tolist()[0][0]))
 
     if clusterer is not None:
-        clusterer_default = hdbscan.HDBSCAN(min_cluster_size=15)
+        clusterer_default = hdbscan.HDBSCAN()
         clusterer.fit(embedding_df)
         clusterer_default.fit(embedding_df)
         embedding_df[f"{args.command}_label"] = clusterer.labels_.astype(str)
