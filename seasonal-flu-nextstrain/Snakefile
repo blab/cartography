@@ -541,7 +541,7 @@ rule KDE_density:
             --embedding-columns {params.embedding_columns} \
             --differentiator-column {params.differentiator_column} \
             --output-figure {output.figure} \
-            --output-dataframe {output.dataframe} 
+            --output-dataframe {output.dataframe}
         """
 
 rule cluster_by_parameters:
@@ -570,18 +570,7 @@ rule aggregate_clusters_by_parameters:
             --tables {input.tables} \
             --output {output.table}
         """
-"""
-rule summarize_grid_search:
-    input:
-        table="results/gridsearch.tsv",
-    output:
-        mcc_by_method_and_distance_threshold="results/mcc_by_method_and_distance_threshold.pdf",
-    conda: "../cartography.yml"
-    log:
-        "logs/summarize-grid-search.ipynb"
-    notebook:
-        "../notebooks/2021-06-23-summarize-grid-search.ipynb"
-"""
+
 rule output_grid_search:
     input:
         table= "results/gridsearch.tsv",
@@ -622,8 +611,8 @@ rule concat_HDBSCAN_table:
     message: "concatenating all the KDE data into one csv dataframe"
     input:
        dataframe_pca = "results/HDBSCAN_metadata_pca.csv",
-       dataframe_mds = "results/HDBSCAN_metadata_mds.csv", 
-       dataframe_tsne = "results/HDBSCAN_metadata_t-sne.csv", 
+       dataframe_mds = "results/HDBSCAN_metadata_mds.csv",
+       dataframe_tsne = "results/HDBSCAN_metadata_t-sne.csv",
        dataframe_umap = "results/HDBSCAN_metadata_umap.csv",
     output:
         metadata = "results/full_HDBSCAN_metadata.csv"
