@@ -107,7 +107,7 @@ if __name__ == "__main__":
         genomes_df = pd.DataFrame(numbers)
         genomes_df.columns = ["Site " + str(k) for k in range(0,len(numbers[i]))]
 
-        
+
         #performing PCA on my pandas dataframe
         pca = PCA(n_components=args.components,svd_solver='full') #can specify n, since with no prior knowledge, I use None
         principalComponents = pca.fit_transform(genomes_df)
@@ -123,7 +123,8 @@ if __name__ == "__main__":
             "metric": "precomputed",
             "perplexity": args.perplexity,
             "learning_rate": args.learning_rate,
-            "random_state" : args.random_seed
+            "random_state" : args.random_seed,
+            "square_distances": True,
         }
     elif args.command == "umap":
         embedding_class = UMAP
@@ -174,7 +175,7 @@ if __name__ == "__main__":
     elif args.cluster_data is not None:
         max_df = pd.read_csv(args.cluster_data)
         clusterer = hdbscan.HDBSCAN(min_cluster_size=15, cluster_selection_epsilon=float(max_df.where(max_df["method"] == args.command).dropna(subset = ['distance_threshold'])[["distance_threshold"]].values.tolist()[0][0]))
-    
+
     if clusterer is not None:
         clusterer_default = hdbscan.HDBSCAN(min_cluster_size=15)
         clusterer.fit(embedding_df)
