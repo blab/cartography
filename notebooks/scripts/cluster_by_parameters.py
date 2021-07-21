@@ -11,8 +11,6 @@ from sklearn.metrics import confusion_matrix, matthews_corrcoef
 from sklearn.model_selection import RepeatedKFold
 from umap import UMAP
 
-import ipdb
-
 import sys
 sys.path.append("../notebooks/scripts/")
 
@@ -116,7 +114,6 @@ else:
     input_matrix.columns = input_matrix.index.values
 
     # Reorder its rows to match the clades above.
-    #ipdb.set_trace()
     input_matrix = input_matrix.loc[strains, strains]
     input_matrix_strains = input_matrix.index.values
     assert np.array_equal(strains, input_matrix_strains)
