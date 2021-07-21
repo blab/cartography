@@ -169,6 +169,15 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
     clusters = val_df["outlier_status_predicted"].values.tolist()
     training_clades = training_clades["clades_num"].values.tolist()
 
+    print(clusters)
+    print(len(clusters))
+    print(type(clusters))
+    
+    print(training_clades)
+    print(len(training_clades))
+    print(type(training_clades))
+
+    print(clusters == training_clades)
     training_mcc = matthews_corrcoef(
         training_clades,
         clusters

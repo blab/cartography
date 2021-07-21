@@ -24,14 +24,6 @@ EMBEDDING_METHODS = [
     "umap"
 ]
 
-KDE_METHODS = [
-    "pca",
-    "mds",
-    "t-sne",
-    "umap",
-    "genetic"
-]
-
 SEGMENTS = [
     "ha",
     "na",
@@ -69,12 +61,10 @@ rule all:
         expand("results/tree_{segment}.nwk", segment=SEG),
         expand("../auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json", segment=SEG),
         expand("results/table_{segment}.tsv", segment=SEG),
-        #expand("results/full_KDE_metadata_{ha_concatenated}.csv", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_pca_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_mds_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_t-sne_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_umap_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
-        expand("results/KDEDensity_{method}_{ha_concatenated}.png", method=KDE_METHODS, ha_concatenated=HA_CONCAT),
         "results/ha_concatenated_data.csv",
         HANAMAFullChartBrushableMDSHTML = "../docs/HANAMAFullChartBrushableMDS.html",
         HANAMAFullChartBrushableMDSPNG = "../docs/HANAMAFullChartBrushableMDS.png",
@@ -86,7 +76,6 @@ rule all:
         HANAFullChartBrushableTSNEPNG = "../docs/HANAFullChartBrushableTSNE.png",
         fullChartPNG = "../docs/flu-embeddingsHaNa.png",
         fullChartHTML = "../docs/flu-embeddingsHaNa.html",
-        KDE_density = "../docs/FinalKDEPlotHANA.png"
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha-na.fa",
@@ -625,55 +614,6 @@ def _get_embedding_path_by_wildcards(wildcards):
     else:
         return "results/distance_matrix_{ha_concatenated}.csv"
 
-rule KDE_density:
-    message: "creating the KDE density plot"
-    input:
-        embedding = _get_embedding_path_by_wildcards,
-        clades = "results/clades_ha.json",
-    output:
-        figure = "results/KDEDensity_{method}_{ha_concatenated}.png",
-        dataframe = "results/KDEDensity_{method}_{ha_concatenated}.csv",
-        metadata = "results/KDEDensity_{method}_metadata_{ha_concatenated}.csv"
-    params:
-        embedding_columns = _get_embedding_columns_by_wildcards,
-        differentiator_column = "clade_membership"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/within_vs_between_status.py \
-            --embedding {input.embedding} \
-            --clades {input.clades} \
-            --method {wildcards.method} \
-            --embedding-columns {params.embedding_columns} \
-            --differentiator-column {params.differentiator_column} \
-            --output-figure {output.figure} \
-            --output-dataframe {output.dataframe} \
-            --output-metadata {output.metadata}
-        """
-
-rule concat_KDE_table:
-    message: "concatenating all the KDE data into one csv dataframe"
-    input:
-       dataframe_pca = "results/KDEDensity_pca_metadata_{ha_concatenated}.csv",
-       dataframe_mds = "results/KDEDensity_mds_metadata_{ha_concatenated}.csv",
-       dataframe_tsne = "results/KDEDensity_t-sne_metadata_{ha_concatenated}.csv",
-       dataframe_umap = "results/KDEDensity_umap_metadata_{ha_concatenated}.csv",
-       dataframe_genetic = "results/KDEDensity_genetic_metadata_{ha_concatenated}.csv"
-    output:
-        metadata = "results/full_KDE_metadata_{ha_concatenated}.csv"
-    params:
-        column = "MCC",
-        dataframes = "results/KDEDensity_pca_metadata_{ha_concatenated}.csv results/KDEDensity_mds_metadata_{ha_concatenated}.csv results/KDEDensity_t-sne_metadata_{ha_concatenated}.csv results/KDEDensity_umap_metadata_{ha_concatenated}.csv results/KDEDensity_genetic_metadata_{ha_concatenated}.csv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/concatenate_tables.py \
-            --tables {params.dataframes} \
-            --separator ',' \
-            --sort-by {params.column} \
-            --output {output.metadata}
-        """
-
 rule concat_scatterplot_table:
     message: "concatenating all the scatterplot metadata into one csv dataframe"
     input:
@@ -743,26 +683,8 @@ rule create_notebook_docs:
         umap_df_ha = "results/embed_umap_ha.csv",
         umap_df_concatenated = "results/embed_umap_concatenated.csv",
 
+        #change this threshold information after seasonal flu changes
         threshold_information = "../seasonal-flu-nextstrain/results/full_output_HDBSCAN.csv",
-        #KDE Density:
-
-        KDE_mds_ha = "results/KDEDensity_mds_ha.csv",
-        KDE_mds_metadata_ha = "results/KDEDensity_mds_metadata_ha.csv",
-
-        KDE_mds_concatenated = "results/KDEDensity_mds_concatenated.csv",
-        KDE_mds_metadata_concatenated = "results/KDEDensity_mds_metadata_concatenated.csv",
-
-        KDE_umap_ha = "results/KDEDensity_umap_ha.csv",
-        KDE_umap_metadata_ha = "results/KDEDensity_umap_metadata_ha.csv",
-
-        KDE_umap_concatenated = "results/KDEDensity_umap_concatenated.csv",
-        KDE_umap_metadata_concatenated = "results/KDEDensity_umap_metadata_concatenated.csv",
-
-        KDE_genetic_ha = "results/KDEDensity_genetic_ha.csv",
-        KDE_genetic_metadata_ha = "results/KDEDensity_genetic_metadata_ha.csv",
-
-        KDE_genetic_concatenated = "results/KDEDensity_genetic_concatenated.csv",
-        KDE_genetic_metadata_concatenated = "results/KDEDensity_genetic_metadata_concatenated.csv"
 
     output:
         HANAMAFullChartBrushableMDSHTML = "../docs/HANAMAFullChartBrushableMDS.html",
@@ -775,7 +697,6 @@ rule create_notebook_docs:
         HANAFullChartBrushableTSNEPNG = "../docs/HANAFullChartBrushableTSNE.png",
         fullChartPNG = "../docs/flu-embeddingsHaNa.png",
         fullChartHTML = "../docs/flu-embeddingsHaNa.html",
-        KDE_density = "../docs/FinalKDEPlotHANA.png",
         umapChartPNG = "../docs/UMAPHaNa.png",
         UMAPProcrustes = "../docs/UMAPProcrustesHaNa.png",
         UMAPBoxplot = "../docs/UMAPBoxplotHaNA.png"

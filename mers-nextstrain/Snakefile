@@ -191,10 +191,31 @@ rule subset_data:
             --output-fasta {output.fasta} 
         """
 
+
+rule pca_after:
+    message: "running PCA before removing any low quality strains for supplemental figure bases missing vs pc1"
+    input:
+        alignment = "results/subset_fasta.fasta"
+    output:
+        dataframe = "results/embed_pca_after.csv",
+        figure = "results/embed_pca_after.pdf"
+    params:
+        components = 10
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/embed.py \
+            --alignment {input.alignment} \
+            --random-seed 314159 \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
+            pca \
+            --components {params.components} 
+        """
 rule create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
-        alignment = "results/subset_fasta.fasta"
+        alignment = "results/aligned.fasta"
     output:
         output = "results/distance_matrix.csv"
     conda: "../cartography.yml"
@@ -223,7 +244,7 @@ rule nucleotide_diversity:
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
-        alignment = rules.subset_data.output.fasta,
+        alignment = "results/aligned.fasta",
         cluster = "results/output_HDBSCAN.csv"
     output:
         node_data = "results/embed_pca.json",
@@ -412,11 +433,12 @@ rule cluster_by_parameters:
     input:
         alignment="results/aligned.fasta",
         distance_matrix="results/distance_matrix.csv",
-        clades="results/clades.json",
+        clades="data/manual_multihost_clades.json",
     output:
         table=f"results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
     params:
         method_parameters=METHOD_PARAMETERS.instance,
+        clade_attribute = "multihost_clade_membership"
     conda: "../cartography.yml"
     script:
         "../notebooks/scripts/cluster_by_parameters.py"
