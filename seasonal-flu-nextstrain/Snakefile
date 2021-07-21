@@ -6,7 +6,6 @@ import pandas as pd
 
 wildcard_constraints:
     method="(pca|mds|t-sne|umap)",
-    KDE_METHODS="(pca|mds|t-sne|umap|genetic)",
     internal_node= "(ancestral|sequences)"
 
 METHOD_PARAMETERS = Paramspace(
@@ -23,14 +22,6 @@ EMBEDDING_METHODS = [
     "umap"
 ]
 
-KDE_METHODS = [
-    "pca",
-    "mds",
-    "t-sne",
-    "umap",
-    "genetic"
-]
-
 INTERNAL_NODE = [
     "ancestral",
     "sequences"
@@ -38,7 +29,6 @@ INTERNAL_NODE = [
 rule all:
     input:
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
         expand("results/distance_matrix_{ancestral}.csv", ancestral=INTERNAL_NODE),
         expand("results/embed_pca_{ancestral}.pdf", ancestral=INTERNAL_NODE),
         expand("results/embed_t-sne_{ancestral}.pdf", ancestral=INTERNAL_NODE),
@@ -52,7 +42,6 @@ rule all:
         "results/table.tsv",
         "results/full_Scatterplot_metadata.csv",
         "results/explained_variance_pca_sequences.csv",
-        "../docs/FullKDEDensityFlu.png",
         "../docs/FullScatterplotFlu.png",
         "../docs/FullLinkedChartBrushableFlu.html",
         "../docs/flu-embeddings.png",
@@ -519,31 +508,6 @@ def _get_embedding_path_by_wildcards(wildcards):
     else:
         return "results/distance_matrix_sequences.csv"
 
-rule KDE_density:
-    message: "creating the KDE density plot"
-    input:
-        embedding = _get_embedding_path_by_wildcards,
-        clades = "results/clades.json",
-    output:
-        figure = "results/KDEDensity_{method}.png",
-        dataframe = "results/KDEDensity_{method}.csv"
-    params:
-        embedding_columns = _get_embedding_columns_by_wildcards,
-        differentiator_column = "clade_membership",
-        method = "{method}"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/within_vs_between_status.py \
-            --embedding {input.embedding} \
-            --clades {input.clades} \
-            --method {params.method} \
-            --embedding-columns {params.embedding_columns} \
-            --differentiator-column {params.differentiator_column} \
-            --output-figure {output.figure} \
-            --output-dataframe {output.dataframe}
-        """
-
 rule cluster_by_parameters:
     input:
         alignment="results/aligned_sequences.fasta",
@@ -677,25 +641,7 @@ rule create_notebook_docs:
 
         scatterplot_umap = "results/scatterplot_umap.csv",
         scatterplot_umap_metadata = "results/scatterplot_umap_metadata.csv",
-
-        #KDE Density:
-        KDE_pca = "results/KDEDensity_pca.csv",
-        KDE_pca_metadata = "results/KDEDensity_pca_metadata.csv",
-
-        KDE_mds = "results/KDEDensity_mds.csv",
-        KDE_mds_metadata = "results/KDEDensity_mds_metadata.csv",
-
-        KDE_tsne = "results/KDEDensity_t-sne.csv",
-        KDE_tsne_metadata = "results/KDEDensity_t-sne_metadata.csv",
-
-        KDE_umap = "results/KDEDensity_umap.csv",
-        KDE_umap_metadata = "results/KDEDensity_umap_metadata.csv",
-
-        KDE_genetic = "results/KDEDensity_genetic.csv",
-        KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv",
-
     output:
-        KDE_density = "../docs/FullKDEDensityFlu.png",
         Scatterplot = "../docs/FullScatterplotFlu.png",
         fullChart = "../docs/FullLinkedChartBrushableFlu.html",
         fullChartPNG = "../docs/flu-embeddings.png",
