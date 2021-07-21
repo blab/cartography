@@ -138,3 +138,6 @@ notebooks/2019-08-01DistanceMatrixCode.ipynb
 notebooks/PairwiseVsEuclidean.ipynb
 notebooks/zika_tree.json
 .vscode/
+
+# Ignore SLURM log files.
+*.out
