@@ -375,7 +375,7 @@ rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
         alignment = "results/imputed_{ancestral}.fasta",
-        cluster = "results/output_HDBSCAN.csv"
+        cluster = "results/pca_parameters.csv",
     output:
         node_data = "results/embed_pca_{ancestral}.json",
         dataframe = "results/embed_pca_{ancestral}.csv",
@@ -403,14 +403,14 @@ rule embed_tsne:
     message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "results/output_HDBSCAN.csv"
+        cluster = "results/tsne_parameters.csv",
     output:
         node_data = "results/embed_t-sne_{ancestral}.json",
         dataframe = "results/embed_t-sne_{ancestral}.csv",
         figure = "results/embed_t-sne_{ancestral}.pdf"
     params:
-        perplexity = 25.95,
-        learning_rate = 200
+        perplexity = 30,
+        learning_rate = 500,
     conda: "../cartography.yml"
     shell:
         """
@@ -430,14 +430,14 @@ rule embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "results/output_HDBSCAN.csv"
+        cluster = "results/umap_parameters.csv",
     output:
         node_data = "results/embed_umap_{ancestral}.json",
         dataframe = "results/embed_umap_{ancestral}.csv",
         figure = "results/embed_umap_{ancestral}.pdf"
     params:
-        nearest_neighbors = 200,
-        min_dist = .5
+        nearest_neighbors = 100,
+        min_dist = 0.05,
     conda: "../cartography.yml"
     shell:
         """
@@ -457,7 +457,7 @@ rule embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "results/output_HDBSCAN.csv",
+        cluster = "results/mds_parameters.csv",
     output:
         node_data = "results/embed_mds_{ancestral}.json",
         dataframe = "results/embed_mds_{ancestral}.csv",
@@ -553,6 +553,10 @@ rule summarize_grid_search:
     input:
         table="results/gridsearch.tsv",
     output:
+        pca_parameters = "results/pca_parameters.csv",
+        mds_parameters = "results/mds_parameters.csv",
+        tsne_parameters = "results/t-sne_parameters.csv",
+        umap_parameters = "results/umap_parameters.csv",
         mcc_by_method_and_distance_threshold="results/mcc_by_method_and_distance_threshold.pdf",
     conda: "../cartography.yml"
     log:
