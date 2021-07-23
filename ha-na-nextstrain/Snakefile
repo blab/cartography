@@ -15,7 +15,8 @@ METHOD_PARAMETERS = Paramspace(
 wildcard_constraints:
     segment="(ha|na|ma)",
     ha_concatenated="(ha|na|ma|concatenated|ma_concatenated)",
-    method="(pca|mds|t-sne|umap)"
+    method="(pca|mds|t-sne|umap)",
+    ha_concat="(ha|concatenated)"
 
 EMBEDDING_METHODS = [
     "pca",
@@ -44,8 +45,7 @@ HA_CONCATENATED = [
 
 HA_CONCAT = [
     "concatenated",
-    "ha",
-    "na",
+    "ha"
 ]
 
 rule all:
@@ -65,6 +65,8 @@ rule all:
         expand("results/embed_mds_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_t-sne_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_umap_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
+        expand("results/gridsearch_{ha_concatenated}.tsv", ha_concatenated=HA_CONCAT),
+        expand("results/pca_parameters_{ha_concatenated}.csv", ha_concatenated=HA_CONCAT),
         "results/ha_concatenated_data.csv",
         HANAMAFullChartBrushableMDSHTML = "../docs/HANAMAFullChartBrushableMDS.html",
         HANAMAFullChartBrushableMDSPNG = "../docs/HANAMAFullChartBrushableMDS.png",
@@ -466,12 +468,13 @@ rule create_distance_matrix:
             --alignment {input.alignment} \
             --output {output.output}
         """
+        
 
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
         alignment = "results/aligned_{ha_concatenated}.fasta",
-        #cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv"
+        cluster = "results/pca_parameters_{ha_concatenated}.csv",
     output:
         node_data = "results/embed_pca_{ha_concatenated}.json",
         dataframe = "results/embed_pca_{ha_concatenated}.csv",
@@ -484,7 +487,7 @@ rule embed_pca:
         """
         python3 ../notebooks/scripts/embed.py \
             --alignment {input.alignment} \
-            --cluster-threshold 2.0 \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -494,12 +497,11 @@ rule embed_pca:
             --explained-variance {output.explained_variance}
         """
 
-
 rule embed_tsne:
     message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
         distance_matrix = rules.create_distance_matrix.output.output,
-        #cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv"
+        cluster = "results/t-sne_parameters_{ha_concatenated}.csv",
     output:
         node_data = "results/embed_t-sne_{ha_concatenated}.json",
         dataframe = "results/embed_t-sne_{ha_concatenated}.csv",
@@ -512,7 +514,7 @@ rule embed_tsne:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster-threshold 6.0 \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -526,7 +528,7 @@ rule embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
         distance_matrix = rules.create_distance_matrix.output.output,
-        #cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv"
+        cluster = "results/umap_parameters_{ha_concatenated}.csv",
     output:
         node_data = "results/embed_umap_{ha_concatenated}.json",
         dataframe = "results/embed_umap_{ha_concatenated}.csv",
@@ -539,7 +541,7 @@ rule embed_umap:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster-threshold 4.0 \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -553,7 +555,7 @@ rule embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
         distance_matrix = rules.create_distance_matrix.output.output,
-        #cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv"
+        cluster = "results/mds_parameters_{ha_concatenated}.csv",
     output:
         node_data = "results/embed_mds_{ha_concatenated}.json",
         dataframe = "results/embed_mds_{ha_concatenated}.csv",
@@ -565,7 +567,7 @@ rule embed_mds:
         """
         python3 ../notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
-            --cluster-threshold 2.0 \
+            --cluster-data {input.cluster} \
             --random-seed 314159 \
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
@@ -593,7 +595,6 @@ rule rename_columns:
             --rename-column {params.rename_column} \
             --output {output.node_data}
         """
-
 
 def _get_embedding_columns_by_wildcards(wildcards):
     method = wildcards.method.replace("-", "")
@@ -660,6 +661,60 @@ rule create_distance_dataframe:
             --output {output.metadata}
         """
 
+rule cluster_by_parameters_ha:
+    input:
+        alignment="results/aligned_ha.fasta",
+        distance_matrix="results/distance_matrix_ha.csv",
+        clades="results/clades_ha.json",
+    output:
+        table=f"results/gridsearch/ha/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
+    params:
+        method_parameters=METHOD_PARAMETERS.instance,
+    conda: "../cartography.yml"
+    script:
+        "../notebooks/scripts/cluster_by_parameters.py"
+        
+rule cluster_by_parameters_concat:
+    input:
+        alignment="results/aligned_concatenated.fasta",
+        distance_matrix="results/distance_matrix_concatenated.csv",
+        clades="results/clades_ha.json",
+    output:
+        table=f"results/gridsearch/concatenated/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
+    params:
+        method_parameters=METHOD_PARAMETERS.instance,
+    conda: "../cartography.yml"
+    script:
+        "../notebooks/scripts/cluster_by_parameters.py"
+
+rule aggregate_clusters_by_parameters:
+    input:
+        tables=expand("results/gridsearch/{ha_concatenated}/{params}.tsv", ha_concatenated=HA_CONCAT, params=METHOD_PARAMETERS.instance_patterns)
+    output:
+        table="results/gridsearch_{ha_concatenated}.tsv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ../notebooks/scripts/concatenate_tables.py \
+            --tables {input.tables} \
+            --output {output.table}
+        """
+
+rule output_grid_search:
+    input:
+        table= "results/gridsearch_{ha_concatenated}.tsv",
+    output:
+        pca_parameters = "results/pca_parameters_{ha_concatenated}.csv",
+        mds_parameters = "results/mds_parameters_{ha_concatenated}.csv",
+        tsne_parameters = "results/t-sne_parameters_{ha_concatenated}.csv",
+        umap_parameters = "results/umap_parameters_{ha_concatenated}.csv",
+        mcc_by_tsne_parameters = "results/mcc_by_t-sne_parameters_{ha_concatenated}.pdf",
+        mcc_by_umap_parameters = "results/mcc_by_umap_parameters_{ha_concatenated}.pdf",
+        mcc_by_method_and_distance_threshold = "results/mcc_by_method_and_distance_threshold_{ha_concatenated}.pdf"
+    conda: "../cartography.yml"
+    notebook:
+        "../notebooks/2021-06-23-summarize-grid-search.ipynb"
+
 rule create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:
@@ -683,9 +738,6 @@ rule create_notebook_docs:
         umap_df_ha = "results/embed_umap_ha.csv",
         umap_df_concatenated = "results/embed_umap_concatenated.csv",
 
-        #change this threshold information after seasonal flu changes
-        threshold_information = "../seasonal-flu-nextstrain/results/full_output_HDBSCAN.csv",
-
     output:
         HANAMAFullChartBrushableMDSHTML = "../docs/HANAMAFullChartBrushableMDS.html",
         HANAMAFullChartBrushableMDSPNG = "../docs/HANAMAFullChartBrushableMDS.png",
@@ -705,45 +757,6 @@ rule create_notebook_docs:
     notebook:
         "2020-12-21NotebookFluHaNa.ipynb"
 
-
-rule cluster_by_parameters:
-    input:
-        alignment="results/aligned_sequences.fasta",
-        distance_matrix="results/distance_matrix_sequences.csv",
-        clades="results/clades.json",
-    output:
-        table=f"results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
-    params:
-        method_parameters=METHOD_PARAMETERS.instance,
-    conda: "../cartography.yml"
-    script:
-        "../notebooks/scripts/cluster_by_parameters.py"
-
-
-rule aggregate_clusters_by_parameters:
-    input:
-        tables=expand("results/gridsearch/{params}.tsv", params=METHOD_PARAMETERS.instance_patterns)
-    output:
-        table="results/gridsearch.tsv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/concatenate_tables.py \
-            --tables {input.tables} \
-            --output {output.table}
-        """
-
-
-rule summarize_grid_search:
-    input:
-        table="results/gridsearch.tsv",
-    output:
-        mcc_by_method_and_distance_threshold="results/mcc_by_method_and_distance_threshold.pdf",
-    conda: "../cartography.yml"
-    log:
-        "logs/summarize-grid-search.ipynb"
-    notebook:
-        "../notebooks/2021-06-23-summarize-grid-search.ipynb"
 
 rule clean:
     message: "Removing directories: {params}"
