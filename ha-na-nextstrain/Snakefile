@@ -708,8 +708,6 @@ rule output_grid_search:
         mds_parameters = "results/mds_parameters_{ha_concatenated}.csv",
         tsne_parameters = "results/t-sne_parameters_{ha_concatenated}.csv",
         umap_parameters = "results/umap_parameters_{ha_concatenated}.csv",
-        mcc_by_tsne_parameters = "results/mcc_by_t-sne_parameters_{ha_concatenated}.pdf",
-        mcc_by_umap_parameters = "results/mcc_by_umap_parameters_{ha_concatenated}.pdf",
         mcc_by_method_and_distance_threshold = "results/mcc_by_method_and_distance_threshold_{ha_concatenated}.pdf"
     conda: "../cartography.yml"
     notebook:
@@ -748,10 +746,7 @@ rule create_notebook_docs:
         HANAFullChartBrushableTSNEHTML = "../docs/HANAFullChartBrushableTSNE.html",
         HANAFullChartBrushableTSNEPNG = "../docs/HANAFullChartBrushableTSNE.png",
         fullChartPNG = "../docs/flu-embeddingsHaNa.png",
-        fullChartHTML = "../docs/flu-embeddingsHaNa.html",
-        umapChartPNG = "../docs/UMAPHaNa.png",
-        UMAPProcrustes = "../docs/UMAPProcrustesHaNa.png",
-        UMAPBoxplot = "../docs/UMAPBoxplotHaNA.png"
+        fullChartHTML = "../docs/flu-embeddingsHaNa.html"
 
     conda: "../cartography.yml"
     notebook:
