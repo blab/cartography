@@ -263,13 +263,14 @@ Specifically, we used a Support Vector Machine (SVM) classifier to identify an o
 To train the classifier, we used the Euclidean distance between all pairs of strains as a one-dimensional feature and a binary encoding of within (1) or between (0) clade status as a model target.
 As there were far more pairs of strains from different clades, we measured classification accuracy with the Matthew's correlation coefficient (MCC), a metric that is robust to unbalanced counts in the confusion matrix [@Matthews_cc].
 As a control, we compared the accuracy of each method's classifier to the MCC from a classifier fit to genetic distance between strains.
-t-SNE, UMAP, and PCA provided the most accurate classifications (MCC = 0.686, 0.695, 0.682, respectively) and matched or outperformed pairwise genetic distance (MCC = 0.589) ([@fig:flu-within-and-between-group-distances],[@tbl:KDE_full]).
+t-SNE, UMAP, and PCA provided the most accurate classifications (MCC = 0.686, 0.695, 0.682, respectively) and matched or outperformed pairwise genetic distance (MCC = 0.589) ([@fig:flu-HDBSCAN],[@tbl:KDE_full]).
 MDS performed poorly (MCC = 0.54), confirming our expectations it would mirror genetic distances MCC value based on MDS's linear relationship with genetic distance.
 These results show the potential benefits of using t-SNE embeddings for cluster analysis over the computationally simpler genetic distance, despite the t-SNE's lack of global linear relationships between strains.
 
 ![The mapping between Euclidean and Genetic distance assess the strength of both the local and global structure of the embedding recapitulation. The scatterplot for PCA (upper left), MDS (upper right), t-SNE (lower left), and UMAP (lower right) consistently exhibit linear relationships for pairs of strains that differ by around 20 nucleotides.](FullScatterplotFlu.png){#fig:flu-Euclidean-vs-genetic-distance}
 
-![Distribution of scaled Euclidean distances between all pairs of H3N2 strains visually represents the efficacy of Euclidean distances for distinguishing virus genomes from different clades by clade status, with the genetic KDE plot (far upper right) used as a comparison for the dimensionality reducing methods PCA (upper middle), MDS (upper left), t-SNE (lower left), and UMAP (lower right).](FullKDEDensityFlu.png){#fig:flu-within-and-between-group-distances}
+<iframe src="https://blab.github.io/cartography/fullHDBSCANChartFlu.html" style="width: 1200px; height: 935px;" frameBorder="0"></iframe>
+![The embeddings colored by their HDBSCAN label, with the distance threshold defined by the threshold that preserved the greatest amount of clade relationships. The chart for PCA (top left), MDS (middle left), t-SNE (middle left), and UMAP (bottom left) generally recapitulate groups of viruses into clades without inferring ancestral relationships, and the trees on the righthand side describes how these clade grouping appear on the tree, which does infer ancestral relations.](fullHDBSCANChartFlu.png){#fig:flu-HDBSCAN .static-embedding}
 
 ### Future clade relationships in 2018-2020 H3N2 Influenza predicted with Cross Validation information from 2016-2018 H3N2 Influenza
 
@@ -318,14 +319,15 @@ The UMAP mapping (Pearson's $R^{2} = 0.592 \pm 0.002$) revealed two different cl
 This clustering is only seen in UMAP, revealing UMAP's sensitivity to outliers.
 t-SNE's mapping was fairly strong (Pearson's $R^{2} = 0.522 \pm 0.002$) and revealed that pairs of strains that differ by more than 50 nucleotides are unlikely to be placed near each other in a t-SNE embedding.
 
-Just as in influenza, t-SNE and PCA provided the most accurate classifications (MCC = 0.543 and 0.666, respectively) and outperformed pairwise genetic distance (MCC = 0.519) and UMAP (MCC = 0.404), [@fig:zika-within-and-between-group-distances], [@tbl:KDE_full]).
+Just as in influenza, t-SNE and PCA provided the most accurate classifications (MCC = 0.543 and 0.666, respectively) and outperformed pairwise genetic distance (MCC = 0.519) and UMAP (MCC = 0.404), [@fig:zika-HDBSCAN], [@tbl:KDE_full]).
 UMAP performed incredibly poorly, which we attribute to the incredible distance between clade c2 and the other clades, which may have caused the classifier to misrepresent the Euclidean threshold between and within clades (False Negative: 7405 vs False Positive: 46961, [@tbl:KDE_full]).
 MDS performed poorly (MCC = 0.421), confirming our expectation that MDS slightly underperforms genetic distance's classification, as MDS linearly recapitulates genetic distance in euclidean space. 
 These results corroborate our previous conclusion about the potential benefits of using t-SNE embeddings for cluster analysis over genetic distance.
 
 ![Euclidean and Genetic distance scatterplots assess the strength of both the local and global structure of the embedding recapitulation. The scatterplot for PCA (upper left), t-SNE (lower left), and UMAP (lower right) displays a steeper LOESS line after 50 nucleotides, revealing their emphasis on local structure. MDS (upper right), however, exhibits linear relationships for pairs of strains that differ by around 50 nucleotides, consistent with its emphasis on global structure.](FullScatterplotZika.png){#fig:zika-Euclidean-vs-genetic-distance}
 
-![Distribution of scaled Euclidean distances between all pairs of Zika strains visually represents how useful Euclidean distances will be as an indicator of within vs. between clades by clade status, with the genetic KDE plot (far upper right) used as a comparison for the dimensionality reducing methods PCA (upper middle), MDS (upper left), t-SNE (lower left), and UMAP (lower right). t-SNE and PCA outperformed genetic, MDS, and UMAP.](FullKDEDensityZika.png){#fig:zika-within-and-between-group-distances}
+<iframe src="https://blab.github.io/cartography/fullHDBSCANChartZika.html" style="width: 1200px; height: 935px;" frameBorder="0"></iframe>
+![The embeddings colored by their HDBSCAN label, with the distance threshold defined by the threshold that preserved the greatest amount of clade relationships. The chart for PCA (top left), MDS (middle left), t-SNE (middle left), and UMAP (bottom left) generally recapitulate groups of viruses into clades without inferring ancestral relationships, and the trees on the righthand side describes how these clade grouping appear on the tree, which does infer ancestral relations.](fullHDBSCANChartZika.png){#fig:zika-HDBSCAN .static-embedding}
 
 
 ## MERS within host outbreak patterns revealed with embedding clusters 
@@ -353,7 +355,7 @@ The two clusters in their scatterplots at higher genetic distance reveals that t
 MDS provided the strongest linear mapping to genetic distance (Pearson's $R^{2} = 0.759 \pm 0.003$).
 The same mapping for PCA was incredibly weak and nonlinear (Pearson's $R^{2} = 0.023 \pm 0.001$).
 
-Just as in influenza and Zika, t-SNE provided the most accurate classification of the embeddings (MCC = 0.626), but did not outperform pairwise genetic distance (MCC = 0.71) ([@fig:MERS-within-and-between-group-distances], [@tbl:KDE_full]).
+Just as in influenza and Zika, t-SNE provided the most accurate classification of the embeddings (MCC = 0.626), but did not outperform pairwise genetic distance (MCC = 0.71) ([@fig:MERS-HDBSCAN], [@tbl:KDE_full]).
 PCA could not be considered in this analysis, as the classifier was unable to find a distance threshold to separate within vs between clade relationships.
 UMAP performed poorest (MCC = 0.473), which we attribute to tight clustering between related clades, which may have caused the classifier to create a lower Euclidean distance threshold between and within clades (False Negative: 234 vs False Positive: 1163) ([@tbl:KDE_full]).
 MDS performed much better in MERS than in influenza and Zika (MCC = 0.625) and minorly underperformed genetic distance, which we conclude is because of the proportional relationship between genetic and euclidean distance as seen in the scatterplot. 
@@ -362,7 +364,8 @@ These results corroborate our conclusion about using t-SNE embeddings for cluste
 
 ![Euclidean and Genetic distance scatterplots assess the strength of both the local and global structure of the embedding recapitulation. The scatterplot for PCA (upper left) was weak and nonlinear, t-SNE (lower left) and UMAP (lower right) displayed a piecewise linear relationship by around 100 nucleotides, consistent with their emphasis on local structure. MDS (upper right), exhibits linear relationships for pairs of strains that differ by around 100 nucleotides, consistent with its emphasis on global structure.](FullScatterplotMERS.png){#fig:MERS-Euclidean-vs-genetic-distance}
 
-![Distribution of scaled Euclidean distances between all pairs of MERS strains visually represents Euclidean distances's efficacy for indicating within vs. between clade status, with the genetic KDE plot (far upper right) used as a comparison for the dimensionality reducing methods PCA (upper middle), MDS (upper left), t-SNE (lower left), and UMAP (lower right). Genetic, t-SNE, and MDS outperformed PCA and UMAP.](FullKDEDensityMERS.png){#fig:MERS-within-and-between-group-distances}
+<iframe src="https://blab.github.io/cartography/fullHDBSCANChartMERS.html" style="width: 1200px; height: 935px;" frameBorder="0"></iframe>
+![The embeddings colored by their HDBSCAN label, with the distance threshold defined by the threshold that preserved the greatest amount of clade relationships. The chart for PCA (top left), MDS (middle left), t-SNE (middle left), and UMAP (bottom left) generally recapitulate groups of viruses into clades without inferring ancestral relationships, and the trees on the righthand side describes how these clade grouping appear on the tree, which does infer ancestral relations.](fullHDBSCANChartMERS.png){#fig:MERS-HDBSCAN .static-embedding}
 
 
 # Analysis of HA and NA joined genomes improves embedding quality and accuracy
@@ -398,9 +401,8 @@ These findings affirm our expectations that full genomes and multiple chromosome
 
 ![A Tangle tree for H3N2 Influenza from 2016-2018 (HA tree on the left and NA tree on the right, connected by strain position in each respective tree) reveals reassortment and recombination within a strain between chromosomes. Reassortment appears as crossed lines between clades in both trees. The HA and NA UMAP embedding was projected into the HA-only embedding space, and the distance between respective strains were calculated. We used these distances to classify reassortment based on three standard deviations above the mean, and colored the tangle tree by this boolean reassortment signal.](tangleTreeHaNa.png){#fig:tree-HaNa}
 
-![Comparison of UMAP strain points in the HA-only and HA and NA joint analysis build, with points connected to reveal overall distance and change in location for reassorted clades.](UMAPProcrustesHaNa.png){#fig:Procrustes-UMAP}
-
-![KDE plot (HA-only: first row ; HA and NA: second row) for genetic (HA-only: Upper left ; HA and NA joint analysis: Lower left), MDS (HA-only: Upper middle ; HA and NA joint analysis: Lower middle), and UMAP (HA-only: Upper right ; HA and NA joint analysis: Lower right) for HA and HA and NA joint analysis embeddings. ](KDEDensityFluHaNa.png){#fig:KDE-Ha-Na}
+<iframe src="https://blab.github.io/cartography/flu-embeddingsHaNa.html" style="width: 1200px; height: 935px;" frameBorder="0"></iframe>
+![The embeddings colored by their HDBSCAN label, with the distance threshold defined by the threshold that preserved the greatest amount of clade relationships. The chart for PCA (top left), MDS (middle left), t-SNE (middle left), and UMAP (bottom left) generally recapitulate groups of viruses into clades without inferring ancestral relationships, and the trees on the righthand side describes how these clade grouping appear on the tree, which does infer ancestral relations.](flu-embeddingsHaNa.png){#fig:flu-HDBSCAN .static-embedding}
 
 
 
