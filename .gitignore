@@ -131,6 +131,7 @@ mers-nextstrain/results/
 mers-nextstrain/logs/
 outlier_analysis/results/
 ha-na-nextstrain/results/
+ha-na-ma-nextstrain/results/
 sars-cov-2-nextstrain/results/
 sars-cov-2-nextstrain/logs/
 notebooks/2019-07-18-view-auspice-tree-json-with-altair.ipynb

@@ -13,8 +13,8 @@ METHOD_PARAMETERS = Paramspace(
 )
 
 wildcard_constraints:
-    segment="(ha|na|ma)",
-    ha_concatenated="(ha|na|ma|concatenated|ma_concatenated)",
+    segment="(ha|na)",
+    ha_concatenated="(ha|na|concatenated)",
     method="(pca|mds|t-sne|umap)",
     ha_concat="(ha|concatenated)"
 
@@ -27,20 +27,13 @@ EMBEDDING_METHODS = [
 
 SEGMENTS = [
     "ha",
-    "na",
-    "ma"
-]
-
-SEG = [
-    "ha",
     "na"
 ]
+
 HA_CONCATENATED = [
     "concatenated",
     "ha",
-    "na",
-    "ma",
-    "ma_concatenated"
+    "na"
 ]
 
 HA_CONCAT = [
@@ -57,10 +50,9 @@ rule all:
         expand("results/filtered_{segment}.fasta", segment=SEGMENTS),
         expand("results/metadata_{segment}.tsv", segment=SEGMENTS),
         "results/aligned_concatenated.fasta",
-        "results/aligned_ma_concatenated.fasta",
-        expand("results/tree_{segment}.nwk", segment=SEG),
-        expand("../auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json", segment=SEG),
-        expand("results/table_{segment}.tsv", segment=SEG),
+        expand("results/tree_{segment}.nwk", segment=SEGMENTS),
+        expand("../auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json", segment=SEGMENTS),
+        expand("results/table_{segment}.tsv", segment=SEGMENTS),
         expand("results/embed_pca_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_mds_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
         expand("results/embed_t-sne_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
@@ -88,41 +80,22 @@ rule files:
 
 files = rules.files.params
 
-#rule split:
-#    message:
-#        """
-#        Split the ha and na file into separate files
-#        """
-#    input:
-#        sequences =  "data/ncbi-h3n2-ha-na.fa",
-#    output:
-#        sequences_ha = "results/ncbi-h3n2-ha.fasta",
-#        sequences_na = "results/ncbi-h3n2-na.fasta"
-#    conda: "../cartography.yml"
-#    shell:
-#        """
-#        python3 scripts/split_fasta.py \
-#            --sequence {input.sequences} \
-#            --output_fastas {output.sequences_ha} {output.sequences_na}\
-#        """
-
-rule split_ma:
+rule split:
     message:
         """
         Split the ha and na file into separate files
         """
     input:
-        sequences =  "data/ncbi-h3n2-ha-na-ma.fa"
+        sequences =  "data/ncbi-h3n2-ha-na.fa",
     output:
         sequences_ha = "results/ncbi-h3n2-ha.fasta",
-        sequences_na = "results/ncbi-h3n2-na.fasta",
-        sequences_ma = "results/ncbi-h3n2-ma.fasta"
+        sequences_na = "results/ncbi-h3n2-na.fasta"
     conda: "../cartography.yml"
     shell:
         """
-        python3 scripts/split_fasta_mp.py \
+        python3 scripts/split_fasta.py \
             --sequence {input.sequences} \
-            --output_fastas {output.sequences_ha} {output.sequences_na} {output.sequences_ma}\
+            --output_fastas {output.sequences_ha} {output.sequences_na}\
         """
 
 rule parse:
@@ -188,17 +161,15 @@ rule pair_ha_strains:
     input:
         sequences_ha = "results/filtered_ha.fasta",
         sequences_na = "results/filtered_na.fasta",
-        sequences_ma = "results/filtered_ma.fasta"
     output:
         output_ha = "results/paired_ha.fasta",
-        output_na = "results/paired_na.fasta",
-        output_ma = "results/paired_ma.fasta"
+        output_na = "results/paired_na.fasta"
     conda: "../cartography.yml"
     shell:
         """
-        python3 scripts/filter_ha_ma.py \
-            --sequence {input.sequences_ha} {input.sequences_na} {input.sequences_ma}\
-            --output_fasta {output.output_ha} {output.output_na} {output.output_ma}
+        python3 scripts/filter_ha.py \
+            --sequence {input.sequences_ha} {input.sequences_na}\
+            --output_fasta {output.output_ha} {output.output_na}
         """
 
 rule align:
@@ -238,23 +209,6 @@ rule concat:
         """
         python3 scripts/concat_sequences.py \
             --sequences {input.sequence_ha} {input.sequence_na}\
-            --output {output.fasta} \
-        """
-
-rule concat_ma:
-    message:
-        """putting the na strains with the ha strains"""
-    input:
-        sequence_ha = "results/aligned_ha.fasta",
-        sequence_na = "results/aligned_na.fasta",
-        sequence_ma = "results/aligned_ma.fasta"
-    output:
-        fasta = "results/aligned_ma_concatenated.fasta"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 scripts/concat_seq_mp.py \
-            --sequences {input.sequence_ha} {input.sequence_na} {input.sequence_ma} \
             --output {output.fasta} \
         """
 
@@ -727,22 +681,16 @@ rule create_notebook_docs:
 
         mds_df_ha = "results/embed_mds_ha.csv",
         mds_df_concatenated = "results/embed_mds_concatenated.csv",
-        mds_df_ma_concatenated = "results/embed_mds_ma_concatenated.csv",
 
         tsne_df_ha = "results/embed_t-sne_ha.csv",
         tsne_df_concatenated = "results/embed_t-sne_concatenated.csv",
-        tsne_df_ma_concatenated = "results/embed_t-sne_ma_concatenated.csv",
 
         umap_df_ha = "results/embed_umap_ha.csv",
         umap_df_concatenated = "results/embed_umap_concatenated.csv",
 
     output:
-        HANAMAFullChartBrushableMDSHTML = "../docs/HANAMAFullChartBrushableMDS.html",
-        HANAMAFullChartBrushableMDSPNG = "../docs/HANAMAFullChartBrushableMDS.png",
         HANAFullChartBrushableMDSHTML = "../docs/HANAFullChartBrushableMDS.html",
         HANAFullChartBrushableMDSPNG = "../docs/HANAFullChartBrushableMDS.png",
-        HANAMAFullChartBrushableTSNEHTML = "../docs/HANAMAFullChartBrushableTSNE.html",
-        HANAMAFullChartBrushableTSNEPNG = "../docs/HANAMAFullChartBrushableTSNE.png",
         HANAFullChartBrushableTSNEHTML = "../docs/HANAFullChartBrushableTSNE.html",
         HANAFullChartBrushableTSNEPNG = "../docs/HANAFullChartBrushableTSNE.png",
         fullChartPNG = "../docs/flu-embeddingsHaNa.png",
