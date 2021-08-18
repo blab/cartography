@@ -127,15 +127,29 @@ These results inform our recommendations for future applications of these method
 
 \subsection*{Embedding clusters recapitulate phylogenetic clades for seasonal influenza A/H3N2}
 
-\subsubsection*{Model training and validation of embeddings with populations between 2016--2018}
+As a positive control, we first analyzed hemagglutinin (HA) sequences from the seasonal influenza subtype A/H3N2.
+A/H3N2's HA protein evolves rapidly, accumulating amino acid mutations that enable escape from adaptive immunity in human populations \citep{flu-review}.
+These mutations produce distinct phylogenetic clades that represent potentially different antigenic phenotypes.
+The World Health Organization (WHO) Global Influenza Surveillance and Response System (GISRS) regularly sequences genomes of circulating influenza lineages \citep{who-gisrs} and submits these sequences to public INSDC databases like NCBI's GenBank \citep{insdc}.
+These factors, coupled with HA's relatively short gene size of 1,701 nucleotides, facilitate real-time genomic epidemiology of A/H3N2 \citep{nextflu,nextstrain} and rapid analysis by embedding methods we wanted to evaluate.
 
-All four dimensionality reduction methods qualitatively recapitulated clade-level groupings observed in the phylogeny (Figure~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}).
-Strains from the same clade appeared tightly grouped in PCA, t-SNE, and UMAP embeddings and more loosely clustered in the MDS embedding.
-Closely related clades tended to tightly cluster in PCA, MDS, UMAP, and, to a lesser extent, t-SNE.
-For example, the clade A2 and its subclade A2/re map to adjacent regions of all four embeddings.
-We observed the same pattern for A1 and its subclade A1a as well as for A1b and its subclades A1b/135K and A1b/135N.
-The clade 3c2.A and its subclade A3 clustered in all embeddings except t-SNE.
-This result matched our expectation that t-SNE would preserve local clusters and not retain global structure between more distantly related data.
+We identified \jhc{NNN} A/H3N2 HA sequences from NCBI's GenBank database (methods) spanning from January 2016 to January 2020.
+To evaluate the optimal parameters for each embedding method and avoid overfitting to specific datasets, we partitioned these data into a training dataset from 2016--2018 (N=\jhc{NNN} sequences) and a test dataset from 2018--2020 (N=\jhc{NNN} sequences).
+We first analyzed the training data with Nextstrain's seasonal influenza workflow that creates a multiple sequence alignment, infers a time-resolved phylogenetic tree, and assigns clade labels to each sequence based on our own expert-defined clade annotations \citep{nextstrain,seasonal-flu,augur}.
+To test whether embeddings from each method could recapitulate phylogenetic clades, we performed a grid search of each method's parameter space during which we applied an embedding method to a randomly selected 50\% of the sequences in the multiple sequence alignment, identified clusters in the embedding with HDBSCAN \citep{hdbscan}, and calculated the accuracy of the cluster labels for each sequence compared to the known clade labels (see methods).
+We used the resulting classification accuracies to identify the optimal distance threshold for HDBSCAN.
+We fixed the HDBSCAN threshold to its optimal value and repeated the same procedure on the other 50\% of the sequences.
+We used the resulting accuracies to identify the optimal t-SNE and UMAP parameters.
+Finally, we applied each embedding method to the full training dataset with the optimal method parameters, clustered the embeddings with HDBSCAN's optimal distance threshold, and evaluated the accuracy of the cluster classifications.
+\jhc{This is probably too much detail for the main text and could be clarified. I want to make sure we at least explain that the embeddings in Figure 1 don't represent default method parameters. It's also potentially confusing to introduce HDBSCAN so early, but this is a key component of the analysis so maybe it is fine.}
+
+All four embedding methods qualitatively recapitulated clade-level groupings observed in the phylogeny (Figure~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}).
+Strains from the same clade generally grouped tightly together in PCA, t-SNE, and UMAP embeddings.
+While MDS followed this general pattern, it also produced separate pairs of A3 and A4 clusters that did not correspond to meaningful subclades.
+\jhc{Is MDS picking up on other characteristics of the sequence data like the number of Ns? Or maybe MDS needs more dimensions to represent these data and the current constraint of 2 dimensions produces suboptimal results.}
+All of the embedding methods clearly delineated larger phylogenetic clades into separate spaces (e.g., A1 and A2) and, with the exception of t-SNE, placed related subclades closer together (e.g., A2 and A2/re or the A1b subclades).
+The t-SNE embedding placed distantly related pairs of clades like 3c3.A and A2 as close together as closely-related clades like A2 and its subclade A2/re.
+These results suggest that t-SNE maintains both local and global structure, but that our interpretation of the absolute distance between points in these embeddings cannot be linear.
 
 \begin{figure}[htb]
   \begin{center}
@@ -143,20 +157,17 @@ This result matched our expectation that t-SNE would preserve local clusters and
   \caption{
     The phylogeny of influenza A/H3N2 viruses (top) shows the evolutionary relationships among viruses including clades, or viruses that share the same mutations and descend from the same common ancestor.
     Reduced dimensionality embeddings of genetic sequences into two dimensions by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right) generally recapitulate groups of viruses into clades without inferring ancestral relationships.
+    \jhc{We should annotate clade membership in the tooltip of the interactive figure.}
   }
   \label{fig:seasonal-influenza-h3n2-ha-embeddings}
   \end{center}
 \end{figure}
 
-To quantify the patterns we observed in Figure~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}, we calculated two complementary metrics for each embedding method.
-First, we measured the linearity of the relationship of Euclidean distance between two strains in an embedding space and the genetic distance between these same strains.
-All four methods exhibited a consistent linear relationship for pairs of strains that differed by no more than 20 nucleotides (Figure~\ref{fig:seasonal-influenza-h3n2-ha-pairwise-distances}).
-PCA and MDS provided the strongest linear mapping to genetic distance (Pearson's $R^{2} = 0.767 \pm 0.000$  and $0.849 \pm 0.000$, respectively).
-This same mapping for the UMAP method was less of a linear function (Pearson's $R^{2} = 0.397 \pm 0.000$) than a piecewise function of two parts.
-Strain pairs with more than 30 nucleotide differences were not as well separated in UMAP space as strains with lesser genetic distances.
-This result suggests that UMAP might be most effective for distinguishing between more distantly related strain pairs.
-t-SNE's mapping was the weakest (Pearson's $R^{2} = 0.393 \pm 0.001$) and revealed that only closely related strains map near each other in t-SNE space.
-Pairs of strains that differ by more than 15 nucleotides are unlikely to be placed near each other in a t-SNE embedding.
+To quantify the apparent maintenance of local and global structure in these embeddings, we calculated the relationship between pairwise genetic distance of genomes and pairwise Euclidean distance of those genomes in each embedding.
+All four methods maintained a linear relationship between genetic and Euclidean distances for genomes that differed by no more than $\approx$20 nucleotides (Figure~\ref{fig:seasonal-influenza-h3n2-ha-pairwise-distances}).
+However, PCA and MDS were the only methods that consistently maintained that linearity as as genetic distance increased (Pearson's $R^{2} = 0.767 \pm 0.000$  and $0.849 \pm 0.000$, respectively).
+In contrast, the relationship between genetic and Euclidean distance was nonlinear in t-SNE (Pearson's $R^{2} = 0.393 \pm 0.001$) and UMAP (Pearson's $R^{2} = 0.397 \pm 0.000$) embeddings.
+Genomes that differed by more than $\approx$20 nucleotides were equally as likely to map close together as far apart in these embeddings.
 
 \begin{figure}[htb]
   \begin{center}
@@ -169,14 +180,21 @@ Pairs of strains that differ by more than 15 nucleotides are unlikely to be plac
   \end{center}
 \end{figure}
 
-Second, we determined how accurately the Euclidean distance between pairs of strains in an embedding could classify those strains as belonging to the same clade or not.
-Specifically, we used a Support Vector Machine (SVM) classifier to identify an optimal Euclidean distance threshold that distinguished pairs of strains from the same clade.
-To train the classifier, we used the Euclidean distance between all pairs of strains as a one-dimensional feature and a binary encoding of within (1) or between (0) clade status as a model target.
-As there were far more pairs of strains from different clades, we measured classification accuracy with the Matthew's correlation coefficient (MCC), a metric that is robust to unbalanced counts in the confusion matrix \citep{matthews_1975}.
-As a control, we compared the accuracy of each method's classifier to the MCC from a classifier fit to genetic distance between strains.
-t-SNE, UMAP, and PCA provided the most accurate classifications (MCC = 0.686, 0.695, 0.682, respectively) and matched or outperformed pairwise genetic distance (MCC = 0.589) (Figure~\ref{fig:seasonal-influenza-h3n2-ha-clusters}, Table~1).
-MDS performed poorly (MCC = 0.54), confirming our expectations it would mirror genetic distances MCC value based on MDS's linear relationship with genetic distance.
-These results show the potential benefits of using t-SNE embeddings for cluster analysis over the computationally simpler genetic distance, despite the t-SNE's lack of global linear relationships between strains.
+Next, we measured how well clusters of genomes in a given embedding corresponded to our expert clade annotations.
+For each embedding described above, we applied hierarchical clustering with HDBSCAN to assign cluster labels to each genome.
+For each pair of genomes, we tested whether both genomes belonged to the same clade and the same cluster.
+We calculated the accuracy of cluster labels using the Matthew's correlation coefficient (MCC) of the resulting pairwise tests \citep{matthews_1975}.
+Since we previously identified the optimal HDBSCAN parameter based on this same accuracy metric and dataset, we anticipated that the cluster accuracy would be relatively high.
+We counted genomes that HDBSCAN could not assign to a cluster as false negatives in our MCC calculation, but we also used this number of unassigned genomes as an additional metric of cluster quality.
+
+As expected, the clusters for each method generally corresponded to larger phylogenetic clades (Figure~\ref{fig:seasonal-influenza-h3n2-ha-clusters}, Table~1).
+The t-SNE embedding produced the most accurate classification (MCC = 0.756) with 20 clusters and \jhc{NNN} genomes not assigned to a cluster.
+UMAP also accurately classified genomes (MCC = 0.662) with only five clusters and no unassigned genomes.
+PCA (MCC = 0.368) and MDS (MCC = 0.476) both performed relatively poorly but for different reasons.
+PCA combined genomes from divergent phylogenetic clades A1 and A2 into the same larger cluster (cluster 4) but managed to assign clusters to all but \jhc{NNN} genomes.
+In contrast, MDS distinguished between most large clades including 3c3.A, A1, and A2, but it also placed closely-related strains from the same clades in two separate clusters (clusters 0 and 5) and failed to assign clusters to \jhc{NNN} genomes.
+Clusters 0 and 5 correspond to the apparently arbitrary splitting of both clades A3 and A4 into different groups in MDS space described above.
+These results indicate that nonlinear embeddings of t-SNE and UMAP could be better-suited for clustering and classification than linear embeddings from PCA and MDS.
 
 \begin{figure}[htb]
   \begin{center}
@@ -189,21 +207,9 @@ These results show the potential benefits of using t-SNE embeddings for cluster 
   \end{center}
 \end{figure}
 
-\subsubsection*{Model testing of embeddings with populations between 2018--2020}
+To understand whether these embedding methods could be used to cluster previously unseen genomes for the same virus, we applied each method to the test dataset spanning 2018--2020, clustered genomes in the embedding space with HDBSCAN, and calculated the accuracy of the cluster assignments based on previously defined clades.
 
 \subsection*{Zika virus clusters reveal geographic patterns of the 2013--2018 epidemic}
-
-\begin{figure}[htb]
-  \begin{center}
-  \includegraphics[width=\columnwidth]{zika-embeddings}
-  \caption{
-    Genetic cartography of Zika strains by dimensionality reduction methods.
-    PCA (components 1 and 2 upper left, components 3 and 4 upper right), MDS (middle left and middle right), t-SNE (lower left), and UMAP (lower right) compared to inferred phylogeny (upper plot).
-    PC1 and PC2 delineate the variance between the Americas and Asia, and PC3 and PC4 are included to better display the variance within the Americas.
-  }
-  \label{fig:zika-embeddings}
-  \end{center}
-\end{figure}
 
 All four dimensionality reduction methods recapitulated phylogenetic patterns observed in the phylogeny (Figure~\ref{fig:zika-embeddings}).
 PCA, after imputing missing data, had a similar structure to the findings in Metsky et.al., where the clades were loosely clustered on a continuum of different clades instead of tightly clustered as seen in influenza.
