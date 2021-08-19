@@ -13,13 +13,6 @@ INTERNAL_NODE = [
     "sequences"
 ]
 
-KDE_METHODS = [
-    "pca",
-    "mds",
-    "t-sne",
-    "umap",#]#,
-    "genetic"
-]
 TYPE = [
     "cross_v",
     "SVM"
@@ -28,7 +21,6 @@ TYPE = [
 rule all:
     input:
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
         expand("results/distance_matrix_{ancestral}.csv", ancestral=INTERNAL_NODE),
         expand("results/embed_pca_{ancestral}.pdf", ancestral=INTERNAL_NODE),
         expand("results/embed_t-sne_{ancestral}.pdf", ancestral=INTERNAL_NODE),
@@ -36,11 +28,9 @@ rule all:
         expand("results/embed_mds_{ancestral}.pdf", ancestral=INTERNAL_NODE),
         "../auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json",
         "results/table.tsv",
-        expand("results/full_KDE_metadata_{type}.csv",type=TYPE),
         "results/full_Scatterplot_metadata.csv",
         expand("results/explained_variance_pca_{ancestral}.csv", ancestral=INTERNAL_NODE),
         "results/nucleotide_diversity.txt",
-        "../docs/FullKDEDensityFluCrossV.png",
         "../docs/fullHDBSCANChartFlu2018-2020.html",
         "../docs/fullHDBSCANChartFlu2018-2020.png",
         expand("results/HDBSCAN_metadata_{method}.csv", method=EMBEDDING_METHODS),
@@ -481,29 +471,6 @@ rule cluster_metadata:
             --output {output.dataframe}
         """
 
-rule concat_HDBSCAN_table:
-    message: "concatenating all the KDE data into one csv dataframe"
-    input:
-       dataframe_pca = "results/HDBSCAN_metadata_pca.csv",
-       dataframe_mds = "results/HDBSCAN_metadata_mds.csv", 
-       dataframe_tsne = "results/HDBSCAN_metadata_t-sne.csv", 
-       dataframe_umap = "results/HDBSCAN_metadata_umap.csv",
-    output:
-        metadata = "results/full_HDBSCAN_metadata.csv"
-    params:
-        column = "MCC",
-        dataframes = "results/HDBSCAN_metadata_pca.csv results/HDBSCAN_metadata_mds.csv results/HDBSCAN_metadata_t-sne.csv results/HDBSCAN_metadata_umap.csv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/concatenate_tables.py \
-            --tables {params.dataframes} \
-            --separator ',' \
-            --sort-by {params.column} \
-            --output {output.metadata}
-        """
-
-
 def _get_embedding_columns_by_wildcards(wildcards):
     method = wildcards.method.replace("-", "")
 
@@ -559,59 +526,6 @@ def _get_embedding_path_by_wildcards(wildcards):
     else:
         return "results/distance_matrix_sequences.csv"
 
-rule KDE_density:
-    message: "creating the KDE density plot"
-    input:
-        embedding = _get_embedding_path_by_wildcards,
-        clades = "results/clades.json",
-        cross_v_values = "../seasonal-flu-nextstrain/results/cross_validation_thresholds.csv"
-    output:
-        figure = "results/KDEDensity_{method}.png",
-        dataframe = "results/KDEDensity_{method}.csv",
-        metadata = "results/KDEDensity_{method}_metadata_SVM.csv",
-        metadata_cross_v = "results/KDEDensity_{method}_metadata_cross_v.csv"
-    params:
-        embedding_columns = _get_embedding_columns_by_wildcards,
-        differentiator_column = "clade_membership"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/within_vs_between_status.py \
-            --embedding {input.embedding} \
-            --clades {input.clades} \
-            --method {wildcards.method} \
-            --embedding-columns {params.embedding_columns} \
-            --differentiator-column {params.differentiator_column} \
-            --cross-v-values {input.cross_v_values} \
-            --output-figure {output.figure} \
-            --output-dataframe {output.dataframe} \
-            --output-metadata {output.metadata} \
-            --output-metadata-cross-v {output.metadata_cross_v}
-        """
-
-rule concat_KDE_table:
-    message: "concatenating all the KDE data into one csv dataframe"
-    input:
-       dataframe_pca = "results/KDEDensity_pca_metadata_{type}.csv",
-       dataframe_mds = "results/KDEDensity_mds_metadata_{type}.csv", 
-       dataframe_tsne = "results/KDEDensity_t-sne_metadata_{type}.csv", 
-       dataframe_umap = "results/KDEDensity_umap_metadata_{type}.csv",
-       #dataframe_genetic = "results/KDEDensity_genetic_metadata.csv"
-    output:
-        metadata = "results/full_KDE_metadata_{type}.csv"
-    params:
-        column = "MCC",
-        dataframes = "results/KDEDensity_pca_metadata_{type}.csv results/KDEDensity_mds_metadata_{type}.csv results/KDEDensity_t-sne_metadata_{type}.csv results/KDEDensity_umap_metadata_{type}.csv "#results/KDEDensity_genetic_metadata.csv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/concatenate_tables.py \
-            --tables {params.dataframes} \
-            --separator ',' \
-            --sort-by {params.column} \
-            --output {output.metadata}
-        """
-
 rule concat_scatterplot_table:
     message: "concatenating all the scatterplot metadata into one csv dataframe"
     input:
@@ -646,32 +560,9 @@ rule create_notebook_docs:
 
         mds_df = "results/embed_mds_sequences.csv",
         tsne_df = "results/embed_t-sne_sequences.csv",
-        umap_df = "results/embed_umap_sequences.csv",
-        cross_v_thresholds = "../seasonal-flu-nextstrain/results/cross_validation_thresholds.csv",
-
-        #KDE Density:
-        KDE_pca = "results/KDEDensity_pca.csv",
-        KDE_pca_metadata_SVM = "results/KDEDensity_pca_metadata_SVM.csv",
-        KDE_pca_metadata_cross_v = "results/KDEDensity_pca_metadata_cross_v.csv",
-
-        KDE_mds = "results/KDEDensity_mds.csv",
-        KDE_mds_metadata_SVM = "results/KDEDensity_mds_metadata_SVM.csv",
-        KDE_mds_metadata_cross_v = "results/KDEDensity_mds_metadata_cross_v.csv",
-
-
-        KDE_tsne = "results/KDEDensity_t-sne.csv",
-        KDE_tsne_metadata_SVM = "results/KDEDensity_t-sne_metadata_SVM.csv",
-        KDE_tsne_metadata_cross_v = "results/KDEDensity_t-sne_metadata_cross_v.csv",
-
-        KDE_umap = "results/KDEDensity_umap.csv",
-        KDE_umap_metadata_SVM = "results/KDEDensity_umap_metadata_SVM.csv",
-        KDE_umap_metadata_cross_v = "results/KDEDensity_umap_metadata_cross_v.csv",
-
-        KDE_genetic = "results/KDEDensity_genetic.csv",
-        KDE_genetic_metadata_SVM = "results/KDEDensity_genetic_metadata_SVM.csv"
+        umap_df = "results/embed_umap_sequences.csv"
 
     output:
-        KDE_density = "../docs/FullKDEDensityFluCrossV.png",
         fullChartHDBSCAN20182020 = "../docs/fullHDBSCANChartFlu2018-2020.html",
         fullChartHDBSCANPNG20182020 = "../docs/fullHDBSCANChartFlu2018-2020.png"
 

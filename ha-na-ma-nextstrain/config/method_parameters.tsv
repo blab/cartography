@@ -1,12 +1,4 @@
 distance_threshold	method
-0	pca
-2	pca
-4	pca
-6	pca
-8	pca
-10	pca
-12	pca
-14	pca
 0	mds
 2	mds
 4	mds
