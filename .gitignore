@@ -140,5 +140,9 @@ notebooks/PairwiseVsEuclidean.ipynb
 notebooks/zika_tree.json
 .vscode/
 
+docs/cartography.aux
+docs/cartography.bbl
+docs/cartography.blg
+docs/cartography.suppinfo
 # Ignore SLURM log files.
 *.out
