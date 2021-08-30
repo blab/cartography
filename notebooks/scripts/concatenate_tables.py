@@ -17,7 +17,7 @@ if __name__ == "__main__":
     df = pd.concat([
         pd.read_csv(table_file, sep=args.separator)
         for table_file in args.tables
-    ], ignore_index=True, sort=True)
+    ], ignore_index=True)
 
     if args.sort_by is not None:
         df = df.sort_values(by=[args.sort_by])

@@ -2,8 +2,6 @@ import argparse
 from augur.utils import write_json
 import Bio.SeqIO
 from collections import OrderedDict
-from dendropy.calculate import popgenstat
-from dendropy import DnaCharacterMatrix
 import hdbscan
 import matplotlib.pyplot as plt
 import numpy as np
@@ -38,7 +36,7 @@ if __name__ == "__main__":
         dest="command",
         required=True
     )
-
+    
     pca = subparsers.add_parser("pca")
     pca.add_argument("--components", default=10, type=int, help="the number of components for PCA")
     pca.add_argument("--explained-variance", default="results/explained_variance_pca.png", help="the path for the explained variance table")
