@@ -549,9 +549,9 @@ rule aggregate_clusters_by_parameters:
             --output {output.table}
         """
 
-rule summarize_grid_search:
+rule output_grid_search:
     input:
-        table="results/gridsearch.tsv",
+        table= "results/gridsearch.tsv",
     output:
         pca_parameters = "results/pca_parameters.csv",
         mds_parameters = "results/mds_parameters.csv",
@@ -559,43 +559,19 @@ rule summarize_grid_search:
         umap_parameters = "results/umap_parameters.csv",
         mcc_by_tsne_parameters = "results/mcc_by_t-sne_parameters.pdf",
         mcc_by_umap_parameters = "results/mcc_by_umap_parameters.pdf",
-        mcc_by_method_and_distance_threshold="results/mcc_by_method_and_distance_threshold.pdf",
+        mcc_by_method_and_distance_threshold = "results/mcc_by_method_and_distance_threshold.pdf"
     conda: "../cartography.yml"
     log:
         "logs/summarize-grid-search.ipynb"
     notebook:
         "../notebooks/2021-06-23-summarize-grid-search.ipynb"
 
-rule output_grid_search:
-    input:
-        table= "results/gridsearch.tsv",
-    output:
-        output_ = "results/output_HDBSCAN.csv",
-        output_txt = "results/output_HDBSCAN.txt",
-        output_hyperparameters = "results/grid_search_parameters.csv",
-        output_hyperparameters_txt = "results/grid_search_parameters.txt",
-        output_figure_HDBSCAN = "results/accuracy_figure_HDBSCAN.png",
-        output_figure_grid_search = "results/accuracy_figure_grid_search.png"
-    conda: "../cartography.yml"
-    params:
-        method = "pca mds t-sne umap"
-    shell:
-        """
-        python3 ../notebooks/scripts/output_grid_search.py \
-            --methods {params.method} \
-            --grid-search-total {input.table} \
-            --output {output.output_} {output.output_txt} \
-            --output-hyperparameters {output.output_hyperparameters} {output.output_hyperparameters_txt} \
-            --output-figure-HDBSCAN {output.output_figure_HDBSCAN} \
-            --output-figure-grid-search {output.output_figure_grid_search}
-        """
-
 rule cluster_metadata:
     message: "Creating the metadata dataframe for HDBSCAN results for main paper"
     input:
         embedding = "results/embed_{method}_sequences.csv",
         metadata = "results/table.tsv",
-        cluster = "results/output_HDBSCAN.csv",
+        cluster = "results/{method}_parameters.csv",
     output:
         dataframe = "results/HDBSCAN_metadata_{method}.csv",
     conda: "../cartography.yml"

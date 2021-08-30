@@ -18,23 +18,13 @@ EMBEDDING_METHODS = [
     "umap"
 ]
 
-KDE_METHODS = [
-    "pca",
-    "mds",
-    "t-sne",
-    "umap",
-    "genetic"
-]
-
 rule all:
     input:
         "../auspice/cartography_mers.json",
         "results/tree.nwk",
         "results/aligned.fasta",
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
         "results/table.tsv",
-        "results/full_KDE_metadata.csv",
         "results/full_Scatterplot_metadata.csv",
         "results/subset_fasta.fasta",
         "../docs/FullScatterplotMERS.png",
@@ -386,33 +376,6 @@ def _get_embedding_path_by_wildcards(wildcards):
     else:
         return "results/distance_matrix.csv"
 
-
-rule KDE_density:
-    message: "creating the KDE density plot"
-    input:
-        embedding =  _get_embedding_path_by_wildcards,
-        metadata = "results/table.tsv"
-    output:
-        figure = "results/KDEDensity_{method}.png",
-        dataframe = "results/KDEDensity_{method}.csv",
-        metadata = "results/KDEDensity_{method}_metadata.csv"
-    params:
-        embedding_columns = _get_embedding_columns_by_wildcards,
-        differentiator_column = "multihost_clade_membership"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/within_vs_between_status.py \
-            --embedding {input.embedding} \
-            --metadata {input.metadata} \
-            --method {wildcards.method} \
-            --embedding-columns {params.embedding_columns} \
-            --differentiator-column {params.differentiator_column} \
-            --output-figure {output.figure} \
-            --output-dataframe {output.dataframe} \
-            --output-metadata {output.metadata}
-        """
-
 rule clades:
      input:
          metadata = "results/metadata.tsv",
@@ -455,47 +418,29 @@ rule aggregate_clusters_by_parameters:
             --output {output.table}
         """
 
-rule summarize_grid_search:
+rule output_grid_search:
     input:
-        table="results/gridsearch.tsv",
+        table= "results/gridsearch.tsv",
     output:
-        mcc_by_method_and_distance_threshold="results/mcc_by_method_and_distance_threshold.pdf",
+        pca_parameters = "results/pca_parameters.csv",
+        mds_parameters = "results/mds_parameters.csv",
+        tsne_parameters = "results/t-sne_parameters.csv",
+        umap_parameters = "results/umap_parameters.csv",
+        mcc_by_tsne_parameters = "results/mcc_by_t-sne_parameters.pdf",
+        mcc_by_umap_parameters = "results/mcc_by_umap_parameters.pdf",
+        mcc_by_method_and_distance_threshold = "results/mcc_by_method_and_distance_threshold.pdf"
     conda: "../cartography.yml"
     log:
         "logs/summarize-grid-search.ipynb"
     notebook:
         "../notebooks/2021-06-23-summarize-grid-search.ipynb"
 
-rule output_grid_search:
-    input:
-        table= "results/gridsearch.tsv",
-    output:
-        output_ = "results/output_HDBSCAN.csv",
-        output_txt = "results/output_HDBSCAN.txt",
-        output_hyperparameters = "results/grid_search_parameters.csv",
-        output_hyperparameters_txt = "results/grid_search_parameters.txt",
-        output_figure_HDBSCAN = "results/accuracy_figure_HDBSCAN.png",
-        output_figure_grid_search = "results/accuracy_figure_grid_search.png"
-    conda: "../cartography.yml"
-    params:
-        method = "pca mds t-sne umap"
-    shell:
-        """
-        python3 ../notebooks/scripts/output_grid_search.py \
-            --methods {params.method} \
-            --grid-search-total {input.table} \
-            --output {output.output_} {output.output_txt} \
-            --output-hyperparameters {output.output_hyperparameters} {output.output_hyperparameters_txt} \
-            --output-figure-HDBSCAN {output.output_figure_HDBSCAN} \
-            --output-figure-grid-search {output.output_figure_grid_search}
-        """
-
 rule cluster_metadata:
     message: "Creating the metadata dataframe for HDBSCAN results for main paper"
     input:
         embedding = "results/embed_{method}.csv",
         metadata = "results/table.tsv",
-        cluster = "results/output_HDBSCAN.csv",
+        cluster = "results/{method}_parameters.csv",
     output:
         dataframe = "results/HDBSCAN_metadata_{method}.csv",
     conda: "../cartography.yml"
@@ -512,7 +457,7 @@ rule cluster_metadata:
         """
 
 rule concat_HDBSCAN_table:
-    message: "concatenating all the KDE data into one csv dataframe"
+    message: "concatenating all the HDBSCAN data into one csv dataframe"
     input:
        dataframe_pca = "results/HDBSCAN_metadata_pca.csv",
        dataframe_mds = "results/HDBSCAN_metadata_mds.csv", 
@@ -575,27 +520,6 @@ rule tree_to_table:
             --attributes {params.attributes}
         """
 
-rule concat_KDE_table:
-    message: "concatenating all the KDE data into one csv dataframe"
-    input:
-       dataframe_pca = "results/KDEDensity_pca_metadata.csv",
-       dataframe_mds = "results/KDEDensity_mds_metadata.csv", 
-       dataframe_tsne = "results/KDEDensity_t-sne_metadata.csv", 
-       dataframe_umap = "results/KDEDensity_umap_metadata.csv",
-       dataframe_genetic = "results/KDEDensity_genetic_metadata.csv"
-    output:
-        metadata = "results/full_KDE_metadata.csv"
-    params:
-        dataframes = "results/KDEDensity_pca_metadata.csv results/KDEDensity_mds_metadata.csv results/KDEDensity_t-sne_metadata.csv results/KDEDensity_umap_metadata.csv results/KDEDensity_genetic_metadata.csv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/concatenate_tables.py \
-            --tables {params.dataframes} \
-            --separator ',' \
-            --output {output.metadata}
-        """
-
 rule concat_scatterplot_table:
     message: "concatenating all the scatterplot metadata into one csv dataframe"
     input:
@@ -644,22 +568,6 @@ rule create_notebook_docs:
 
         scatterplot_umap = "results/scatterplot_umap.csv",
         scatterplot_umap_metadata = "results/scatterplot_umap_metadata.csv",
-
-        #KDE Density:
-        KDE_pca = "results/KDEDensity_pca.csv",
-        KDE_pca_metadata = "results/KDEDensity_pca_metadata.csv",
-
-        KDE_mds = "results/KDEDensity_mds.csv",
-        KDE_mds_metadata = "results/KDEDensity_mds_metadata.csv",
-
-        KDE_tsne = "results/KDEDensity_t-sne.csv",
-        KDE_tsne_metadata = "results/KDEDensity_t-sne_metadata.csv",
-
-        KDE_umap = "results/KDEDensity_umap.csv",
-        KDE_umap_metadata = "results/KDEDensity_umap_metadata.csv",
-
-        KDE_genetic = "results/KDEDensity_genetic.csv",
-        KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv",
 
     output:
         Scatterplot = "../docs/FullScatterplotMERS.png",
