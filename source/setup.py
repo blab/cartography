@@ -8,13 +8,13 @@ setup(
     version='0.0.1',    
     description='Reduced dimension embeddings for pathogen sequences',
     url='https://github.com/blab/cartography/',
-    author='Sravani Nanduri, John Huddleston', 
-    author_email='nandsra@cs.washington.edu, huddlej@gmail.com',
+    author='Sravani Nanduri <nandsra@cs.washington.edu> , John Huddleston <huddlej@gmail.com>', 
+    author_email='nandsra@cs.washington.edu',
     license='MIT License',
     packages=['seaborn', 'scikit-learn', 'umap-learn', 'matplotlib', 'pandas', 'numpy', 'hdbscan'],
     install_requires=['augur>=12.0.0',
                       'numpy', 
-                      'pandas' 
+                      'pandas'
                       ],
     classifiers=[
         "Programming Language :: Python :: 3",
