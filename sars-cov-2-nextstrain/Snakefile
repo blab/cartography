@@ -19,20 +19,11 @@ EMBEDDING_METHODS = [
     "umap"
 ]
 
-KDE_METHODS = [
-    "pca",
-    "mds",
-    "t-sne",
-    "umap",
-    "genetic"
-]
-
 
 rule all:
     input:
         "../auspice/cartography_ncov.json",
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        expand("results/KDEDensity_{method}.png", method=KDE_METHODS),
         "results/distance_matrix.csv",
         "results/embed_pca.pdf",
         "results/embed_t-sne.pdf",
@@ -42,10 +33,8 @@ rule all:
         "results/accuracy_figure_HDBSCAN.png",
         "results/global-xsmall_alignment.fasta",
         "results/table.tsv",
-        "results/full_KDE_metadata.csv",
         "results/full_Scatterplot_metadata.csv",
         "results/explained_variance_pca.csv",
-        "../docs/FullKDEDensitySars-cov-2.png",
         "../docs/FullScatterplotSars-cov-2.png",
         "../docs/FullLinkedChartBrushableSars-cov-2.html",
         "../docs/sars-cov-2-embeddings.png",
@@ -486,32 +475,6 @@ def _get_embedding_path_by_wildcards(wildcards):
     else:
         return "results/distance_matrix.csv"
 
-rule KDE_density:
-    message: "creating the KDE density plot"
-    input:
-        embedding = _get_embedding_path_by_wildcards,
-        clades = "results/clades.json",
-    output:
-        figure = "results/KDEDensity_{method}.png",
-        dataframe = "results/KDEDensity_{method}.csv",
-        metadata = "results/KDEDensity_{method}_metadata.csv"
-    params:
-        embedding_columns = _get_embedding_columns_by_wildcards,
-        differentiator_column = "clade_membership"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/within_vs_between_status.py \
-            --embedding {input.embedding} \
-            --clades {input.clades} \
-            --method {wildcards.method} \
-            --embedding-columns {params.embedding_columns} \
-            --differentiator-column {params.differentiator_column} \
-            --output-figure {output.figure} \
-            --output-dataframe {output.dataframe} \
-            --output-metadata {output.metadata}
-        """
-
 rule cluster_by_parameters:
     input:
         alignment="results/global-xsmall_alignment.fasta",
@@ -595,7 +558,7 @@ rule cluster_metadata:
         """
 
 rule concat_HDBSCAN_table:
-    message: "concatenating all the KDE data into one csv dataframe"
+    message: "concatenating all the HDBSCAN data into one csv dataframe"
     input:
        dataframe_pca = "results/HDBSCAN_metadata_pca.csv",
        dataframe_mds = "results/HDBSCAN_metadata_mds.csv", 
@@ -665,25 +628,7 @@ rule create_notebook_docs:
 
         scatterplot_umap = "results/scatterplot_umap.csv",
         scatterplot_umap_metadata = "results/scatterplot_umap_metadata.csv",
-
-        #KDE Density:
-        KDE_pca = "results/KDEDensity_pca.csv",
-        KDE_pca_metadata = "results/KDEDensity_pca_metadata.csv",
-
-        KDE_mds = "results/KDEDensity_mds.csv",
-        KDE_mds_metadata = "results/KDEDensity_mds_metadata.csv",
-
-        KDE_tsne = "results/KDEDensity_t-sne.csv",
-        KDE_tsne_metadata = "results/KDEDensity_t-sne_metadata.csv",
-
-        KDE_umap = "results/KDEDensity_umap.csv",
-        KDE_umap_metadata = "results/KDEDensity_umap_metadata.csv",
-
-        KDE_genetic = "results/KDEDensity_genetic.csv",
-        KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv",
-
     output:
-        KDE_density = "../docs/FullKDEDensitySars-cov-2.png",
         Scatterplot = "../docs/FullScatterplotSars-cov-2.png",
         fullChart = "../docs/FullLinkedChartBrushableSars-cov-2.html",
         fullChartPNG = "../docs/sars-cov-2-embeddings.png",

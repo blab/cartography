@@ -403,7 +403,7 @@ rule embed_tsne:
     message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "results/tsne_parameters.csv",
+        cluster = "results/t-sne_parameters.csv",
     output:
         node_data = "results/embed_t-sne_{ancestral}.json",
         dataframe = "results/embed_t-sne_{ancestral}.csv",

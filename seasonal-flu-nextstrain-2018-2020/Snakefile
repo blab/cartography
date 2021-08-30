@@ -346,7 +346,7 @@ rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
         alignment = "results/aligned_{ancestral}.fasta",
-        cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv",
+        cluster = "../seasonal-flu-nextstrain/results/pca_parameters.csv",
     output:
         node_data = "results/embed_pca_{ancestral}.json",
         dataframe = "results/embed_pca_{ancestral}.csv",
@@ -374,7 +374,7 @@ rule embed_tsne:
     message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv",
+        cluster = "../seasonal-flu-nextstrain/results/t-sne_parameters.csv",
     output:
         node_data = "results/embed_t-sne_{ancestral}.json",
         dataframe = "results/embed_t-sne_{ancestral}.csv",
@@ -401,7 +401,7 @@ rule embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv",
+        cluster = "../seasonal-flu-nextstrain/results/umap_parameters.csv",
     output:
         node_data = "results/embed_umap_{ancestral}.json",
         dataframe = "results/embed_umap_{ancestral}.csv",
@@ -428,13 +428,13 @@ rule embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv",
+        cluster = "../seasonal-flu-nextstrain/results/mds_parameters.csv",
     output:
         node_data = "results/embed_mds_{ancestral}.json",
         dataframe = "results/embed_mds_{ancestral}.csv",
         figure = "results/embed_mds_{ancestral}.pdf"
     params:
-        components = 2
+        components = 4
     conda: "../cartography.yml"
     shell:
         """
@@ -449,48 +449,13 @@ rule embed_mds:
             --components {params.components} \
         """
 
-
-rule cluster_metadata:
-    message: "Creating the metadata dataframe for HDBSCAN results for main paper"
-    input:
-        embedding = "results/embed_{method}_sequences.csv",
-        metadata = "results/table.tsv",
-        cluster = "../seasonal-flu-nextstrain/results/output_HDBSCAN.csv",
-    output:
-        dataframe = "results/HDBSCAN_metadata_{method}.csv",
-    conda: "../cartography.yml"
-    params:
-        method = "{method}"
-    shell:
-        """
-        python3 ../notebooks/scripts/metadata_HDBSCAN.py \
-            --method {params.method} \
-            --embedding {input.embedding} \
-            --metadata {input.metadata} \
-            --cluster-data {input.cluster} \
-            --output {output.dataframe}
-        """
-
 def _get_embedding_columns_by_wildcards(wildcards):
     method = wildcards.method.replace("-", "")
 
-    if method in ("pca"):
+    if method in ("pca", "mds"):
         return f"{method}1 {method}2 {method}3 {method}4"
-    if method in ("mds"):
-        return f"{method}1 {method}2"
     else:
         return f"{method}_x {method}_y"
-
-def _get_embedding_columns_by_wildcards(wildcards):
-    method = wildcards.method.replace("-", "")
-
-    if method in ("pca"):
-        return f"{method}1 {method}2 {method}3 {method}4"
-    if method in ("mds"):
-        return f"{method}1 {method}2"
-    else:
-        return f"{method}_x {method}_y"
-
 
 rule scatterplot:
     message: "Creating the scatterplot (PNG, dataframe)"

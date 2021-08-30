@@ -446,7 +446,7 @@ rule embed_mds:
         dataframe = "results/embed_mds_{ancestral}.csv",
         figure = "results/embed_mds_{ancestral}.pdf"
     params:
-        components = 2
+        components = 4
     conda: "../cartography.yml"
     shell:
         """
@@ -466,10 +466,8 @@ rule embed_mds:
 def _get_embedding_columns_by_wildcards(wildcards):
     method = wildcards.method.replace("-", "")
 
-    if method in ("pca"):
+    if method in ("pca", "mds"):
         return f"{method}1 {method}2 {method}3 {method}4"
-    if method in ("mds"):
-        return f"{method}1 {method}2"
     else:
         return f"{method}_x {method}_y"
 
@@ -574,7 +572,7 @@ rule cluster_metadata:
         """
 
 rule concat_HDBSCAN_table:
-    message: "concatenating all the KDE data into one csv dataframe"
+    message: "concatenating all the HDBSCAN data into one csv dataframe"
     input:
        dataframe_pca = "results/HDBSCAN_metadata_pca.csv",
        dataframe_mds = "results/HDBSCAN_metadata_mds.csv",

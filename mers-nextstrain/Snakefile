@@ -37,7 +37,6 @@ rule all:
         "results/full_KDE_metadata.csv",
         "results/full_Scatterplot_metadata.csv",
         "results/subset_fasta.fasta",
-        "../docs/FullKDEDensityMERS.png",
         "../docs/FullScatterplotMERS.png",
         "../docs/FullLinkedChartBrushableMERS.html",
         "../docs/MERS-embeddings.png",
@@ -663,7 +662,6 @@ rule create_notebook_docs:
         KDE_genetic_metadata = "results/KDEDensity_genetic_metadata.csv",
 
     output:
-        KDE_density = "../docs/FullKDEDensityMERS.png",
         Scatterplot = "../docs/FullScatterplotMERS.png",
         fullChart = "../docs/FullLinkedChartBrushableMERS.html",
         fullChartPNG = "../docs/MERS-embeddings.png",
