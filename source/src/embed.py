@@ -19,20 +19,25 @@ def get_hamming_distances(genomes):
     """Calculate pairwise Hamming distances between the given list of genomes
     and return the nonredundant array of values for use with scipy's squareform function.
     Bases other than standard nucleotides (A, T, C, G) are ignored.
+
     Parameters
     ----------
     genomes : list
         a list of strings corresponding to genomes that should be compared
+
     Returns
     -------
     list
         a list of distinct Hamming distances as a vector-form distance vector
+
+
     >>> genomes = ["ATGCT", "ATGCT", "ACGCT"]
     >>> get_hamming_distances(genomes)
     [0, 1, 1]
     >>> genomes = ["AT-GCT", "AT--CT", "AC--CT"]
     >>> get_hamming_distances(genomes)
     [0, 1, 1]
+
     """
     # Define an array of valid nucleotides to use in pairwise distance calculations.
     # Using a numpy array of byte strings allows us to apply numpy.isin later.
@@ -70,6 +75,7 @@ def get_hamming_distances(genomes):
 
 def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column_list=None):
     """Gives a dataframe of euclidean distances for embedding columns to use in plotting and analysis
+
     Parameters
     -----------
     sampled_df: pandas DataFrame
@@ -80,9 +86,11 @@ def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column_
         the name of the second column in sampled_df
     column_for_analysis: string
         the name of the column which the dataframe will construct "between" and "within" from (ex. Host, Clade_membership, etc)
+
     Returns
     ----------
     A data frame of Euclidean distances for the requested embedding columns.
+
     """
     # Traverse pairs of samples from left-to-right, top-to-bottom
     # along the upper triangle of the pairwise matrix and collect
@@ -116,8 +124,7 @@ def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column_
     return sampled_distances_df
 
 
-if __name__ == "__main__":
-
+def make_parser():
     parser = argparse.ArgumentParser(description = "creates embeddings", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument("--distance-matrix", help="a csv distance matrix that can be read in by pandas, index column as row 0")
@@ -134,9 +141,6 @@ if __name__ == "__main__":
         required=True
     )
 
-    if(args.cluster_data is None and args.cluster_threshold is None):
-        args.cluster_threshold = 0.0
-
     pca = subparsers.add_parser("pca")
     pca.add_argument("--components", default=10, type=int, help="the number of components for PCA")
     pca.add_argument("--explained-variance", default="results/explained_variance_pca.png", help="the path for the explained variance table")
@@ -152,8 +156,14 @@ if __name__ == "__main__":
     mds = subparsers.add_parser("mds")
     mds.add_argument("--components", default=10, type=int, help="the number of components for MDS")
 
+    return parser
+
+
+if __name__ == "__main__":
+    parser = make_parser()
     args = parser.parse_args()
-    # Checking that the input fits the restrictions
+
+    # TODO: Create a default cluster distance threshold if none given.
 
     # Setting Random seed for numpy
     np.random.seed(seed=args.random_seed)
