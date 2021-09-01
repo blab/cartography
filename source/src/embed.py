@@ -1,5 +1,5 @@
 import argparse
-from augur.utils import write_json
+
 import Bio.SeqIO
 from collections import OrderedDict
 import hdbscan
@@ -72,88 +72,36 @@ def get_hamming_distances(genomes):
 
     return hamming_distances
 
-
-def get_euclidean_data_frame(sampled_df, column_for_analysis, embedding, column_list=None):
-    """Gives a dataframe of euclidean distances for embedding columns to use in plotting and analysis
-
-    Parameters
-    -----------
-    sampled_df: pandas DataFrame
-        a dataframe of euclidean coordinate points containing the two columns passed in
-    column1: string
-        the name of the first column in sampled_df
-    column2: string
-        the name of the second column in sampled_df
-    column_for_analysis: string
-        the name of the column which the dataframe will construct "between" and "within" from (ex. Host, Clade_membership, etc)
-
-    Returns
-    ----------
-    A data frame of Euclidean distances for the requested embedding columns.
-
-    """
-    # Traverse pairs of samples from left-to-right, top-to-bottom
-    # along the upper triangle of the pairwise matrix and collect
-    # the clade status of each pair as either within- or between-clades.
-    # This traversal excludes self-self comparisons along the diagonal.
-    clade_status = []
-    clade_memberships = sampled_df[column_for_analysis].values
-    for i in range(sampled_df.shape[0] - 1):
-        for j in range(i + 1, sampled_df.shape[0]):
-            if clade_memberships[i] == clade_memberships[j]:
-                clade_status.append(1)
-            else:
-                clade_status.append(0)
-
-    # Calculate pairwise distances between samples for the requested columns.
-    # The resulting array is in the same left-to-right, top-to-bottom order
-    # as the clade statuses above.
-    if (column_list is not None):
-        sampled_distances = pdist(sampled_df[column_list])
-
-    else:
-        sampled_distances = squareform(sampled_df.drop([column_for_analysis, "strain"], axis=1))
-
-    # Align clade status with pairwise distance for each pairwise comparison.
-    sampled_distances_df = pd.DataFrame(
-        {"distance": sampled_distances, "clade_status": clade_status})
-
-    # Annotate the requested embedding.
-    sampled_distances_df["embedding"] = embedding
-
-    return sampled_distances_df
-
-
 def make_parser():
-    parser = argparse.ArgumentParser(description = "creates embeddings", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description = "Reduced dimension embeddings for pathogen sequences", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument("--distance-matrix", help="a csv distance matrix that can be read in by pandas, index column as row 0")
-    parser.add_argument("--alignment", help="an aligned FASTA file to create a distance matrix with")
-    parser.add_argument("--cluster-data", help="cluster data from embedding and assign labels given via HDBSCAN")
-    parser.add_argument("--cluster-threshold", type=float, help="cluster data from embedding and assign labels given via HDBSCAN. Pass in a threshold.")
-    parser.add_argument("--random-seed", default = 314159, type=int, help="an integer used as the random seed for reproducible results")
-    parser.add_argument("--output-node-data", help="outputting a node data JSON file")
-    parser.add_argument("--output-dataframe", help="outputting a csv file")
-    parser.add_argument("--output-figure", help="plot of the embedding, for debugging purposes")
+    parser.add_argument("--distance-matrix", help="a distance matrix that can be read in by pandas, index column as row 0")
+    parser.add_argument("--separator", default=",", help="separator between columns in the given distance matrix")
+    parser.add_argument("--alignment", help="an aligned FASTA file to create a distance matrix with. Make sure the strain order in this file matches the order in the distance matrix.")
+    parser.add_argument("--cluster-data", help="The file (same separator as distance-matrix) that contains the distance threshold by which to cluster data in the embedding and assign labels given via HDBSCAN (https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html). If no value is given in cluster-data or cluster-threshold, the default distance threshold of 0.0 will be used.")
+    parser.add_argument("--cluster-threshold", type=float, help="The float value for the distance threshold by which to cluster data in the embedding and assign labels via HDBSCAN. If no value is given in cluster-data or cluster-threshold, the default distance threshold of 0.0 will be used.")
+    parser.add_argument("--random-seed", default = 314159, type=int, help="an integer used for reproducible results.")
+    parser.add_argument("--output-dataframe", help="a csv file outputting the embedding with the strain name and its components.")
+    parser.add_argument("--output-figure", help="outputs a PNG plot of the embedding")
 
     subparsers = parser.add_subparsers(
         dest="command",
         required=True
     )
 
-    pca = subparsers.add_parser("pca")
+    pca = subparsers.add_parser("pca", description="Principal Component Analysis")
     pca.add_argument("--components", default=10, type=int, help="the number of components for PCA")
-    pca.add_argument("--explained-variance", default="results/explained_variance_pca.png", help="the path for the explained variance table")
+    pca.add_argument("--explained-variance", help="the path for the CSV explained variance for each component")
 
-    tsne = subparsers.add_parser("t-sne")
-    tsne.add_argument("--perplexity", default=30.0, type=float, help="the perplexity value for the tsne embedding")
-    tsne.add_argument("--learning-rate", default=200.0, type=float, help="the learning rate value for the tsne embedding")
+    tsne = subparsers.add_parser("t-sne", description="t-distributed Stochastic Neighborhood Embedding")
+    tsne.add_argument("--perplexity", default=30.0, type=float, help="The perplexity is related to the number of nearest neighbors. Because of this, the size of the dataset is proportional to the best perplexity value (large dataset -> large perplexity). Values between 5 and 50 work best. The default value is the value consistently the best for pathogen analyses, results from an exhaustive grid search.")
+    tsne.add_argument("--learning-rate", default=200.0, type=float, help="The learning rate for t-SNE is usually between 10.0 and 1000.0. Values out of these bounds may create innacurate results. The default value is the value consistently the best for pathogen analyses, results from an exhaustive grid search.")
 
-    umap = subparsers.add_parser("umap")
-    umap.add_argument("--nearest-neighbors", default=200, type=int, help="the nearest neighbors value for the umap embedding")
-    umap.add_argument("--min-dist", default=.5, type=float, help="the minimum distance value for the umap embedding")
+    umap = subparsers.add_parser("umap", description="Uniform Manifold Approximation and Projection")
+    umap.add_argument("--nearest-neighbors", default=200, type=int, help="Nearest neighbors controls how UMAP balances local versus global structure in the data (finer detail patterns versus global structure). This value is proportional to the size of the data (large dataset -> large nearest neighbors. The default value is the value consistently the best for pathogen analyses, results from an exhaustive grid search.")
+    umap.add_argument("--min-dist", default=.5, type=float, help="Minimum Distance controls how tightly packed the UMAP embedding is. While it does not change the structure of the data, it does change the embedding's shape. The default value is the value consistently the best for pathogen analyses, results from an exhaustive grid search.")
 
-    mds = subparsers.add_parser("mds")
+    mds = subparsers.add_parser("mds", description="Multidimensional Scaling")
     mds.add_argument("--components", default=10, type=int, help="the number of components for MDS")
 
     return parser
@@ -291,10 +239,6 @@ if __name__ == "__main__":
         clusterer_default.fit(embedding_df)
         embedding_df[f"{args.command}_label"] = clusterer.labels_.astype(str)
         embedding_df[f"{args.command}_label_default"] = clusterer_default.labels_.astype(str)
-
-    if args.output_node_data is not None:
-        embedding_dict = embedding_df.transpose().to_dict()
-        write_json({"nodes": embedding_dict}, args.output_node_data)
 
     if args.output_dataframe is not None:
         embedding_df.to_csv(args.output_dataframe, index_label="strain")

@@ -45,7 +45,7 @@ def prose_list(items):
 
 project = 'EmbedGen'
 copyright = '2021–%d Sravani Nanduri' % (date.today().year)
-author = prose_list(git_authors())
+author = 'Sravani Nanduri and John Huddleston'#prose_list(git_authors())
 
 
 # -- General configuration ---------------------------------------------------
@@ -76,7 +76,7 @@ rst_epilog = f"""
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-#html_theme = 'nextstrain-sphinx-theme'
+html_theme = 'sphinx_book_theme'
 
 html_theme_options = {
     'logo_only': False, # if True, don't display project name at top of the sidebar
