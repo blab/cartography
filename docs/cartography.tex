@@ -95,53 +95,49 @@ Tracking the evolution of human pathogenic viruses in real time enables epidemio
 Real-time analyses of viral evolution typically rely on phylogenetic methods.
 These methods can reconstruct the evolutionary history of viral populations from their genome sequences and estimate states of inferred ancestral viruses including their most likely genome sequence, time of circulation, and geographic location (gen epi papers).
 Importantly, these methods assume that all sequence data share an evolutionary history represented by the clonal replication of genomes.
-In practice, the evolutionary histories of many human pathogenic viruses including seasonal influenza viruses, Zika virus, and coronaviruses violate this assumption through processes of recombination or reassortment.
+In practice, the evolutionary histories of many human pathogenic viruses including seasonal influenza viruses, Zika virus, and coronaviruses violate this assumption through processes of reassortment or recombination.
 Researchers have attempted to compensate for these evolutionary mechanisms by limiting their analyses to specific genes (citation?), concatenating multiple genes despite their different evolutionary histories (citation?), or developing more sophisticated models to represent the joint likelihoods of multiple co-evolving lineages represented by networks rather than trees (Muller).
 However, several key questions in genomic epidemiology do not require full phylogenetic inference of ancestral relationships and states.
 For example, genomic epidemiologists commonly need to 1) identify clusters of closely-related genomes that represent regional outbreaks or new variants of concern (Black et al.? MicrobeTrace?), 2) rapidly place newly sequenced viral genomes in the evolutionary context of other circulating strains (USHER, NextClade), and 3) flag low-quality or mislabeled genome sequences for exclusion from their analyses.
 These common use cases can all be addressed by standard statistical methods including clustering, classification, and outlier detection.
 These methods make few assumptions about the input data and therefore should be applicable to genomic data that violate phylogenetic assumptions.
 
-To apply these methods to a population of viral genomes, we need metrics to compare genome sequences to each other and algorithms to reduce the highly multidimensional input data (M x N for M genomes of length N) to one or two dimensions where clustering, classification, and outlier detection are more tractable.
+To apply these methods to a population of viral genomes, we need metrics to compare genome sequences to each other and algorithms to reduce the highly multidimensional input data ($M \times N$ values for $M$ genomes of length $N$) to one or two dimensions where clustering, classification, and outlier detection are more tractable.
 The number of mismatches between any pair of aligned genome sequences, also known as the Hamming distance, provides a natural distance metric for viral genomes.
 Indeed, most phylogenetic methods start by building a matrix of Hamming distances between all sequences in a given multiple sequence alignment.
 Many dimensionality reduction algorithms including multidimensional scaling (MDS) \citep{hout_papesh_goldinger_2012}, t-SNE \citep{maaten2008visualizing}, and UMAP \citep{lel2018umap} accept such distance matrices as an input and produce a corresponding lower-dimensional representation or “embedding” of those data.
 Alternately, principal components analysis (PCA) only requires the input data to be transformed to a matrix of integers before it can embed those data into a few orthogonal dimensions.
 
 Each of these embedding methods has been applied to genomic data to visualize relationships between individuals and identify clusters of related genomes.
-PCA has been applied to single nucleotide polymorphisms (SNPs) of human genomes \citep{novembre_2008,alexander_2009,mcvean_2009,auton_2015} and to multiple sequence alignments of viral genomes \citep{metsky_2017}.
-Although PCA is a generic linear algebra algorithm that optimizes for an orthogonal embedding of the data, the principal components from SNPs represent mean coalescent times and therefore recapitulate broad phylogenetic relationships \citep{mcvean_2009}.
-MDS has been applied to multiple gene segments of seasonal influenza viruses to understand evolutionary relationships between segments \citep{rambaut_2008}.
+Although PCA is a generic linear algebra algorithm that optimizes for an orthogonal embedding of the data, the principal components from single nucleotide polymorphisms (SNPs) represent mean coalescent times and therefore recapitulate broad phylogenetic relationships \citep{mcvean_2009}.
+PCA has been applied to SNPs of human genomes \citep{novembre_2008,alexander_2009,mcvean_2009,auton_2015} and to multiple sequence alignments of viral genomes \citep{metsky_2017}.
 MDS attempts to embed input data into a lower-dimensional representation such that each pair of data points are as far apart in the embedding as they are in the original data.
-Modern embedding methods like t-SNE and UMAP have also been applied to SNPs from human genomes \citep{diaz-papkovich_2019} and single-cell transcriptomes \citep{becht_2018,kobak_2019}.
+MDS has been applied to multiple gene segments of seasonal influenza viruses to understand evolutionary relationships between segments \citep{rambaut_2008}.
 t-SNE and UMAP build on manifold learning methods like MDS to find low-dimensional embeddings of data that place similar points close together and dissimilar points far apart \citep{kobak_2021}.
+Both t-SNE and UMAP have been applied to SNPs from human genomes \citep{diaz-papkovich_2019} and single-cell transcriptomes \citep{becht_2018,kobak_2019}.
 
 Although these embedding methods are commonly used for qualitative studies of evolutionary relationships, few studies have attempted to quantify patterns observed in these embeddings and no studies have investigated the value of applying these methods to human pathogenic viruses.
 To this end, we applied PCA, MDS, t-SNE, and UMAP to genomes from recent populations of seasonal influenza virus A/H3N2, Zika virus, MERS-CoV, and SARS-CoV-2.
 Each of these viruses have impacted human populations globally in the last decade and have been studied in real time by genomic epidemiologists.
 For each virus and embedding method, we quantified the relationship between pairwise sequence and embedding distances, identified clusters of closely-related genomes in embedding space, and evaluated the accuracy of clusters compared to expert-defined phylogenetic clades.
 Finally, we tested the practical application of these methods to identify reassortment and outliers in seasonal influenza viruses.
-These results inform our recommendations for future applications of these methods including which methods are most effective for specific problems in genomic epidemiology and which parameters to use for each method.
+These results inform our recommendations for future applications of these methods including which methods are most effective for specific problems in genomic epidemiology and which parameters researchers should use for each method.
 
 \section*{Results}
 
 \subsection*{Embedding clusters recapitulate phylogenetic clades for seasonal influenza A/H3N2}
 
-As a positive control, we first analyzed hemagglutinin (HA) sequences from the seasonal influenza subtype A/H3N2.
+Seasonal influenza A/H3N2's hemagglutinin (HA) sequences provide an ideal positive control to test dimensionality reduction methods and clustering.
 A/H3N2's HA protein evolves rapidly, accumulating amino acid mutations that enable escape from adaptive immunity in human populations \citep{flu-review}.
 These mutations produce distinct phylogenetic clades that represent potentially different antigenic phenotypes.
 The World Health Organization (WHO) Global Influenza Surveillance and Response System (GISRS) regularly sequences genomes of circulating influenza lineages \citep{who-gisrs} and submits these sequences to public INSDC databases like NCBI's GenBank \citep{insdc}.
-These factors, coupled with HA's relatively short gene size of 1,701 nucleotides, facilitate real-time genomic epidemiology of A/H3N2 \citep{nextflu,nextstrain} and rapid analysis by embedding methods we wanted to evaluate.
+These factors, coupled with HA's relatively short gene size of 1,701 nucleotides, facilitate real-time genomic epidemiology of A/H3N2 \citep{nextflu,nextstrain} and rapid analysis by the embedding methods we wanted to evaluate.
 
 We identified \jhc{NNN} A/H3N2 HA sequences from NCBI's GenBank database (methods) spanning from January 2016 to January 2020.
 To evaluate the optimal parameters for each embedding method and avoid overfitting to specific datasets, we partitioned these data into a training dataset from 2016--2018 (N=\jhc{NNN} sequences) and a test dataset from 2018--2020 (N=\jhc{NNN} sequences).
 We first analyzed the training data with Nextstrain's seasonal influenza workflow that creates a multiple sequence alignment, infers a time-resolved phylogenetic tree, and assigns clade labels to each sequence based on our own expert-defined clade annotations \citep{nextstrain,seasonal-flu,augur}.
-To test whether embeddings from each method could recapitulate phylogenetic clades, we performed a grid search of each method's parameter space during which we applied an embedding method to a randomly selected 50\% of the sequences in the multiple sequence alignment, identified clusters in the embedding with HDBSCAN \citep{hdbscan}, and calculated the accuracy of the cluster labels for each sequence compared to the known clade labels (see methods).
-We used the resulting classification accuracies to identify the optimal distance threshold for HDBSCAN.
-We fixed the HDBSCAN threshold to its optimal value and repeated the same procedure on the other 50\% of the sequences.
-We used the resulting accuracies to identify the optimal t-SNE and UMAP parameters.
-Finally, we applied each embedding method to the full training dataset with the optimal method parameters, clustered the embeddings with HDBSCAN's optimal distance threshold, and evaluated the accuracy of the cluster classifications.
-\jhc{This is probably too much detail for the main text and could be clarified. I want to make sure we at least explain that the embeddings in Figure 1 don't represent default method parameters. It's also potentially confusing to introduce HDBSCAN so early, but this is a key component of the analysis so maybe it is fine.}
+We applied each embedding method to the multiple sequence alignment, identified clusters in the embeddings with HDBSCAN \citep{hdbscan}, and evaluated the accuracy of cluster classifications compared to known clade annotations.
+We applied this general approach in an exhaustive grid search to identify the optimal parameters for each combination of embedding method and HDBSCAN (see Methods).
 
 All four embedding methods qualitatively recapitulated clade-level groupings observed in the phylogeny (Figure~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}).
 Strains from the same clade generally grouped tightly together in PCA, t-SNE, and UMAP embeddings.
@@ -165,7 +161,7 @@ These results suggest that t-SNE maintains both local and global structure, but 
 
 To quantify the apparent maintenance of local and global structure in these embeddings, we calculated the relationship between pairwise genetic distance of genomes and pairwise Euclidean distance of those genomes in each embedding.
 All four methods maintained a linear relationship between genetic and Euclidean distances for genomes that differed by no more than $\approx$20 nucleotides (Figure~\ref{fig:seasonal-influenza-h3n2-ha-pairwise-distances}).
-However, PCA and MDS were the only methods that consistently maintained that linearity as as genetic distance increased (Pearson's $R^{2} = 0.767 \pm 0.000$  and $0.849 \pm 0.000$, respectively).
+However, PCA and MDS were the only methods that consistently maintained that linearity as genetic distance increased (Pearson's $R^{2} = 0.767 \pm 0.000$  and $0.849 \pm 0.000$, respectively).
 In contrast, the relationship between genetic and Euclidean distance was nonlinear in t-SNE (Pearson's $R^{2} = 0.393 \pm 0.001$) and UMAP (Pearson's $R^{2} = 0.397 \pm 0.000$) embeddings.
 Genomes that differed by more than $\approx$20 nucleotides were equally as likely to map close together as far apart in these embeddings.
 
@@ -246,6 +242,14 @@ This suggests that strains from the same introduction cluster together, and do n
 \section*{Discussion}
 
 \section*{Materials and methods}
+
+\subsection*{Hyperparameter optimization}
+
+To test whether embeddings from each method could recapitulate phylogenetic clades, we performed a grid search of each method's parameter space during which we applied an embedding method to a randomly selected 50\% of the sequences in the multiple sequence alignment, identified clusters in the embedding with HDBSCAN \citep{hdbscan}, and calculated the accuracy of the cluster labels for each sequence compared to the known clade labels (see methods).
+We used the resulting classification accuracies to identify the optimal distance threshold for HDBSCAN.
+We fixed the HDBSCAN threshold to its optimal value and repeated the same procedure on the other 50\% of the sequences.
+We used the resulting accuracies to identify the optimal t-SNE and UMAP parameters.
+Finally, we applied each embedding method to the full training dataset with the optimal method parameters, clustered the embeddings with HDBSCAN's optimal distance threshold, and evaluated the accuracy of the cluster classifications.
 
 \subsection*{Data and software availability}
 
