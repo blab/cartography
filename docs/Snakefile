@@ -1,6 +1,6 @@
 rule all:
     input:
-        #"cartography.pdf",
+        "cartography.pdf",
         #"cartography.html",
         "total_HDBSCAN_table.csv"
 
@@ -28,24 +28,17 @@ rule concat_HDBSCAN_tables:
 
 rule manuscript_pdf:
     input:
-        manuscript = "cartography.md",
-        csl = "chicago-author-date.csl",
-        template = "template.tex",
-        disable = "figure_placement.tex"
+        manuscript="cartography.tex",
+        bibliography="cartography.bib",
     output:
-        manuscript = "cartography.pdf"
+        manuscript = "cartography.pdf",
     conda: "../cartography.yml"
     shell:
         """
-        pandoc \
-            -H  {input.disable} \
-            --filter pandoc-crossref \
-            --citeproc \
-            --bibliography=cartography.bib \
-            --csl {input.csl} \
-            --template {input.template} \
-            -s {input.manuscript} \
-            -o {output.manuscript} \
+        pdflatex -draftmode {input.manuscript};
+        bibtex cartography;
+        pdflatex -draftmode {input.manuscript};
+        pdflatex {input.manuscript};
         """
 
 rule manuscript_html:
