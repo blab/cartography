@@ -32,9 +32,7 @@ rule all:
         expand("results/explained_variance_pca_{ancestral}.csv", ancestral=INTERNAL_NODE),
         "results/nucleotide_diversity.txt",
         "../docs/fullHDBSCANChartFlu2018-2020.html",
-        "../docs/fullHDBSCANChartFlu2018-2020.png",
-        expand("results/HDBSCAN_metadata_{method}.csv", method=EMBEDDING_METHODS),
-        "results/full_HDBSCAN_metadata.csv"
+        "../docs/fullHDBSCANChartFlu2018-2020.png"
 rule files:
     params:
         input_fasta = "data/ncbi-h3n2-ha.fa",
