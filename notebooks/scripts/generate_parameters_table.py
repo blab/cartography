@@ -5,6 +5,7 @@ import pandas as pd
 
 methods = ["pca", "mds", "t-sne", "umap"]
 distance_thresholds = range(0, 16, 2)
+n_components = [2,4,6]
 
 # t-SNE
 learning_rates = [100, 200, 500]
@@ -47,10 +48,20 @@ umap_df = pd.DataFrame(
 umap_df["method"] = "umap"
 
 # MDS
-mds_df = pd.DataFrame({
-    "method": "mds",
-    "distance_threshold": distance_thresholds
-})
+columns = (
+    "distance_threshold",
+    "n_components"
+)
+
+mds_parameters = itertools.product(
+     distance_thresholds,
+     n_components
+)
+mds_df = pd.DataFrame(
+    mds_parameters,
+    columns=columns
+)
+mds_df["method"] = "mds"
 
 # PCA
 pca_df = pd.DataFrame({
@@ -69,6 +80,7 @@ df = pd.concat([
 # Maintain the same column order.
 columns = (
     "distance_threshold",
+    "n_components",
     "perplexity",
     "learning_rate",
     "method",
@@ -77,7 +89,7 @@ columns = (
 )
 
 df.to_csv(
-    "method_parameters.tsv",
+    "config/method_parameters.tsv",
     sep="\t",
     index=False,
     na_rep="N/A",
