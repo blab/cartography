@@ -4,8 +4,8 @@ Reduced dimension embeddings for pathogen sequences
 
 Cartography is an open-source software for scientists, epidemiologists, etc. to run reduced dimension embeddings (PCA, MDS, t-SNE, and UMAP) on viral populations. This is the source code from the paper Cartography written by Sravani Nanduri and John Huddleston.
 
-[Documentation](https://blab.github.io/cartography/)
-[Source Code](https://github.com/blab/cartography/tree/master/source)
+[Documentation](https://blab.github.io/cartography/)\
+[Source Code](https://github.com/blab/cartography/tree/master/source)\
 [Bug reports](https://github.com/blab/cartography/issues)
 
 
