@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
     
 setup(
-    name='embedGen',
+    name='pathogen-embed',
     version='0.0.1',    
     description='Reduced dimension embeddings for pathogen sequences',
     url='https://github.com/blab/cartography/',
@@ -15,9 +15,9 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     license='MIT License',
-    #project_urls = {
-    #    "Documentation": "" Do I need to publish my documentation somewhere in order to have this link work?
-    #}
+    project_urls = {
+        "Documentation": "https://blab.github.io/cartography/"
+    }
 	packages=find_packages(exclude=['test']),
     #packages=['seaborn', 'scikit-learn', 'umap-learn', 'matplotlib', 'pandas', 'numpy', 'hdbscan'],
     install_requires=['numpy', 

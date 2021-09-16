@@ -43,7 +43,7 @@ def prose_list(items):
     else:
         return ", ".join([*items[0:-1], "and " + items[-1]])
 
-project = 'EmbedGen'
+project = 'pathogen-embed'
 copyright = '2021–%d Sravani Nanduri' % (date.today().year)
 author = 'Sravani Nanduri and John Huddleston'#prose_list(git_authors())
 

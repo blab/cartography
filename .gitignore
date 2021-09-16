@@ -138,6 +138,7 @@ notebooks/2019-07-18-view-auspice-tree-json-with-altair.ipynb
 notebooks/2019-08-01DistanceMatrixCode.ipynb
 notebooks/PairwiseVsEuclidean.ipynb
 notebooks/zika_tree.json
+source/docs/_build
 .vscode/
 
 docs/cartography.aux

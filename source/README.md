@@ -4,9 +4,10 @@ Reduced dimension embeddings for pathogen sequences
 
 Cartography is an open-source software for scientists, epidemiologists, etc. to run reduced dimension embeddings (PCA, MDS, t-SNE, and UMAP) on viral populations. This is the source code from the paper Cartography written by Sravani Nanduri and John Huddleston.
 
-Source Code:
-Bug reports:
-Paper:
+[Documentation](https://blab.github.io/cartography/)
+[Source Code](https://github.com/blab/cartography/tree/master/source)
+[Bug reports](https://github.com/blab/cartography/issues)
+
 
 
 ## Installing the package
@@ -14,12 +15,15 @@ Paper:
 Simply install the package using pip.
 
 ```
-pip install CartographyGen
+pip install pathogen-embed
 ```
 
 # src.embed module
 
 ## Command line interface
+
+The full [Documentation](https://blab.github.io/cartography/). 
+The below documentation does not detail the named and positional arguments. 
 
 Reduced dimension embeddings for pathogen sequences
 
@@ -33,10 +37,6 @@ usage: embed [-h] [--distance-matrix DISTANCE_MATRIX] [--separator SEPARATOR]
              {pca,t-sne,umap,mds} ...
 ```
 
-### Positional Arguments
-
-### Named Arguments
-
 ### Sub-commands:
 
 #### pca
@@ -48,8 +48,6 @@ embed pca [-h] [--components COMPONENTS]
           [--explained-variance EXPLAINED_VARIANCE]
 ```
 
-##### Named Arguments
-
 #### t-sne
 
 t-distributed Stochastic Neighborhood Embedding
@@ -57,8 +55,6 @@ t-distributed Stochastic Neighborhood Embedding
 ```
 embed t-sne [-h] [--perplexity PERPLEXITY] [--learning-rate LEARNING_RATE]
 ```
-
-##### Named Arguments
 
 #### umap
 
@@ -68,8 +64,6 @@ Uniform Manifold Approximation and Projection
 embed umap [-h] [--nearest-neighbors NEAREST_NEIGHBORS] [--min-dist MIN_DIST]
 ```
 
-##### Named Arguments
-
 #### mds
 
 Multidimensional Scaling
@@ -77,8 +71,6 @@ Multidimensional Scaling
 ```
 embed mds [-h] [--components COMPONENTS]
 ```
-
-##### Named Arguments
 
 ## API
 

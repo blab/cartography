@@ -1,6 +1,10 @@
 # Cartography
 Reduced dimension embeddings for pathogen sequences
 
+[Documentation](https://blab.github.io/cartography/)
+[Source Code](https://github.com/blab/cartography/tree/master/source)
+[Bug reports](https://github.com/blab/cartography/issues)
+
 ## Running the entire build
 
 Hello and welcome to Cartography! This is all the source code for the paper Cartography written by Sravani Nanduri. In order to run the build from start to finish, there are some dependencies that much be installed.
@@ -99,17 +103,12 @@ Once they all finish running to completion, navigate into the "docs" folder, and
 
 If you'd like to run separate parts of the build, you can definitely do so.
 
-Creating the paper itself is done using pandoc. The .bib file in the "docs" folder contains the citations, and the index.md contains the analysis and actual content of the paper. To put them together, simply navigate in your shell to the "docs" folder, and type
+Creating the paper itself is done using LaTex. Simply navigate in your shell to the "docs" folder, and type
 
 ```
-pandoc --filter pandoc-citeproc --bibliography=cartography.bib -s index.md -o cartography.html
+./build.sh
 ```
-for the html version of the paper, or
-```
-pandoc --filter pandoc-citeproc --bibliography=cartography.bib -s index.md -o cartography.pdf
-```
-for the pdf version.
-
+for the pdf.
 
 Running the builds for the trees can also be done separately.
 
@@ -129,14 +128,14 @@ and let the build run. The JSON tree will be in the top level "auspice" director
 
 # Build documentation
 
-Build the docs.
+Build the [Documentation](https://blab.github.io/cartography/)
 
 ``` bash
-make -C sources/docs html
+make -C source/docs html
 ```
 
 Clean the docs.
 
 ``` bash
-make -C sources/docs clean
+make -C source/docs clean
 ```
