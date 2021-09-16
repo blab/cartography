@@ -17,8 +17,8 @@ setup(
     license='MIT License',
     project_urls = {
         "Documentation": "https://blab.github.io/cartography/"
-    }
-	packages=find_packages(exclude=['test']),
+    },
+	packages = find_packages(exclude=['test']),
     #packages=['seaborn', 'scikit-learn', 'umap-learn', 'matplotlib', 'pandas', 'numpy', 'hdbscan'],
     install_requires=['numpy', 
                       'pandas'

@@ -19,7 +19,8 @@ Once you have this running, you'll need to install "unzip" through linux. This i
 
 Windows Users: you CANNOT put this github repository in the Users file. Snakemake sees /U as a unicodeescape error and will not run, so please make a folder outside of the Users folder (ex. directly in the C drive) where you install this github repository, anaconda, and all other dependencies.
 
-### Running the Cartography YAML File  All these dependencies for this project can be installed via Conda (install conda [here](https://docs.conda.io/en/latest/miniconda.html) ) by running:
+### Running the Cartography YAML File  
+All these dependencies for this project can be installed via Conda (install conda [here](https://docs.conda.io/en/latest/miniconda.html) ) by running:
 
 ``` conda env create -f cartography.yml ```
 To check the environment was created, run
@@ -57,8 +58,11 @@ and making sure the file location exists. Congratulations on creating a local ve
 ### Getting Data from NCBI for Flu  
 This data is within the build itself, but if you would like to see the data we used, go to the link posted [here](https://www.ncbi.nlm.nih.gov/genomes/FLU/Database/nph-select.cgi?cdate_has_day=true&cdate_has_month=true&cmd=show_query&collapse=on&country=any&fyear=2018&go=database&host=Human&lab=exclude&lineage=include&niaid=include&qcollapse=on&searchin=strain&segment=4&sequence=N&showfilters=true&sonly=on&subtype_h=3&subtype_mix=include&subtype_n=2&swine=include&tyear=2020&type=a&vac_strain=include) . This link will give you the parameters needed to get the correct data from the NCBI Influenza Database. Click the "Customize Fasta Defline" button next to the download and input
 
+
 ``` >{strain}|{year}-{month}-{day}|{accession}|{country}|{region} ```
+
 It should look like this:
+
 ![](NCBI_instructions.png)
 
 After customizing the defline, click "download", and download the data into the "data" folder of the "seasonal-flu-nextstrain" folder in your local repository of Cartography. Name the file "ncbi-h3n2-ha.fa".
