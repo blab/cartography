@@ -25,5 +25,4 @@ if __name__ == "__main__":
         new_columns = cols_to_order + (df.columns.drop(cols_to_order).tolist())
         df = df[new_columns]
 
-
     df.to_csv(args.output, sep=args.separator, header=True, index=False)

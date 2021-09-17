@@ -87,9 +87,11 @@ columns = (
     "n_neighbors",
     "min_dist",
 )
+df["n_components"] = df.n_components.astype('Int64')
+
 
 df.to_csv(
-    "config/method_parameters.tsv",
+    #"../sars-cov-2-nextstrain/config/method_parameters.tsv",
     sep="\t",
     index=False,
     na_rep="N/A",
