@@ -559,12 +559,14 @@ rule output_grid_search:
         umap_parameters = "results/umap_parameters.csv",
         mcc_by_tsne_parameters = "results/mcc_by_t-sne_parameters.pdf",
         mcc_by_umap_parameters = "results/mcc_by_umap_parameters.pdf",
+        mcc_by_mds_parameters = "results/mcc_by_mds_parameters.pdf",
         mcc_by_method_and_distance_threshold = "results/mcc_by_method_and_distance_threshold.pdf"
     conda: "../cartography.yml"
     log:
         "logs/summarize-grid-search.ipynb"
     notebook:
         "../notebooks/2021-06-23-summarize-grid-search.ipynb"
+
 
 rule cluster_metadata:
     message: "Creating the metadata dataframe for HDBSCAN results for main paper"

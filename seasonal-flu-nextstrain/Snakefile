@@ -49,6 +49,7 @@ rule all:
         "results/nucleotide_diversity.txt",
         "../docs/explainedVarianceFlu.png",
          "results/full_HDBSCAN_metadata.csv",
+         "results/gridsearch.tsv",
         expand("results/HDBSCAN_metadata_{method}.csv", method=EMBEDDING_METHODS)
 
 rule files:
@@ -543,6 +544,7 @@ rule output_grid_search:
         umap_parameters = "results/umap_parameters.csv",
         mcc_by_tsne_parameters = "results/mcc_by_t-sne_parameters.pdf",
         mcc_by_umap_parameters = "results/mcc_by_umap_parameters.pdf",
+        mcc_by_mds_parameters = "results/mcc_by_mds_parameters.pdf",
         mcc_by_method_and_distance_threshold = "results/mcc_by_method_and_distance_threshold.pdf"
     conda: "../cartography.yml"
     log:

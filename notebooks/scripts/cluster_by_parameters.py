@@ -52,7 +52,6 @@ DEFAULT_PARAMETERS_BY_METHOD = {
     },
     "mds": {
         "dissimilarity": "precomputed",
-        "n_components": 2,
         "n_init": 2,
         "n_jobs": 1,
         "random_state": RANDOM_STATE,
@@ -69,6 +68,7 @@ DEFAULT_PARAMETERS_BY_METHOD = {
 }
 TYPE_BY_PARAMETER = {
     "n_neighbors": int,
+    "n_components": int
 }
 
 try:
