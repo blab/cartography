@@ -105,3 +105,41 @@ Build the [Documentation](https://blab.github.io/cartography/):
 Clean the docs.
 
 ``` bash make -C source/docs clean ```
+
+# Releasing a new version
+
+### Information about each file
+
+#### README.md
+
+contains the description of the package pathogen-embed.
+
+#### setup.py
+
+Gives PyPi the instructions about where to find dependent packages, the authors and relevant links, etc. Also gives the entry points for the console script, which tells Pypi to call the main function of __main__.py. 
+
+#### __init__.py
+
+Initializes the package, creates the parser to parse the command line arguments and pass them into the embed.py function.
+
+#### __main__.py
+
+Calls the "run" function in __init__.py, which calls embed.py. 
+
+#### embed.py
+
+The main code for the package.
+
+# To create new version 
+
+Navigate into "source" and run 
+
+``` python3 -m build ``` 
+
+This creates the dist folder that gets uploaded to pypi.
+
+``` python3 -m twine upload dist/* ```
+
+Input the username and password, upload new dist files to pypi. Make sure the version of the dist folders does not already exist within pypi. 
+
+
