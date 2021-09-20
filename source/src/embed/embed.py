@@ -41,13 +41,19 @@ def get_hamming_distances(genomes):
     """
     # Define an array of valid nucleotides to use in pairwise distance calculations.
     # Using a numpy array of byte strings allows us to apply numpy.isin later.
-    nucleotides = np.array([b'A', b'T', b'C', b'G'])
+
+    # TODO: Worth a push to pip? Or wait for more issues?
+
+    nucleotides = np.array([b'A', b'T', b'C', b'G', b'a', b't', b'c', b'g']) #take into account lowercase letters as well as uppercase
 
     # Convert genome strings into numpy arrays to enable vectorized comparisons.
     genome_arrays = [
         np.frombuffer(genome.encode(), dtype="S1")
         for genome in genomes
     ]
+
+    # TODO: Alternatively, throwing an error if fasta is lowercase would have been helpful for troubleshooting.
+    # Create error messages if none/very few of the fasta file characters match valid bases? At least a warning?
 
     # Precalculate positions of valid bases (A, T, C, and G) in each genome to speed up later comparisons.
     valid_bases = [
@@ -72,51 +78,14 @@ def get_hamming_distances(genomes):
 
     return hamming_distances
 
-def make_parser():
-    parser = argparse.ArgumentParser(description = "Reduced dimension embeddings for pathogen sequences", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument("--distance-matrix", help="a distance matrix that can be read in by pandas, index column as row 0")
-    parser.add_argument("--separator", default=",", help="separator between columns in the given distance matrix")
-    parser.add_argument("--alignment", help="an aligned FASTA file to create a distance matrix with. Make sure the strain order in this file matches the order in the distance matrix.")
-    parser.add_argument("--cluster-data", help="The file (same separator as distance-matrix) that contains the distance threshold by which to cluster data in the embedding and assign labels given via HDBSCAN (https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html). If no value is given in cluster-data or cluster-threshold, the default distance threshold of 0.0 will be used.")
-    parser.add_argument("--cluster-threshold", type=float, help="The float value for the distance threshold by which to cluster data in the embedding and assign labels via HDBSCAN. If no value is given in cluster-data or cluster-threshold, the default distance threshold of 0.0 will be used.")
-    parser.add_argument("--random-seed", default = 314159, type=int, help="an integer used for reproducible results.")
-    parser.add_argument("--output-dataframe", help="a csv file outputting the embedding with the strain name and its components.")
-    parser.add_argument("--output-figure", help="outputs a PNG plot of the embedding")
-
-    subparsers = parser.add_subparsers(
-        dest="command",
-        required=True
-    )
-
-    pca = subparsers.add_parser("pca", description="Principal Component Analysis")
-    pca.add_argument("--components", default=10, type=int, help="the number of components for PCA")
-    pca.add_argument("--explained-variance", help="the path for the CSV explained variance for each component")
-
-    tsne = subparsers.add_parser("t-sne", description="t-distributed Stochastic Neighborhood Embedding")
-    tsne.add_argument("--perplexity", default=30.0, type=float, help="The perplexity is related to the number of nearest neighbors. Because of this, the size of the dataset is proportional to the best perplexity value (large dataset -> large perplexity). Values between 5 and 50 work best. The default value is the value consistently the best for pathogen analyses, results from an exhaustive grid search.")
-    tsne.add_argument("--learning-rate", default=200.0, type=float, help="The learning rate for t-SNE is usually between 10.0 and 1000.0. Values out of these bounds may create innacurate results. The default value is the value consistently the best for pathogen analyses, results from an exhaustive grid search.")
-
-    umap = subparsers.add_parser("umap", description="Uniform Manifold Approximation and Projection")
-    umap.add_argument("--nearest-neighbors", default=200, type=int, help="Nearest neighbors controls how UMAP balances local versus global structure in the data (finer detail patterns versus global structure). This value is proportional to the size of the data (large dataset -> large nearest neighbors. The default value is the value consistently the best for pathogen analyses, results from an exhaustive grid search.")
-    umap.add_argument("--min-dist", default=.5, type=float, help="Minimum Distance controls how tightly packed the UMAP embedding is. While it does not change the structure of the data, it does change the embedding's shape. The default value is the value consistently the best for pathogen analyses, results from an exhaustive grid search.")
-
-    mds = subparsers.add_parser("mds", description="Multidimensional Scaling")
-    mds.add_argument("--components", default=10, type=int, help="the number of components for MDS")
-
-    return parser
-
-
-if __name__ == "__main__":
-    parser = make_parser()
-    args = parser.parse_args()
-
+def embed(args):
     # TODO: Create a default cluster distance threshold if none given.
 
     # Setting Random seed for numpy
     np.random.seed(seed=args.random_seed)
 
-    if args.output_node_data is None and args.output_dataframe is None:
+    if args.output_dataframe is None:
         print("You must specify one of the outputs", file=sys.stderr)
         sys.exit(1)
 
@@ -204,8 +173,6 @@ if __name__ == "__main__":
     if args.command != "pca":
         embedder = embedding_class(**embedding_parameters)
         embedding = embedder.fit_transform(distance_matrix)
-
-        print(embedding)
 
         # Output Embedding
             # create dictionary to be "wrapped" by write_json

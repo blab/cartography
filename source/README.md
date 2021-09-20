@@ -23,6 +23,7 @@ pip install pathogen-embed
 ## Command line interface
 
 The full [Documentation](https://blab.github.io/cartography/). 
+
 The below documentation does not detail the named and positional arguments. 
 
 Reduced dimension embeddings for pathogen sequences
@@ -106,6 +107,3 @@ Bases other than standard nucleotides (A, T, C, G) are ignored.
 >>> get_hamming_distances(genomes)
 [0, 1, 1]
 ```
-
-
-### src.embed.make_parser()
