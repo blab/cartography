@@ -42,18 +42,13 @@ def get_hamming_distances(genomes):
     # Define an array of valid nucleotides to use in pairwise distance calculations.
     # Using a numpy array of byte strings allows us to apply numpy.isin later.
 
-    # TODO: Worth a push to pip? Or wait for more issues?
-
-    nucleotides = np.array([b'A', b'T', b'C', b'G', b'a', b't', b'c', b'g']) #take into account lowercase letters as well as uppercase
+    nucleotides = np.array([b'A', b'T', b'C', b'G', b'a', b't', b'c', b'g']) # take into account lowercase letters as well as uppercase
 
     # Convert genome strings into numpy arrays to enable vectorized comparisons.
     genome_arrays = [
         np.frombuffer(genome.encode(), dtype="S1")
         for genome in genomes
     ]
-
-    # TODO: Alternatively, throwing an error if fasta is lowercase would have been helpful for troubleshooting.
-    # Create error messages if none/very few of the fasta file characters match valid bases? At least a warning?
 
     # Precalculate positions of valid bases (A, T, C, and G) in each genome to speed up later comparisons.
     valid_bases = [
