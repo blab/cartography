@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     
 setup(
     name='pathogen-embed',
-    version='0.0.1',    
+    version='0.0.2',    
     description='Reduced dimension embeddings for pathogen sequences',
     url='https://github.com/blab/cartography/',
     author='Sravani Nanduri <nandsra@cs.washington.edu> , John Huddleston <huddlej@gmail.com>', 
