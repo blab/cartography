@@ -18,7 +18,8 @@ setup(
     project_urls = {
         "Documentation": "https://blab.github.io/cartography/",
         "Bug Reports": "https://github.com/blab/cartography/issues",
-        "Source Code": "https://github.com/blab/cartography/tree/master/source"
+        "Source Code": "https://github.com/blab/cartography/tree/master/source",
+		"Change Log": "https://github.com/blab/cartography/tree/master/source/CHANGES.md",
     },
     package_dir={"": "src"},
 	packages = find_packages(where="src", exclude=['test']),
