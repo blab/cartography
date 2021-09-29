@@ -10,7 +10,7 @@ wildcard_constraints:
 
 METHOD_PARAMETERS = Paramspace(
     pd.read_csv(
-        "config/method_parameters.tsv",
+        workflow.source_path("config/method_parameters.tsv"),
         sep="\t"
     )
 )
@@ -54,11 +54,11 @@ rule all:
 
 rule files:
     params:
-        input_fasta = "data/ncbi-h3n2-ha.fa",
-        dropped_strains = "config/exclude.txt",
-        reference = "config/reference_h3n2_ha.gb",
-        auspice_config = "config/auspice_config.json",
-        clades = "config/clades_h3n2_ha.tsv"
+        input_fasta = workflow.source_path("data/ncbi-h3n2-ha.fa"),
+        dropped_strains = workflow.source_path("config/exclude.txt"),
+        reference = workflow.source_path("config/reference_h3n2_ha.gb"),
+        auspice_config = workflow.source_path("config/auspice_config.json"),
+        clades = workflow.source_path("config/clades_h3n2_ha.tsv"),
 
 files = rules.files.params
 
@@ -620,7 +620,7 @@ rule concat_scatterplot_table:
 rule create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:
-        colors = "../notebooks/config/color_schemes.tsv",
+        colors = workflow.source_path("../notebooks/config/color_schemes.tsv"),
         #Charts, tree:
         node_df = "results/table.tsv",
 
