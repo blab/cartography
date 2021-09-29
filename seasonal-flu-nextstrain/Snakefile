@@ -144,6 +144,11 @@ rule align:
         alignment = "results/aligned_sequences.fasta"
     conda: "../cartography.yml"
     threads: 4
+    resources:
+        mem_mb=16000,
+        runtime="0:30:00",
+        partition="campus-new",
+        qos="",
     shell:
         """
         augur align \
@@ -163,6 +168,11 @@ rule tree:
         tree = "results/tree_raw.nwk"
     conda: "../cartography.yml"
     threads: 4
+    resources:
+        mem_mb=16000,
+        runtime="2:00:00",
+        partition="campus-new",
+        qos="",
     shell:
         """
         augur tree \
@@ -192,6 +202,11 @@ rule refine:
         clock_rate = 0.00382,
         clock_std_dev = 0.000764
     conda: "../cartography.yml"
+    resources:
+        mem_mb=16000,
+        runtime="4:00:00",
+        partition="campus-new",
+        qos="",
     shell:
         """
         augur refine \
@@ -219,6 +234,9 @@ rule ancestral:
     params:
         inference = "joint"
     conda: "../cartography.yml"
+    resources:
+        mem_mb=4000,
+        runtime="0:15:00",
     shell:
         """
         augur ancestral \
