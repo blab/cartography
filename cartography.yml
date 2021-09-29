@@ -4,7 +4,7 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - augur=12.0.0
+  - augur=13.0.0
   - pip
   - seaborn
   - altair
@@ -16,7 +16,7 @@ dependencies:
   - jsonschema
   - jupyterlab
   - matplotlib
-  - nodejs=15.14.0
+  - nodejs
   - pandoc=2.14.1
   - pandoc-crossref=0.3.12.0
   - selenium
