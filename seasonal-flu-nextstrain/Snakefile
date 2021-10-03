@@ -26,6 +26,9 @@ INTERNAL_NODE = [
     "ancestral",
     "sequences"
 ]
+
+RANDOM_SEED = 314159
+
 rule all:
     input:
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
@@ -58,7 +61,7 @@ rule files:
         dropped_strains = "config/exclude.txt",
         reference = "config/reference_h3n2_ha.gb",
         auspice_config = "config/auspice_config.json",
-        clades = "config/clades_h3n2_ha.tsv"
+        clades = "config/clades_h3n2_ha.tsv",
 
 files = rules.files.params
 
@@ -116,7 +119,10 @@ rule filter:
         group_by = "country year month",
         sequences_per_group = 25,
         min_date = 2015.75,
-        max_date = 2018.25
+        max_date = 2018.25,
+        random_seed = RANDOM_SEED
+    log:
+        "logs/filtered.txt"
     conda: "../cartography.yml"
     shell:
         """
@@ -127,8 +133,9 @@ rule filter:
             --output {output.sequences} \
             --group-by {params.group_by} \
             --sequences-per-group {params.sequences_per_group} \
+            --subsample-seed {params.random_seed} \
             --min-date {params.min_date} \
-            --max-date {params.max_date}
+            --max-date {params.max_date} &> {log}
         """
 
 rule align:
@@ -144,6 +151,11 @@ rule align:
         alignment = "results/aligned_sequences.fasta"
     conda: "../cartography.yml"
     threads: 4
+    resources:
+        mem_mb=16000,
+        runtime="0:30:00",
+        partition="campus-new",
+        qos="",
     shell:
         """
         augur align \
@@ -163,6 +175,11 @@ rule tree:
         tree = "results/tree_raw.nwk"
     conda: "../cartography.yml"
     threads: 4
+    resources:
+        mem_mb=16000,
+        runtime="2:00:00",
+        partition="campus-new",
+        qos="",
     shell:
         """
         augur tree \
@@ -192,6 +209,11 @@ rule refine:
         clock_rate = 0.00382,
         clock_std_dev = 0.000764
     conda: "../cartography.yml"
+    resources:
+        mem_mb=16000,
+        runtime="4:00:00",
+        partition="campus-new",
+        qos="",
     shell:
         """
         augur refine \
@@ -219,6 +241,9 @@ rule ancestral:
     params:
         inference = "joint"
     conda: "../cartography.yml"
+    resources:
+        mem_mb=4000,
+        runtime="0:15:00",
     shell:
         """
         augur ancestral \
@@ -365,14 +390,20 @@ rule embed_pca:
         figure = "results/embed_pca_{ancestral}.pdf",
         explained_variance = "results/explained_variance_pca_{ancestral}.csv"
     params:
-        components = 10
+        components = 10,
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --alignment {input.alignment} \
             --cluster-data {input.cluster} \
+<<<<<<< HEAD
             --random-seed 314159 \
+=======
+            --random-seed {params.random_seed} \
+            --output-node-data {output.node_data} \
+>>>>>>> 1107b92bd2b896fdf0979b45c4421a94c53b557c
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             pca \
@@ -391,14 +422,20 @@ rule embed_tsne:
         figure = "results/embed_t-sne_{ancestral}.pdf"
     params:
         perplexity = 30,
-        learning_rate = 200
+        learning_rate = 200,
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
+<<<<<<< HEAD
             --random-seed 314159 \
+=======
+            --random-seed {params.random_seed} \
+            --output-node-data {output.node_data} \
+>>>>>>> 1107b92bd2b896fdf0979b45c4421a94c53b557c
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             t-sne \
@@ -416,14 +453,20 @@ rule embed_umap:
         figure = "results/embed_umap_{ancestral}.pdf"
     params:
         nearest_neighbors = 200,
-        min_dist = .5
+        min_dist = .5,
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
+<<<<<<< HEAD
             --random-seed 314159 \
+=======
+            --random-seed {params.random_seed} \
+            --output-node-data {output.node_data} \
+>>>>>>> 1107b92bd2b896fdf0979b45c4421a94c53b557c
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             umap \
@@ -440,14 +483,20 @@ rule embed_mds:
         dataframe = "results/embed_mds_{ancestral}.csv",
         figure = "results/embed_mds_{ancestral}.pdf"
     params:
-        components = 4
+        components = 4,
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
+<<<<<<< HEAD
             --random-seed 314159 \
+=======
+            --random-seed {params.random_seed} \
+            --output-node-data {output.node_data} \
+>>>>>>> 1107b92bd2b896fdf0979b45c4421a94c53b557c
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             mds \
