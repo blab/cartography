@@ -361,7 +361,6 @@ rule embed_pca:
         alignment = "results/aligned_{ancestral}.fasta",
         cluster = "results/pca_parameters.csv",
     output:
-        node_data = "results/embed_pca_{ancestral}.json",
         dataframe = "results/embed_pca_{ancestral}.csv",
         figure = "results/embed_pca_{ancestral}.pdf",
         explained_variance = "results/explained_variance_pca_{ancestral}.csv"
@@ -370,11 +369,10 @@ rule embed_pca:
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/embed.py \
+        embed \
             --alignment {input.alignment} \
             --cluster-data {input.cluster} \
             --random-seed 314159 \
-            --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             pca \
@@ -389,7 +387,6 @@ rule embed_tsne:
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
         cluster = "results/t-sne_parameters.csv",
     output:
-        node_data = "results/embed_t-sne_{ancestral}.json",
         dataframe = "results/embed_t-sne_{ancestral}.csv",
         figure = "results/embed_t-sne_{ancestral}.pdf"
     params:
@@ -398,11 +395,10 @@ rule embed_tsne:
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/embed.py \
+        embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --random-seed 314159 \
-            --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             t-sne \
@@ -416,7 +412,6 @@ rule embed_umap:
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
         cluster = "results/umap_parameters.csv",
     output:
-        node_data = "results/embed_umap_{ancestral}.json",
         dataframe = "results/embed_umap_{ancestral}.csv",
         figure = "results/embed_umap_{ancestral}.pdf"
     params:
@@ -425,11 +420,10 @@ rule embed_umap:
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/embed.py \
+        embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --random-seed 314159 \
-            --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             umap \
@@ -443,7 +437,6 @@ rule embed_mds:
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
         cluster = "results/mds_parameters.csv",
     output:
-        node_data = "results/embed_mds_{ancestral}.json",
         dataframe = "results/embed_mds_{ancestral}.csv",
         figure = "results/embed_mds_{ancestral}.pdf"
     params:
@@ -451,18 +444,28 @@ rule embed_mds:
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/embed.py \
+        embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --random-seed 314159 \
-            --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             mds \
             --components {params.components} \
         """
 
-
+rule create_node_output:
+    message: "creates node output that is used by augur to create the phylogenies"
+    input: 
+        dataframe = "results/embed_{method}_ancestral.csv"
+    output:
+        node_data = "results/embed_{method}_ancestral.json"
+    shell: 
+        """
+        python3 ../notebooks/scripts/otuput_node_data.py \
+            --table {input.dataframe} \
+            --output {output.node_data}
+        """
 
 def _get_embedding_columns_by_wildcards(wildcards):
     method = wildcards.method.replace("-", "")
@@ -509,9 +512,9 @@ def _get_embedding_path_by_wildcards(wildcards):
 
 rule cluster_by_parameters:
     input:
-        alignment="results/aligned_sequences.fasta",
-        distance_matrix="results/distance_matrix_sequences.csv",
-        clades="results/clades.json",
+        alignment=ancient("results/aligned_sequences.fasta"),
+        distance_matrix=ancient("results/distance_matrix_sequences.csv"),
+        clades=ancient("results/clades.json"),
     output:
         table=f"results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
     params:

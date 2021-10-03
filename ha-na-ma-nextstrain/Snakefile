@@ -438,7 +438,7 @@ rule embed_tsne:
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/embed.py \
+        embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --random-seed 314159 \
@@ -465,11 +465,10 @@ rule embed_umap:
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/embed.py \
+        embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --random-seed 314159 \
-            --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             umap \
@@ -491,15 +490,27 @@ rule embed_mds:
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/embed.py \
+        embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --random-seed 314159 \
-            --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             mds \
             --components {params.components} \
+        """
+
+rule create_node_output:
+    message: "creates node output that is used by augur to create the phylogenies"
+    input: 
+        dataframe = "results/embed_{method}.csv"
+    output:
+        node_data = "results/embed_{method}.json"
+    shell: 
+        """
+        python3 ../notebooks/scripts/otuput_node_data.py \
+            --table {input.dataframe} \
+            --output {output.node_data}
         """
 
 rule rename_columns:
