@@ -155,7 +155,7 @@ rule align:
         mem_mb=16000,
         runtime="0:30:00",
         partition="campus-new",
-        qos="",
+        qos="campus-new",
     shell:
         """
         augur align \
@@ -179,7 +179,7 @@ rule tree:
         mem_mb=16000,
         runtime="2:00:00",
         partition="campus-new",
-        qos="",
+        qos="campus-new",
     shell:
         """
         augur tree \
@@ -213,7 +213,7 @@ rule refine:
         mem_mb=16000,
         runtime="4:00:00",
         partition="campus-new",
-        qos="",
+        qos="campus-new",
     shell:
         """
         augur refine \
