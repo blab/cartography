@@ -383,8 +383,8 @@ rule embed_tsne:
         dataframe = "results/embed_t-sne_{ancestral}.csv",
         figure = "results/embed_t-sne_{ancestral}.pdf"
     params:
-        perplexity = 25.95,
-        learning_rate = 200,
+        perplexity = 30,
+        learning_rate = 100,
         random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
@@ -411,8 +411,8 @@ rule embed_umap:
         dataframe = "results/embed_umap_{ancestral}.csv",
         figure = "results/embed_umap_{ancestral}.pdf"
     params:
-        nearest_neighbors = 200,
-        min_dist = .5,
+        nearest_neighbors = 50,
+        min_dist = 0.25,
         random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
