@@ -140,7 +140,8 @@ if __name__ == "__main__":
             "dissimilarity": "precomputed",
             "n_components": args.components,
             "n_jobs": 1,
-            "n_init": 2
+            "n_init": 2,
+            "random_state": args.random_seed
         }
 
     if args.command != "pca":
