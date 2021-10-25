@@ -398,12 +398,8 @@ rule embed_pca:
         embed \
             --alignment {input.alignment} \
             --cluster-data {input.cluster} \
-<<<<<<< HEAD
-            --random-seed 314159 \
-=======
             --random-seed {params.random_seed} \
             --output-node-data {output.node_data} \
->>>>>>> 1107b92bd2b896fdf0979b45c4421a94c53b557c
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             pca \
@@ -430,12 +426,8 @@ rule embed_tsne:
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
-<<<<<<< HEAD
-            --random-seed 314159 \
-=======
             --random-seed {params.random_seed} \
             --output-node-data {output.node_data} \
->>>>>>> 1107b92bd2b896fdf0979b45c4421a94c53b557c
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             t-sne \
@@ -461,12 +453,8 @@ rule embed_umap:
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
-<<<<<<< HEAD
-            --random-seed 314159 \
-=======
             --random-seed {params.random_seed} \
             --output-node-data {output.node_data} \
->>>>>>> 1107b92bd2b896fdf0979b45c4421a94c53b557c
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             umap \
@@ -491,12 +479,8 @@ rule embed_mds:
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
-<<<<<<< HEAD
-            --random-seed 314159 \
-=======
             --random-seed {params.random_seed} \
             --output-node-data {output.node_data} \
->>>>>>> 1107b92bd2b896fdf0979b45c4421a94c53b557c
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             mds \
@@ -505,11 +489,11 @@ rule embed_mds:
 
 rule create_node_output:
     message: "creates node output that is used by augur to create the phylogenies"
-    input: 
+    input:
         dataframe = "results/embed_{method}_ancestral.csv"
     output:
         node_data = "results/embed_{method}_ancestral.json"
-    shell: 
+    shell:
         """
         python3 ../notebooks/scripts/otuput_node_data.py \
             --table {input.dataframe} \
