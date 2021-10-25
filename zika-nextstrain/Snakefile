@@ -28,6 +28,8 @@ INTERNAL_NODE = [
     "sequences"
 ]
 
+RANDOM_SEED = 314159
+
 rule all:
     input:
         expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
@@ -113,7 +115,8 @@ rule filter:
     params:
         group_by = "country year month",
         sequences_per_group = 500,
-        min_date = 2013
+        min_date = 2013,
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
@@ -124,6 +127,7 @@ rule filter:
             --output {output.sequences} \
             --group-by {params.group_by} \
             --sequences-per-group {params.sequences_per_group} \
+            --subsample-seed {params.random_seed} \
             --min-date {params.min_date}
         """
 
@@ -381,14 +385,15 @@ rule embed_pca:
         figure = "results/embed_pca_{ancestral}.pdf",
         explained_variance = "results/explained_variance_pca_{ancestral}.csv"
     params:
-        components = 10
+        components = 10,
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --alignment {input.alignment} \
             --cluster-data {input.cluster} \
-            --random-seed 314159 \
+            --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             pca \
@@ -408,13 +413,14 @@ rule embed_tsne:
     params:
         perplexity = 30,
         learning_rate = 500,
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
-            --random-seed 314159 \
+            --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             t-sne \
@@ -433,13 +439,14 @@ rule embed_umap:
     params:
         nearest_neighbors = 100,
         min_dist = 0.05,
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
-            --random-seed 314159 \
+            --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             umap \
@@ -456,14 +463,15 @@ rule embed_mds:
         dataframe = "results/embed_mds_{ancestral}.csv",
         figure = "results/embed_mds_{ancestral}.pdf"
     params:
-        components = 10
+        components = 10,
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
-            --random-seed 314159 \
+            --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             mds \
