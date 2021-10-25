@@ -232,7 +232,7 @@ rule translate:
             --tree {input.tree} \
             --ancestral-sequences {input.node_data} \
             --reference-sequence {input.reference} \
-            --output {output.node_data} 
+            --output {output.node_data}
         """
 rule clades:
     message: " Labeling clades as specified in config/clades.tsv"
@@ -301,7 +301,7 @@ rule export:
 
 rule tree_to_table:
     message: "creating a table of node data values from the tree attributes"
-    input: 
+    input:
         tree = rules.export.output.auspice_tree
     output:
         table = "results/table.tsv"
@@ -501,8 +501,8 @@ rule concat_scatterplot_table:
     message: "concatenating all the scatterplot metadata into one csv dataframe"
     input:
        dataframe_pca = "results/scatterplot_pca_metadata.csv",
-       dataframe_mds = "results/scatterplot_mds_metadata.csv", 
-       dataframe_tsne = "results/scatterplot_t-sne_metadata.csv", 
+       dataframe_mds = "results/scatterplot_mds_metadata.csv",
+       dataframe_tsne = "results/scatterplot_t-sne_metadata.csv",
        dataframe_umap = "results/scatterplot_umap_metadata.csv"
     output:
         metadata = "results/full_Scatterplot_metadata.csv"
