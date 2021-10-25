@@ -480,13 +480,13 @@ rule embed_mds:
 
 rule create_node_output:
     message: "creates node output that is used by augur to create the phylogenies"
-    input: 
+    input:
         dataframe = "results/embed_{method}_ancestral.csv"
     output:
         node_data = "results/embed_{method}_ancestral.json"
-    shell: 
+    shell:
         """
-        python3 ../notebooks/scripts/otuput_node_data.py \
+        python3 ../notebooks/scripts/output_node_data.py \
             --table {input.dataframe} \
             --output {output.node_data}
         """
