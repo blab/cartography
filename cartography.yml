@@ -25,6 +25,7 @@ dependencies:
   - wget
   - snakemake
   - pip:
+    - pathogen-embed==0.0.2
     - statsmodels
     - statistics
     - svglib
