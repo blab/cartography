@@ -372,12 +372,11 @@ rule create_distance_matrix:
         """
 
 rule embed_pca:
-    message: "Creating the embedding (dataframe, node JSON) for PCA"
+    message: "Creating the embedding (dataframe) for PCA"
     input:
         alignment = "results/imputed_{ancestral}.fasta",
         cluster = "results/pca_parameters.csv",
     output:
-        node_data = "results/embed_pca_{ancestral}.json",
         dataframe = "results/embed_pca_{ancestral}.csv",
         figure = "results/embed_pca_{ancestral}.pdf",
         explained_variance = "results/explained_variance_pca_{ancestral}.csv"
@@ -399,12 +398,11 @@ rule embed_pca:
 
 
 rule embed_tsne:
-    message: "Creating the embedding (dataframe, node JSON) for t-SNE"
+    message: "Creating the embedding (dataframe) for t-SNE"
     input:
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
         cluster = "results/t-sne_parameters.csv",
     output:
-        node_data = "results/embed_t-sne_{ancestral}.json",
         dataframe = "results/embed_t-sne_{ancestral}.csv",
         figure = "results/embed_t-sne_{ancestral}.pdf"
     params:
@@ -425,12 +423,11 @@ rule embed_tsne:
         """
 
 rule embed_umap:
-    message: "Creating the embedding (dataframe, node JSON) for UMAP"
+    message: "Creating the embedding (dataframe) for UMAP"
     input:
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
         cluster = "results/umap_parameters.csv",
     output:
-        node_data = "results/embed_umap_{ancestral}.json",
         dataframe = "results/embed_umap_{ancestral}.csv",
         figure = "results/embed_umap_{ancestral}.pdf"
     params:
@@ -451,12 +448,11 @@ rule embed_umap:
         """
 
 rule embed_mds:
-    message: "Creating the embedding (dataframe, node JSON) for MDS"
+    message: "Creating the embedding (dataframe) for MDS"
     input:
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
         cluster = "results/mds_parameters.csv",
     output:
-        node_data = "results/embed_mds_{ancestral}.json",
         dataframe = "results/embed_mds_{ancestral}.csv",
         figure = "results/embed_mds_{ancestral}.pdf"
     params:
