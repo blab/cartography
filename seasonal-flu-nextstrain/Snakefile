@@ -489,6 +489,7 @@ rule create_node_output:
         dataframe = "results/embed_{method}_ancestral.csv"
     output:
         node_data = "results/embed_{method}_ancestral.json"
+    conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/output_node_data.py \
