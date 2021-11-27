@@ -410,6 +410,7 @@ rule embed_pca:
 rule embed_tsne:
     message: "Creating the embedding (dataframe) for t-SNE"
     input:
+        alignment = "results/aligned_{ancestral}.fasta",
         distance_matrix = "results/distance_matrix_{ancestral}.csv",
         cluster = "results/t-sne_parameters.csv",
     output:
@@ -423,6 +424,7 @@ rule embed_tsne:
     shell:
         """
         embed \
+            --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --random-seed {params.random_seed} \

@@ -34,10 +34,12 @@ def make_parser():
     pca.add_argument("--explained-variance", help="the path for the CSV explained variance for each component")
 
     tsne = subparsers.add_parser("t-sne", description="t-distributed Stochastic Neighborhood Embedding")
+    tsne.add_argument("--components", default=2, type=int, help="the number of components for t-SNE")
     tsne.add_argument("--perplexity", default=30.0, type=float, help="The perplexity is related to the number of nearest neighbors. Because of this, the size of the dataset is proportional to the best perplexity value (large dataset -> large perplexity). Values between 5 and 50 work best. The default value is the value consistently the best for pathogen analyses, results from an exhaustive grid search.")
     tsne.add_argument("--learning-rate", default=200.0, type=float, help="The learning rate for t-SNE is usually between 10.0 and 1000.0. Values out of these bounds may create innacurate results. The default value is the value consistently the best for pathogen analyses, results from an exhaustive grid search.")
 
     umap = subparsers.add_parser("umap", description="Uniform Manifold Approximation and Projection")
+    umap.add_argument("--components", default=2, type=int, help="the number of components for UMAP")
     umap.add_argument("--nearest-neighbors", default=200, type=int, help="Nearest neighbors controls how UMAP balances local versus global structure in the data (finer detail patterns versus global structure). This value is proportional to the size of the data (large dataset -> large nearest neighbors. The default value is the value consistently the best for pathogen analyses, results from an exhaustive grid search.")
     umap.add_argument("--min-dist", default=.5, type=float, help="Minimum Distance controls how tightly packed the UMAP embedding is. While it does not change the structure of the data, it does change the embedding's shape. The default value is the value consistently the best for pathogen analyses, results from an exhaustive grid search.")
 

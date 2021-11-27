@@ -111,7 +111,8 @@ def embed(args):
 
     # Calculate Embedding
 
-    if args.command == "pca":
+    # Use PCA as its own embedding or as an initialization for t-SNE.
+    if args.command == "pca" or args.command == "t-sne":
         sequences_by_name = OrderedDict()
 
         for sequence in Bio.SeqIO.parse(args.alignment, "fasta"):
@@ -141,7 +142,9 @@ def embed(args):
     if args.command == "t-sne":
         embedding_class = TSNE
         embedding_parameters = {
+            "n_components": args.components,
             "metric": "precomputed",
+            "init": principalComponents[:, :args.components],
             "perplexity": args.perplexity,
             "learning_rate": args.learning_rate,
             "random_state" : args.random_seed,
@@ -152,7 +155,7 @@ def embed(args):
         embedding_parameters = {
             "n_neighbors": args.nearest_neighbors,
             "min_dist": args.min_dist,
-            "n_components": 2,
+            "n_components": args.components,
             "init": "spectral",
             "random_state" : args.random_seed
         }
