@@ -57,11 +57,13 @@ DEFAULT_PARAMETERS_BY_METHOD = {
         "random_state": RANDOM_STATE,
     },
     "t-sne": {
+        "n_components": 2,
         "metric": "precomputed",
         "random_state": RANDOM_STATE,
         "square_distances": True,
     },
     "umap": {
+        "n_components": 2,
         "init": "spectral",
         "random_state": RANDOM_STATE,
     },
@@ -122,6 +124,9 @@ else:
     input_matrix = input_matrix.values
     is_distance_matrix = True
 
+    if method == "t-sne":
+        pca_matrix = get_PCA_feature_matrix(snakemake.input.alignment, strains)
+
 folds = RepeatedKFold(
     n_splits=N_SPLITS,
     n_repeats=N_REPEATS,
@@ -148,6 +153,19 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
     if is_distance_matrix:
         training_matrix = training_matrix[:, training_index]
         validation_matrix = validation_matrix[:, validation_index]
+
+    if method == "t-sne":
+        # Fit PCA embedding to use as initialization of t-SNE embedding.
+        components = method_parameters["n_components"]
+        pca = PCA(n_components=components, svd_solver='full')
+        training_pca_matrix = pca_matrix[training_index, :]
+        training_principal_components = pca.fit_transform(training_pca_matrix)
+        training_init = training_principal_components[:, :components]
+        method_parameters["init"] = training_init
+
+        validation_pca_matrix = pca_matrix[validation_index, :]
+        validation_principal_components = pca.fit_transform(validation_pca_matrix)
+        validation_init = validation_principal_components[:, :components]
 
     # Train the embedding method.
     embedder = method_class(**method_parameters)
@@ -191,6 +209,9 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
     plt.close()
 
     # Validate the embedding method.
+    if method == "t-sne":
+        method_parameters["init"] = validation_init
+
     embedder = method_class(**method_parameters)
     validation_embedding = embedder.fit_transform(validation_matrix)
 
@@ -229,6 +250,10 @@ for cv_iteration, (training_index, validation_index) in enumerate(folds.split(st
     )
     plt.savefig(snakemake.output.table.replace(".tsv", f"_{cv_iteration}_validation_embedding.pdf"))
     plt.close()
+
+    # Don't save initialization matrices in data frame output.
+    if "init" in results:
+        del results["init"]
 
     all_results.append(results)
 
