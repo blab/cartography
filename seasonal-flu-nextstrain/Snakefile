@@ -418,7 +418,7 @@ rule embed_tsne:
         figure = "results/embed_t-sne_{ancestral}.pdf"
     params:
         perplexity = 30,
-        learning_rate = 100,
+        learning_rate = 200,
         random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
@@ -445,7 +445,7 @@ rule embed_umap:
         figure = "results/embed_umap_{ancestral}.pdf"
     params:
         nearest_neighbors = 50,
-        min_dist = 0.25,
+        min_dist = 0.05,
         random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
