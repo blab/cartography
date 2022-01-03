@@ -415,7 +415,6 @@ rule embed_pca:
         figure = "seasonal-flu-nextstrain/results/embed_pca_{ancestral}.pdf",
         explained_variance = "seasonal-flu-nextstrain/results/explained_variance_pca_{ancestral}.csv"
     params:
-        components = 10,
         random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
@@ -427,7 +426,6 @@ rule embed_pca:
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             pca \
-            --components {params.components} \
             --explained-variance {output.explained_variance}
         """
 
@@ -441,8 +439,6 @@ rule embed_tsne:
         dataframe = "seasonal-flu-nextstrain/results/embed_t-sne_{ancestral}.csv",
         figure = "seasonal-flu-nextstrain/results/embed_t-sne_{ancestral}.pdf"
     params:
-        perplexity = 30,
-        learning_rate = 200,
         random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
@@ -454,9 +450,7 @@ rule embed_tsne:
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            t-sne \
-            --perplexity {params.perplexity} \
-            --learning-rate {params.learning_rate}
+            t-sne
         """
 
 rule embed_umap:
@@ -468,8 +462,6 @@ rule embed_umap:
         dataframe = "seasonal-flu-nextstrain/results/embed_umap_{ancestral}.csv",
         figure = "seasonal-flu-nextstrain/results/embed_umap_{ancestral}.pdf"
     params:
-        nearest_neighbors = 50,
-        min_dist = 0.05,
         random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
@@ -480,9 +472,7 @@ rule embed_umap:
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            umap \
-            --nearest-neighbors {params.nearest_neighbors} \
-            --min-dist {params.min_dist}
+            umap
         """
 
 rule embed_mds:
@@ -494,7 +484,6 @@ rule embed_mds:
         dataframe = "seasonal-flu-nextstrain/results/embed_mds_{ancestral}.csv",
         figure = "seasonal-flu-nextstrain/results/embed_mds_{ancestral}.pdf"
     params:
-        components = 4,
         random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
@@ -505,8 +494,7 @@ rule embed_mds:
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            mds \
-            --components {params.components} \
+            mds
         """
 
 rule create_node_output:
