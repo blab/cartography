@@ -360,6 +360,51 @@ rule create_distance_matrix:
             --output {output.output}
         """
 
+rule cluster_by_parameters:
+    input:
+        alignment=ancient("seasonal-flu-nextstrain/results/aligned_sequences.fasta"),
+        distance_matrix=ancient("seasonal-flu-nextstrain/results/distance_matrix_sequences.csv"),
+        clades=ancient("seasonal-flu-nextstrain/results/clades.json"),
+    output:
+        table=f"seasonal-flu-nextstrain/results/gridsearch/{SEASONAL_FLU_METHOD_PARAMETERS.wildcard_pattern}.tsv",
+    params:
+        method_parameters=SEASONAL_FLU_METHOD_PARAMETERS.instance,
+    conda: "../cartography.yml"
+    script:
+        "notebooks/scripts/cluster_by_parameters.py"
+
+
+rule aggregate_clusters_by_parameters:
+    input:
+        tables=expand("seasonal-flu-nextstrain/results/gridsearch/{params}.tsv", params=SEASONAL_FLU_METHOD_PARAMETERS.instance_patterns)
+    output:
+        table="seasonal-flu-nextstrain/results/gridsearch.tsv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.tables} \
+            --output {output.table}
+        """
+
+rule output_grid_search:
+    input:
+        table= "seasonal-flu-nextstrain/results/gridsearch.tsv",
+    output:
+        pca_parameters = "seasonal-flu-nextstrain/results/pca_parameters.csv",
+        mds_parameters = "seasonal-flu-nextstrain/results/mds_parameters.csv",
+        tsne_parameters = "seasonal-flu-nextstrain/results/t-sne_parameters.csv",
+        umap_parameters = "seasonal-flu-nextstrain/results/umap_parameters.csv",
+        mcc_by_tsne_parameters = "seasonal-flu-nextstrain/results/mcc_by_t-sne_parameters.pdf",
+        mcc_by_umap_parameters = "seasonal-flu-nextstrain/results/mcc_by_umap_parameters.pdf",
+        mcc_by_mds_parameters = "seasonal-flu-nextstrain/results/mcc_by_mds_parameters.pdf",
+        mcc_by_method_and_distance_threshold = "seasonal-flu-nextstrain/results/mcc_by_method_and_distance_threshold.pdf"
+    conda: "../cartography.yml"
+    log:
+        "logs/seasonal-flu-nextstrain/summarize-grid-search.ipynb"
+    notebook:
+        "notebooks/2021-06-23-summarize-grid-search.ipynb"
+
 rule embed_pca:
     message: "Creating the embedding (dataframe) for PCA"
     input:
@@ -385,7 +430,6 @@ rule embed_pca:
             --components {params.components} \
             --explained-variance {output.explained_variance}
         """
-
 
 rule embed_tsne:
     message: "Creating the embedding (dataframe) for t-SNE"
@@ -513,59 +557,6 @@ rule scatterplot:
             --output-dataframe {output.dataframe} \
             --output-metadata {output.metadata}
         """
-
-def _get_embedding_path_by_wildcards(wildcards):
-    method = wildcards.method
-
-    if method in ("pca", "mds", "t-sne", "umap"):
-        return f"seasonal-flu-nextstrain/results/embed_{method}_sequences.csv"
-    else:
-        return "seasonal-flu-nextstrain/results/distance_matrix_sequences.csv"
-
-rule cluster_by_parameters:
-    input:
-        alignment=ancient("seasonal-flu-nextstrain/results/aligned_sequences.fasta"),
-        distance_matrix=ancient("seasonal-flu-nextstrain/results/distance_matrix_sequences.csv"),
-        clades=ancient("seasonal-flu-nextstrain/results/clades.json"),
-    output:
-        table=f"seasonal-flu-nextstrain/results/gridsearch/{SEASONAL_FLU_METHOD_PARAMETERS.wildcard_pattern}.tsv",
-    params:
-        method_parameters=SEASONAL_FLU_METHOD_PARAMETERS.instance,
-    conda: "../cartography.yml"
-    script:
-        "notebooks/scripts/cluster_by_parameters.py"
-
-
-rule aggregate_clusters_by_parameters:
-    input:
-        tables=expand("seasonal-flu-nextstrain/results/gridsearch/{params}.tsv", params=SEASONAL_FLU_METHOD_PARAMETERS.instance_patterns)
-    output:
-        table="seasonal-flu-nextstrain/results/gridsearch.tsv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 notebooks/scripts/concatenate_tables.py \
-            --tables {input.tables} \
-            --output {output.table}
-        """
-
-rule output_grid_search:
-    input:
-        table= "seasonal-flu-nextstrain/results/gridsearch.tsv",
-    output:
-        pca_parameters = "seasonal-flu-nextstrain/results/pca_parameters.csv",
-        mds_parameters = "seasonal-flu-nextstrain/results/mds_parameters.csv",
-        tsne_parameters = "seasonal-flu-nextstrain/results/t-sne_parameters.csv",
-        umap_parameters = "seasonal-flu-nextstrain/results/umap_parameters.csv",
-        mcc_by_tsne_parameters = "seasonal-flu-nextstrain/results/mcc_by_t-sne_parameters.pdf",
-        mcc_by_umap_parameters = "seasonal-flu-nextstrain/results/mcc_by_umap_parameters.pdf",
-        mcc_by_mds_parameters = "seasonal-flu-nextstrain/results/mcc_by_mds_parameters.pdf",
-        mcc_by_method_and_distance_threshold = "seasonal-flu-nextstrain/results/mcc_by_method_and_distance_threshold.pdf"
-    conda: "../cartography.yml"
-    log:
-        "logs/seasonal-flu-nextstrain/summarize-grid-search.ipynb"
-    notebook:
-        "notebooks/2021-06-23-summarize-grid-search.ipynb"
 
 rule cluster_metadata:
     message: "Creating the metadata dataframe for HDBSCAN results for main paper"
