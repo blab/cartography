@@ -55,7 +55,7 @@ rule seasonal_flu_test_deduplicate_sequences:
     conda: "../cartography.yml"
     shell:
         """
-        python3 scripts/deduplicate_sequences.py \
+        python3 seasonal-flu-nextstrain-2018-2020/scripts/deduplicate_sequences.py \
             --sequences {input.sequences} \
             --output {output.sequences}
         """
@@ -290,7 +290,7 @@ rule seasonal_flu_test_tree_to_table:
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/auspice_tree_to_table.py \
+        python3 notebooks/scripts/auspice_tree_to_table.py \
             {input.tree} \
             {output.table} \
             --attributes {params.attributes}
@@ -305,7 +305,7 @@ rule seasonal_flu_test_nucleotide_diversity:
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/nucleotide_diversity.py \
+        python3 notebooks/scripts/nucleotide_diversity.py \
             --alignment {input.alignment} \
             --output {output.output}
         """
@@ -319,7 +319,7 @@ rule seasonal_flu_test_create_distance_matrix:
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/hamming_distance_from_fasta.py \
+        python3 notebooks/scripts/hamming_distance_from_fasta.py \
             --alignment {input.alignment} \
             --output {output.output}
         """
@@ -339,7 +339,7 @@ rule seasonal_flu_test_embed_pca:
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/embed.py \
+        python3 notebooks/scripts/embed.py \
             --alignment {input.alignment} \
             --cluster-data {input.cluster} \
             --random-seed {params.random_seed} \
@@ -364,7 +364,7 @@ rule seasonal_flu_test_embed_tsne:
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/embed.py \
+        python3 notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --random-seed {params.random_seed} \
@@ -388,7 +388,7 @@ rule seasonal_flu_test_embed_umap:
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/embed.py \
+        python3 notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --random-seed {params.random_seed} \
@@ -412,7 +412,7 @@ rule seasonal_flu_test_embed_mds:
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/embed.py \
+        python3 notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --random-seed {params.random_seed} \
@@ -437,7 +437,7 @@ rule seasonal_flu_test_scatterplot:
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/scatterplot.py \
+        python3 notebooks/scripts/scatterplot.py \
             --distance {input.distance_matrix} \
             --embedding {input.embedding} \
             --method {wildcards.method} \
@@ -462,7 +462,7 @@ rule seasonal_flu_test_concat_scatterplot_table:
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/concatenate_tables.py \
+        python3 notebooks/scripts/concatenate_tables.py \
             --tables {input.dataframe_pca} {input.dataframe_mds} {input.dataframe_tsne} {input.dataframe_umap} \
             --separator ',' \
             --sort-by {params.column} \
