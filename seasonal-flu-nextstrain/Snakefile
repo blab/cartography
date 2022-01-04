@@ -5,7 +5,6 @@ SEASONAL_FLU_METHOD_PARAMETERS = Paramspace(
     )
 )
 
-
 rule seasonal_flu_training:
     input:
         expand("seasonal-flu-nextstrain/results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
@@ -406,7 +405,7 @@ rule seasonal_flu_training_output_grid_search:
         "notebooks/2021-06-23-summarize-grid-search.ipynb"
 
 rule seasonal_flu_training_embed_pca:
-    message: "Creating the embedding (dataframe) for PCA"
+    message: "Creating the embedding for PCA"
     input:
         alignment = "seasonal-flu-nextstrain/results/aligned_{ancestral}.fasta",
         cluster = "seasonal-flu-nextstrain/results/pca_parameters.csv",
@@ -430,7 +429,7 @@ rule seasonal_flu_training_embed_pca:
         """
 
 rule seasonal_flu_training_embed_tsne:
-    message: "Creating the embedding (dataframe) for t-SNE"
+    message: "Creating the embedding for t-SNE"
     input:
         alignment = "seasonal-flu-nextstrain/results/aligned_{ancestral}.fasta",
         distance_matrix = "seasonal-flu-nextstrain/results/distance_matrix_{ancestral}.csv",
@@ -454,7 +453,7 @@ rule seasonal_flu_training_embed_tsne:
         """
 
 rule seasonal_flu_training_embed_umap:
-    message: "Creating the embedding (dataframe) for UMAP"
+    message: "Creating the embedding for UMAP"
     input:
         distance_matrix = "seasonal-flu-nextstrain/results/distance_matrix_{ancestral}.csv",
         cluster = "seasonal-flu-nextstrain/results/umap_parameters.csv",
@@ -476,7 +475,7 @@ rule seasonal_flu_training_embed_umap:
         """
 
 rule seasonal_flu_training_embed_mds:
-    message: "Creating the embedding (dataframe) for MDS"
+    message: "Creating the embedding for MDS"
     input:
         distance_matrix = "seasonal-flu-nextstrain/results/distance_matrix_{ancestral}.csv",
         cluster = "seasonal-flu-nextstrain/results/mds_parameters.csv",
