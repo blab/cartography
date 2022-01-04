@@ -16,7 +16,7 @@ rule seasonal_flu_test:
 
 rule seasonal_flu_test_files:
     params:
-        input_fasta = "data/ncbi-h3n2-ha.fa",
+        input_fasta = "seasonal-flu-nextstrain-2018-2020/data/ncbi-h3n2-ha.fa",
         dropped_strains = "seasonal-flu-nextstrain-2018-2020/config/exclude.txt",
         reference = "seasonal-flu-nextstrain-2018-2020/config/reference_h3n2_ha.gb",
         auspice_config = "seasonal-flu-nextstrain-2018-2020/config/auspice_config.json",
@@ -49,7 +49,7 @@ rule seasonal_flu_test_deduplicate_sequences:
         Deduplicating sequences
         """
     input:
-        sequences = rules.parse.output.sequences
+        sequences = rules.seasonal_flu_test_parse.output.sequences
     output:
         sequences = "seasonal-flu-nextstrain-2018-2020/results/deduplicated_sequences.fasta"
     conda: "../cartography.yml"
@@ -69,8 +69,8 @@ rule seasonal_flu_test_filter:
           - excluding strains in {input.exclude}
         """
     input:
-        sequences = rules.deduplicate_sequences.output.sequences,
-        metadata = rules.parse.output.metadata,
+        sequences = rules.seasonal_flu_test_deduplicate_sequences.output.sequences,
+        metadata = rules.seasonal_flu_test_parse.output.metadata,
         exclude = seasonal_flu_test_files.dropped_strains
     output:
         sequences = "seasonal-flu-nextstrain-2018-2020/results/filtered.fasta"
@@ -102,7 +102,7 @@ rule seasonal_flu_test_align:
           - filling gaps with N
         """
     input:
-        sequences = rules.filter.output.sequences,
+        sequences = rules.seasonal_flu_test_filter.output.sequences,
         reference = seasonal_flu_test_files.reference
     output:
         alignment = "seasonal-flu-nextstrain-2018-2020/results/aligned_sequences.fasta"
@@ -122,7 +122,7 @@ rule seasonal_flu_test_align:
 rule seasonal_flu_test_tree:
     message: "Building tree"
     input:
-        alignment = rules.align.output.alignment
+        alignment = rules.seasonal_flu_test_align.output.alignment
     output:
         tree = "seasonal-flu-nextstrain-2018-2020/results/tree_raw.nwk"
     conda: "../cartography.yml"
@@ -145,9 +145,9 @@ rule seasonal_flu_test_refine:
           - filter tips more than {params.clock_filter_iqd} IQDs from clock expectation
         """
     input:
-        tree = rules.tree.output.tree,
-        alignment = rules.align.output,
-        metadata = rules.parse.output.metadata
+        tree = rules.seasonal_flu_test_tree.output.tree,
+        alignment = rules.seasonal_flu_test_align.output,
+        metadata = rules.seasonal_flu_test_parse.output.metadata
     output:
         tree = "seasonal-flu-nextstrain-2018-2020/results/tree.nwk",
         node_data = "seasonal-flu-nextstrain-2018-2020/results/branch_lengths.json"
@@ -178,8 +178,8 @@ rule seasonal_flu_test_refine:
 rule seasonal_flu_test_ancestral:
     message: "Reconstructing ancestral sequences and mutations"
     input:
-        tree = rules.refine.output.tree,
-        alignment = rules.align.output.alignment
+        tree = rules.seasonal_flu_test_refine.output.tree,
+        alignment = rules.seasonal_flu_test_align.output.alignment
     output:
         node_data = "seasonal-flu-nextstrain-2018-2020/results/nt_muts.json",
         sequences = "seasonal-flu-nextstrain-2018-2020/results/aligned_ancestral.fasta"
@@ -199,8 +199,8 @@ rule seasonal_flu_test_ancestral:
 rule seasonal_flu_test_translate:
     message: "Translating amino acid sequences"
     input:
-        tree = rules.refine.output.tree,
-        node_data = rules.ancestral.output.node_data,
+        tree = rules.seasonal_flu_test_refine.output.tree,
+        node_data = rules.seasonal_flu_test_ancestral.output.node_data,
         reference = seasonal_flu_test_files.reference
     output:
         node_data = "seasonal-flu-nextstrain-2018-2020/results/aa_muts.json"
@@ -217,9 +217,9 @@ rule seasonal_flu_test_translate:
 rule seasonal_flu_test_clades:
     message: " Labeling clades as specified in seasonal-flu-nextstrain-2018-2020/config/clades.tsv"
     input:
-        tree = rules.refine.output.tree,
-        aa_muts = rules.translate.output.node_data,
-        nuc_muts = rules.ancestral.output.node_data,
+        tree = rules.seasonal_flu_test_refine.output.tree,
+        aa_muts = rules.seasonal_flu_test_translate.output.node_data,
+        nuc_muts = rules.seasonal_flu_test_ancestral.output.node_data,
         clades = seasonal_flu_test_files.clades
     output:
         clade_data = "seasonal-flu-nextstrain-2018-2020/results/clades.json"
@@ -235,8 +235,8 @@ rule seasonal_flu_test_clades:
 rule seasonal_flu_test_traits:
     message: "Inferring ancestral traits for {params.columns!s}"
     input:
-        tree = rules.refine.output.tree,
-        metadata = rules.parse.output.metadata
+        tree = rules.seasonal_flu_test_refine.output.tree,
+        metadata = rules.seasonal_flu_test_parse.output.metadata
     output:
         node_data = "seasonal-flu-nextstrain-2018-2020/results/traits.json",
     params:
@@ -255,16 +255,16 @@ rule seasonal_flu_test_traits:
 rule seasonal_flu_test_export:
     message: "Exporting data files for for auspice"
     input:
-        tree = rules.refine.output.tree,
-        metadata = rules.parse.output.metadata,
-        branch_lengths = rules.refine.output.node_data,
-        traits = rules.traits.output.node_data,
-        nt_muts = rules.ancestral.output.node_data,
-        aa_muts = rules.translate.output.node_data,
+        tree = rules.seasonal_flu_test_refine.output.tree,
+        metadata = rules.seasonal_flu_test_parse.output.metadata,
+        branch_lengths = rules.seasonal_flu_test_refine.output.node_data,
+        traits = rules.seasonal_flu_test_traits.output.node_data,
+        nt_muts = rules.seasonal_flu_test_ancestral.output.node_data,
+        aa_muts = rules.seasonal_flu_test_translate.output.node_data,
         embeddings = expand("seasonal-flu-nextstrain-2018-2020/results/embed_{embedding}_{ancestral}.json", embedding=EMBEDDING_METHODS, ancestral=INTERNAL_NODE),
         auspice_config = seasonal_flu_test_files.auspice_config,
         colors = "seasonal-flu-nextstrain-2018-2020/config/colors.tsv",
-        clades = rules.clades.output.clade_data
+        clades = rules.seasonal_flu_test_clades.output.clade_data
     output:
         auspice_tree = "auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json"
     conda: "../cartography.yml"
@@ -282,7 +282,7 @@ rule seasonal_flu_test_export:
 rule seasonal_flu_test_tree_to_table:
     message: "creating a table of node data values from the tree attributes"
     input:
-        tree = rules.export.output.auspice_tree
+        tree = rules.seasonal_flu_test_export.output.auspice_tree
     output:
         table = "seasonal-flu-nextstrain-2018-2020/results/table.tsv"
     params:
