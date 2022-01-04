@@ -43,5 +43,10 @@ include: "seasonal-flu-nextstrain-2018-2020/Snakefile"
 # include: "mers-nextstrain/Snakefile"
 # include: "sars-cov-2-nextstrain/Snakefile"
 
+rule pathogens:
+    input:
+        *rules.seasonal_flu_training.input,
+        *rules.seasonal_flu_test.input,
+
 # Include rules for the manuscript.
 #include: "docs/Snakefile"
