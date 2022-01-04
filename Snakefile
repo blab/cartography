@@ -19,7 +19,7 @@ INTERNAL_NODE = [
 RANDOM_SEED = 314159
 
 wildcard_constraints:
-    method="(pca|mds|t-sne|umap)",
+    method="(pca|mds|t-sne|umap|genetic)",
     internal_node= "(ancestral|sequences)"
 
 # Define final outputs for the workflow.
@@ -30,9 +30,12 @@ rule all:
         # Interactive version of the paper.
         "docs/cartography.html",
 
+# Include common functions and rules shared across analyses.
+include: "rules/common.smk"
+
 # Include rules for each pathogen.
 include: "seasonal-flu-nextstrain/Snakefile"
-# include: "seasonal-flu-nextstrain-2018-2020/Snakefile"
+include: "seasonal-flu-nextstrain-2018-2020/Snakefile"
 # include: "ha-na-nextstrain/Snakefile"
 # include: "ha-na-ma-nextstrain/Snakefile"
 # include: "outlier_analysis/Snakefile"

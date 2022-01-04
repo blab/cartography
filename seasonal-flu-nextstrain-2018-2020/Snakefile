@@ -1,57 +1,36 @@
-wildcard_constraints:
-    method="(pca|mds|t-sne|umap|genetic)"
-
-EMBEDDING_METHODS = [
-    "pca",
-    "mds",
-    "t-sne",
-    "umap"
-]
-
-INTERNAL_NODE = [
-    "ancestral",
-    "sequences"
-]
-
-TYPE = [
-    "cross_v",
-    "SVM"
-]
-
-RANDOM_SEED = 314159
-
-rule all:
+rule seasonal_flu_test:
     input:
-        expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        expand("results/distance_matrix_{ancestral}.csv", ancestral=INTERNAL_NODE),
-        expand("results/embed_pca_{ancestral}.pdf", ancestral=INTERNAL_NODE),
-        expand("results/embed_t-sne_{ancestral}.pdf", ancestral=INTERNAL_NODE),
-        expand("results/embed_umap_{ancestral}.pdf", ancestral=INTERNAL_NODE),
-        expand("results/embed_mds_{ancestral}.pdf", ancestral=INTERNAL_NODE),
-        "../auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json",
-        "results/table.tsv",
-        "results/full_Scatterplot_metadata.csv",
-        expand("results/explained_variance_pca_{ancestral}.csv", ancestral=INTERNAL_NODE),
-        "results/nucleotide_diversity.txt",
-        "../docs/fullHDBSCANChartFlu2018-2020.html",
-        "../docs/fullHDBSCANChartFlu2018-2020.png"
-rule files:
+        expand("seasonal-flu-nextstrain-2018-2020/results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
+        expand("seasonal-flu-nextstrain-2018-2020/results/distance_matrix_{ancestral}.csv", ancestral=INTERNAL_NODE),
+        expand("seasonal-flu-nextstrain-2018-2020/results/embed_pca_{ancestral}.pdf", ancestral=INTERNAL_NODE),
+        expand("seasonal-flu-nextstrain-2018-2020/results/embed_t-sne_{ancestral}.pdf", ancestral=INTERNAL_NODE),
+        expand("seasonal-flu-nextstrain-2018-2020/results/embed_umap_{ancestral}.pdf", ancestral=INTERNAL_NODE),
+        expand("seasonal-flu-nextstrain-2018-2020/results/embed_mds_{ancestral}.pdf", ancestral=INTERNAL_NODE),
+        "auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json",
+        "seasonal-flu-nextstrain-2018-2020/results/table.tsv",
+        "seasonal-flu-nextstrain-2018-2020/results/full_Scatterplot_metadata.csv",
+        expand("seasonal-flu-nextstrain-2018-2020/results/explained_variance_pca_{ancestral}.csv", ancestral=INTERNAL_NODE),
+        "seasonal-flu-nextstrain-2018-2020/results/nucleotide_diversity.txt",
+        "docs/fullHDBSCANChartFlu2018-2020.html",
+        "docs/fullHDBSCANChartFlu2018-2020.png"
+
+rule seasonal_flu_test_files:
     params:
         input_fasta = "data/ncbi-h3n2-ha.fa",
-        dropped_strains = "config/exclude.txt",
-        reference = "config/reference_h3n2_ha.gb",
-        auspice_config = "config/auspice_config.json",
-        clades = "config/clades_h3n2_ha.tsv"
+        dropped_strains = "seasonal-flu-nextstrain-2018-2020/config/exclude.txt",
+        reference = "seasonal-flu-nextstrain-2018-2020/config/reference_h3n2_ha.gb",
+        auspice_config = "seasonal-flu-nextstrain-2018-2020/config/auspice_config.json",
+        clades = "seasonal-flu-nextstrain-2018-2020/config/clades_h3n2_ha.tsv"
 
-files = rules.files.params
+seasonal_flu_test_files = rules.seasonal_flu_test_files.params
 
-rule parse:
+rule seasonal_flu_test_parse:
     message: "Parsing fasta into sequences and metadata"
     input:
-        sequences = files.input_fasta
+        sequences = seasonal_flu_test_files.input_fasta
     output:
-        sequences = "results/sequences.fasta",
-        metadata = "results/metadata.tsv"
+        sequences = "seasonal-flu-nextstrain-2018-2020/results/sequences.fasta",
+        metadata = "seasonal-flu-nextstrain-2018-2020/results/metadata.tsv"
     params:
         fasta_fields = "strain date accession country region"
     conda: "../cartography.yml"
@@ -64,7 +43,7 @@ rule parse:
             --fields {params.fasta_fields}
         """
 
-rule deduplicate_sequences:
+rule seasonal_flu_test_deduplicate_sequences:
     message:
         """
         Deduplicating sequences
@@ -72,7 +51,7 @@ rule deduplicate_sequences:
     input:
         sequences = rules.parse.output.sequences
     output:
-        sequences = "results/deduplicated_sequences.fasta"
+        sequences = "seasonal-flu-nextstrain-2018-2020/results/deduplicated_sequences.fasta"
     conda: "../cartography.yml"
     shell:
         """
@@ -81,7 +60,7 @@ rule deduplicate_sequences:
             --output {output.sequences}
         """
 
-rule filter:
+rule seasonal_flu_test_filter:
     message:
         """
         Filtering to
@@ -92,9 +71,9 @@ rule filter:
     input:
         sequences = rules.deduplicate_sequences.output.sequences,
         metadata = rules.parse.output.metadata,
-        exclude = files.dropped_strains
+        exclude = seasonal_flu_test_files.dropped_strains
     output:
-        sequences = "results/filtered.fasta"
+        sequences = "seasonal-flu-nextstrain-2018-2020/results/filtered.fasta"
     params:
         group_by = "country year month",
         sequences_per_group = 10,
@@ -116,7 +95,7 @@ rule filter:
             --max-date {params.max_date}
         """
 
-rule align:
+rule seasonal_flu_test_align:
     message:
         """
         Aligning sequences to {input.reference}
@@ -124,9 +103,9 @@ rule align:
         """
     input:
         sequences = rules.filter.output.sequences,
-        reference = files.reference
+        reference = seasonal_flu_test_files.reference
     output:
-        alignment = "results/aligned_sequences.fasta"
+        alignment = "seasonal-flu-nextstrain-2018-2020/results/aligned_sequences.fasta"
     conda: "../cartography.yml"
     threads: 4
     shell:
@@ -140,12 +119,12 @@ rule align:
             --nthreads {threads}
         """
 
-rule tree:
+rule seasonal_flu_test_tree:
     message: "Building tree"
     input:
         alignment = rules.align.output.alignment
     output:
-        tree = "results/tree_raw.nwk"
+        tree = "seasonal-flu-nextstrain-2018-2020/results/tree_raw.nwk"
     conda: "../cartography.yml"
     threads: 4
     shell:
@@ -156,7 +135,7 @@ rule tree:
             --nthreads {threads}
         """
 
-rule refine:
+rule seasonal_flu_test_refine:
     message:
         """
         Refining tree
@@ -170,8 +149,8 @@ rule refine:
         alignment = rules.align.output,
         metadata = rules.parse.output.metadata
     output:
-        tree = "results/tree.nwk",
-        node_data = "results/branch_lengths.json"
+        tree = "seasonal-flu-nextstrain-2018-2020/results/tree.nwk",
+        node_data = "seasonal-flu-nextstrain-2018-2020/results/branch_lengths.json"
     params:
         coalescent = "opt",
         date_inference = "marginal",
@@ -196,14 +175,14 @@ rule refine:
             --clock-std-dev {params.clock_std_dev}
         """
 
-rule ancestral:
+rule seasonal_flu_test_ancestral:
     message: "Reconstructing ancestral sequences and mutations"
     input:
         tree = rules.refine.output.tree,
         alignment = rules.align.output.alignment
     output:
-        node_data = "results/nt_muts.json",
-        sequences = "results/aligned_ancestral.fasta"
+        node_data = "seasonal-flu-nextstrain-2018-2020/results/nt_muts.json",
+        sequences = "seasonal-flu-nextstrain-2018-2020/results/aligned_ancestral.fasta"
     params:
         inference = "joint"
     conda: "../cartography.yml"
@@ -217,14 +196,14 @@ rule ancestral:
             --inference {params.inference}
         """
 
-rule translate:
+rule seasonal_flu_test_translate:
     message: "Translating amino acid sequences"
     input:
         tree = rules.refine.output.tree,
         node_data = rules.ancestral.output.node_data,
-        reference = files.reference
+        reference = seasonal_flu_test_files.reference
     output:
-        node_data = "results/aa_muts.json"
+        node_data = "seasonal-flu-nextstrain-2018-2020/results/aa_muts.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -234,15 +213,16 @@ rule translate:
             --reference-sequence {input.reference} \
             --output {output.node_data}
         """
-rule clades:
-    message: " Labeling clades as specified in config/clades.tsv"
+
+rule seasonal_flu_test_clades:
+    message: " Labeling clades as specified in seasonal-flu-nextstrain-2018-2020/config/clades.tsv"
     input:
         tree = rules.refine.output.tree,
         aa_muts = rules.translate.output.node_data,
         nuc_muts = rules.ancestral.output.node_data,
-        clades = files.clades
+        clades = seasonal_flu_test_files.clades
     output:
-        clade_data = "results/clades.json"
+        clade_data = "seasonal-flu-nextstrain-2018-2020/results/clades.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -252,13 +232,13 @@ rule clades:
             --output {output.clade_data}
         """
 
-rule traits:
+rule seasonal_flu_test_traits:
     message: "Inferring ancestral traits for {params.columns!s}"
     input:
         tree = rules.refine.output.tree,
         metadata = rules.parse.output.metadata
     output:
-        node_data = "results/traits.json",
+        node_data = "seasonal-flu-nextstrain-2018-2020/results/traits.json",
     params:
         columns = "region country"
     conda: "../cartography.yml"
@@ -272,7 +252,7 @@ rule traits:
             --confidence
         """
 
-rule export:
+rule seasonal_flu_test_export:
     message: "Exporting data files for for auspice"
     input:
         tree = rules.refine.output.tree,
@@ -281,12 +261,12 @@ rule export:
         traits = rules.traits.output.node_data,
         nt_muts = rules.ancestral.output.node_data,
         aa_muts = rules.translate.output.node_data,
-        embeddings = expand("results/embed_{embedding}_{ancestral}.json", embedding=EMBEDDING_METHODS, ancestral=INTERNAL_NODE),
-        auspice_config = files.auspice_config,
-        colors = "config/colors.tsv",
+        embeddings = expand("seasonal-flu-nextstrain-2018-2020/results/embed_{embedding}_{ancestral}.json", embedding=EMBEDDING_METHODS, ancestral=INTERNAL_NODE),
+        auspice_config = seasonal_flu_test_files.auspice_config,
+        colors = "seasonal-flu-nextstrain-2018-2020/config/colors.tsv",
         clades = rules.clades.output.clade_data
     output:
-        auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json"
+        auspice_tree = "auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -299,12 +279,12 @@ rule export:
             --output {output.auspice_tree}
         """
 
-rule tree_to_table:
+rule seasonal_flu_test_tree_to_table:
     message: "creating a table of node data values from the tree attributes"
     input:
         tree = rules.export.output.auspice_tree
     output:
-        table = "results/table.tsv"
+        table = "seasonal-flu-nextstrain-2018-2020/results/table.tsv"
     params:
         attributes = "num_date pca1 pca2 pca3 pca4 mds1 mds2 tsne_x tsne_y umap_x umap_y clade_membership pca_label mds_label umap_label t-sne_label"
     conda: "../cartography.yml"
@@ -316,12 +296,12 @@ rule tree_to_table:
             --attributes {params.attributes}
         """
 
-rule nucleotide_diversity:
+rule seasonal_flu_test_nucleotide_diversity:
     message: "finding the nucleotide diversity of an aligned FASTA file"
     input:
-        alignment = "results/aligned_sequences.fasta"
+        alignment = "seasonal-flu-nextstrain-2018-2020/results/aligned_sequences.fasta"
     output:
-        output = "results/nucleotide_diversity.txt"
+        output = "seasonal-flu-nextstrain-2018-2020/results/nucleotide_diversity.txt"
     conda: "../cartography.yml"
     shell:
         """
@@ -330,12 +310,12 @@ rule nucleotide_diversity:
             --output {output.output}
         """
 
-rule create_distance_matrix:
+rule seasonal_flu_test_create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
-        alignment = "results/aligned_{ancestral}.fasta"
+        alignment = "seasonal-flu-nextstrain-2018-2020/results/aligned_{ancestral}.fasta"
     output:
-        output = "results/distance_matrix_{ancestral}.csv"
+        output = "seasonal-flu-nextstrain-2018-2020/results/distance_matrix_{ancestral}.csv"
     conda: "../cartography.yml"
     shell:
         """
@@ -344,18 +324,17 @@ rule create_distance_matrix:
             --output {output.output}
         """
 
-rule embed_pca:
+rule seasonal_flu_test_embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
-        alignment = "results/aligned_{ancestral}.fasta",
-        cluster = "../seasonal-flu-nextstrain/results/pca_parameters.csv",
+        alignment = "seasonal-flu-nextstrain-2018-2020/results/aligned_{ancestral}.fasta",
+        cluster = "seasonal-flu-nextstrain/results/pca_parameters.csv",
     output:
-        node_data = "results/embed_pca_{ancestral}.json",
-        dataframe = "results/embed_pca_{ancestral}.csv",
-        figure = "results/embed_pca_{ancestral}.pdf",
-        explained_variance = "results/explained_variance_pca_{ancestral}.csv"
+        node_data = "seasonal-flu-nextstrain-2018-2020/results/embed_pca_{ancestral}.json",
+        dataframe = "seasonal-flu-nextstrain-2018-2020/results/embed_pca_{ancestral}.csv",
+        figure = "seasonal-flu-nextstrain-2018-2020/results/embed_pca_{ancestral}.pdf",
+        explained_variance = "seasonal-flu-nextstrain-2018-2020/results/explained_variance_pca_{ancestral}.csv"
     params:
-        components = 10,
         random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
@@ -368,23 +347,19 @@ rule embed_pca:
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             pca \
-            --components {params.components} \
             --explained-variance {output.explained_variance}
         """
 
-
-rule embed_tsne:
+rule seasonal_flu_test_embed_tsne:
     message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
-        distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "../seasonal-flu-nextstrain/results/t-sne_parameters.csv",
+        distance_matrix = "seasonal-flu-nextstrain-2018-2020/results/distance_matrix_{ancestral}.csv",
+        cluster = "seasonal-flu-nextstrain/results/t-sne_parameters.csv",
     output:
-        node_data = "results/embed_t-sne_{ancestral}.json",
-        dataframe = "results/embed_t-sne_{ancestral}.csv",
-        figure = "results/embed_t-sne_{ancestral}.pdf"
+        node_data = "seasonal-flu-nextstrain-2018-2020/results/embed_t-sne_{ancestral}.json",
+        dataframe = "seasonal-flu-nextstrain-2018-2020/results/embed_t-sne_{ancestral}.csv",
+        figure = "seasonal-flu-nextstrain-2018-2020/results/embed_t-sne_{ancestral}.pdf"
     params:
-        perplexity = 30,
-        learning_rate = 100,
         random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
@@ -396,23 +371,19 @@ rule embed_tsne:
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            t-sne \
-            --perplexity {params.perplexity} \
-            --learning-rate {params.learning_rate}
+            t-sne
         """
 
-rule embed_umap:
+rule seasonal_flu_test_embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
-        distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "../seasonal-flu-nextstrain/results/umap_parameters.csv",
+        distance_matrix = "seasonal-flu-nextstrain-2018-2020/results/distance_matrix_{ancestral}.csv",
+        cluster = "seasonal-flu-nextstrain/results/umap_parameters.csv",
     output:
-        node_data = "results/embed_umap_{ancestral}.json",
-        dataframe = "results/embed_umap_{ancestral}.csv",
-        figure = "results/embed_umap_{ancestral}.pdf"
+        node_data = "seasonal-flu-nextstrain-2018-2020/results/embed_umap_{ancestral}.json",
+        dataframe = "seasonal-flu-nextstrain-2018-2020/results/embed_umap_{ancestral}.csv",
+        figure = "seasonal-flu-nextstrain-2018-2020/results/embed_umap_{ancestral}.pdf"
     params:
-        nearest_neighbors = 50,
-        min_dist = 0.25,
         random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
@@ -424,22 +395,19 @@ rule embed_umap:
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            umap \
-            --nearest-neighbors {params.nearest_neighbors} \
-            --min-dist {params.min_dist}
+            umap
         """
 
-rule embed_mds:
+rule seasonal_flu_test_embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
-        distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "../seasonal-flu-nextstrain/results/mds_parameters.csv",
+        distance_matrix = "seasonal-flu-nextstrain-2018-2020/results/distance_matrix_{ancestral}.csv",
+        cluster = "seasonal-flu-nextstrain/results/mds_parameters.csv",
     output:
-        node_data = "results/embed_mds_{ancestral}.json",
-        dataframe = "results/embed_mds_{ancestral}.csv",
-        figure = "results/embed_mds_{ancestral}.pdf"
+        node_data = "seasonal-flu-nextstrain-2018-2020/results/embed_mds_{ancestral}.json",
+        dataframe = "seasonal-flu-nextstrain-2018-2020/results/embed_mds_{ancestral}.csv",
+        figure = "seasonal-flu-nextstrain-2018-2020/results/embed_mds_{ancestral}.pdf"
     params:
-        components = 4,
         random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
@@ -451,27 +419,18 @@ rule embed_mds:
             --output-node-data {output.node_data} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            mds \
-            --components {params.components} \
+            mds
         """
 
-def _get_embedding_columns_by_wildcards(wildcards):
-    method = wildcards.method.replace("-", "")
-
-    if method in ("pca", "mds"):
-        return f"{method}1 {method}2 {method}3 {method}4"
-    else:
-        return f"{method}_x {method}_y"
-
-rule scatterplot:
+rule seasonal_flu_test_scatterplot:
     message: "Creating the scatterplot (PNG, dataframe)"
     input:
-        distance_matrix = "results/distance_matrix_sequences.csv",
-        embedding = "results/embed_{method}_sequences.csv",
+        distance_matrix = "seasonal-flu-nextstrain-2018-2020/results/distance_matrix_sequences.csv",
+        embedding = "seasonal-flu-nextstrain-2018-2020/results/embed_{method}_sequences.csv",
     output:
-        figure = "results/scatterplot_{method}.png",
-        dataframe = "results/scatterplot_{method}.csv",
-        metadata = "results/scatterplot_{method}_metadata.csv"
+        figure = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_{method}.png",
+        dataframe = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_{method}.csv",
+        metadata = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_{method}_metadata.csv"
     params:
         bootstrap = 100,
         columns = _get_embedding_columns_by_wildcards
@@ -489,63 +448,45 @@ rule scatterplot:
             --output-metadata {output.metadata}
         """
 
-def _get_embedding_path_by_wildcards(wildcards):
-    method = wildcards.method
-
-    if method in ("pca", "mds", "t-sne", "umap"):
-        return f"results/embed_{method}_sequences.csv"
-    else:
-        return "results/distance_matrix_sequences.csv"
-
-rule concat_scatterplot_table:
+rule seasonal_flu_test_concat_scatterplot_table:
     message: "concatenating all the scatterplot metadata into one csv dataframe"
     input:
-       dataframe_pca = "results/scatterplot_pca_metadata.csv",
-       dataframe_mds = "results/scatterplot_mds_metadata.csv",
-       dataframe_tsne = "results/scatterplot_t-sne_metadata.csv",
-       dataframe_umap = "results/scatterplot_umap_metadata.csv"
+       dataframe_pca = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_pca_metadata.csv",
+       dataframe_mds = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_mds_metadata.csv",
+       dataframe_tsne = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_t-sne_metadata.csv",
+       dataframe_umap = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_umap_metadata.csv"
     output:
-        metadata = "results/full_Scatterplot_metadata.csv"
+        metadata = "seasonal-flu-nextstrain-2018-2020/results/full_Scatterplot_metadata.csv"
     params:
         column = "pearson_coef",
-        dataframes = "results/scatterplot_pca_metadata.csv results/scatterplot_mds_metadata.csv results/scatterplot_t-sne_metadata.csv results/scatterplot_umap_metadata.csv"
     conda: "../cartography.yml"
     shell:
         """
         python3 ../notebooks/scripts/concatenate_tables.py \
-            --tables {params.dataframes} \
+            --tables {input.dataframe_pca} {input.dataframe_mds} {input.dataframe_tsne} {input.dataframe_umap} \
             --separator ',' \
             --sort-by {params.column} \
             --output {output.metadata}
         """
 
-rule create_notebook_docs:
+rule seasonal_flu_test_create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:
         #Charts, tree:
-        colors = "../notebooks/config/color_schemes.tsv",
-        node_df = "results/table.tsv",
+        colors = "notebooks/config/color_schemes.tsv",
+        node_df = "seasonal-flu-nextstrain-2018-2020/results/table.tsv",
 
-        pca_df = "results/embed_pca_sequences.csv",
-        explained_variance_pca = "results/explained_variance_pca_sequences.csv",
+        pca_df = "seasonal-flu-nextstrain-2018-2020/results/embed_pca_sequences.csv",
+        explained_variance_pca = "seasonal-flu-nextstrain-2018-2020/results/explained_variance_pca_sequences.csv",
 
-        mds_df = "results/embed_mds_sequences.csv",
-        tsne_df = "results/embed_t-sne_sequences.csv",
-        umap_df = "results/embed_umap_sequences.csv"
+        mds_df = "seasonal-flu-nextstrain-2018-2020/results/embed_mds_sequences.csv",
+        tsne_df = "seasonal-flu-nextstrain-2018-2020/results/embed_t-sne_sequences.csv",
+        umap_df = "seasonal-flu-nextstrain-2018-2020/results/embed_umap_sequences.csv"
 
     output:
-        fullChartHDBSCAN20182020 = "../docs/fullHDBSCANChartFlu2018-2020.html",
-        fullChartHDBSCANPNG20182020 = "../docs/fullHDBSCANChartFlu2018-2020.png"
+        fullChartHDBSCAN20182020 = "docs/fullHDBSCANChartFlu2018-2020.html",
+        fullChartHDBSCANPNG20182020 = "docs/fullHDBSCANChartFlu2018-2020.png"
 
     conda: "../cartography.yml"
     notebook:
         "2021-03-09Notebook.ipynb"
-
-rule clean:
-    message: "Removing directories: {params}"
-    params:
-        "results ",
-        "auspice"
-    conda: "../cartography.yml"
-    shell:
-        "rm -rfv {params}"
