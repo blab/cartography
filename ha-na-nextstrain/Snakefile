@@ -248,8 +248,8 @@ rule refine:
         coalescent = "opt",
         date_inference = "marginal",
         clock_filter_iqd = 4,
-        clock_rate = 0.00382,
-        clock_std_dev = 0.000764
+        clock_rate = lambda wildcards: 0.00382 if wildcards.segment == "ha" else 0.00267,
+        clock_std_dev = lambda wildcards: 0.000764 if wildcards.segment == "ha" else 0.000534,
     conda: "../cartography.yml"
     shell:
         """
