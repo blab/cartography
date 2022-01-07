@@ -538,7 +538,7 @@ def _get_embedding_path_by_wildcards(wildcards):
 
 rule cluster_by_parameters:
     input:
-        alignment="results/aligned_sequences.fasta",
+        alignment="results/imputed_sequences.fasta",
         distance_matrix="results/distance_matrix_sequences.csv",
         clades="results/clades.json",
     output:
