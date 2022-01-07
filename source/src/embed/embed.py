@@ -134,11 +134,6 @@ def embed(args):
 
     # Use PCA as its own embedding or as an initialization for t-SNE.
     if args.command == "pca" or args.command == "t-sne":
-        sequences_by_name = OrderedDict()
-
-        for sequence in Bio.SeqIO.parse(args.alignment, "fasta"):
-            sequences_by_name[sequence.id] = str(sequence.seq)
-
         sequence_names = list(sequences_by_name.keys())
 
         numbers = list(sequences_by_name.values())[:]

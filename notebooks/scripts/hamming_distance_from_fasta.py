@@ -5,7 +5,7 @@ import sys
 sys.path.append("../")
 
 import argparse
-import Bio.SeqIO
+from augur.io import read_sequences
 from collections import OrderedDict
 import pandas as pd
 import numpy as np
@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     sequences_by_name = OrderedDict()
 
-    for sequence in Bio.SeqIO.parse(args.alignment, "fasta"):
+    for sequence in read_sequences(args.alignment):
         sequences_by_name[sequence.id] = str(sequence.seq)
 
     sequence_names = list(sequences_by_name.keys())

@@ -1,6 +1,7 @@
 """Functions for manipulating and plotting pairwise distances and reduced
 dimensionality embeddings of distance matrices.
 """
+from augur.io import read_sequences
 import Bio.SeqIO
 from collections import OrderedDict
 import numpy as np
@@ -10,6 +11,16 @@ import re
 from scipy.spatial.distance import squareform, pdist
 from scipy.stats import linregress
 import statsmodels
+
+def get_embedding_columns_by_method(method):
+    if method in ("pca"):
+        return list(f"{method}1 {method}2 {method}3 {method}4 {method}5 {method}6 {method}7 {method}8 {method}9 {method}10".split())
+    if method in ("mds"):
+        return list(f"{method}1 {method}2 {method}3 {method}4".split())
+    if method in ("t-sne"):
+        return list("tsne_x tsne_y".split())
+    else:
+        return list(f"{method}_x {method}_y".split())
 
 def get_PCA_feature_matrix(alignment, sequence_names):
     """Calculate PCA feature matrix from the alignment and the strains that should be kept
@@ -24,7 +35,7 @@ def get_PCA_feature_matrix(alignment, sequence_names):
     """
     sequences_by_name = OrderedDict()
 
-    for sequence in Bio.SeqIO.parse(alignment, "fasta"):
+    for sequence in read_sequences(alignment):
         if sequence.id in sequence_names:
             sequences_by_name[sequence.id] = str(sequence.seq)
 

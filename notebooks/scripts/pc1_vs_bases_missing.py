@@ -1,8 +1,8 @@
 """
-Takes aligned strain data and PC1 and outputs a chart of bases missing vs PC1 
+Takes aligned strain data and PC1 and outputs a chart of bases missing vs PC1
 """
-
 import argparse
+from augur.io import read_sequences
 from Bio import SeqIO
 import matplotlib.pyplot as plt
 import numpy as np
@@ -21,14 +21,14 @@ if __name__ == "__main__":
     parser.add_argument("--color", help="the column to color by (optional)")
     parser.add_argument("--bootstrapping-sample", default=100, type=int, help="number of times the data is sampled with replacement to find the mean and standard deviation of the pearson coefficient")
     parser.add_argument("--output", help="the name of the output file for the PCA vs missing bases figure")
-    
-        
+
+
     args = parser.parse_args()
 
     metadata_df = pd.read_csv(args.metadata, sep="\t")
     strains = []
     genomes = []
-    for record in SeqIO.parse(args.alignment, "fasta"):
+    for record in read_sequences(args.alignment):
         strains.append(str(record.id))
         genomes.append(str(record.seq))
 
@@ -51,14 +51,14 @@ if __name__ == "__main__":
         regression = linregress(new_merged["pca1"], new_merged["bases_missing"])
         slope, intercept, r_value, p_value, std_err = regression
         r_value_arr.append(r_value ** 2)
-    
+
     r_value_arr = np.array(r_value_arr)
 
     mean = np.mean(r_value_arr)
     std = np.std(r_value_arr)
     if args.color is not None:
         new_merged = new_merged.merge(metadata_df, on="strain")
-        
+
     fig, ax = plt.subplots(1, 1, figsize=(6, 6))
     if args.color is None:
         sns.scatterplot(data=new_merged, x="bases_missing", y="pca1", alpha=0.25, ax=ax)
@@ -78,6 +78,5 @@ if __name__ == "__main__":
                 verticalalignment='center',
                 transform=ax.transAxes,
             )
-   
-    plt.savefig(args.output, dpi=300)
 
+    plt.savefig(args.output, dpi=300)

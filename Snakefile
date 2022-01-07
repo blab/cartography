@@ -34,17 +34,18 @@ rule all:
 include: "rules/common.smk"
 
 # Include rules for each pathogen.
+include: "sars-cov-2-nextstrain/Snakefile"
 include: "seasonal-flu-nextstrain/Snakefile"
 include: "seasonal-flu-nextstrain-2018-2020/Snakefile"
-# include: "ha-na-nextstrain/Snakefile"
+#include: "ha-na-nextstrain/Snakefile"
 # include: "ha-na-ma-nextstrain/Snakefile"
 # include: "outlier_analysis/Snakefile"
 # include: "zika-nextstrain/Snakefile"
 # include: "mers-nextstrain/Snakefile"
-# include: "sars-cov-2-nextstrain/Snakefile"
 
 rule pathogens:
     input:
+        *rules.sarscov2.input,
         *rules.seasonal_flu_training.input,
         *rules.seasonal_flu_test.input,
 
