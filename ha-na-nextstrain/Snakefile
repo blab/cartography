@@ -422,7 +422,7 @@ rule create_distance_matrix:
             --alignment {input.alignment} \
             --output {output.output}
         """
-        
+
 
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
@@ -529,11 +529,11 @@ rule embed_mds:
 
 rule create_node_output:
     message: "creates node output that is used by augur to create the phylogenies"
-    input: 
+    input:
         dataframe = "results/embed_{method}.csv"
     output:
         node_data = "results/embed_{method}.json"
-    shell: 
+    shell:
         """
         python3 ../notebooks/scripts/otuput_node_data.py \
             --table {input.dataframe} \
@@ -550,7 +550,7 @@ rule rename_columns:
     params:
         rename_column = "{method}_label_ha_na",
         differentiator_column = "{method}_label"
-    shell: 
+    shell:
         """
         python3 scripts/rename_columns.py \
             --clades {input.clades} \
@@ -637,7 +637,7 @@ rule cluster_by_parameters_ha:
     conda: "../cartography.yml"
     script:
         "../notebooks/scripts/cluster_by_parameters.py"
-        
+
 rule cluster_by_parameters_concat:
     input:
         alignment="results/aligned_concatenated.fasta",
@@ -682,7 +682,7 @@ rule create_notebook_docs:
     input:
         #Charts, tree:
         node_df_ha = "results/table_ha.tsv",
-        
+
         pca_df_ha = "results/embed_pca_ha.csv",
         explained_variance_pca_ha = "results/explained_variance_pca_ha.csv",
 
