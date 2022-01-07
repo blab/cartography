@@ -321,7 +321,7 @@ rule seasonal_flu_training_tree_to_table:
     output:
         table = "seasonal-flu-nextstrain/results/table.tsv"
     params:
-        attributes = "num_date pca1 pca2 pca3 pca4 mds1 mds2 tsne_x tsne_y umap_x umap_y clade_membership pca_label mds_label umap_label t-sne_label pca_label_default mds_label_default umap_label_default t-sne_label_default"
+        attributes = "num_date pca1 pca2 pca3 pca4 pca5 pca6 pca7 pca8 pca9 pca10 mds1 mds2 mds3 mds4 tsne_x tsne_y umap_x umap_y clade_membership pca_label mds_label umap_label t-sne_label pca_label_default mds_label_default umap_label_default t-sne_label_default"
     conda: "../cartography.yml"
     shell:
         """
