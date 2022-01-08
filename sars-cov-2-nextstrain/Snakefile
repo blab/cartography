@@ -233,6 +233,9 @@ rule cluster_by_parameters:
         table=f"sars-cov-2-nextstrain/results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
     params:
         method_parameters=METHOD_PARAMETERS.instance,
+    resources:
+        runtime="0:30:00",
+        mem_mb=4000,
     conda: "../cartography.yml"
     script:
         "../notebooks/scripts/cluster_by_parameters.py"
@@ -266,7 +269,7 @@ rule output_grid_search:
     log:
         "logs/summarize-grid-search.ipynb"
     notebook:
-        "notebooks/2021-06-23-summarize-grid-search.ipynb"
+        "../notebooks/2021-06-23-summarize-grid-search.ipynb"
 
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
