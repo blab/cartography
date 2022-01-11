@@ -1,6 +1,6 @@
 # converts unimputed data into a genome_df, creates imputed data
 import argparse
-import Bio.SeqIO
+from augur.io import read_sequences
 from collections import OrderedDict
 import numpy as np
 import pandas as pd
@@ -11,7 +11,7 @@ from sklearn.impute import SimpleImputer
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description = "creates imputed fasta or df", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        
+
     parser.add_argument("--alignment", help="the path to an alignment FASTA file")
     parser.add_argument("--output-dataframe", help="path for outputting as a dataframe of numbers")
     parser.add_argument("--output-fasta", help="path for outputting as a FASTA")
@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
     sequences_by_name = OrderedDict()
 
-    for sequence in Bio.SeqIO.parse(args.alignment, "fasta"):
+    for sequence in read_sequences(args.alignment):
         sequences_by_name[sequence.id] = str(sequence.seq)
 
     sequence_names = list(sequences_by_name.keys())
@@ -48,11 +48,11 @@ if __name__ == "__main__":
     new_genomes = []
     if args.output_fasta is not None:
         for i in range(0, len(genomes)):
-            string_numbers = ''.join(map(str, genomes[i])) 
+            string_numbers = ''.join(map(str, genomes[i]))
             string_numbers = string_numbers.replace('1','A').replace('2','G').replace('3', 'C').replace('4','T')
 
             new_genomes.append(string_numbers)
-    
+
         fasta_file = open(args.output_fasta, "w")
 
         for i in range(len(new_genomes)):
