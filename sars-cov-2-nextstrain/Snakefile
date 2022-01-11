@@ -48,6 +48,7 @@ rule embed_pca_before:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta.xz",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_pca_before.csv",
+        figure = "sars-cov-2-nextstrain/results/embed_pca_before.pdf",
     params:
         random_seed = RANDOM_SEED,
         components = 10,
@@ -58,6 +59,7 @@ rule embed_pca_before:
             --alignment /dev/stdin \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
             pca \
             --components {params.components}
         """
