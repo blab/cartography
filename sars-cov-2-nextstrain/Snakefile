@@ -165,13 +165,13 @@ rule compress_and_index_snps:
 
 rule build_population_file:
     input:
-        alignment="sars-cov-2-nextstrain/data/aligned.fasta.xz",
+        alignment="sars-cov-2-nextstrain/data/aligned.fasta",
     output:
         populations="sars-cov-2-nextstrain/results/populations.txt",
     conda: "../cartography.yml"
     shell:
         """
-        xz -c -d {input.alignment} | grep "^>" | sed 's/>//' | awk 'OFS="\\t" {{ print $1,"virus" }}' > {output.populations}
+        grep "^>" {input.alignment} | sed 's/>//' | awk 'OFS="\\t" {{ print $1,"virus" }}' > {output.populations}
         """
 
 rule nucleotide_diversity:
@@ -287,8 +287,8 @@ rule embed_pca:
     conda: "../cartography.yml"
     shell:
         """
-        xz -c -d {input.alignment} | embed \
-            --alignment /dev/stdin \
+        embed \
+            --alignment {input.alignment} \
             --cluster-data {input.cluster} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
@@ -322,6 +322,7 @@ rule embed_mds:
 rule embed_tsne:
     message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
         cluster = "sars-cov-2-nextstrain/results/t-sne_parameters.csv",
     output:
@@ -333,6 +334,7 @@ rule embed_tsne:
     shell:
         """
         embed \
+            --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --random-seed {params.random_seed} \
