@@ -89,20 +89,19 @@ def embed(args):
         sys.exit(1)
 
     # getting or creating the distance matrix
-
+    distance_matrix = None
     if args.distance_matrix is not None:
         distance_matrix  = pd.read_csv(args.distance_matrix, index_col=0)
 
-    elif args.alignment is not None:
+    if args.alignment is not None:
         sequences_by_name = OrderedDict()
 
         for sequence in Bio.SeqIO.parse(args.alignment, "fasta"):
             sequences_by_name[sequence.id] = str(sequence.seq)
 
         sequence_names = list(sequences_by_name.keys())
-        if args.command != "pca":
+        if args.command != "pca" and distance_matrix is None:
             # Calculate Distance Matrix
-
             hamming_distances = get_hamming_distances(
                 sequences_by_name.values()
             )
