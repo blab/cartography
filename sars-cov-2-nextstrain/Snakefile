@@ -228,7 +228,7 @@ rule create_distance_matrix:
 
 rule cluster_by_parameters:
     input:
-        alignment="sars-cov-2-nextstrain/data/aligned.fasta.xz",
+        alignment="sars-cov-2-nextstrain/results/imputed_alignment.fasta",
         distance_matrix="sars-cov-2-nextstrain/results/distance_matrix.csv",
         clades="sars-cov-2-nextstrain/results/clades.json",
     output:
@@ -276,7 +276,7 @@ rule output_grid_search:
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
-        alignment = "sars-cov-2-nextstrain/data/aligned.fasta.xz",
+        alignment = "sars-cov-2-nextstrain/results/imputed_alignment.fasta",
         cluster = "sars-cov-2-nextstrain/results/pca_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_pca.csv",
