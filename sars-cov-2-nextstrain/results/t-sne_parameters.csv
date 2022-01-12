@@ -1,2 +1,2 @@
 method,distance_threshold,perplexity,learning_rate,validation_mcc
-t-sne,2.0,100.0,200.0,0.8408071556227323
+t-sne,2.0,100.0,100.0,0.7284752715534003
