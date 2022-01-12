@@ -1,6 +1,11 @@
 {
     "title": "Seasonal influenza A/H3N2 phylogeny from 2016-2018",
     "colorings": [
+        {
+            "key": "MCC",
+            "title": "MCC",
+            "type": "categorical"
+        },
 		{
             "key": "pca_label_ha_na",
             "title": "HA NA cluster pca",
