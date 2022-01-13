@@ -12,17 +12,33 @@ if __name__ == '__main__':
 
     data = {}
     mcc = 0
+    total_strains = 0
+    skipped_mccs = 0
+    skipped_strains = 0
     with open(args.mccs, "r", encoding="utf-8") as fh:
         for line in fh:
             strains = line.strip().split(",")
+            total_strains += len(strains)
 
             if len(strains) >= args.min_size:
                 print(f"MCC {mcc} has {len(strains)} strains")
                 for strain in strains:
                     data[strain] = {
-                        args.field_name: mcc,
+                        args.field_name: f"MCC_{mcc}",
                     }
 
                 mcc += 1
+            else:
+                for strain in strains:
+                    data[strain] = {
+                        args.field_name: "unassigned",
+                    }
+
+                skipped_mccs += 1
+                skipped_strains += len(strains)
 
     write_json({"nodes": data}, args.output)
+
+    print(f"Inspected MCCs with {total_strains} total strains.")
+    print(f"Annotated {mcc + 1} MCCs, totalling {total_strains - skipped_strains} strains ({((total_strains - skipped_strains) / total_strains) * 100:.0f}%).")
+    print(f"Skipped {skipped_mccs} MCCs smaller than {args.min_size}, totalling {skipped_strains} strains.")

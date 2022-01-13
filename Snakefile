@@ -20,7 +20,10 @@ RANDOM_SEED = 314159
 
 wildcard_constraints:
     method="(pca|mds|t-sne|umap|genetic)",
-    internal_node= "(ancestral|sequences)"
+    internal_node= "(ancestral|sequences)",
+    segment="(ha|na)",
+    ha_concatenated="(ha|na|concatenated)",
+    ha_concat="(ha|concatenated)"
 
 # Define final outputs for the workflow.
 rule all:
@@ -36,7 +39,7 @@ include: "rules/common.smk"
 # Include rules for each pathogen.
 include: "seasonal-flu-nextstrain/Snakefile"
 include: "seasonal-flu-nextstrain-2018-2020/Snakefile"
-#include: "ha-na-nextstrain/Snakefile"
+include: "ha-na-nextstrain/Snakefile"
 # include: "mers-nextstrain/Snakefile"
 include: "sars-cov-2-nextstrain/Snakefile"
 
@@ -48,6 +51,7 @@ rule pathogens:
     input:
         *rules.seasonal_flu_training.input,
         *rules.seasonal_flu_test.input,
+        *rules.seasonal_flu_reassortment.input,
         *rules.sarscov2.input,
 
 # Include rules for the manuscript.
