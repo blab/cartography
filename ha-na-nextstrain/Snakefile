@@ -456,6 +456,7 @@ rule seasonal_flu_reassortment_create_node_output:
         dataframe = "ha-na-nextstrain/results/embed_{method}_{ha_concatenated}.csv"
     output:
         node_data = "ha-na-nextstrain/results/embed_{method}_{ha_concatenated}.json"
+    conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/output_node_data.py \
@@ -470,6 +471,7 @@ rule seasonal_flu_reassortment_rename_columns:
         embedding = "ha-na-nextstrain/results/embed_{method}_concatenated.csv"
     output:
         node_data = "ha-na-nextstrain/results/embed_{method}_concatenated_renamed.json"
+    conda: "../cartography.yml"
     params:
         rename_column = "{method}_label_ha_na",
         differentiator_column = "{method}_label"
@@ -518,6 +520,7 @@ rule seasonal_flu_reassortment_create_distance_dataframe:
         dataframe_umap_na = "ha-na-nextstrain/results/embed_umap_concatenated.csv"
     output:
         metadata = "ha-na-nextstrain/results/ha_concatenated_data.csv"
+    conda: "../cartography.yml"
     params:
         suffixes = "_ha _concatenated"
     shell:
