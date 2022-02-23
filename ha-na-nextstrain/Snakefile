@@ -367,7 +367,7 @@ rule seasonal_flu_reassortment_tree_to_table:
     output:
         table = "ha-na-nextstrain/results/table_{segment}.tsv"
     params:
-        attributes = "num_date pca1 pca2 pca3 pca4 pca5 pca6 pca7 pca8 pca9 pca10 mds1 mds2 mds3 mds4 tsne_x tsne_y umap_x umap_y MCC clade_membership pca_label mds_label umap_label t-sne_label"
+        attributes = "num_date MCC clade_membership"
     conda: "../cartography.yml"
     shell:
         """
@@ -565,6 +565,24 @@ rule seasonal_flu_reassortment_create_distance_dataframe:
             --output {output.metadata}
         """
 
+rule seasonal_flu_reassortment_annotate_embeddings:
+    input:
+        left="ha-na-nextstrain/results/table_ha.tsv",
+        right="ha-na-nextstrain/results/ha_concatenated_data.csv",
+    output:
+        table="ha-na-nextstrain/results/annotated_embeddings.tsv",
+    conda: "../cartography.yml"
+    params:
+        join_on="strain",
+    shell:
+        """
+        python3 notebooks/scripts/join_tables.py \
+            --left {input.left} \
+            --right {input.right} \
+            --on {params.join_on} \
+            --output {output.table}
+        """
+
 rule seasonal_flu_reassortment_cluster_metadata:
     input:
         embedding = "ha-na-nextstrain/results/embed_{method}_{ha_concatenated}.csv",
@@ -609,34 +627,16 @@ rule seasonal_flu_reassortment_concat_HDBSCAN_table:
 rule seasonal_flu_reassortment_create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:
-        #Charts, tree:
-        node_df_ha = "ha-na-nextstrain/results/table_ha.tsv",
-        alignment_ha = "ha-na-nextstrain/results/aligned_ha.fasta",
-        alignment_concatenated = "ha-na-nextstrain/results/aligned_concatenated.fasta",
-
-        pca_df_ha = "ha-na-nextstrain/results/embed_pca_ha.csv",
-        explained_variance_pca_ha = "ha-na-nextstrain/results/explained_variance_pca_ha.csv",
-
-        pca_df_concatenated = "ha-na-nextstrain/results/embed_pca_concatenated.csv",
-        explained_variance_pca_concatenated = "ha-na-nextstrain/results/explained_variance_pca_concatenated.csv",
-
-        mds_df_ha = "ha-na-nextstrain/results/embed_mds_ha.csv",
-        mds_df_concatenated = "ha-na-nextstrain/results/embed_mds_concatenated.csv",
-
-        tsne_df_ha = "ha-na-nextstrain/results/embed_t-sne_ha.csv",
-        tsne_df_concatenated = "ha-na-nextstrain/results/embed_t-sne_concatenated.csv",
-
-        umap_df_ha = "ha-na-nextstrain/results/embed_umap_ha.csv",
-        umap_df_concatenated = "ha-na-nextstrain/results/embed_umap_concatenated.csv",
-
+        colors = "notebooks/config/color_schemes.tsv",
+        annotated_embeddings="ha-na-nextstrain/results/annotated_embeddings.tsv",
+        accuracy_table="ha-na-nextstrain/results/full_HDBSCAN_metadata.csv",
     output:
         HANAFullChartBrushableMDSHTML = "docs/HANAFullChartBrushableMDS.html",
-        #HANAFullChartBrushableMDSPNG = "docs/HANAFullChartBrushableMDS.png",
+        HANAFullChartBrushableMDSPNG = "docs/HANAFullChartBrushableMDS.png",
         HANAFullChartBrushableTSNEHTML = "docs/HANAFullChartBrushableTSNE.html",
-        #HANAFullChartBrushableTSNEPNG = "docs/HANAFullChartBrushableTSNE.png",
+        HANAFullChartBrushableTSNEPNG = "docs/HANAFullChartBrushableTSNE.png",
         fullChartHTML = "docs/flu-embeddingsHaNa.html",
-        #fullChartPNG = "docs/flu-embeddingsHaNa.png",
-
+        fullChartPNG = "docs/flu-embeddingsHaNa.png",
     conda: "../cartography.yml"
     notebook:
-        "2020-12-21NotebookFluHaNa.ipynb"
+        "2022-02-23-seasonal-flu-ha-na-reassortment.ipynb"
