@@ -21,6 +21,7 @@ if __name__ == "__main__":
     parser.add_argument("--method", required=True, choices = ["pca", "mds", "t-sne", "umap"], help="the embedding used")
     parser.add_argument("--clade-column", default="clade_membership", help="column storing known clade or group membership to use for accuracy calculations")
     parser.add_argument("--missing-data-value", help="string used to represent missing data values that should be dropped from accuracy calculations")
+    parser.add_argument("--analysis-name", help="name of analysis to annotate the accuracy values with. Used when outputs will be concatenated downstream across multiple analyses.")
     parser.add_argument("--cluster-data", help="cluster data from embedding and assign labels given via HDBSCAN")
     parser.add_argument("--cluster-threshold", type=float, help="cluster data from embedding and assign labels given via HDBSCAN. Pass in a threshold.")
     parser.add_argument("--output", required=True, help="outputting a csv file of metadata info for HDBSCAN results")
@@ -88,5 +89,8 @@ if __name__ == "__main__":
         ],
         columns=["embedding", "MCC", "threshold", "TN", "FN", "TP", "FP"]
     ).round(3)
+
+    if args.analysis_name:
+        output_df["analysis_name"] = args.analysis_name
 
     output_df.to_csv(args.output, index=False)
