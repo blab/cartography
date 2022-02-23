@@ -300,6 +300,39 @@ rule seasonal_flu_reassortment_traits:
             --confidence
         """
 
+rule seasonal_flu_reassortment_find_mccs:
+    input:
+        ha_tree="ha-na-nextstrain/results/tree_raw_ha.nwk",
+        na_tree="ha-na-nextstrain/results/tree_raw_na.nwk",
+    output:
+        mccs="ha-na-nextstrain/results/treeknit_results/MCCs.dat",
+    params:
+        gamma=2,
+    conda: "../cartography.yml"
+    shell:
+        """
+        ~/.julia/bin/treeknit \
+            {input.ha_tree} \
+            {input.na_tree} \
+            -g={params.gamma}
+        """
+
+rule seasonal_flu_reassortment_convert_mccs_to_json:
+    input:
+        mccs="ha-na-nextstrain/results/treeknit_results/MCCs.dat",
+    output:
+        node_data="ha-na-nextstrain/results/mccs.json",
+    conda: "../cartography.yml"
+    params:
+        min_mcc_size=10,
+    shell:
+        """
+        python3 ha-na-nextstrain/scripts/convert_mccs_to_node_json.py \
+            --min-size {params.min_mcc_size} \
+            --mccs {input.mccs} \
+            --output {output.node_data}
+        """
+
 rule seasonal_flu_reassortment_export:
     message: "Exporting data files for for auspice"
     input:
