@@ -630,7 +630,11 @@ rule seasonal_flu_reassortment_create_notebook_docs:
         colors = "notebooks/config/color_schemes.tsv",
         annotated_embeddings="ha-na-nextstrain/results/annotated_embeddings.tsv",
         accuracy_table="ha-na-nextstrain/results/full_HDBSCAN_metadata.csv",
+        explained_variance_pca_ha = "ha-na-nextstrain/results/explained_variance_pca_ha.csv",
+        explained_variance_pca_concatenated = "ha-na-nextstrain/results/explained_variance_pca_concatenated.csv",
     output:
+        HANAFullChartBrushablePCAHTML = "docs/HANAFullChartBrushablePCA.html",
+        HANAFullChartBrushablePCAPNG = "docs/HANAFullChartBrushablePCA.png",
         HANAFullChartBrushableMDSHTML = "docs/HANAFullChartBrushableMDS.html",
         HANAFullChartBrushableMDSPNG = "docs/HANAFullChartBrushableMDS.png",
         HANAFullChartBrushableTSNEHTML = "docs/HANAFullChartBrushableTSNE.html",
