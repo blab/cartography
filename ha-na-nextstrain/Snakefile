@@ -639,6 +639,8 @@ rule seasonal_flu_reassortment_create_notebook_docs:
         HANAFullChartBrushableMDSPNG = "docs/HANAFullChartBrushableMDS.png",
         HANAFullChartBrushableTSNEHTML = "docs/HANAFullChartBrushableTSNE.html",
         HANAFullChartBrushableTSNEPNG = "docs/HANAFullChartBrushableTSNE.png",
+        HANAFullChartBrushableUMAPHTML = "docs/HANAFullChartBrushableUMAP.html",
+        HANAFullChartBrushableUMAPPNG = "docs/HANAFullChartBrushableUMAP.png",
         fullChartHTML = "docs/flu-embeddingsHaNa.html",
         fullChartPNG = "docs/flu-embeddingsHaNa.png",
     conda: "../cartography.yml"
