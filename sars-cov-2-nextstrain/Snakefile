@@ -29,7 +29,7 @@ rule sarscov2:
         "sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv",
         expand("sars-cov-2-nextstrain/results/HDBSCAN_metadata_{method}.csv", method=EMBEDDING_METHODS)
 
-rule annotate_low_quality:
+rule sarscov2_annotate_low_quality:
     input:
         metadata="sars-cov-2-nextstrain/data/metadata.tsv.xz"
     output:
@@ -42,7 +42,7 @@ rule annotate_low_quality:
             --output {output.output}
         """
 
-rule embed_pca_before:
+rule sarscov2_embed_pca_before:
     message: "Creating the embedding for PCA bases missing analysis"
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta.xz",
@@ -64,7 +64,7 @@ rule embed_pca_before:
             --components {params.components}
         """
 
-rule bases_missing_vs_pc1:
+rule sarscov2_bases_missing_vs_pc1:
     message: "creating a bases_missing vs PC1 graph"
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta.xz",
@@ -86,7 +86,7 @@ rule bases_missing_vs_pc1:
             --output {output.figure}
         """
 
-rule impute_data:
+rule sarscov2_impute_data:
     message: "creating an imputed dataframe/fasta file"
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta.xz"
@@ -104,7 +104,7 @@ rule impute_data:
 
 # Calculate nucleotide diversity by calling SNPs (with monomorphic sites) and
 # using Pixy to calculate unbiased value of Pi.
-rule uncompress_alignment:
+rule sarscov2_uncompress_alignment:
     input:
         alignment="sars-cov-2-nextstrain/data/aligned.fasta.xz",
     output:
@@ -115,7 +115,7 @@ rule uncompress_alignment:
         xz -c -d {input.alignment} > {output.alignment}
         """
 
-rule call_snps:
+rule sarscov2_call_snps:
     input:
         alignment="sars-cov-2-nextstrain/data/aligned.fasta",
     output:
@@ -126,7 +126,7 @@ rule call_snps:
         snp-sites -b -v {input.alignment} > {output.snps}
         """
 
-rule fix_alt_snps:
+rule sarscov2_fix_alt_snps:
     input:
         snps="sars-cov-2-nextstrain/results/snps.vcf",
     output:
@@ -151,7 +151,7 @@ rule fix_alt_snps:
 
                     oh.write(line)
 
-rule compress_and_index_snps:
+rule sarscov2_compress_and_index_snps:
     input:
         snps="sars-cov-2-nextstrain/results/snps_cleaned.vcf",
     output:
@@ -163,7 +163,7 @@ rule compress_and_index_snps:
         tabix {output.snps}
         """
 
-rule build_population_file:
+rule sarscov2_build_population_file:
     input:
         alignment="sars-cov-2-nextstrain/data/aligned.fasta",
     output:
@@ -174,7 +174,7 @@ rule build_population_file:
         grep "^>" {input.alignment} | sed 's/>//' | awk 'OFS="\\t" {{ print $1,"virus" }}' > {output.populations}
         """
 
-rule nucleotide_diversity:
+rule sarscov2_nucleotide_diversity:
     input:
         snps="sars-cov-2-nextstrain/results/snps_cleaned.vcf.gz",
         populations="sars-cov-2-nextstrain/results/populations.txt",
@@ -196,7 +196,7 @@ rule nucleotide_diversity:
             --output_prefix {params.output_prefix}
         """
 
-rule make_clades:
+rule sarscov2_make_clades:
     message: "creating the clades file to be used in the rest of the analysis"
     input:
         metadata = "sars-cov-2-nextstrain/data/metadata.tsv.xz"
@@ -212,7 +212,7 @@ rule make_clades:
             --col-name {params.col_name}
         """
 
-rule create_distance_matrix:
+rule sarscov2_create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta.xz",
@@ -226,7 +226,7 @@ rule create_distance_matrix:
             --output {output.output}
         """
 
-rule cluster_by_parameters:
+rule sarscov2_cluster_by_parameters:
     input:
         alignment="sars-cov-2-nextstrain/results/imputed_alignment.fasta",
         distance_matrix="sars-cov-2-nextstrain/results/distance_matrix.csv",
@@ -242,7 +242,7 @@ rule cluster_by_parameters:
     script:
         "../notebooks/scripts/cluster_by_parameters.py"
 
-rule aggregate_clusters_by_parameters:
+rule sarscov2_aggregate_clusters_by_parameters:
     input:
         tables=expand("sars-cov-2-nextstrain/results/gridsearch/{params}.tsv", params=SARS_COV_2_METHOD_PARAMETERS.instance_patterns)
     output:
@@ -255,7 +255,7 @@ rule aggregate_clusters_by_parameters:
             --output {output.table}
         """
 
-rule output_grid_search:
+rule sarscov2_output_grid_search:
     input:
         table= "sars-cov-2-nextstrain/results/gridsearch.tsv",
     output:
@@ -273,7 +273,7 @@ rule output_grid_search:
     notebook:
         "../notebooks/2021-06-23-summarize-grid-search.ipynb"
 
-rule embed_pca:
+rule sarscov2_embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
         alignment = "sars-cov-2-nextstrain/results/imputed_alignment.fasta",
@@ -297,7 +297,7 @@ rule embed_pca:
             --explained-variance {output.explained_variance}
         """
 
-rule embed_mds:
+rule sarscov2_embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
@@ -319,7 +319,7 @@ rule embed_mds:
             mds
         """
 
-rule embed_tsne:
+rule sarscov2_embed_tsne:
     message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
@@ -343,7 +343,7 @@ rule embed_tsne:
             t-sne
         """
 
-rule embed_umap:
+rule sarscov2_embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
@@ -365,7 +365,7 @@ rule embed_umap:
             umap
         """
 
-rule create_node_output:
+rule sarscov2_create_node_output:
     message: "creates node output that is used by augur to create the phylogenies"
     input:
         dataframe = "sars-cov-2-nextstrain/results/embed_{method}.csv"
@@ -378,7 +378,7 @@ rule create_node_output:
             --output {output.node_data}
         """
 
-rule annotate_tree:
+rule sarscov2_annotate_tree:
     input:
         tree="sars-cov-2-nextstrain/data/ncov_open_global.json",
         embeddings=expand("sars-cov-2-nextstrain/results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
@@ -397,10 +397,10 @@ rule annotate_tree:
             --output {output.auspice_tree}
         """
 
-rule tree_to_table:
+rule sarscov2_tree_to_table:
     message: "creating a table of node data values from the tree attributes"
     input:
-        tree = rules.annotate_tree.output.auspice_tree
+        tree = "auspice/cartography_ncov.json",
     output:
         table = "sars-cov-2-nextstrain/results/table.tsv"
     params:
@@ -414,7 +414,7 @@ rule tree_to_table:
             --attributes {params.attributes}
         """
 
-rule scatterplot:
+rule sarscov2_scatterplot:
     message: "Creating the scatterplot (PNG, dataframe)"
     input:
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
@@ -440,7 +440,7 @@ rule scatterplot:
             --output-metadata {output.metadata}
         """
 
-rule cluster_metadata:
+rule sarscov2_cluster_metadata:
     message: "Creating the metadata dataframe for HDBSCAN results for main paper"
     input:
         embedding = "sars-cov-2-nextstrain/results/embed_{method}.csv",
@@ -461,7 +461,7 @@ rule cluster_metadata:
             --output {output.dataframe}
         """
 
-rule concat_HDBSCAN_table:
+rule sarscov2_concat_HDBSCAN_table:
     message: "concatenating all the HDBSCAN data into one csv dataframe"
     input:
        dataframe_pca = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_pca.csv",
@@ -483,7 +483,7 @@ rule concat_HDBSCAN_table:
             --output {output.metadata}
         """
 
-rule concat_scatterplot_table:
+rule sarscov2_concat_scatterplot_table:
     message: "concatenating all the scatterplot metadata into one csv dataframe"
     input:
        dataframe_pca = "sars-cov-2-nextstrain/results/scatterplot_pca_metadata.csv",
@@ -505,7 +505,7 @@ rule concat_scatterplot_table:
             --output {output.metadata}
         """
 
-rule create_notebook_docs:
+rule sarscov2_create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:
         colors = "notebooks/config/color_schemes.tsv",
