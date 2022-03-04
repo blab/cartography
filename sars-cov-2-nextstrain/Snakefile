@@ -1,4 +1,4 @@
-METHOD_PARAMETERS = Paramspace(
+SARS_COV_2_METHOD_PARAMETERS = Paramspace(
     pd.read_csv(
         "sars-cov-2-nextstrain/config/method_parameters.tsv",
         sep="\t"
@@ -232,9 +232,9 @@ rule cluster_by_parameters:
         distance_matrix="sars-cov-2-nextstrain/results/distance_matrix.csv",
         clades="sars-cov-2-nextstrain/results/clades.json",
     output:
-        table=f"sars-cov-2-nextstrain/results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
+        table=f"sars-cov-2-nextstrain/results/gridsearch/{SARS_COV_2_METHOD_PARAMETERS.wildcard_pattern}.tsv",
     params:
-        method_parameters=METHOD_PARAMETERS.instance,
+        method_parameters=SARS_COV_2_METHOD_PARAMETERS.instance,
     resources:
         runtime="0:30:00",
         mem_mb=4000,
@@ -244,7 +244,7 @@ rule cluster_by_parameters:
 
 rule aggregate_clusters_by_parameters:
     input:
-        tables=expand("sars-cov-2-nextstrain/results/gridsearch/{params}.tsv", params=METHOD_PARAMETERS.instance_patterns)
+        tables=expand("sars-cov-2-nextstrain/results/gridsearch/{params}.tsv", params=SARS_COV_2_METHOD_PARAMETERS.instance_patterns)
     output:
         table="sars-cov-2-nextstrain/results/gridsearch.tsv"
     conda: "../cartography.yml"
