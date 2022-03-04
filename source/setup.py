@@ -1,16 +1,16 @@
 from setuptools import setup, find_packages
-import os 
+import os
 
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
-    
+
 setup(
     name='pathogen-embed',
-    version='0.0.2',    
+    version='0.1.0',
     description='Reduced dimension embeddings for pathogen sequences',
     url='https://github.com/blab/cartography/',
-    author='Sravani Nanduri <nandsra@cs.washington.edu> , John Huddleston <huddlej@gmail.com>', 
+    author='Sravani Nanduri <nandsra@cs.washington.edu> , John Huddleston <huddlej@gmail.com>',
     author_email='nandsra@cs.washington.edu',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -24,13 +24,13 @@ setup(
     package_dir={"": "src"},
 	packages = find_packages(where="src", exclude=['test']),
     #packages=['seaborn', 'scikit-learn', 'umap-learn', 'matplotlib', 'pandas', 'numpy', 'hdbscan'],
-    install_requires=['numpy', 
+    install_requires=['numpy',
                       'pandas',
                       "biopython",
-                      'seaborn', 
-                      'scikit-learn', 
-                      'umap-learn', 
-                      'matplotlib', 
+                      'seaborn',
+                      'scikit-learn',
+                      'umap-learn',
+                      'matplotlib',
                       'hdbscan'
                       ],
     classifiers=[
