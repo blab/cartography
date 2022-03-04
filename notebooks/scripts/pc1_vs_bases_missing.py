@@ -73,7 +73,7 @@ if __name__ == "__main__":
     ax.text(
                 0.05,
                 0.95,
-                f"$R^2={mean:.3f} +/- {std}$",
+                f"$R^2={mean:.3f} \pm {std}$",
                 horizontalalignment='left',
                 verticalalignment='center',
                 transform=ax.transAxes,

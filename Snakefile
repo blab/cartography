@@ -40,11 +40,10 @@ include: "rules/common.smk"
 include: "seasonal-flu-nextstrain/Snakefile"
 include: "seasonal-flu-nextstrain-2018-2020/Snakefile"
 include: "ha-na-nextstrain/Snakefile"
-# include: "mers-nextstrain/Snakefile"
+include: "mers-nextstrain/Snakefile"
 include: "sars-cov-2-nextstrain/Snakefile"
 
 # include: "outlier_analysis/Snakefile"
-# include: "ha-na-ma-nextstrain/Snakefile"
 # include: "zika-nextstrain/Snakefile"
 
 rule pathogens:
@@ -52,6 +51,7 @@ rule pathogens:
         *rules.seasonal_flu_training.input,
         *rules.seasonal_flu_test.input,
         *rules.seasonal_flu_reassortment.input,
+        *rules.mers.input,
         *rules.sarscov2.input,
 
 # Include rules for the manuscript.

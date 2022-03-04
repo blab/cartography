@@ -1,105 +1,84 @@
-from snakemake.utils import min_version
-min_version("6.0")
-
-from snakemake.utils import Paramspace
-import pandas as pd
-
-METHOD_PARAMETERS = Paramspace(
+MERS_METHOD_PARAMETERS = Paramspace(
     pd.read_csv(
-        "config/method_parameters.tsv",
+        "mers-nextstrain/config/method_parameters.tsv",
         sep="\t"
     )
 )
 
-EMBEDDING_METHODS = [
-    "pca",
-    "mds",
-    "t-sne",
-    "umap"
-]
-
-rule all:
+rule mers:
     input:
-        "../auspice/cartography_mers.json",
-        "results/tree.nwk",
-        "results/aligned.fasta",
-        expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        "results/table.tsv",
-        "results/full_Scatterplot_metadata.csv",
-        "results/subset_fasta.fasta",
-        "../docs/FullScatterplotMERS.png",
-        "../docs/FullLinkedChartBrushableMERS.html",
-        "../docs/MERS-embeddings.png",
-        "../docs/FullMDSBrushSupplementMERS.html",
-        "../docs/FullMDSBrushSupplementMERS.png",
-        "../docs/FullPCABrushSupplementMERS.html",
-        "../docs/FullPCABrushSupplementMERS.png",
-        "../docs/explainedVarianceMERS.png",
-        "../docs/FullLinkedChartBrushableHostMERS.html",
-        "../docs/bases_missing_vs_pc1_MERS.png",
-        "results/nucleotide_diversity.txt",
-        "../docs/fullHDBSCANChartMERS.png",
-        "results/mcc_by_method_and_distance_threshold.pdf",
-        "results/full_HDBSCAN_metadata.csv",
-        expand("results/HDBSCAN_metadata_{method}.csv", method=EMBEDDING_METHODS)
+        "auspice/cartography_mers.json",
+        expand("mers-nextstrain/results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
+        "mers-nextstrain/results/full_Scatterplot_metadata.csv",
+        "mers-nextstrain/results/subset_fasta.fasta",
+        "docs/FullScatterplotMERS.png",
+        "docs/FullLinkedChartBrushableMERS.html",
+        "docs/MERS-embeddings.png",
+        "docs/FullMDSBrushSupplementMERS.html",
+        "docs/FullMDSBrushSupplementMERS.png",
+        "docs/FullPCABrushSupplementMERS.html",
+        "docs/FullPCABrushSupplementMERS.png",
+        "docs/explainedVarianceMERS.png",
+        "docs/FullLinkedChartBrushableHostMERS.html",
+        "docs/bases_missing_vs_pc1_MERS.png",
+        "mers-nextstrain/results/nucleotide_diversity.txt",
+        "docs/fullHDBSCANChartMERS.png",
+        "mers-nextstrain/results/mcc_by_method_and_distance_threshold.pdf",
+        "mers-nextstrain/results/full_HDBSCAN_metadata.csv",
+        expand("mers-nextstrain/results/HDBSCAN_metadata_{method}.csv", method=EMBEDDING_METHODS)
 
-
-rule files:
-    params:
-        dropped_strains = "config/exclude.txt"
-
-rule download_elife_tree:
+rule mers_download_elife_tree:
     output:
-        mers_data = "data/elife-31257-fig1-data5-v3.zip"
+        mers_data = "mers-nextstrain/data/elife-31257-fig1-data5-v3.zip"
     params:
         mers_url = "https://elifesciences.org/download/aHR0cHM6Ly9jZG4uZWxpZmVzY2llbmNlcy5vcmcvYXJ0aWNsZXMvMzEyNTcvZWxpZmUtMzEyNTctZmlnMS1kYXRhNS12My56aXA-/elife-31257-fig1-data5-v3.zip?_hash=YhuQfm%2BGO%2BY6MsWLZB4WrPQvYtSlHOhLnzwnvTaesws%3D"
     conda: "../cartography.yml"
     shell:
         """
-        wget "{params.mers_url}" -O {output.mers_data}
+        curl -o {output.mers_data} "{params.mers_url}"
         """
 
-rule download_mcc_tree:
+rule mers_download_mcc_tree:
     output:
-        mers_data = "data/MERS_CoV_274_mcc.tree"
+        mers_data = "mers-nextstrain/data/MERS_CoV_274_mcc.tree"
     params:
         mers_url = "https://raw.githubusercontent.com/nextstrain/augur/master/tests/builds/beast_mers/data/MERS_CoV_274_mcc.tree"
     conda: "../cartography.yml"
     shell:
         """
-        wget "{params.mers_url}" -O {output.mers_data}
+        curl -o {output.mers_data} "{params.mers_url}"
         """
 
-rule unzip:
+rule mers_unzip:
     input:
-        mers_data = "data/elife-31257-fig1-data5-v3.zip"
+        mers_data = "mers-nextstrain/data/elife-31257-fig1-data5-v3.zip"
     output:
-        mers_tree = "data/MERS_CoV_274.nex"
+        mers_tree = "mers-nextstrain/data/MERS_CoV_274.nex"
     conda: "../cartography.yml"
     shell:
         """
-        unzip -j -d data/ {input.mers_data}
+        unzip -j -d mers-nextstrain/data/ {input.mers_data}
         """
 
-rule extract_sequences:
+rule mers_extract_sequences:
     input:
-        mers_tree = "data/MERS_CoV_274.nex"
+        mers_tree = "mers-nextstrain/data/MERS_CoV_274.nex"
     output:
-        sequences = "results/aligned.fasta"
+        sequences = "mers-nextstrain/results/aligned.fasta"
     conda: "../cartography.yml"
     shell:
         """
-        python3 scripts/nexus_to_fasta.py \
+        python3 mers-nextstrain/scripts/nexus_to_fasta.py \
             {input.mers_tree} \
             {output.sequences}
         """
 
-rule import_tree:
+rule mers_import_tree:
     input:
-        mers_tree = "data/MERS_CoV_274_mcc.tree"
+        mers_tree = "mers-nextstrain/data/MERS_CoV_274_mcc.tree"
     output:
-        tree = "results/tree.nwk",
-        node_data = "results/node_data.json"
+        tree = "mers-nextstrain/results/tree.nwk",
+        node_data = "mers-nextstrain/results/node_data.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -109,55 +88,60 @@ rule import_tree:
             --output-node-data {output.node_data}
         """
 
-rule parse:
+rule mers_parse:
     input:
-        sequences = "results/aligned.fasta"
+        sequences = "mers-nextstrain/results/aligned.fasta"
     output:
-        metadata = "results/metadata.tsv"
+        metadata = "mers-nextstrain/results/metadata.tsv"
     params:
         fields = "strain accession host date"
     conda: "../cartography.yml"
     shell:
         """
-        python3 scripts/parse_metadata.py \
+        python3 mers-nextstrain/scripts/parse_metadata.py \
             --sequences {input.sequences} \
             --fields {params.fields} \
             --output-metadata {output.metadata}
         """
 
-rule pca_before:
-    message: "running PCA before removing any low quality strains for supplemental figure bases missing vs pc1"
+rule mers_pca_before:
+    message: "running PCA before removing any low quality strains for supplemental figure bases missing vs. PC1"
     input:
-        alignment = rules.extract_sequences.output.sequences
+        alignment = "mers-nextstrain/results/aligned.fasta"
     output:
-        dataframe = "results/embed_pca_before.csv"
+        dataframe = "mers-nextstrain/results/embed_pca_before.csv",
+        figure = "mers-nextstrain/results/embed_pca_before.pdf",
+        explained_variance = "mers-nextstrain/results/explained_variance_pca_before.csv",
     params:
-        components = 10
+        random_seed = RANDOM_SEED,
+        components = 10,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --alignment {input.alignment} \
-            --random-seed 314159 \
+            --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
             pca \
-            --components {params.components} 
+            --components {params.components} \
+            --explained-variance {output.explained_variance}
         """
 
-rule bases_missing_vs_pc1:
+rule mers_bases_missing_vs_pc1:
     message: "creating a bases_missing vs PC1 graph"
     input:
-        alignment = "results/aligned.fasta",
-        pca = "results/embed_pca_before.csv",
-        metadata = "results/metadata.tsv"
+        alignment = "mers-nextstrain/results/aligned.fasta",
+        pca = "mers-nextstrain/results/embed_pca_before.csv",
+        metadata = "mers-nextstrain/results/metadata.tsv"
     output:
-        figure = "../docs/bases_missing_vs_pc1_MERS.png"
+        figure = "docs/bases_missing_vs_pc1_MERS.png"
     params:
         bootstrap = 100
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/pc1_vs_bases_missing.py \
+        python3 notebooks/scripts/pc1_vs_bases_missing.py \
             --alignment {input.alignment} \
             --embedding {input.pca} \
             --method pca \
@@ -166,88 +150,37 @@ rule bases_missing_vs_pc1:
             --output {output.figure}
         """
 
-rule subset_data:
+rule mers_subset_data:
     message: "creating a new dataframe/fasta file"
     input:
-        alignment = rules.extract_sequences.output.sequences
+        alignment = "mers-nextstrain/results/aligned.fasta"
     output:
-        fasta = "results/subset_fasta.fasta",
+        fasta = "mers-nextstrain/results/subset_fasta.fasta",
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/bases_missing.py \
+        python3 notebooks/scripts/bases_missing.py \
             --alignment {input.alignment} \
-            --output-fasta {output.fasta} 
+            --output-fasta {output.fasta}
         """
 
-
-rule pca_after:
-    message: "running PCA before removing any low quality strains for supplemental figure bases missing vs pc1"
+rule mers_pca_after:
+    message: "running PCA after removing low quality strains for supplemental figure bases missing vs. PC1"
     input:
-        alignment = "results/subset_fasta.fasta"
+        alignment = "mers-nextstrain/results/subset_fasta.fasta"
     output:
-        dataframe = "results/embed_pca_after.csv",
-        figure = "results/embed_pca_after.pdf"
+        dataframe = "mers-nextstrain/results/embed_pca_after.csv",
+        figure = "mers-nextstrain/results/embed_pca_after.pdf",
+        explained_variance = "mers-nextstrain/results/explained_variance_pca_after.csv",
     params:
-        components = 10
-    conda: "../cartography.yml"
-    shell:
-        """
-        embed.py \
-            --alignment {input.alignment} \
-            --random-seed 314159 \
-            --output-dataframe {output.dataframe} \
-            --output-figure {output.figure} \
-            pca \
-            --components {params.components} 
-        """
-rule create_distance_matrix:
-    message: "creating the distance matrix to be used in the rest of the analysis"
-    input:
-        alignment = "results/aligned.fasta"
-    output:
-        output = "results/distance_matrix.csv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/hamming_distance_from_fasta.py \
-            --alignment {input.alignment} \
-            --output {output.output}
-        """
-
-rule nucleotide_diversity:
-    message: "finding the nucleotide diversity of an aligned FASTA file"
-    input:
-        alignment = "results/aligned.fasta"
-    output:
-        output = "results/nucleotide_diversity.txt"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/nucleotide_diversity.py \
-            --alignment {input.alignment} \
-            --output {output.output}
-        """
-
-
-rule embed_pca:
-    message: "Creating the embedding (dataframe, node JSON) for PCA"
-    input:
-        alignment = "results/aligned_{ancestral}.fasta",
-        cluster = "results/pca_parameters.csv",
-    output:
-        dataframe = "results/embed_pca_{ancestral}.csv",
-        figure = "results/embed_pca_{ancestral}.pdf",
-        explained_variance = "results/explained_variance_pca_{ancestral}.csv"
-    params:
-        components = 10
+        random_seed = RANDOM_SEED,
+        components = 10,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --alignment {input.alignment} \
-            --cluster-data {input.cluster} \
-            --random-seed 314159 \
+            --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             pca \
@@ -255,118 +188,213 @@ rule embed_pca:
             --explained-variance {output.explained_variance}
         """
 
-
-rule embed_tsne:
-    message: "Creating the embedding (dataframe, node JSON) for t-SNE"
+rule mers_create_distance_matrix:
+    message: "creating the distance matrix to be used in the rest of the analysis"
     input:
-        distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "results/t-sne_parameters.csv",
+        alignment = "mers-nextstrain/results/aligned.fasta"
     output:
-        dataframe = "results/embed_t-sne_{ancestral}.csv",
-        figure = "results/embed_t-sne_{ancestral}.pdf"
+        output = "mers-nextstrain/results/distance_matrix.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/hamming_distance_from_fasta.py \
+            --alignment {input.alignment} \
+            --output {output.output}
+        """
+
+rule mers_nucleotide_diversity:
+    message: "finding the nucleotide diversity of an aligned FASTA file"
+    input:
+        alignment = "mers-nextstrain/results/aligned.fasta"
+    output:
+        output = "mers-nextstrain/results/nucleotide_diversity.txt"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/nucleotide_diversity.py \
+            --alignment {input.alignment} \
+            --output {output.output}
+        """
+
+rule mers_clades:
+     input:
+         metadata = "mers-nextstrain/results/metadata.tsv",
+         tree = "mers-nextstrain/results/tree.nwk"
+     output:
+         clades = "mers-nextstrain/results/clades.json"
+     conda: "../cartography.yml"
+     shell:
+         """
+         python3 mers-nextstrain/scripts/assign_clades.py \
+             --metadata {input.metadata} \
+             --tree {input.tree} \
+             --output {output.clades}
+         """
+
+rule mers_cluster_by_parameters:
+    input:
+        alignment="mers-nextstrain/results/aligned.fasta",
+        distance_matrix="mers-nextstrain/results/distance_matrix.csv",
+        clades="mers-nextstrain/data/manual_multihost_clades.json",
+    output:
+        table=f"mers-nextstrain/results/gridsearch/{MERS_METHOD_PARAMETERS.wildcard_pattern}.tsv",
     params:
-        perplexity = 30,
-        learning_rate = 200
+        method_parameters=MERS_METHOD_PARAMETERS.instance,
+        clade_attribute = "multihost_clade_membership"
+    conda: "../cartography.yml"
+    script:
+        "notebooks/scripts/cluster_by_parameters.py"
+
+rule mers_aggregate_clusters_by_parameters:
+    input:
+        tables=expand("mers-nextstrain/results/gridsearch/{params}.tsv", params=MERS_METHOD_PARAMETERS.instance_patterns)
+    output:
+        table="mers-nextstrain/results/gridsearch.tsv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.tables} \
+            --output {output.table}
+        """
+
+rule mers_output_grid_search:
+    input:
+        table= "mers-nextstrain/results/gridsearch.tsv",
+    output:
+        pca_parameters = "mers-nextstrain/results/pca_parameters.csv",
+        mds_parameters = "mers-nextstrain/results/mds_parameters.csv",
+        tsne_parameters = "mers-nextstrain/results/t-sne_parameters.csv",
+        umap_parameters = "mers-nextstrain/results/umap_parameters.csv",
+        mcc_by_tsne_parameters = "mers-nextstrain/results/mcc_by_t-sne_parameters.pdf",
+        mcc_by_umap_parameters = "mers-nextstrain/results/mcc_by_umap_parameters.pdf",
+        mcc_by_mds_parameters = "mers-nextstrain/results/mcc_by_mds_parameters.pdf",
+        mcc_by_method_and_distance_threshold = "mers-nextstrain/results/mcc_by_method_and_distance_threshold.pdf"
+    conda: "../cartography.yml"
+    log:
+        "logs/summarize-grid-search.ipynb"
+    notebook:
+        "../notebooks/2021-06-23-summarize-grid-search.ipynb"
+
+rule mers_embed_pca:
+    message: "Creating the embedding for PCA"
+    input:
+        alignment = "mers-nextstrain/results/aligned.fasta",
+        cluster = "mers-nextstrain/results/pca_parameters.csv",
+    output:
+        dataframe = "mers-nextstrain/results/embed_pca.csv",
+        figure = "mers-nextstrain/results/embed_pca.pdf",
+        explained_variance = "mers-nextstrain/results/explained_variance_pca.csv",
+    params:
+        random_seed = RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        embed \
+            --alignment {input.alignment} \
+            --cluster-data {input.cluster} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
+            pca \
+            --explained-variance {output.explained_variance}
+        """
+
+rule mers_embed_mds:
+    message: "Creating the embedding for MDS"
+    input:
+        distance_matrix = "mers-nextstrain/results/distance_matrix.csv",
+        cluster = "mers-nextstrain/results/mds_parameters.csv",
+    output:
+        dataframe = "mers-nextstrain/results/embed_mds.csv",
+        figure = "mers-nextstrain/results/embed_mds.pdf",
+    params:
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
-            --random-seed 314159 \
+            --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            t-sne \
-            --perplexity {params.perplexity} \
-            --learning-rate {params.learning_rate}
+            mds
         """
 
-rule embed_umap:
-    message: "Creating the embedding (dataframe, node JSON) for UMAP"
+rule mers_embed_tsne:
+    message: "Creating the embedding for t-SNE"
     input:
-        distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "results/umap_parameters.csv",
+        distance_matrix = "mers-nextstrain/results/distance_matrix.csv",
+        cluster = "mers-nextstrain/results/t-sne_parameters.csv",
     output:
-        dataframe = "results/embed_umap_{ancestral}.csv",
-        figure = "results/embed_umap_{ancestral}.pdf"
+        dataframe = "mers-nextstrain/results/embed_t-sne.csv",
+        figure = "mers-nextstrain/results/embed_t-sne.pdf",
     params:
-        nearest_neighbors = 200,
-        min_dist = .5
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
-            --random-seed 314159 \
+            --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            umap \
-            --nearest-neighbors {params.nearest_neighbors} \
-            --min-dist {params.min_dist}
+            t-sne
         """
 
-rule embed_mds:
-    message: "Creating the embedding (dataframe, node JSON) for MDS"
+rule mers_embed_umap:
+    message: "Creating the embedding for UMAP"
     input:
-        distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "results/mds_parameters.csv",
+        distance_matrix = "mers-nextstrain/results/distance_matrix.csv",
+        cluster = "mers-nextstrain/results/umap_parameters.csv",
     output:
-        dataframe = "results/embed_mds_{ancestral}.csv",
-        figure = "results/embed_mds_{ancestral}.pdf"
+        dataframe = "mers-nextstrain/results/embed_umap.csv",
+        figure = "mers-nextstrain/results/embed_umap.pdf"
     params:
-        components = 4
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
-            --random-seed 314159 \
+            --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            mds \
-            --components {params.components} \
+            umap
         """
 
-rule create_node_output:
-    message: "creates node output that is used by augur to create thy phylogenies"
-    input: 
-        dataframe = "results/embed_{method}_ancestral.csv"
+rule mers_create_node_output:
+    input:
+        dataframe = "mers-nextstrain/results/embed_{method}.csv",
     output:
-        node_data = "results/embed_{method}_ancestral.json"
-    shell: 
+        node_data = "mers-nextstrain/results/embed_{method}.json",
+    conda: "../cartography.yml",
+    shell:
         """
-        python3 ../notebooks/scripts/otuput_node_data.py \
+        python3 notebooks/scripts/output_node_data.py \
             --table {input.dataframe} \
             --output {output.node_data}
         """
 
-def _get_embedding_columns_by_wildcards(wildcards):
-    method = wildcards.method.replace("-", "")
-
-    if method in ("pca", "mds"):
-        return f"{method}1 {method}2 {method}3 {method}4"
-    else:
-        return f"{method}_x {method}_y"
-
-
-rule scatterplot:
+rule mers_scatterplot:
     message: "Creating the scatterplot (PNG, dataframe)"
     input:
-        distance_matrix = "results/distance_matrix.csv",
-        embedding = "results/embed_{method}.csv",
+        distance_matrix = "mers-nextstrain/results/distance_matrix.csv",
+        embedding = "mers-nextstrain/results/embed_{method}.csv",
     output:
-        figure = "results/scatterplot_{method}.png",
-        dataframe = "results/scatterplot_{method}.csv",
-        metadata = "results/scatterplot_{method}_metadata.csv"
+        figure = "mers-nextstrain/results/scatterplot_{method}.png",
+        dataframe = "mers-nextstrain/results/scatterplot_{method}.csv",
+        metadata = "mers-nextstrain/results/scatterplot_{method}_metadata.csv",
     params:
         bootstrap = 100,
         columns = _get_embedding_columns_by_wildcards
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/scatterplot.py \
+        python3 notebooks/scripts/scatterplot.py \
             --distance {input.distance_matrix} \
             --embedding {input.embedding} \
             --method {wildcards.method} \
@@ -377,130 +405,18 @@ rule scatterplot:
             --output-metadata {output.metadata}
         """
 
-def _get_embedding_path_by_wildcards(wildcards):
-    method = wildcards.method
-
-    if method in ("pca", "mds", "t-sne", "umap"):
-        return f"results/embed_{method}.csv"
-    else:
-        return "results/distance_matrix.csv"
-
-rule clades:
-     input:
-         metadata = "results/metadata.tsv",
-         tree = "results/tree.nwk"
-     output:
-         clades = "results/clades.json"
-     conda: "../cartography.yml"
-     shell:
-         """
-         python3 scripts/assign_clades.py \
-             --metadata {input.metadata} \
-             --tree {input.tree} \
-             --output {output.clades}
-         """
-
-rule cluster_by_parameters:
+rule mers_export:
     input:
-        alignment="results/aligned.fasta",
-        distance_matrix="results/distance_matrix.csv",
-        clades="data/manual_multihost_clades.json",
+        tree = "mers-nextstrain/results/tree.nwk",
+        metadata = "mers-nextstrain/results/metadata.tsv",
+        branch_lengths = "mers-nextstrain/results/node_data.json",
+        embeddings = expand("mers-nextstrain/results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
+        clades = "mers-nextstrain/results/clades.json",
+        multihost_clades = "mers-nextstrain/data/manual_multihost_clades.json",
+        auspice_config = "mers-nextstrain/config/auspice_config.json",
+        colors = "mers-nextstrain/config/colors.tsv",
     output:
-        table=f"results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
-    params:
-        method_parameters=METHOD_PARAMETERS.instance,
-        clade_attribute = "multihost_clade_membership"
-    conda: "../cartography.yml"
-    script:
-        "../notebooks/scripts/cluster_by_parameters.py"
-
-rule aggregate_clusters_by_parameters:
-    input:
-        tables=expand("results/gridsearch/{params}.tsv", params=METHOD_PARAMETERS.instance_patterns)
-    output:
-        table="results/gridsearch.tsv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/concatenate_tables.py \
-            --tables {input.tables} \
-            --output {output.table}
-        """
-        
-rule output_grid_search:
-    input:
-        table= "results/gridsearch.tsv",
-    output:
-        pca_parameters = "results/pca_parameters.csv",
-        mds_parameters = "results/mds_parameters.csv",
-        tsne_parameters = "results/t-sne_parameters.csv",
-        umap_parameters = "results/umap_parameters.csv",
-        mcc_by_tsne_parameters = "results/mcc_by_t-sne_parameters.pdf",
-        mcc_by_umap_parameters = "results/mcc_by_umap_parameters.pdf",
-        mcc_by_mds_parameters = "results/mcc_by_mds_parameters.pdf",
-        mcc_by_method_and_distance_threshold = "results/mcc_by_method_and_distance_threshold.pdf"
-    conda: "../cartography.yml"
-    log:
-        "logs/summarize-grid-search.ipynb"
-    notebook:
-        "../notebooks/2021-06-23-summarize-grid-search.ipynb"
-
-
-rule cluster_metadata:
-    message: "Creating the metadata dataframe for HDBSCAN results for main paper"
-    input:
-        embedding = "results/embed_{method}.csv",
-        metadata = "results/table.tsv",
-        cluster = "results/{method}_parameters.csv",
-    output:
-        dataframe = "results/HDBSCAN_metadata_{method}.csv",
-    conda: "../cartography.yml"
-    params:
-        method = "{method}"
-    shell:
-        """
-        python3 ../notebooks/scripts/metadata_HDBSCAN.py \
-            --method {params.method} \
-            --embedding {input.embedding} \
-            --metadata {input.metadata} \
-            --cluster-data {input.cluster} \
-            --output {output.dataframe}
-        """
-
-rule concat_HDBSCAN_table:
-    message: "concatenating all the HDBSCAN data into one csv dataframe"
-    input:
-       dataframe_pca = "results/HDBSCAN_metadata_pca.csv",
-       dataframe_mds = "results/HDBSCAN_metadata_mds.csv", 
-       dataframe_tsne = "results/HDBSCAN_metadata_t-sne.csv", 
-       dataframe_umap = "results/HDBSCAN_metadata_umap.csv",
-    output:
-        metadata = "results/full_HDBSCAN_metadata.csv"
-    params:
-        column = "MCC",
-        dataframes = "results/HDBSCAN_metadata_pca.csv results/HDBSCAN_metadata_mds.csv results/HDBSCAN_metadata_t-sne.csv results/HDBSCAN_metadata_umap.csv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/concatenate_tables.py \
-            --tables {params.dataframes} \
-            --separator ',' \
-            --sort-by {params.column} \
-            --output {output.metadata}
-        """
-
-rule export:
-    input:
-        tree = "results/tree.nwk",
-        metadata = "results/metadata.tsv",
-        branch_lengths = "results/node_data.json",
-        embeddings = expand("results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
-        clades = "results/clades.json",
-        multihost_clades = "data/manual_multihost_clades.json",
-        auspice_config = "config/auspice_config.json",
-        colors = "config/colors.tsv"
-    output:
-        auspice_tree = "../auspice/cartography_mers.json"
+        auspice_tree = "auspice/cartography_mers.json",
     conda: "../cartography.yml"
     shell:
         """
@@ -513,95 +429,126 @@ rule export:
             --output {output.auspice_tree}
         """
 
-rule tree_to_table:
+rule mers_tree_to_table:
     message: "creating a table of node data values from the tree attributes"
-    input: 
-        tree = rules.export.output.auspice_tree
+    input:
+        tree = "auspice/cartography_mers.json"
     output:
-        table = "results/table.tsv"
+        table = "mers-nextstrain/results/table.tsv"
     params:
         attributes = "num_date host pca1 pca2 pca3 pca4 mds1 mds2 tsne_x tsne_y umap_x umap_y clade_membership multihost_clade_membership pca_label mds_label umap_label t-sne_label"
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/auspice_tree_to_table.py \
+        python3 notebooks/scripts/auspice_tree_to_table.py \
             {input.tree} \
             {output.table} \
             --include-internal-nodes \
             --attributes {params.attributes}
         """
 
-rule concat_scatterplot_table:
-    message: "concatenating all the scatterplot metadata into one csv dataframe"
+rule mers_cluster_metadata:
+    message: "Creating the metadata dataframe for HDBSCAN results for main paper"
     input:
-       dataframe_pca = "results/scatterplot_pca_metadata.csv",
-       dataframe_mds = "results/scatterplot_mds_metadata.csv", 
-       dataframe_tsne = "results/scatterplot_t-sne_metadata.csv", 
-       dataframe_umap = "results/scatterplot_umap_metadata.csv"
+        embedding = "mers-nextstrain/results/embed_{method}.csv",
+        metadata = "mers-nextstrain/results/table.tsv",
+        cluster = "mers-nextstrain/results/{method}_parameters.csv",
     output:
-        metadata = "results/full_Scatterplot_metadata.csv"
-    params:
-        column = "pearson_coef",
-        dataframes = "results/scatterplot_pca_metadata.csv results/scatterplot_mds_metadata.csv results/scatterplot_t-sne_metadata.csv results/scatterplot_umap_metadata.csv"
+        dataframe = "mers-nextstrain/results/HDBSCAN_metadata_{method}.csv",
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/concatenate_tables.py \
+        python3 notebooks/scripts/metadata_HDBSCAN.py \
+            --method {wildcards.method} \
+            --embedding {input.embedding} \
+            --metadata {input.metadata} \
+            --cluster-data {input.cluster} \
+            --output {output.dataframe}
+        """
+
+rule mers_concat_HDBSCAN_table:
+    message: "concatenating all the HDBSCAN data into one csv dataframe"
+    input:
+       dataframe_pca = "mers-nextstrain/results/HDBSCAN_metadata_pca.csv",
+       dataframe_mds = "mers-nextstrain/results/HDBSCAN_metadata_mds.csv",
+       dataframe_tsne = "mers-nextstrain/results/HDBSCAN_metadata_t-sne.csv",
+       dataframe_umap = "mers-nextstrain/results/HDBSCAN_metadata_umap.csv",
+    output:
+        metadata = "mers-nextstrain/results/full_HDBSCAN_metadata.csv"
+    params:
+        column = "MCC",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.dataframe_pca} {input.dataframe_mds} {input.dataframe_tsne} {input.dataframe_umap} \
+            --separator ',' \
+            --sort-by {params.column} \
+            --output {output.metadata}
+        """
+
+rule mers_concat_scatterplot_table:
+    message: "concatenating all the scatterplot metadata into one csv dataframe"
+    input:
+       dataframe_pca = "mers-nextstrain/results/scatterplot_pca_metadata.csv",
+       dataframe_mds = "mers-nextstrain/results/scatterplot_mds_metadata.csv",
+       dataframe_tsne = "mers-nextstrain/results/scatterplot_t-sne_metadata.csv",
+       dataframe_umap = "mers-nextstrain/results/scatterplot_umap_metadata.csv"
+    output:
+        metadata = "mers-nextstrain/results/full_Scatterplot_metadata.csv"
+    params:
+        column = "pearson_coef",
+        dataframes = "mers-nextstrain/results/scatterplot_pca_metadata.csv mers-nextstrain/results/scatterplot_mds_metadata.csv mers-nextstrain/results/scatterplot_t-sne_metadata.csv mers-nextstrain/results/scatterplot_umap_metadata.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
             --tables {params.dataframes} \
             --separator ',' \
             --sort-by {params.column} \
             --output {output.metadata}
         """
-        
-rule create_notebook_docs:
+
+rule mers_create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:
-        colors = "../notebooks/config/color_schemes.tsv",
+        colors = "notebooks/config/color_schemes.tsv",
         #Charts, tree:
-        node_df = "results/table.tsv",
+        node_df = "mers-nextstrain/results/table.tsv",
 
-        pca_df = "results/embed_pca.csv",
-        explained_variance_pca = "results/explained_variance_pca.csv",
+        pca_df = "mers-nextstrain/results/embed_pca.csv",
+        explained_variance_pca = "mers-nextstrain/results/explained_variance_pca.csv",
 
-        mds_df = "results/embed_mds.csv",
-        tsne_df = "results/embed_t-sne.csv",
-        umap_df = "results/embed_umap.csv",
+        mds_df = "mers-nextstrain/results/embed_mds.csv",
+        tsne_df = "mers-nextstrain/results/embed_t-sne.csv",
+        umap_df = "mers-nextstrain/results/embed_umap.csv",
 
         #Scatterplot:
-        scatterplot_pca = "results/scatterplot_pca.csv",
-        scatterplot_pca_metadata = "results/scatterplot_pca_metadata.csv",
+        scatterplot_pca = "mers-nextstrain/results/scatterplot_pca.csv",
+        scatterplot_pca_metadata = "mers-nextstrain/results/scatterplot_pca_metadata.csv",
 
-        scatterplot_mds = "results/scatterplot_mds.csv",
-        scatterplot_mds_metadata = "results/scatterplot_mds_metadata.csv",
+        scatterplot_mds = "mers-nextstrain/results/scatterplot_mds.csv",
+        scatterplot_mds_metadata = "mers-nextstrain/results/scatterplot_mds_metadata.csv",
 
-        scatterplot_tsne = "results/scatterplot_t-sne.csv",
-        scatterplot_tsne_metadata = "results/scatterplot_t-sne_metadata.csv",
+        scatterplot_tsne = "mers-nextstrain/results/scatterplot_t-sne.csv",
+        scatterplot_tsne_metadata = "mers-nextstrain/results/scatterplot_t-sne_metadata.csv",
 
-        scatterplot_umap = "results/scatterplot_umap.csv",
-        scatterplot_umap_metadata = "results/scatterplot_umap_metadata.csv",
+        scatterplot_umap = "mers-nextstrain/results/scatterplot_umap.csv",
+        scatterplot_umap_metadata = "mers-nextstrain/results/scatterplot_umap_metadata.csv",
 
     output:
-        Scatterplot = "../docs/FullScatterplotMERS.png",
-        fullChart = "../docs/FullLinkedChartBrushableMERS.html",
-        fullChartPNG = "../docs/MERS-embeddings.png",
-        MDS_Supplement = "../docs/FullMDSBrushSupplementMERS.html",
-        MDS_Supplement_PNG = "../docs/FullMDSBrushSupplementMERS.png",
-        PCA_Supplement = "../docs/FullPCABrushSupplementMERS.html",
-        PCA_Supplement_PNG = "../docs/FullPCABrushSupplementMERS.png",
-        Explained_variance_PCA = "../docs/explainedVarianceMERS.png",
-        fullChartHost = "../docs/FullLinkedChartBrushableHostMERS.html",
-        fullChartHDBSCAN = "../docs/fullHDBSCANChartMERS.html",
-        fullChartHDBSCANPNG = "../docs/fullHDBSCANChartMERS.png"
+        Scatterplot = "docs/FullScatterplotMERS.png",
+        fullChart = "docs/FullLinkedChartBrushableMERS.html",
+        fullChartPNG = "docs/MERS-embeddings.png",
+        MDS_Supplement = "docs/FullMDSBrushSupplementMERS.html",
+        MDS_Supplement_PNG = "docs/FullMDSBrushSupplementMERS.png",
+        PCA_Supplement = "docs/FullPCABrushSupplementMERS.html",
+        PCA_Supplement_PNG = "docs/FullPCABrushSupplementMERS.png",
+        Explained_variance_PCA = "docs/explainedVarianceMERS.png",
+        fullChartHost = "docs/FullLinkedChartBrushableHostMERS.html",
+        fullChartHDBSCAN = "docs/fullHDBSCANChartMERS.html",
+        fullChartHDBSCANPNG = "docs/fullHDBSCANChartMERS.png"
 
     conda: "../cartography.yml"
     notebook:
         "FinalNotebookMers09-05-2020.ipynb"
-
-rule clean:
-    message: "Removing directories: {params}"
-    params:
-        "results ",
-        "auspice"
-    conda: "../cartography.yml"
-    shell:
-        "rm -rfv {params}"
