@@ -4,7 +4,7 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - augur=13.0.1
+  - augur=13.1.2
   - pip
   - seaborn
   - altair
@@ -24,6 +24,9 @@ dependencies:
   - reportlab
   - wget
   - snakemake
+  - snp-sites
+  - tabix
+  - pixy
   - pip:
     - pathogen-embed==0.0.2
     - statsmodels

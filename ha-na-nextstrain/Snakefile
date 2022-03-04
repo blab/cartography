@@ -1,30 +1,3 @@
-
-from snakemake.utils import min_version
-min_version("6.0")
-
-from snakemake.utils import Paramspace
-import pandas as pd
-
-METHOD_PARAMETERS = Paramspace(
-    pd.read_csv(
-        "config/method_parameters.tsv",
-        sep="\t"
-    )
-)
-
-wildcard_constraints:
-    segment="(ha|na)",
-    ha_concatenated="(ha|na|concatenated)",
-    method="(pca|mds|t-sne|umap)",
-    ha_concat="(ha|concatenated)"
-
-EMBEDDING_METHODS = [
-    "pca",
-    "mds",
-    "t-sne",
-    "umap"
-]
-
 SEGMENTS = [
     "ha",
     "na"
@@ -37,74 +10,57 @@ HA_CONCATENATED = [
 ]
 
 HA_CONCAT = [
+    "ha",
     "concatenated",
-    "ha"
 ]
 
-rule all:
+rule seasonal_flu_reassortment:
     input:
-        "results/ncbi-h3n2-ha.fasta",
-        expand("results/deduplicated_sequences_{segment}.fasta", segment=SEGMENTS),
-        "results/paired_ha.fasta",
-        expand("results/aligned_{segment}.fasta", segment=SEGMENTS),
-        expand("results/filtered_{segment}.fasta", segment=SEGMENTS),
-        expand("results/metadata_{segment}.tsv", segment=SEGMENTS),
-        "results/aligned_concatenated.fasta",
-        expand("results/tree_{segment}.nwk", segment=SEGMENTS),
-        expand("../auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json", segment=SEGMENTS),
-        expand("results/table_{segment}.tsv", segment=SEGMENTS),
-        expand("results/embed_pca_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
-        expand("results/embed_mds_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
-        expand("results/embed_t-sne_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
-        expand("results/embed_umap_{ha_concatenated}.json", ha_concatenated=HA_CONCATENATED),
-        expand("results/gridsearch_{ha_concatenated}.tsv", ha_concatenated=HA_CONCAT),
-        expand("results/pca_parameters_{ha_concatenated}.csv", ha_concatenated=HA_CONCAT),
-        "results/ha_concatenated_data.csv",
-        HANAMAFullChartBrushableMDSHTML = "../docs/HANAMAFullChartBrushableMDS.html",
-        HANAMAFullChartBrushableMDSPNG = "../docs/HANAMAFullChartBrushableMDS.png",
-        HANAFullChartBrushableMDSHTML = "../docs/HANAFullChartBrushableMDS.html",
-        HANAFullChartBrushableMDSPNG = "../docs/HANAFullChartBrushableMDS.png",
-        HANAMAFullChartBrushableTSNEHTML = "../docs/HANAMAFullChartBrushableTSNE.html",
-        HANAMAFullChartBrushableTSNEPNG = "../docs/HANAMAFullChartBrushableTSNE.png",
-        HANAFullChartBrushableTSNEHTML = "../docs/HANAFullChartBrushableTSNE.html",
-        HANAFullChartBrushableTSNEPNG = "../docs/HANAFullChartBrushableTSNE.png",
-        fullChartPNG = "../docs/flu-embeddingsHaNa.png",
-        fullChartHTML = "../docs/flu-embeddingsHaNa.html",
-rule files:
+        expand("auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json", segment=SEGMENTS),
+        expand("ha-na-nextstrain/results/table_{segment}.tsv", segment=SEGMENTS),
+        "ha-na-nextstrain/results/ha_concatenated_data.csv",
+        HANAFullChartBrushableMDSHTML = "docs/HANAFullChartBrushableMDS.html",
+        #HANAFullChartBrushableMDSPNG = "docs/HANAFullChartBrushableMDS.png",
+        HANAFullChartBrushableTSNEHTML = "docs/HANAFullChartBrushableTSNE.html",
+        #HANAFullChartBrushableTSNEPNG = "docs/HANAFullChartBrushableTSNE.png",
+        fullChartHTML = "docs/flu-embeddingsHaNa.html",
+        #fullChartPNG = "docs/flu-embeddingsHaNa.png",
+
+rule seasonal_flu_reassortment_files:
     params:
-        input_fasta = "data/ncbi-h3n2-ha-na.fa",
-        dropped_strains = "config/exclude.txt",
-        reference = "config/reference_h3n2_ha.gb",
-        auspice_config = "config/auspice_config.json",
-        clades = "config/clades_h3n2_ha.tsv"
+        input_fasta = "ha-na-nextstrain/data/ncbi-h3n2-ha-na.fa",
+        dropped_strains = "ha-na-nextstrain/config/exclude.txt",
+        reference = "ha-na-nextstrain/config/reference_h3n2_ha.gb",
+        auspice_config = "ha-na-nextstrain/config/auspice_config.json",
+        clades = "ha-na-nextstrain/config/clades_h3n2_ha.tsv"
 
-files = rules.files.params
+seasonal_flu_reassortment_files = rules.seasonal_flu_reassortment_files.params
 
-rule split:
+rule seasonal_flu_reassortment_split:
     message:
         """
         Split the ha and na file into separate files
         """
     input:
-        sequences =  "data/ncbi-h3n2-ha-na.fa",
+        sequences =  "ha-na-nextstrain/data/ncbi-h3n2-ha-na.fa",
     output:
-        sequences_ha = "results/ncbi-h3n2-ha.fasta",
-        sequences_na = "results/ncbi-h3n2-na.fasta"
+        sequences_ha = "ha-na-nextstrain/results/ncbi-h3n2-ha.fasta",
+        sequences_na = "ha-na-nextstrain/results/ncbi-h3n2-na.fasta"
     conda: "../cartography.yml"
     shell:
         """
-        python3 scripts/split_fasta.py \
+        python3 ha-na-nextstrain/scripts/split_fasta.py \
             --sequence {input.sequences} \
             --output_fastas {output.sequences_ha} {output.sequences_na}\
         """
 
-rule parse:
+rule seasonal_flu_reassortment_parse:
     message: "Parsing fasta into sequences and metadata"
     input:
-        sequences = "results/ncbi-h3n2-{segment}.fasta"
+        sequences = "ha-na-nextstrain/results/ncbi-h3n2-{segment}.fasta"
     output:
-        sequences = "results/sequences_{segment}.fasta",
-        metadata = "results/metadata_{segment}.tsv"
+        sequences = "ha-na-nextstrain/results/sequences_{segment}.fasta",
+        metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv"
     params:
         fasta_fields = "strain date accession country region segment_name"
     conda: "../cartography.yml"
@@ -117,35 +73,35 @@ rule parse:
             --fields {params.fasta_fields}
         """
 
-rule deduplicate_sequences:
+rule seasonal_flu_reassortment_deduplicate_sequences:
     message:
         """
         Deduplicating sequences
         """
     input:
-        sequences = "results/sequences_{segment}.fasta"
+        sequences = "ha-na-nextstrain/results/sequences_{segment}.fasta"
     output:
-        sequences = "results/deduplicated_sequences_{segment}.fasta"
+        sequences = "ha-na-nextstrain/results/deduplicated_sequences_{segment}.fasta"
     conda: "../cartography.yml"
     shell:
         """
-        python3 scripts/deduplicate_sequences.py \
+        python3 ha-na-nextstrain/scripts/deduplicate_sequences.py \
             --sequences {input.sequences} \
             --output {output.sequences}
         """
 
-rule filter:
+rule seasonal_flu_reassortment_filter:
     message:
         """
         Filtering to
           - excluding strains in {input.exclude}
         """
     input:
-        sequences = "results/deduplicated_sequences_{segment}.fasta",
-        metadata = "results/metadata_{segment}.tsv",
-        exclude = files.dropped_strains
+        sequences = "ha-na-nextstrain/results/deduplicated_sequences_{segment}.fasta",
+        metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
+        exclude = seasonal_flu_reassortment_files.dropped_strains
     output:
-        sequences = "results/filtered_{segment}.fasta"
+        sequences = "ha-na-nextstrain/results/filtered_{segment}.fasta"
     conda: "../cartography.yml"
     shell:
         """
@@ -156,33 +112,33 @@ rule filter:
             --output {output.sequences}
         """
 
-rule pair_ha_strains:
+rule seasonal_flu_reassortment_pair_ha_strains:
     message: "making ha strains same as na strains"
     input:
-        sequences_ha = "results/filtered_ha.fasta",
-        sequences_na = "results/filtered_na.fasta",
+        sequences_ha = "ha-na-nextstrain/results/filtered_ha.fasta",
+        sequences_na = "ha-na-nextstrain/results/filtered_na.fasta",
     output:
-        output_ha = "results/paired_ha.fasta",
-        output_na = "results/paired_na.fasta"
+        output_ha = "ha-na-nextstrain/results/paired_ha.fasta",
+        output_na = "ha-na-nextstrain/results/paired_na.fasta"
     conda: "../cartography.yml"
     shell:
         """
-        python3 scripts/filter_ha.py \
+        python3 ha-na-nextstrain/scripts/filter_ha.py \
             --sequence {input.sequences_ha} {input.sequences_na}\
             --output_fasta {output.output_ha} {output.output_na}
         """
 
-rule align:
+rule seasonal_flu_reassortment_align:
     message:
         """
         Aligning sequences
           - filling gaps with N
         """
     input:
-        sequences = "results/paired_{segment}.fasta",
-        reference = "config/reference_h3n2_{segment}.gb"
+        sequences = "ha-na-nextstrain/results/paired_{segment}.fasta",
+        reference = "ha-na-nextstrain/config/reference_h3n2_{segment}.gb"
     output:
-        alignment = "results/aligned_{segment}.fasta"
+        alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta"
     conda: "../cartography.yml"
     threads: 4
     shell:
@@ -196,60 +152,62 @@ rule align:
             --nthreads {threads}
         """
 
-rule concat:
+rule seasonal_flu_reassortment_concat:
     message:
         """putting the na strains with the ha strains"""
     input:
-        sequence_ha = "results/aligned_ha.fasta",
-        sequence_na = "results/aligned_na.fasta",
+        sequence_ha = "ha-na-nextstrain/results/aligned_ha.fasta",
+        sequence_na = "ha-na-nextstrain/results/aligned_na.fasta",
     output:
-        fasta = "results/aligned_concatenated.fasta"
+        fasta = "ha-na-nextstrain/results/aligned_concatenated.fasta"
     conda: "../cartography.yml"
     shell:
         """
-        python3 scripts/concat_sequences.py \
+        python3 ha-na-nextstrain/scripts/concat_sequences.py \
             --sequences {input.sequence_ha} {input.sequence_na}\
             --output {output.fasta} \
         """
 
-rule tree:
+rule seasonal_flu_reassortment_tree:
     message: "Building tree"
     input:
-        alignment = "results/aligned_{segment}.fasta"
+        alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta"
     output:
-        tree = "results/tree_raw_{segment}.nwk"
+        tree = "ha-na-nextstrain/results/tree_raw_{segment}.nwk"
     conda: "../cartography.yml"
     threads: 4
+    params:
+        tree_builder_args="-czb"
     shell:
         """
         augur tree \
             --alignment {input.alignment} \
-            --output {output.tree} \
-            --nthreads {threads}
+            --method iqtree \
+            --nthreads {threads} \
+            --tree-builder-args="{params.tree_builder_args}" \
+            --output {output.tree}
         """
 
-rule refine:
+rule seasonal_flu_reassortment_refine:
     message:
         """
         Refining tree
           - estimate timetree
           - use {params.coalescent} coalescent timescale
           - estimate {params.date_inference} node dates
-          - filter tips more than {params.clock_filter_iqd} IQDs from clock expectation
         """
     input:
-        tree = rules.tree.output.tree,
-        alignment = "results/aligned_{segment}.fasta",
-        metadata = "results/metadata_{segment}.tsv",
+        tree = rules.seasonal_flu_reassortment_tree.output.tree,
+        alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta",
+        metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
     output:
-        tree = "results/tree_{segment}.nwk",
-        node_data = "results/_{segment}.json"
+        tree = "ha-na-nextstrain/results/tree_{segment}.nwk",
+        node_data = "ha-na-nextstrain/results/branch_lengths_{segment}.json"
     params:
         coalescent = "opt",
         date_inference = "marginal",
-        clock_filter_iqd = 4,
-        clock_rate = 0.00382,
-        clock_std_dev = 0.000764
+        clock_rate = lambda wildcards: 0.00382 if wildcards.segment == "ha" else 0.00267,
+        clock_std_dev = lambda wildcards: 0.000764 if wildcards.segment == "ha" else 0.000534,
     conda: "../cartography.yml"
     shell:
         """
@@ -263,18 +221,17 @@ rule refine:
             --coalescent {params.coalescent} \
             --date-confidence \
             --date-inference {params.date_inference} \
-            --clock-filter-iqd {params.clock_filter_iqd} \
             --clock-rate {params.clock_rate} \
             --clock-std-dev {params.clock_std_dev}
         """
 
-rule ancestral:
+rule seasonal_flu_reassortment_ancestral:
     message: "Reconstructing ancestral sequences and mutations"
     input:
-        tree = rules.refine.output.tree,
-        alignment = "results/aligned_{segment}.fasta"
+        tree = rules.seasonal_flu_reassortment_refine.output.tree,
+        alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta"
     output:
-        node_data = "results/nt_muts_{segment}.json"
+        node_data = "ha-na-nextstrain/results/nt_muts_{segment}.json"
     params:
         inference = "joint"
     conda: "../cartography.yml"
@@ -287,14 +244,14 @@ rule ancestral:
             --inference {params.inference}
         """
 
-rule translate:
+rule seasonal_flu_reassortment_translate:
     message: "Translating amino acid sequences"
     input:
-        tree = rules.refine.output.tree,
-        node_data = rules.ancestral.output.node_data,
-        reference = files.reference
+        tree = rules.seasonal_flu_reassortment_refine.output.tree,
+        node_data = rules.seasonal_flu_reassortment_ancestral.output.node_data,
+        reference = seasonal_flu_reassortment_files.reference
     output:
-        node_data = "results/aa_muts_{segment}.json"
+        node_data = "ha-na-nextstrain/results/aa_muts_{segment}.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -305,15 +262,15 @@ rule translate:
             --output {output.node_data}
         """
 
-rule clades:
-    message: " Labeling clades as specified in config/clades.tsv"
+rule seasonal_flu_reassortment_clades:
+    message: " Labeling clades as specified in ha-na-nextstrain/config/clades.tsv"
     input:
-        tree = rules.refine.output.tree,
-        aa_muts = rules.translate.output.node_data,
-        nuc_muts = rules.ancestral.output.node_data,
-        clades = files.clades
+        tree = rules.seasonal_flu_reassortment_refine.output.tree,
+        aa_muts = rules.seasonal_flu_reassortment_translate.output.node_data,
+        nuc_muts = rules.seasonal_flu_reassortment_ancestral.output.node_data,
+        clades = seasonal_flu_reassortment_files.clades
     output:
-        clade_data = "results/clades_{segment}.json"
+        clade_data = "ha-na-nextstrain/results/clades_{segment}.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -323,13 +280,13 @@ rule clades:
             --output {output.clade_data}
         """
 
-rule traits:
+rule seasonal_flu_reassortment_traits:
     message: "Inferring ancestral traits for {params.columns!s}"
     input:
-        tree = rules.refine.output.tree,
-        metadata = "results/metadata_{segment}.tsv",
+        tree = rules.seasonal_flu_reassortment_refine.output.tree,
+        metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
     output:
-        node_data = "results/traits_{segment}.json",
+        node_data = "ha-na-nextstrain/results/traits_{segment}.json",
     params:
         columns = "region country"
     conda: "../cartography.yml"
@@ -343,216 +300,217 @@ rule traits:
             --confidence
         """
 
-rule export:
+rule seasonal_flu_reassortment_find_mccs:
+    input:
+        ha_tree="ha-na-nextstrain/results/tree_raw_ha.nwk",
+        na_tree="ha-na-nextstrain/results/tree_raw_na.nwk",
+    output:
+        mccs="ha-na-nextstrain/results/treeknit_results/MCCs.dat",
+    params:
+        gamma=2,
+    conda: "../cartography.yml"
+    shell:
+        """
+        ~/.julia/bin/treeknit \
+            {input.ha_tree} \
+            {input.na_tree} \
+            -g={params.gamma}
+        """
+
+rule seasonal_flu_reassortment_convert_mccs_to_json:
+    input:
+        mccs="ha-na-nextstrain/results/treeknit_results/MCCs.dat",
+    output:
+        node_data="ha-na-nextstrain/results/mccs.json",
+    conda: "../cartography.yml"
+    params:
+        min_mcc_size=10,
+    shell:
+        """
+        python3 ha-na-nextstrain/scripts/convert_mccs_to_node_json.py \
+            --min-size {params.min_mcc_size} \
+            --mccs {input.mccs} \
+            --output {output.node_data}
+        """
+
+rule seasonal_flu_reassortment_export:
     message: "Exporting data files for for auspice"
     input:
-        tree = rules.refine.output.tree,
-        metadata = "results/metadata_{segment}.tsv",
-        branch_lengths = rules.refine.output.node_data,
-        traits = rules.traits.output.node_data,
-        nt_muts = rules.ancestral.output.node_data,
-        aa_muts = rules.translate.output.node_data,
-        embeddings = expand("results/embed_{embedding}_ha.json", embedding=EMBEDDING_METHODS),
-        embeddings_concat = expand("results/embed_{embedding}_concatenated_renamed.json", embedding=EMBEDDING_METHODS),
-        auspice_config = files.auspice_config,
-        colors = "config/colors.tsv",
-        clades = "results/clades_ha.json"
+        tree = rules.seasonal_flu_reassortment_refine.output.tree,
+        metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
+        branch_lengths = rules.seasonal_flu_reassortment_refine.output.node_data,
+        traits = rules.seasonal_flu_reassortment_traits.output.node_data,
+        nt_muts = rules.seasonal_flu_reassortment_ancestral.output.node_data,
+        aa_muts = rules.seasonal_flu_reassortment_translate.output.node_data,
+        mccs = "ha-na-nextstrain/results/mccs.json",
+        embeddings = expand("ha-na-nextstrain/results/embed_{embedding}_ha.json", embedding=EMBEDDING_METHODS),
+        embeddings_concat = expand("ha-na-nextstrain/results/embed_{embedding}_concatenated_renamed.json", embedding=EMBEDDING_METHODS),
+        auspice_config = seasonal_flu_reassortment_files.auspice_config,
+        clades = "ha-na-nextstrain/results/clades_ha.json"
     output:
-        auspice_tree = "../auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json"
+        auspice_tree = "auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json"
     conda: "../cartography.yml"
     shell:
         """
         augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} {input.embeddings_concat} \
+            --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} {input.embeddings_concat} {input.mccs} \
             --auspice-config {input.auspice_config} \
-            --colors {input.colors} \
             --output {output.auspice_tree}
         """
 
-def _get_embedding_columns_by_wildcards_mds_umap(wildcards):
-    method = wildcards.mds_umap
-    if method in ("mds"):
-        return f"{method}1 {method}2"
-    else:
-        return f"{method}_x {method}_y"
-
-rule nucleotide_diversity:
-    message: "finding the nucleotide diversity of an aligned FASTA file"
-    input:
-        alignment = "results/aligned_na.fasta"
-    output:
-        output = "results/nucleotide_diversity_na.txt"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/nucleotide_diversity.py \
-            --alignment {input.alignment} \
-            --output {output.output}
-        """
-
-rule tree_to_table:
+rule seasonal_flu_reassortment_tree_to_table:
     message: "creating a table of node data values from the tree attributes"
     input:
-        tree = rules.export.output.auspice_tree
+        tree = rules.seasonal_flu_reassortment_export.output.auspice_tree
     output:
-        table = "results/table_{segment}.tsv"
+        table = "ha-na-nextstrain/results/table_{segment}.tsv"
     params:
-        attributes = "num_date pca1 pca2 pca3 pca4 mds1 mds2 tsne_x tsne_y umap_x umap_y clade_membership pca_label mds_label umap_label t-sne_label"
+        attributes = "num_date MCC clade_membership"
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/auspice_tree_to_table.py \
+        python3 notebooks/scripts/auspice_tree_to_table.py \
             {input.tree} \
             {output.table} \
             --attributes {params.attributes}
         """
 
-rule create_distance_matrix:
+rule seasonal_flu_reassortment_create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
-        alignment = "results/aligned_{ha_concatenated}.fasta"
+        alignment = "ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta"
     output:
-        output = "results/distance_matrix_{ha_concatenated}.csv"
+        output = "ha-na-nextstrain/results/distance_matrix_{ha_concatenated}.csv"
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/hamming_distance_from_fasta.py \
+        python3 notebooks/scripts/hamming_distance_from_fasta.py \
             --alignment {input.alignment} \
             --output {output.output}
         """
-        
 
-rule embed_pca:
-    message: "Creating the embedding (dataframe, node JSON) for PCA"
+rule seasonal_flu_reassortment_embed_pca:
+    message: "Creating the embedding for PCA"
     input:
-        alignment = "results/aligned_{ha_concatenated}.fasta",
-        cluster = "results/pca_parameters_{ha_concatenated}.csv",
+        alignment = "ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta",
+        cluster = "seasonal-flu-nextstrain/results/pca_parameters.csv",
     output:
-        node_data = "results/embed_pca_{ha_concatenated}.json",
-        dataframe = "results/embed_pca_{ha_concatenated}.csv",
-        figure = "results/embed_pca_{ha_concatenated}.pdf",
-        explained_variance = "results/explained_variance_pca_{ha_concatenated}.csv"
+        dataframe = "ha-na-nextstrain/results/embed_pca_{ha_concatenated}.csv",
+        figure = "ha-na-nextstrain/results/embed_pca_{ha_concatenated}.pdf",
+        explained_variance = "ha-na-nextstrain/results/explained_variance_pca_{ha_concatenated}.csv"
     params:
-        components = 10
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --alignment {input.alignment} \
             --cluster-data {input.cluster} \
-            --random-seed 314159 \
+            --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             pca \
-            --components {params.components} \
             --explained-variance {output.explained_variance}
         """
 
-rule embed_tsne:
-    message: "Creating the embedding (dataframe, node JSON) for t-SNE"
+rule seasonal_flu_reassortment_embed_mds:
+    message: "Creating the embedding for MDS"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output,
-        cluster = "results/t-sne_parameters_{ha_concatenated}.csv",
+        distance_matrix = rules.seasonal_flu_reassortment_create_distance_matrix.output.output,
+        cluster = "seasonal-flu-nextstrain/results/mds_parameters.csv",
     output:
-        node_data = "results/embed_t-sne_{ha_concatenated}.json",
-        dataframe = "results/embed_t-sne_{ha_concatenated}.csv",
-        figure = "results/embed_t-sne_{ha_concatenated}.pdf"
+        dataframe = "ha-na-nextstrain/results/embed_mds_{ha_concatenated}.csv",
+        figure = "ha-na-nextstrain/results/embed_mds_{ha_concatenated}.pdf"
     params:
-        perplexity = 25.95,
-        learning_rate = 200
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
-            --random-seed 314159 \
+            --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            t-sne \
-            --perplexity {params.perplexity} \
-            --learning-rate {params.learning_rate}
+            mds
         """
 
-rule embed_umap:
-    message: "Creating the embedding (dataframe, node JSON) for UMAP"
+rule seasonal_flu_reassortment_embed_tsne:
+    message: "Creating the embedding for t-SNE"
     input:
-        distance_matrix = rules.create_distance_matrix.output.output,
-        cluster = "results/umap_parameters_{ha_concatenated}.csv",
+        alignment = "ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta",
+        distance_matrix = rules.seasonal_flu_reassortment_create_distance_matrix.output.output,
+        cluster = "seasonal-flu-nextstrain/results/t-sne_parameters.csv",
     output:
-        node_data = "results/embed_umap_{ha_concatenated}.json",
-        dataframe = "results/embed_umap_{ha_concatenated}.csv",
-        figure = "results/embed_umap_{ha_concatenated}.pdf"
+        dataframe = "ha-na-nextstrain/results/embed_t-sne_{ha_concatenated}.csv",
+        figure = "ha-na-nextstrain/results/embed_t-sne_{ha_concatenated}.pdf"
     params:
-        nearest_neighbors = 200,
-        min_dist = .5
+        random_seed = RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        embed \
+            --alignment {input.alignment} \
+            --distance-matrix {input.distance_matrix} \
+            --cluster-data {input.cluster} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
+            t-sne
+        """
+
+rule seasonal_flu_reassortment_embed_umap:
+    message: "Creating the embedding for UMAP"
+    input:
+        distance_matrix = rules.seasonal_flu_reassortment_create_distance_matrix.output.output,
+        cluster = "seasonal-flu-nextstrain/results/umap_parameters.csv",
+    output:
+        dataframe = "ha-na-nextstrain/results/embed_umap_{ha_concatenated}.csv",
+        figure = "ha-na-nextstrain/results/embed_umap_{ha_concatenated}.pdf"
+    params:
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
-            --random-seed 314159 \
+            --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            umap \
-            --nearest-neighbors {params.nearest_neighbors} \
-            --min-dist {params.min_dist}
+            umap
         """
 
-rule embed_mds:
-    message: "Creating the embedding (dataframe, node JSON) for MDS"
-    input:
-        distance_matrix = rules.create_distance_matrix.output.output,
-        cluster = "results/mds_parameters_{ha_concatenated}.csv",
-    output:
-        node_data = "results/embed_mds_{ha_concatenated}.json",
-        dataframe = "results/embed_mds_{ha_concatenated}.csv",
-        figure = "results/embed_mds_{ha_concatenated}.pdf"
-    params:
-        components = 2
-    conda: "../cartography.yml"
-    shell:
-        """
-        embed \
-            --distance-matrix {input.distance_matrix} \
-            --cluster-data {input.cluster} \
-            --random-seed 314159 \
-            --output-node-data {output.node_data} \
-            --output-dataframe {output.dataframe} \
-            --output-figure {output.figure} \
-            mds \
-            --components {params.components} \
-        """
-
-rule create_node_output:
+rule seasonal_flu_reassortment_create_node_output:
     message: "creates node output that is used by augur to create the phylogenies"
-    input: 
-        dataframe = "results/embed_{method}.csv"
+    input:
+        dataframe = "ha-na-nextstrain/results/embed_{method}_{ha_concatenated}.csv"
     output:
-        node_data = "results/embed_{method}.json"
-    shell: 
+        node_data = "ha-na-nextstrain/results/embed_{method}_{ha_concatenated}.json"
+    conda: "../cartography.yml"
+    shell:
         """
-        python3 ../notebooks/scripts/otuput_node_data.py \
+        python3 notebooks/scripts/output_node_data.py \
             --table {input.dataframe} \
             --output {output.node_data}
         """
 
-rule rename_columns:
+rule seasonal_flu_reassortment_rename_columns:
     message: "renaming columns for the concat so it can be exported to aupice (concat and ha colorbys)"
     input:
-        clades = "results/embed_{method}_concatenated.json",
-        embedding = "results/embed_{method}_concatenated.csv"
+        clades = "ha-na-nextstrain/results/embed_{method}_concatenated.json",
+        embedding = "ha-na-nextstrain/results/embed_{method}_concatenated.csv"
     output:
-        node_data = "results/embed_{method}_concatenated_renamed.json"
+        node_data = "ha-na-nextstrain/results/embed_{method}_concatenated_renamed.json"
+    conda: "../cartography.yml"
     params:
         rename_column = "{method}_label_ha_na",
         differentiator_column = "{method}_label"
-    shell: 
+    shell:
         """
-        python3 scripts/rename_columns.py \
+        python3 ha-na-nextstrain/scripts/rename_columns.py \
             --clades {input.clades} \
             --embedding {input.embedding} \
             --differentiator-column {params.differentiator_column} \
@@ -560,162 +518,131 @@ rule rename_columns:
             --output {output.node_data}
         """
 
-def _get_embedding_columns_by_wildcards(wildcards):
-    method = wildcards.method.replace("-", "")
-
-    if method in ("pca"):
-        return f"{method}1 {method}2 {method}3 {method}4"
-    if method in ("mds"):
-        return f"{method}1 {method}2"
-    else:
-        return f"{method}_x {method}_y"
-
-def _get_embedding_path_by_wildcards(wildcards):
-    method = wildcards.method
-    ha_concatenated = wildcards.ha_concatenated
-
-    if method in ("pca", "mds", "t-sne", "umap"):
-        return f"results/embed_{method}_{ha_concatenated}.csv"
-    else:
-        return "results/distance_matrix_{ha_concatenated}.csv"
-
-rule concat_scatterplot_table:
+rule seasonal_flu_reassortment_concat_scatterplot_table:
     message: "concatenating all the scatterplot metadata into one csv dataframe"
     input:
-       dataframe_pca = "results/scatterplot_pca_metadata_{ha_concatenated}.csv",
-       dataframe_mds = "results/scatterplot_mds_metadata_{ha_concatenated}.csv",
-       dataframe_tsne = "results/scatterplot_t-sne_metadata_{ha_concatenated}.csv",
-       dataframe_umap = "results/scatterplot_umap_metadata_{ha_concatenated}.csv"
+       dataframe_pca = "ha-na-nextstrain/results/scatterplot_pca_metadata_{ha_concatenated}.csv",
+       dataframe_mds = "ha-na-nextstrain/results/scatterplot_mds_metadata_{ha_concatenated}.csv",
+       dataframe_tsne = "ha-na-nextstrain/results/scatterplot_t-sne_metadata_{ha_concatenated}.csv",
+       dataframe_umap = "ha-na-nextstrain/results/scatterplot_umap_metadata_{ha_concatenated}.csv"
     output:
-        metadata = "results/full_Scatterplot_metadata_{ha_concatenated}.csv"
+        metadata = "ha-na-nextstrain/results/full_Scatterplot_metadata_{ha_concatenated}.csv"
     params:
         column = "pearson_coef",
-        dataframes = "results/scatterplot_pca_metadata_{ha_concatenated}.csv results/scatterplot_mds_metadata_{ha_concatenated}.csv results/scatterplot_t-sne_metadata_{ha_concatenated}.csv results/scatterplot_umap_metadata_{ha_concatenated}.csv"
+        dataframes = "ha-na-nextstrain/results/scatterplot_pca_metadata_{ha_concatenated}.csv ha-na-nextstrain/results/scatterplot_mds_metadata_{ha_concatenated}.csv ha-na-nextstrain/results/scatterplot_t-sne_metadata_{ha_concatenated}.csv ha-na-nextstrain/results/scatterplot_umap_metadata_{ha_concatenated}.csv"
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/concatenate_tables.py \
+        python3 notebooks/scripts/concatenate_tables.py \
             --tables {params.dataframes} \
             --separator ',' \
             --sort-by {params.column} \
             --output {output.metadata}
         """
 
-rule create_distance_dataframe:
+rule seasonal_flu_reassortment_create_distance_dataframe:
     message: "creating distance dataframe for the ha and ha+na for animation"
     input:
-        dataframe_pca = "results/embed_pca_ha.csv",
-        dataframe_mds = "results/embed_mds_ha.csv",
-        dataframe_tsne = "results/embed_t-sne_ha.csv",
-        dataframe_umap = "results/embed_umap_ha.csv",
-        dataframe_pca_na = "results/embed_pca_concatenated.csv",
-        dataframe_mds_na = "results/embed_mds_concatenated.csv",
-        dataframe_tsne_na = "results/embed_t-sne_concatenated.csv",
-        dataframe_umap_na = "results/embed_umap_concatenated.csv"
+        dataframe_pca = "ha-na-nextstrain/results/embed_pca_ha.csv",
+        dataframe_mds = "ha-na-nextstrain/results/embed_mds_ha.csv",
+        dataframe_tsne = "ha-na-nextstrain/results/embed_t-sne_ha.csv",
+        dataframe_umap = "ha-na-nextstrain/results/embed_umap_ha.csv",
+        dataframe_pca_na = "ha-na-nextstrain/results/embed_pca_concatenated.csv",
+        dataframe_mds_na = "ha-na-nextstrain/results/embed_mds_concatenated.csv",
+        dataframe_tsne_na = "ha-na-nextstrain/results/embed_t-sne_concatenated.csv",
+        dataframe_umap_na = "ha-na-nextstrain/results/embed_umap_concatenated.csv"
     output:
-        metadata = "results/ha_concatenated_data.csv"
+        metadata = "ha-na-nextstrain/results/ha_concatenated_data.csv"
+    conda: "../cartography.yml"
     params:
         suffixes = "_ha _concatenated"
     shell:
         """
-        python3 ../notebooks/scripts/make_table.py \
+        python3 notebooks/scripts/make_table.py \
             --tables {input} \
             --separator ',' \
             --suffixes {params.suffixes} \
             --output {output.metadata}
         """
 
-rule cluster_by_parameters_ha:
+rule seasonal_flu_reassortment_annotate_embeddings:
     input:
-        alignment="results/aligned_ha.fasta",
-        distance_matrix="results/distance_matrix_ha.csv",
-        clades="results/clades_ha.json",
+        left="ha-na-nextstrain/results/table_ha.tsv",
+        right="ha-na-nextstrain/results/ha_concatenated_data.csv",
     output:
-        table=f"results/gridsearch/ha/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
+        table="ha-na-nextstrain/results/annotated_embeddings.tsv",
+    conda: "../cartography.yml"
     params:
-        method_parameters=METHOD_PARAMETERS.instance,
-    conda: "../cartography.yml"
-    script:
-        "../notebooks/scripts/cluster_by_parameters.py"
-        
-rule cluster_by_parameters_concat:
-    input:
-        alignment="results/aligned_concatenated.fasta",
-        distance_matrix="results/distance_matrix_concatenated.csv",
-        clades="results/clades_ha.json",
-    output:
-        table=f"results/gridsearch/concatenated/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
-    params:
-        method_parameters=METHOD_PARAMETERS.instance,
-    conda: "../cartography.yml"
-    script:
-        "../notebooks/scripts/cluster_by_parameters.py"
-
-rule aggregate_clusters_by_parameters:
-    input:
-        tables=expand("results/gridsearch/{ha_concatenated}/{params}.tsv", ha_concatenated=HA_CONCAT, params=METHOD_PARAMETERS.instance_patterns)
-    output:
-        table="results/gridsearch_{ha_concatenated}.tsv"
-    conda: "../cartography.yml"
+        join_on="strain",
     shell:
         """
-        python3 ../notebooks/scripts/concatenate_tables.py \
-            --tables {input.tables} \
+        python3 notebooks/scripts/join_tables.py \
+            --left {input.left} \
+            --right {input.right} \
+            --on {params.join_on} \
             --output {output.table}
         """
 
-rule output_grid_search:
+rule seasonal_flu_reassortment_cluster_metadata:
     input:
-        table= "results/gridsearch_{ha_concatenated}.tsv",
+        embedding = "ha-na-nextstrain/results/embed_{method}_{ha_concatenated}.csv",
+        metadata = "ha-na-nextstrain/results/table_ha.tsv",
+        cluster = "seasonal-flu-nextstrain/results/{method}_parameters.csv",
     output:
-        pca_parameters = "results/pca_parameters_{ha_concatenated}.csv",
-        mds_parameters = "results/mds_parameters_{ha_concatenated}.csv",
-        tsne_parameters = "results/t-sne_parameters_{ha_concatenated}.csv",
-        umap_parameters = "results/umap_parameters_{ha_concatenated}.csv",
-        mcc_by_method_and_distance_threshold = "results/mcc_by_method_and_distance_threshold_{ha_concatenated}.pdf"
+        dataframe = "ha-na-nextstrain/results/HDBSCAN_metadata_{method}_{ha_concatenated}.csv",
     conda: "../cartography.yml"
-    notebook:
-        "../notebooks/2021-06-23-summarize-grid-search.ipynb"
-
-rule create_notebook_docs:
-    message: "creating linked and grouped charts using the jupyter notebook"
-    input:
-        #Charts, tree:
-        node_df_ha = "results/table_ha.tsv",
-        
-        pca_df_ha = "results/embed_pca_ha.csv",
-        explained_variance_pca_ha = "results/explained_variance_pca_ha.csv",
-
-        pca_df_concatenated = "results/embed_pca_concatenated.csv",
-        explained_variance_pca_concatenated = "results/explained_variance_pca_concatenated.csv",
-
-        mds_df_ha = "results/embed_mds_ha.csv",
-        mds_df_concatenated = "results/embed_mds_concatenated.csv",
-
-        tsne_df_ha = "results/embed_t-sne_ha.csv",
-        tsne_df_concatenated = "results/embed_t-sne_concatenated.csv",
-
-        umap_df_ha = "results/embed_umap_ha.csv",
-        umap_df_concatenated = "results/embed_umap_concatenated.csv",
-
-    output:
-        HANAFullChartBrushableMDSHTML = "../docs/HANAFullChartBrushableMDS.html",
-        HANAFullChartBrushableMDSPNG = "../docs/HANAFullChartBrushableMDS.png",
-        HANAFullChartBrushableTSNEHTML = "../docs/HANAFullChartBrushableTSNE.html",
-        HANAFullChartBrushableTSNEPNG = "../docs/HANAFullChartBrushableTSNE.png",
-        fullChartPNG = "../docs/flu-embeddingsHaNa.png",
-        fullChartHTML = "../docs/flu-embeddingsHaNa.html"
-
-    conda: "../cartography.yml"
-    notebook:
-        "2020-12-21NotebookFluHaNa.ipynb"
-
-
-rule clean:
-    message: "Removing directories: {params}"
     params:
-        "results ",
-        "auspice"
+        clade_column="MCC",
+        missing_data_value="unassigned",
+    shell:
+        """
+        python3 notebooks/scripts/metadata_HDBSCAN.py \
+            --method {wildcards.method} \
+            --clade-column {params.clade_column} \
+            --missing-data-value {params.missing_data_value} \
+            --analysis-name {wildcards.ha_concatenated} \
+            --embedding {input.embedding} \
+            --metadata {input.metadata} \
+            --cluster-data {input.cluster} \
+            --output {output.dataframe}
+        """
+
+rule seasonal_flu_reassortment_concat_HDBSCAN_table:
+    input:
+       dataframes = expand("ha-na-nextstrain/results/HDBSCAN_metadata_{method}_{ha_concatenated}.csv", method=EMBEDDING_METHODS, ha_concatenated=HA_CONCAT)
+    output:
+        metadata = "ha-na-nextstrain/results/full_HDBSCAN_metadata.csv"
+    params:
+        column = "MCC",
     conda: "../cartography.yml"
     shell:
-        "rm -rfv {params}"
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.dataframes} \
+            --separator ',' \
+            --sort-by {params.column} \
+            --output {output.metadata}
+        """
+
+rule seasonal_flu_reassortment_create_notebook_docs:
+    message: "creating linked and grouped charts using the jupyter notebook"
+    input:
+        colors = "notebooks/config/color_schemes.tsv",
+        annotated_embeddings="ha-na-nextstrain/results/annotated_embeddings.tsv",
+        accuracy_table="ha-na-nextstrain/results/full_HDBSCAN_metadata.csv",
+        explained_variance_pca_ha = "ha-na-nextstrain/results/explained_variance_pca_ha.csv",
+        explained_variance_pca_concatenated = "ha-na-nextstrain/results/explained_variance_pca_concatenated.csv",
+    output:
+        HANAFullChartBrushablePCAHTML = "docs/HANAFullChartBrushablePCA.html",
+        HANAFullChartBrushablePCAPNG = "docs/HANAFullChartBrushablePCA.png",
+        HANAFullChartBrushableMDSHTML = "docs/HANAFullChartBrushableMDS.html",
+        HANAFullChartBrushableMDSPNG = "docs/HANAFullChartBrushableMDS.png",
+        HANAFullChartBrushableTSNEHTML = "docs/HANAFullChartBrushableTSNE.html",
+        HANAFullChartBrushableTSNEPNG = "docs/HANAFullChartBrushableTSNE.png",
+        HANAFullChartBrushableUMAPHTML = "docs/HANAFullChartBrushableUMAP.html",
+        HANAFullChartBrushableUMAPPNG = "docs/HANAFullChartBrushableUMAP.png",
+        fullChartHTML = "docs/flu-embeddingsHaNa.html",
+        fullChartPNG = "docs/flu-embeddingsHaNa.png",
+    conda: "../cartography.yml"
+    notebook:
+        "2022-02-23-seasonal-flu-ha-na-reassortment.ipynb"

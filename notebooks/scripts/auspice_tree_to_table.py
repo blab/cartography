@@ -35,10 +35,12 @@ if __name__ == "__main__":
     else:
         attributes = sorted(list(tree.root.node_attr.keys()) + list(tree.root.branch_attrs.keys()))
 
+    heights = get_y_positions(tree)
     for node in tree.find_clades(terminal=True):
         if node.is_terminal() or args.include_internal_nodes:
             record = {
-                "name": node.name
+                "strain": node.name,
+                "y_value": heights[node],
             }
 
             for attribute in attributes:
@@ -51,14 +53,6 @@ if __name__ == "__main__":
 
             records.append(record)
 
-    tree_records = []
-    heights = get_y_positions(tree)
-    for node in tree.find_clades(terminal=True):
-        tree_records.append(dict(strain=node.name, y=heights[node]))
-    tree_records_df = pd.DataFrame(tree_records)
-    # Convert records to a data frame and save as a tab-delimited file.
+   # Convert records to a data frame and save as a tab-delimited file.
     df = pd.DataFrame(records)
-    df.columns = ["strain"] + list(attributes)
-    df["y_value"] = tree_records_df["y"]
-
     df.to_csv(args.output, sep="\t", header=True, index=False, float_format="%.2f")

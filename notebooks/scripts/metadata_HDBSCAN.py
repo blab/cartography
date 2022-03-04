@@ -8,47 +8,89 @@ import re
 from sklearn.metrics import confusion_matrix, matthews_corrcoef
 import sys
 
-from Helpers import get_hamming_distances, get_euclidean_data_frame
+from Helpers import get_hamming_distances, get_euclidean_data_frame, get_embedding_columns_by_method
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
 
-    parser = argparse.ArgumentParser()
-
+    parser.add_argument("--metadata", required=True, help="clades information")
+    parser.add_argument("--embedding", required=True, help="a csv file with embedding information for method")
     parser.add_argument("--method", required=True, choices = ["pca", "mds", "t-sne", "umap"], help="the embedding used")
-    parser.add_argument("--embedding", help="a csv file with embedding information for method")
-    parser.add_argument("--metadata", help="clades information")
+    parser.add_argument("--clade-column", default="clade_membership", help="column storing known clade or group membership to use for accuracy calculations")
+    parser.add_argument("--missing-data-value", help="string used to represent missing data values that should be dropped from accuracy calculations")
+    parser.add_argument("--analysis-name", help="name of analysis to annotate the accuracy values with. Used when outputs will be concatenated downstream across multiple analyses.")
     parser.add_argument("--cluster-data", help="cluster data from embedding and assign labels given via HDBSCAN")
     parser.add_argument("--cluster-threshold", type=float, help="cluster data from embedding and assign labels given via HDBSCAN. Pass in a threshold.")
-    parser.add_argument("--output", help="outputting a csv file of metadata info for HDBSCAN results")
+    parser.add_argument("--output", required=True, help="outputting a csv file of metadata info for HDBSCAN results")
 
     args = parser.parse_args()
 
+    embedding_df = pd.read_csv(args.embedding)
+    metadata_df = pd.read_csv(args.metadata, sep="\t")
+    embedding_df = embedding_df.merge(metadata_df[["strain", args.clade_column]], on="strain")
 
-    def _get_embedding_columns_by_method(method):
-        if method in ("pca"):
-            return list(f"{method}1 {method}2 {method}3 {method}4 {method}5 {method}6 {method}7 {method}8 {method}9 {method}10".split())
-        if method in ("mds"):
-            return list(f"{method}1 {method}2".split())
-        if method in ("t-sne"):
-            return list("tsne_x tsne_y".split())
-        else:
-            return list(f"{method}_x {method}_y".split())
+    if args.missing_data_value:
+        embedding_df[args.clade_column] = embedding_df[args.clade_column].replace(
+            args.missing_data_value,
+            np.NaN,
+        )
+        total_rows = embedding_df.shape[0]
+        embedding_df.dropna(subset=[args.clade_column], inplace=True)
+        non_missing_rows = embedding_df.shape[0]
+        print(f"Dropped {total_rows - non_missing_rows} missing values in the clade column '{args.clade_column}'.")
 
-    if args.output is not None:
-        embedding_df = pd.read_csv(args.embedding)
-        if args.metadata is not None:
-            metadata_df = pd.read_csv(args.metadata, sep="\t")
-            embedding_df = embedding_df.merge(metadata_df[["strain", "clade_membership"]], on="strain")
-            KDE_df_cluster = get_euclidean_data_frame(sampled_df=embedding_df, column_for_analysis=f"{args.method}_label", embedding=args.method, column_list=_get_embedding_columns_by_method(args.method))
-            KDE_df_normal = get_euclidean_data_frame(sampled_df=embedding_df,column_for_analysis="clade_membership", embedding=args.method, column_list=_get_embedding_columns_by_method(args.method))
-            
-            confusion_matrix_val = confusion_matrix(KDE_df_normal["clade_status"], KDE_df_cluster["clade_status"])
-            matthews_cc_val = matthews_corrcoef(KDE_df_normal["clade_status"], KDE_df_cluster["clade_status"])
-            if args.cluster_threshold is not None:
-                output_df = pd.DataFrame([[args.method, matthews_cc_val, float(args.cluster_threshold), confusion_matrix_val[0][0], confusion_matrix_val[1][0], confusion_matrix_val[1][1], confusion_matrix_val[0][1]]], columns=["embedding", "MCC", "threshold", "TN", "FN", "TP", "FP"]).round(3)
-                output_df.to_csv(args.output)
-            if args.cluster_data is not None:
-                max_df = pd.read_csv(args.cluster_data)
-                output_df = pd.DataFrame([[args.method, matthews_cc_val, float(max_df['distance_threshold'].values.tolist()[0]), confusion_matrix_val[0][0], confusion_matrix_val[1][0], confusion_matrix_val[1][1], confusion_matrix_val[0][1]]], columns=["embedding", "MCC", "threshold", "TN", "FN", "TP", "FP"]).round(3)
-                output_df.to_csv(args.output, index=False)
+    # Determine clade status from automated cluster labels.
+    KDE_df_cluster = get_euclidean_data_frame(
+        sampled_df=embedding_df,
+        column_for_analysis=f"{args.method}_label",
+        embedding=args.method,
+        column_list=get_embedding_columns_by_method(args.method)
+    )
+
+    # Determine clade status from pre-assigned clade or group membership.
+    KDE_df_normal = get_euclidean_data_frame(
+        sampled_df=embedding_df,
+        column_for_analysis=args.clade_column,
+        embedding=args.method,
+        column_list=get_embedding_columns_by_method(args.method)
+    )
+
+    # Calculate accuracy of automated cluster labels compared to pre-assigned
+    # clade or group membership.
+    confusion_matrix_val = confusion_matrix(
+        KDE_df_normal["clade_status"],
+        KDE_df_cluster["clade_status"]
+    )
+    matthews_cc_val = matthews_corrcoef(
+        KDE_df_normal["clade_status"],
+        KDE_df_cluster["clade_status"]
+    )
+
+    if args.cluster_data is not None:
+        max_df = pd.read_csv(args.cluster_data)
+        cluster_threshold = float(max_df['distance_threshold'].values.tolist()[0])
+    else:
+        cluster_threshold = args.cluster_threshold
+
+    output_df = pd.DataFrame(
+        [
+            [
+                args.method,
+                matthews_cc_val,
+                cluster_threshold,
+                confusion_matrix_val[0][0],
+                confusion_matrix_val[1][0],
+                confusion_matrix_val[1][1],
+                confusion_matrix_val[0][1],
+            ]
+        ],
+        columns=["embedding", "MCC", "threshold", "TN", "FN", "TP", "FP"]
+    ).round(3)
+
+    if args.analysis_name:
+        output_df["analysis_name"] = args.analysis_name
+
+    output_df.to_csv(args.output, index=False)

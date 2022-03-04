@@ -1,6 +1,11 @@
 {
     "title": "Seasonal influenza A/H3N2 phylogeny from 2016-2018",
     "colorings": [
+        {
+            "key": "MCC",
+            "title": "MCC",
+            "type": "categorical"
+        },
 		{
             "key": "pca_label_ha_na",
             "title": "HA NA cluster pca",
@@ -42,6 +47,26 @@
             "type": "categorical"
         },
         {
+            "key": "pca_label_default",
+            "title": "PCA cluster (default)",
+            "type": "categorical"
+        },
+        {
+            "key": "mds_label_default",
+            "title": "MDS cluster (default)",
+            "type": "categorical"
+        },
+        {
+            "key": "t-sne_label_default",
+            "title": "t-SNE cluster (default)",
+            "type": "categorical"
+        },
+        {
+            "key": "umap_label_default",
+            "title": "UMAP cluster (default)",
+            "type": "categorical"
+        },
+        {
             "key": "gt",
             "title": "Genotype",
             "type": "categorical"
@@ -66,12 +91,7 @@
             "title": "Country",
             "type": "categorical"
         },
-		{
-            "key": "pca1",
-            "title": "PCA1",
-            "type": "categorical"
-        },
-		{
+        {
             "key": "pca1",
             "title": "PCA1",
             "type": "continuous"
@@ -89,26 +109,6 @@
 		{
             "key": "pca4",
             "title": "PCA4",
-            "type": "continuous"
-        },
-		{
-            "key": "tsne_x",
-            "title": "t-sne_x",
-            "type": "continuous"
-        },
-		{
-            "key": "tsne_y",
-            "title": "t-sne_y",
-            "type": "continuous"
-        },
-		{
-            "key": "umap_x",
-            "title": "UMAP_x",
-            "type": "continuous"
-        },
-		{
-            "key": "umap_y",
-            "title": "UMAP_y",
             "type": "continuous"
         },
 		{
@@ -142,6 +142,16 @@
             "type": "continuous"
         },
 		{
+            "key": "mds1",
+            "title": "MDS1",
+            "type": "continuous"
+        },
+		{
+            "key": "mds2",
+            "title": "MDS2",
+            "type": "continuous"
+        },
+        {
             "key": "mds3",
             "title": "MDS3",
             "type": "continuous"
@@ -152,37 +162,26 @@
             "type": "continuous"
         },
 		{
-            "key": "mds5",
-            "title": "MDS5",
+            "key": "tsne_x",
+            "title": "t-sne_x",
             "type": "continuous"
         },
 		{
-            "key": "mds6",
-            "title": "MDS6",
+            "key": "tsne_y",
+            "title": "t-sne_y",
             "type": "continuous"
         },
 		{
-            "key": "mds7",
-            "title": "MDS7",
+            "key": "umap_x",
+            "title": "UMAP_x",
             "type": "continuous"
         },
 		{
-            "key": "mds8",
-            "title": "MDS8",
-            "type": "continuous"
-        },
-		{
-            "key": "mds9",
-            "title": "MDS9",
-            "type": "continuous"
-        },
-		{
-            "key": "mds10",
-            "title": "MDS10",
+            "key": "umap_y",
+            "title": "UMAP_y",
             "type": "continuous"
         }
-		
-    ],
+   ],
     "display_defaults": {
         "color_by": "clade_membership",
         "distance_measure": "num_date"
@@ -200,7 +199,7 @@
       "region",
       "country"
     ],
-	
+
     "panels": [
         "tree"
     ]

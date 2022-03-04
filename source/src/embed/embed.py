@@ -89,20 +89,19 @@ def embed(args):
         sys.exit(1)
 
     # getting or creating the distance matrix
-
+    distance_matrix = None
     if args.distance_matrix is not None:
         distance_matrix  = pd.read_csv(args.distance_matrix, index_col=0)
 
-    elif args.alignment is not None:
+    if args.alignment is not None:
         sequences_by_name = OrderedDict()
 
         for sequence in Bio.SeqIO.parse(args.alignment, "fasta"):
             sequences_by_name[sequence.id] = str(sequence.seq)
 
         sequence_names = list(sequences_by_name.keys())
-        if args.command != "pca":
+        if args.command != "pca" and distance_matrix is None:
             # Calculate Distance Matrix
-
             hamming_distances = get_hamming_distances(
                 sequences_by_name.values()
             )
@@ -111,13 +110,29 @@ def embed(args):
 
     # Calculate Embedding
 
+    # Load embedding and cluster parameters from an external CSV file, if
+    # possible.
+    clusterer = None
+    cluster_data = None
+    if args.cluster_data is not None:
+        max_df = pd.read_csv(args.cluster_data)
+        clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=float(max_df.where(max_df["method"] == args.command).dropna(subset = ['distance_threshold'])[["distance_threshold"]].values.tolist()[0][0]))
+
+        # Get a dictionary of additional parameters provided by the cluster data
+        # to override defaults for the current method.
+        cluster_data = max_df.to_dict("records")[0]
+
+    if cluster_data is not None and "n_components" in cluster_data:
+        n_components = cluster_data["n_components"]
+    else:
+        n_components = args.components
+
+    if args.cluster_threshold is not None:
+        cluster_threshold = float(args.cluster_threshold)
+        clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=cluster_threshold)
+
     # Use PCA as its own embedding or as an initialization for t-SNE.
     if args.command == "pca" or args.command == "t-sne":
-        sequences_by_name = OrderedDict()
-
-        for sequence in Bio.SeqIO.parse(args.alignment, "fasta"):
-            sequences_by_name[sequence.id] = str(sequence.seq)
-
         sequence_names = list(sequences_by_name.keys())
 
         numbers = list(sequences_by_name.values())[:]
@@ -129,9 +144,8 @@ def embed(args):
         genomes_df = pd.DataFrame(numbers)
         genomes_df.columns = ["Site " + str(k) for k in range(0,len(numbers[i]))]
 
-
         #performing PCA on my pandas dataframe
-        pca = PCA(n_components=args.components,svd_solver='full') #can specify n, since with no prior knowledge, I use None
+        pca = PCA(n_components=n_components, svd_solver='full') #can specify n, since with no prior knowledge, I use None
         principalComponents = pca.fit_transform(genomes_df)
 
         # Create a data frame from the PCA embedding.
@@ -168,6 +182,18 @@ def embed(args):
             "n_init": 2
         }
 
+    # Override defaults with parameter values passed through cluster data, if
+    # possible.
+    if cluster_data is not None and args.command != "pca":
+        for key, value in cluster_data.items():
+            if key in embedding_parameters:
+                value_type = type(embedding_parameters[key])
+                print(
+                    f"INFO: Replacing embedding parameter {key} value of '{embedding_parameters[key]}' with '{value_type(value)}' provided by '{args.cluster_data}'.",
+                    file=sys.stderr
+                )
+                embedding_parameters[key] = value_type(value)
+
     if args.command != "pca":
         embedder = embedding_class(**embedding_parameters)
         embedding = embedder.fit_transform(distance_matrix)
@@ -179,7 +205,7 @@ def embed(args):
         embedding_df.index = list(distance_matrix.index)
 
     if args.command == "mds" or args.command == "pca":
-        embedding_df.columns=[args.command + str(i) for i in range(1,args.components + 1)]
+        embedding_df.columns=[args.command + str(i) for i in range(1, n_components + 1)]
     else:
         embedding_df.columns = [args.command.replace('-', '') + "_x" , args.command.replace('-', '') + "_y"]
 
@@ -187,16 +213,8 @@ def embed(args):
 
         #add explained variance as the first row of the dataframe
         explained_variance = pd.DataFrame([round(pca.explained_variance_ratio_[i],4) for i in range(0,len(pca.explained_variance_ratio_))], columns=["explained variance"])
-        explained_variance["principal components"] = [i for i in range(1, args.components + 1)]
+        explained_variance["principal components"] = [i for i in range(1, n_components + 1)]
         explained_variance.to_csv(args.explained_variance, index=False)
-
-    clusterer = None
-    if args.cluster_threshold is not None:
-        cluster = float(args.cluster_threshold)
-        clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=float(cluster))
-    elif args.cluster_data is not None:
-        max_df = pd.read_csv(args.cluster_data)
-        clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=float(max_df.where(max_df["method"] == args.command).dropna(subset = ['distance_threshold'])[["distance_threshold"]].values.tolist()[0][0]))
 
     if clusterer is not None:
         clusterer_default = hdbscan.HDBSCAN()

@@ -1,87 +1,43 @@
-configfile: "config/config.yaml"
-from snakemake.utils import min_version
-min_version("6.0")
-
-from snakemake.utils import Paramspace
-import pandas as pd
-
-METHOD_PARAMETERS = Paramspace(
+SARS_COV_2_METHOD_PARAMETERS = Paramspace(
     pd.read_csv(
-        "config/method_parameters.tsv",
+        "sars-cov-2-nextstrain/config/method_parameters.tsv",
         sep="\t"
     )
 )
 
-EMBEDDING_METHODS = [
-    "pca",
-    "mds",
-    "t-sne",
-    "umap"
-]
-
-
-rule all:
+rule sarscov2:
     input:
-        "../auspice/cartography_ncov.json",
-        expand("results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        "results/distance_matrix.csv",
-        "results/embed_pca.pdf",
-        "results/embed_t-sne.pdf",
-        "results/embed_umap.pdf",
-        "results/embed_mds.pdf",
-        "results/clades.json",
-        "results/accuracy_figure_HDBSCAN.png",
-        "results/global-xsmall_alignment.fasta",
-        "results/table.tsv",
-        "results/full_Scatterplot_metadata.csv",
-        "results/explained_variance_pca.csv",
-        "../docs/FullScatterplotSars-cov-2.png",
-        "../docs/FullLinkedChartBrushableSars-cov-2.html",
-        "../docs/sars-cov-2-embeddings.png",
-        "../docs/FullPCABrushSupplementSars-cov-2.html",
-        "results/nucleotide_diversity.txt",
-        "../docs/explainedVarianceSars-cov-2.png",
-        "../docs/bases_missing_vs_pc1_Sars.png",
-        "../docs/fullHDBSCANChartSars-cov-2.png",
-        "results/mcc_by_method_and_distance_threshold.pdf",
-        "results/full_HDBSCAN_metadata.csv",
-        expand("results/HDBSCAN_metadata_{method}.csv", method=EMBEDDING_METHODS)
+        "auspice/cartography_ncov.json",
+        expand("sars-cov-2-nextstrain/results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
+        "sars-cov-2-nextstrain/results/distance_matrix.csv",
+        "sars-cov-2-nextstrain/results/embed_pca.pdf",
+        "sars-cov-2-nextstrain/results/embed_t-sne.pdf",
+        "sars-cov-2-nextstrain/results/embed_umap.pdf",
+        "sars-cov-2-nextstrain/results/embed_mds.pdf",
+        "sars-cov-2-nextstrain/results/table.tsv",
+        "sars-cov-2-nextstrain/results/full_Scatterplot_metadata.csv",
+        "sars-cov-2-nextstrain/results/explained_variance_pca.csv",
+        "docs/FullScatterplotSars-cov-2.png",
+        "docs/FullLinkedChartBrushableSars-cov-2.html",
+        "docs/sars-cov-2-embeddings.png",
+        "docs/FullPCABrushSupplementSars-cov-2.html",
+        "sars-cov-2-nextstrain/results/alignment_pi.txt",
+        "docs/explainedVarianceSars-cov-2.png",
+        "docs/bases_missing_vs_pc1_Sars.png",
+        "docs/fullHDBSCANChartSars-cov-2.png",
+        "sars-cov-2-nextstrain/results/mcc_by_method_and_distance_threshold.pdf",
+        "sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv",
+        expand("sars-cov-2-nextstrain/results/HDBSCAN_metadata_{method}.csv", method=EMBEDDING_METHODS)
 
-
-rule decompress_alignment:
+rule annotate_low_quality:
     input:
-        alignment="data/global-xsmall_alignment.fasta.xz"
+        metadata="sars-cov-2-nextstrain/data/metadata.tsv.xz"
     output:
-        alignment="results/global-xsmall_alignment.fasta"
-    conda:
-        config["conda_environment"]
+        output ="sars-cov-2-nextstrain/results/metadata_low_quality.tsv"
+    conda: "../cartography.yml"
     shell:
         """
-        xz -c -d {input} > {output}
-        """
-
-rule decompress_metadata:
-    input:
-        metadata="data/global-xsmall_metadata.tsv.xz" 
-    output:
-        metadata="results/global-xsmall_metadata.tsv"
-    conda:
-        config["conda_environment"]
-    shell:
-        """
-        xz -c -d {input} > {output} \
-        """
-
-rule get_low_quality:
-    input:
-        metadata="results/global-xsmall_metadata.tsv" 
-    output:
-        output ="results/global-xsmall_metadata_low_quality.tsv"
-    conda:
-        config["conda_environment"]
-    shell:
-        """
-        python3 scripts/bad_samples.py \
+        python3 sars-cov-2-nextstrain/scripts/bad_samples.py \
             --metadata {input.metadata} \
             --output {output.output}
         """
@@ -89,36 +45,39 @@ rule get_low_quality:
 rule embed_pca_before:
     message: "Creating the embedding for PCA bases missing analysis"
     input:
-        alignment = "results/global-xsmall_alignment.fasta",
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta.xz",
     output:
-        dataframe = "results/embed_pca_before.csv",
+        dataframe = "sars-cov-2-nextstrain/results/embed_pca_before.csv",
+        figure = "sars-cov-2-nextstrain/results/embed_pca_before.pdf",
     params:
-        components = 10
+        random_seed = RANDOM_SEED,
+        components = 10,
     conda: "../cartography.yml"
     shell:
         """
-        embed \
-            --alignment {input.alignment} \
-            --random-seed 314159 \
+        xz -c -d {input.alignment} | embed \
+            --alignment /dev/stdin \
+            --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
             pca \
-            --components {params.components} \
+            --components {params.components}
         """
 
 rule bases_missing_vs_pc1:
     message: "creating a bases_missing vs PC1 graph"
     input:
-        alignment = "results/global-xsmall_alignment.fasta",
-        pca = "results/embed_pca_before.csv",
-        metadata = "results/global-xsmall_metadata_low_quality.tsv"
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta.xz",
+        pca = "sars-cov-2-nextstrain/results/embed_pca_before.csv",
+        metadata = "sars-cov-2-nextstrain/results/metadata_low_quality.tsv"
     output:
-        figure = "../docs/bases_missing_vs_pc1_Sars.png"
+        figure = "docs/bases_missing_vs_pc1_Sars.png"
     params:
         bootstrap = 100
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/pc1_vs_bases_missing.py \
+        python3 notebooks/scripts/pc1_vs_bases_missing.py \
             --alignment {input.alignment} \
             --embedding {input.pca} \
             --method pca \
@@ -130,130 +89,124 @@ rule bases_missing_vs_pc1:
 rule impute_data:
     message: "creating an imputed dataframe/fasta file"
     input:
-        alignment = "results/global-xsmall_alignment.fasta"
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta.xz"
     output:
-        dataframe = "results/imputed_alignment.csv",
-        fasta = "results/imputed_alignment.fasta"
+        dataframe = "sars-cov-2-nextstrain/results/imputed_alignment.csv",
+        fasta = "sars-cov-2-nextstrain/results/imputed_alignment.fasta"
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/impute_data.py \
+        python3 notebooks/scripts/impute_data.py \
             --alignment {input.alignment} \
             --output-dataframe {output.dataframe} \
             --output-fasta {output.fasta}
         """
 
-rule tree:
+# Calculate nucleotide diversity by calling SNPs (with monomorphic sites) and
+# using Pixy to calculate unbiased value of Pi.
+rule uncompress_alignment:
     input:
-        alignment="results/global-xsmall_alignment.fasta"
+        alignment="sars-cov-2-nextstrain/data/aligned.fasta.xz",
     output:
-        tree="results/tree_raw.nwk"
-    log:
-        "logs/tree.txt"
-    benchmark:
-        "benchmarks/tree.txt"
-    threads: 4
-    resources:
-        # Multiple sequence alignments can use up to 40 times their disk size in
-        # memory, especially for larger alignments.
-        # Note that Snakemake >5.10.0 supports input.size_mb to avoid converting from bytes to MB.
-        mem_mb=lambda wildcards, input: 40 * int(input.size / 1024 / 1024)
-    conda: config["conda_environment"]
-    params:
-        tree_builder_args=config["tree"]["tree-builder-args"]
-    shell:
-        """
-        augur tree \
-            --alignment {input.alignment} \
-            --tree-builder-args={params.tree_builder_args:q} \
-            --output {output.tree} \
-            --nthreads {threads} 2>&1 | tee {log}
-        """
-
-
-rule refine:
-    message:
-        """
-        Refining tree
-          - estimate timetree
-          - use {params.coalescent} coalescent timescale
-          - estimate {params.date_inference} node dates
-        """
-    input:
-        tree="results/tree_raw.nwk",
-        alignment="results/global-xsmall_alignment.fasta",
-        metadata="data/global-xsmall_metadata.tsv.xz"
-    output:
-        tree = "results/tree.nwk",
-        node_data = "results/branch_lengths.json"
-    log:
-        "logs/refine.txt"
-    benchmark:
-        "benchmarks/refine.txt"
-    threads: 1
-    resources:
-        # Multiple sequence alignments can use up to 15 times their disk size in
-        # memory.
-        # Note that Snakemake >5.10.0 supports input.size_mb to avoid converting from bytes to MB.
-        mem_mb=lambda wildcards, input: 15 * int(input.size / 1024 / 1024)
-    params:
-        root = config["refine"]["root"],
-        clock_rate = config["refine"]["clock_rate"],
-        clock_std_dev = config["refine"]["clock_std_dev"],
-        coalescent = config["refine"]["coalescent"],
-        date_inference = config["refine"]["date_inference"],
-        divergence_unit = config["refine"]["divergence_unit"],
-        clock_filter_iqd = config["refine"]["clock_filter_iqd"],
-        keep_polytomies = "--keep-polytomies" if config["refine"].get("keep_polytomies", False) else "",
-        timetree = "" if config["refine"].get("no_timetree", False) else "--timetree"
-    conda: config["conda_environment"]
-    shell:
-        """
-        augur refine \
-            --tree {input.tree} \
-            --alignment {input.alignment} \
-            --metadata {input.metadata} \
-            --output-tree {output.tree} \
-            --output-node-data {output.node_data} \
-            --root {params.root} \
-            {params.timetree} \
-            {params.keep_polytomies} \
-            --clock-rate {params.clock_rate} \
-            --clock-std-dev {params.clock_std_dev} \
-            --coalescent {params.coalescent} \
-            --date-inference {params.date_inference} \
-            --divergence-unit {params.divergence_unit} \
-            --date-confidence \
-            --no-covariance \
-            --clock-filter-iqd {params.clock_filter_iqd} 2>&1 | tee {log}
-        """
-
-
-rule nucleotide_diversity:
-    message: "finding the nucleotide diversity of an aligned FASTA file"
-    input:
-        alignment = "results/global-xsmall_alignment.fasta",
-    output:
-        output = "results/nucleotide_diversity.txt"
+        alignment=temp("sars-cov-2-nextstrain/data/aligned.fasta"),
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/nucleotide_diversity.py \
-            --alignment {input.alignment} \
-            --output {output.output}
+        xz -c -d {input.alignment} > {output.alignment}
+        """
+
+rule call_snps:
+    input:
+        alignment="sars-cov-2-nextstrain/data/aligned.fasta",
+    output:
+        snps="sars-cov-2-nextstrain/results/snps.vcf",
+    conda: "../cartography.yml"
+    shell:
+        """
+        snp-sites -b -v {input.alignment} > {output.snps}
+        """
+
+rule fix_alt_snps:
+    input:
+        snps="sars-cov-2-nextstrain/results/snps.vcf",
+    output:
+        snps="sars-cov-2-nextstrain/results/snps_cleaned.vcf",
+    run:
+        with open(input.snps, "r", encoding="utf-8") as fh:
+            with open(output.snps, "w", encoding="utf-8") as oh:
+                for line in fh:
+                    if not line.startswith("#"):
+                        pieces = line.split("\t")
+                        if len(pieces) >= 5:
+                            # Replace ALT values of "*" from snp-sites with
+                            # standard "." values.
+                            alt = pieces[4].split(",")
+                            new_alt = ",".join([
+                                "." if allele == "*" else allele
+                                for allele in alt
+                            ])
+                            pieces[4] = new_alt
+
+                        line = "\t".join(pieces)
+
+                    oh.write(line)
+
+rule compress_and_index_snps:
+    input:
+        snps="sars-cov-2-nextstrain/results/snps_cleaned.vcf",
+    output:
+        snps="sars-cov-2-nextstrain/results/snps_cleaned.vcf.gz",
+    conda: "../cartography.yml"
+    shell:
+        """
+        bgzip -c {input.snps} > {output.snps};
+        tabix {output.snps}
+        """
+
+rule build_population_file:
+    input:
+        alignment="sars-cov-2-nextstrain/data/aligned.fasta",
+    output:
+        populations="sars-cov-2-nextstrain/results/populations.txt",
+    conda: "../cartography.yml"
+    shell:
+        """
+        grep "^>" {input.alignment} | sed 's/>//' | awk 'OFS="\\t" {{ print $1,"virus" }}' > {output.populations}
+        """
+
+rule nucleotide_diversity:
+    input:
+        snps="sars-cov-2-nextstrain/results/snps_cleaned.vcf.gz",
+        populations="sars-cov-2-nextstrain/results/populations.txt",
+    output:
+        output = "sars-cov-2-nextstrain/results/alignment_pi.txt"
+    params:
+        window_size=30000,
+        output_prefix="alignment",
+        output_dir="sars-cov-2-nextstrain/results",
+    conda: "../cartography.yml"
+    shell:
+        """
+        pixy \
+            --stats pi \
+            --vcf {input.snps} \
+            --populations {input.populations} \
+            --window_size {params.window_size} \
+            --output_folder {params.output_dir} \
+            --output_prefix {params.output_prefix}
         """
 
 rule make_clades:
     message: "creating the clades file to be used in the rest of the analysis"
     input:
-        metadata = "results/global-xsmall_metadata.tsv"
+        metadata = "sars-cov-2-nextstrain/data/metadata.tsv.xz"
     output:
-        output = "results/clades.json"
+        output = "sars-cov-2-nextstrain/results/clades.json"
     params:
         col_name = "Nextstrain_clade"
     shell:
         """
-        python3 ../notebooks/scripts/make_clades.py \
+        python3 notebooks/scripts/make_clades.py \
             --metadata {input.metadata} \
             --output {output.output} \
             --col-name {params.col_name}
@@ -262,185 +215,200 @@ rule make_clades:
 rule create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
-        alignment = "results/global-xsmall_alignment.fasta",
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta.xz",
     output:
-        output = "results/distance_matrix.csv"
+        output = "sars-cov-2-nextstrain/results/distance_matrix.csv"
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/hamming_distance_from_fasta.py \
+        python3 notebooks/scripts/hamming_distance_from_fasta.py \
             --alignment {input.alignment} \
             --output {output.output}
         """
 
+rule cluster_by_parameters:
+    input:
+        alignment="sars-cov-2-nextstrain/results/imputed_alignment.fasta",
+        distance_matrix="sars-cov-2-nextstrain/results/distance_matrix.csv",
+        clades="sars-cov-2-nextstrain/results/clades.json",
+    output:
+        table=f"sars-cov-2-nextstrain/results/gridsearch/{SARS_COV_2_METHOD_PARAMETERS.wildcard_pattern}.tsv",
+    params:
+        method_parameters=SARS_COV_2_METHOD_PARAMETERS.instance,
+    resources:
+        runtime="0:30:00",
+        mem_mb=4000,
+    conda: "../cartography.yml"
+    script:
+        "../notebooks/scripts/cluster_by_parameters.py"
+
+rule aggregate_clusters_by_parameters:
+    input:
+        tables=expand("sars-cov-2-nextstrain/results/gridsearch/{params}.tsv", params=SARS_COV_2_METHOD_PARAMETERS.instance_patterns)
+    output:
+        table="sars-cov-2-nextstrain/results/gridsearch.tsv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.tables} \
+            --output {output.table}
+        """
+
+rule output_grid_search:
+    input:
+        table= "sars-cov-2-nextstrain/results/gridsearch.tsv",
+    output:
+        pca_parameters = "sars-cov-2-nextstrain/results/pca_parameters.csv",
+        mds_parameters = "sars-cov-2-nextstrain/results/mds_parameters.csv",
+        tsne_parameters = "sars-cov-2-nextstrain/results/t-sne_parameters.csv",
+        umap_parameters = "sars-cov-2-nextstrain/results/umap_parameters.csv",
+        mcc_by_tsne_parameters = "sars-cov-2-nextstrain/results/mcc_by_t-sne_parameters.pdf",
+        mcc_by_umap_parameters = "sars-cov-2-nextstrain/results/mcc_by_umap_parameters.pdf",
+        mcc_by_mds_parameters = "sars-cov-2-nextstrain/results/mcc_by_mds_parameters.pdf",
+        mcc_by_method_and_distance_threshold = "sars-cov-2-nextstrain/results/mcc_by_method_and_distance_threshold.pdf"
+    conda: "../cartography.yml"
+    log:
+        "logs/summarize-grid-search.ipynb"
+    notebook:
+        "../notebooks/2021-06-23-summarize-grid-search.ipynb"
+
 rule embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
-        alignment = "results/aligned_{ancestral}.fasta",
-        cluster = "results/pca_parameters.csv",
+        alignment = "sars-cov-2-nextstrain/results/imputed_alignment.fasta",
+        cluster = "sars-cov-2-nextstrain/results/pca_parameters.csv",
     output:
-        dataframe = "results/embed_pca_{ancestral}.csv",
-        figure = "results/embed_pca_{ancestral}.pdf",
-        explained_variance = "results/explained_variance_pca_{ancestral}.csv"
+        dataframe = "sars-cov-2-nextstrain/results/embed_pca.csv",
+        figure = "sars-cov-2-nextstrain/results/embed_pca.pdf",
+        explained_variance = "sars-cov-2-nextstrain/results/explained_variance_pca.csv"
     params:
-        components = 10
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --alignment {input.alignment} \
             --cluster-data {input.cluster} \
-            --random-seed 314159 \
+            --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             pca \
-            --components {params.components} \
             --explained-variance {output.explained_variance}
-        """
-
-
-rule embed_tsne:
-    message: "Creating the embedding (dataframe, node JSON) for t-SNE"
-    input:
-        distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "results/t-sne_parameters.csv",
-    output:
-        dataframe = "results/embed_t-sne_{ancestral}.csv",
-        figure = "results/embed_t-sne_{ancestral}.pdf"
-    params:
-        perplexity = 30,
-        learning_rate = 200
-    conda: "../cartography.yml"
-    shell:
-        """
-        embed \
-            --distance-matrix {input.distance_matrix} \
-            --cluster-data {input.cluster} \
-            --random-seed 314159 \
-            --output-dataframe {output.dataframe} \
-            --output-figure {output.figure} \
-            t-sne \
-            --perplexity {params.perplexity} \
-            --learning-rate {params.learning_rate}
-        """
-
-rule embed_umap:
-    message: "Creating the embedding (dataframe, node JSON) for UMAP"
-    input:
-        distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "results/umap_parameters.csv",
-    output:
-        dataframe = "results/embed_umap_{ancestral}.csv",
-        figure = "results/embed_umap_{ancestral}.pdf"
-    params:
-        nearest_neighbors = 200,
-        min_dist = .5
-    conda: "../cartography.yml"
-    shell:
-        """
-        embed \
-            --distance-matrix {input.distance_matrix} \
-            --cluster-data {input.cluster} \
-            --random-seed 314159 \
-            --output-dataframe {output.dataframe} \
-            --output-figure {output.figure} \
-            umap \
-            --nearest-neighbors {params.nearest_neighbors} \
-            --min-dist {params.min_dist}
         """
 
 rule embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
-        distance_matrix = "results/distance_matrix_{ancestral}.csv",
-        cluster = "results/mds_parameters.csv",
+        distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
+        cluster = "sars-cov-2-nextstrain/results/mds_parameters.csv",
     output:
-        dataframe = "results/embed_mds_{ancestral}.csv",
-        figure = "results/embed_mds_{ancestral}.pdf"
+        dataframe = "sars-cov-2-nextstrain/results/embed_mds.csv",
+        figure = "sars-cov-2-nextstrain/results/embed_mds.pdf"
     params:
-        components = 4
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
-            --random-seed 314159 \
+            --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            mds \
-            --components {params.components} \
+            mds
+        """
+
+rule embed_tsne:
+    message: "Creating the embedding (dataframe, node JSON) for t-SNE"
+    input:
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
+        distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
+        cluster = "sars-cov-2-nextstrain/results/t-sne_parameters.csv",
+    output:
+        dataframe = "sars-cov-2-nextstrain/results/embed_t-sne.csv",
+        figure = "sars-cov-2-nextstrain/results/embed_t-sne.pdf"
+    params:
+        random_seed = RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        embed \
+            --alignment {input.alignment} \
+            --distance-matrix {input.distance_matrix} \
+            --cluster-data {input.cluster} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
+            t-sne
+        """
+
+rule embed_umap:
+    message: "Creating the embedding (dataframe, node JSON) for UMAP"
+    input:
+        distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
+        cluster = "sars-cov-2-nextstrain/results/umap_parameters.csv",
+    output:
+        dataframe = "sars-cov-2-nextstrain/results/embed_umap.csv",
+        figure = "sars-cov-2-nextstrain/results/embed_umap.pdf"
+    params:
+        random_seed = RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        embed \
+            --distance-matrix {input.distance_matrix} \
+            --cluster-data {input.cluster} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
+            umap
         """
 
 rule create_node_output:
-    message: "creates node output that is used by augur to create thy phylogenies"
-    input: 
-        dataframe = "results/embed_{method}_ancestral.csv"
+    message: "creates node output that is used by augur to create the phylogenies"
+    input:
+        dataframe = "sars-cov-2-nextstrain/results/embed_{method}.csv"
     output:
-        node_data = "results/embed_{method}_ancestral.json"
-    shell: 
+        node_data = "sars-cov-2-nextstrain/results/embed_{method}.json"
+    shell:
         """
-        python3 ../notebooks/scripts/otuput_node_data.py \
+        python3 notebooks/scripts/output_node_data.py \
             --table {input.dataframe} \
             --output {output.node_data}
         """
-        
-def _get_embedding_columns_by_wildcards(wildcards):
-    method = wildcards.method.replace("-", "")
 
-    if method in ("pca"):
-        return f"{method}1 {method}2 {method}3 {method}4"
-    if method in ("mds"):
-        return f"{method}1 {method}2"
-    else:
-        return f"{method}_x {method}_y"
-
-rule export:
+rule annotate_tree:
     input:
-        tree="results/tree.nwk",
-        metadata="data/global-xsmall_metadata.tsv.xz",
-        branch_lengths="results/branch_lengths.json",
-        embeddings=expand("results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
-        clades = "results/clades.json",
-        auspice_config="config/auspice_config.json",
-        lat_longs="config/lat_longs.tsv",
+        tree="sars-cov-2-nextstrain/data/ncov_open_global.json",
+        embeddings=expand("sars-cov-2-nextstrain/results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
     output:
-        auspice_tree="../auspice/cartography_ncov.json",
+        auspice_tree="auspice/cartography_ncov.json",
     log:
-        "logs/export.txt"
+        "logs/sars-cov-2_annotate_tree.txt",
     benchmark:
-        "benchmarks/export.txt"
-    resources:
-        # Memory use scales primarily with the size of the metadata file.
-        mem_mb=lambda wildcards, input: 15 * int(input.metadata.size / 1024 / 1024)
-    conda:
-        config["conda_environment"]
-    params:
-        color_by_metadata=config["export"]["color_by_metadata"]
+        "benchmarks/sars-cov-2_annotate_tree.txt",
+    conda: "../cartography.yml"
     shell:
         """
-        augur export v2 \
+        python3 sars-cov-2-nextstrain/scripts/annotate_tree.py \
             --tree {input.tree} \
-            --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.embeddings} {input.clades} \
-            --auspice-config {input.auspice_config} \
-            --color-by-metadata {params.color_by_metadata} \
-            --lat-longs {input.lat_longs} \
-            --output {output.auspice_tree} 2>&1 | tee {log}
+            --node-data {input.embeddings} \
+            --output {output.auspice_tree}
         """
 
 rule tree_to_table:
     message: "creating a table of node data values from the tree attributes"
-    input: 
-        tree = rules.export.output.auspice_tree
+    input:
+        tree = rules.annotate_tree.output.auspice_tree
     output:
-        table = "results/table.tsv"
+        table = "sars-cov-2-nextstrain/results/table.tsv"
     params:
-        attributes = "num_date pca1 pca2 pca3 pca4 mds1 mds2 tsne_x tsne_y umap_x umap_y clade_membership pca_label mds_label umap_label t-sne_label pca_label_default mds_label_default umap_label_default t-sne_label_default"
+        attributes = "num_date pca1 pca2 pca3 pca4 pca5 pca6 pca7 pca8 pca9 pca10 mds1 mds2 mds3 mds4 tsne_x tsne_y umap_x umap_y clade_membership pango_lineage pca_label mds_label umap_label t-sne_label pca_label_default mds_label_default umap_label_default t-sne_label_default"
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/auspice_tree_to_table.py \
+        python3 notebooks/scripts/auspice_tree_to_table.py \
             {input.tree} \
             {output.table} \
             --attributes {params.attributes}
@@ -449,19 +417,19 @@ rule tree_to_table:
 rule scatterplot:
     message: "Creating the scatterplot (PNG, dataframe)"
     input:
-        distance_matrix = "results/distance_matrix.csv",
-        embedding = "results/embed_{method}.csv",
+        distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
+        embedding = "sars-cov-2-nextstrain/results/embed_{method}.csv",
     output:
-        figure = "results/scatterplot_{method}.png",
-        dataframe = "results/scatterplot_{method}.csv",
-        metadata = "results/scatterplot_{method}_metadata.csv"
+        figure = "sars-cov-2-nextstrain/results/scatterplot_{method}.png",
+        dataframe = "sars-cov-2-nextstrain/results/scatterplot_{method}.csv",
+        metadata = "sars-cov-2-nextstrain/results/scatterplot_{method}_metadata.csv"
     params:
         bootstrap = 100,
         columns = _get_embedding_columns_by_wildcards
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/scatterplot.py \
+        python3 notebooks/scripts/scatterplot.py \
             --distance {input.distance_matrix} \
             --embedding {input.embedding} \
             --method {wildcards.method} \
@@ -472,73 +440,20 @@ rule scatterplot:
             --output-metadata {output.metadata}
         """
 
-def _get_embedding_path_by_wildcards(wildcards):
-    method = wildcards.method
-
-    if method in ("pca", "mds", "t-sne", "umap"):
-        return f"results/embed_{method}.csv"
-    else:
-        return "results/distance_matrix.csv"
-
-rule cluster_by_parameters:
-    input:
-        alignment="results/global-xsmall_alignment.fasta",
-        distance_matrix="results/distance_matrix.csv",
-        clades="results/clades.json",
-    output:
-        table=f"results/gridsearch/{METHOD_PARAMETERS.wildcard_pattern}.tsv",
-    params:
-        method_parameters=METHOD_PARAMETERS.instance,
-    conda: "../cartography.yml"
-    script:
-        "../notebooks/scripts/cluster_by_parameters.py"
-
-rule aggregate_clusters_by_parameters:
-    input:
-        tables=expand("results/gridsearch/{params}.tsv", params=METHOD_PARAMETERS.instance_patterns)
-    output:
-        table="results/gridsearch.tsv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ../notebooks/scripts/concatenate_tables.py \
-            --tables {input.tables} \
-            --output {output.table}
-        """
-
-rule output_grid_search:
-    input:
-        table= "results/gridsearch.tsv",
-    output:
-        pca_parameters = "results/pca_parameters.csv",
-        mds_parameters = "results/mds_parameters.csv",
-        tsne_parameters = "results/t-sne_parameters.csv",
-        umap_parameters = "results/umap_parameters.csv",
-        mcc_by_tsne_parameters = "results/mcc_by_t-sne_parameters.pdf",
-        mcc_by_umap_parameters = "results/mcc_by_umap_parameters.pdf",
-        mcc_by_mds_parameters = "results/mcc_by_mds_parameters.pdf",
-        mcc_by_method_and_distance_threshold = "results/mcc_by_method_and_distance_threshold.pdf"
-    conda: "../cartography.yml"
-    log:
-        "logs/summarize-grid-search.ipynb"
-    notebook:
-        "../notebooks/2021-06-23-summarize-grid-search.ipynb"
-
-
 rule cluster_metadata:
     message: "Creating the metadata dataframe for HDBSCAN results for main paper"
     input:
-        embedding = "results/embed_{method}.csv",
-        metadata = "results/table.tsv",
-        cluster = "results/{method}_parameters.csv",
+        embedding = "sars-cov-2-nextstrain/results/embed_{method}.csv",
+        metadata = "sars-cov-2-nextstrain/results/table.tsv",
+        cluster = "sars-cov-2-nextstrain/results/{method}_parameters.csv",
     output:
-        dataframe = "results/HDBSCAN_metadata_{method}.csv",
+        dataframe = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_{method}.csv",
     conda: "../cartography.yml"
     params:
         method = "{method}"
     shell:
         """
-        python3 ../notebooks/scripts/metadata_HDBSCAN.py \
+        python3 notebooks/scripts/metadata_HDBSCAN.py \
             --method {params.method} \
             --embedding {input.embedding} \
             --metadata {input.metadata} \
@@ -549,19 +464,19 @@ rule cluster_metadata:
 rule concat_HDBSCAN_table:
     message: "concatenating all the HDBSCAN data into one csv dataframe"
     input:
-       dataframe_pca = "results/HDBSCAN_metadata_pca.csv",
-       dataframe_mds = "results/HDBSCAN_metadata_mds.csv", 
-       dataframe_tsne = "results/HDBSCAN_metadata_t-sne.csv", 
-       dataframe_umap = "results/HDBSCAN_metadata_umap.csv",
+       dataframe_pca = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_pca.csv",
+       dataframe_mds = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_mds.csv",
+       dataframe_tsne = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_t-sne.csv",
+       dataframe_umap = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_umap.csv",
     output:
-        metadata = "results/full_HDBSCAN_metadata.csv"
+        metadata = "sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv"
     params:
         column = "MCC",
-        dataframes = "results/HDBSCAN_metadata_pca.csv results/HDBSCAN_metadata_mds.csv results/HDBSCAN_metadata_t-sne.csv results/HDBSCAN_metadata_umap.csv"
+        dataframes = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_pca.csv results/HDBSCAN_metadata_mds.csv results/HDBSCAN_metadata_t-sne.csv results/HDBSCAN_metadata_umap.csv"
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/concatenate_tables.py \
+        python3 notebooks/scripts/concatenate_tables.py \
             --tables {params.dataframes} \
             --separator ',' \
             --sort-by {params.column} \
@@ -571,19 +486,19 @@ rule concat_HDBSCAN_table:
 rule concat_scatterplot_table:
     message: "concatenating all the scatterplot metadata into one csv dataframe"
     input:
-       dataframe_pca = "results/scatterplot_pca_metadata.csv",
-       dataframe_mds = "results/scatterplot_mds_metadata.csv", 
-       dataframe_tsne = "results/scatterplot_t-sne_metadata.csv", 
-       dataframe_umap = "results/scatterplot_umap_metadata.csv"
+       dataframe_pca = "sars-cov-2-nextstrain/results/scatterplot_pca_metadata.csv",
+       dataframe_mds = "sars-cov-2-nextstrain/results/scatterplot_mds_metadata.csv",
+       dataframe_tsne = "sars-cov-2-nextstrain/results/scatterplot_t-sne_metadata.csv",
+       dataframe_umap = "sars-cov-2-nextstrain/results/scatterplot_umap_metadata.csv"
     output:
-        metadata = "results/full_Scatterplot_metadata.csv"
+        metadata = "sars-cov-2-nextstrain/results/full_Scatterplot_metadata.csv"
     params:
         column = "pearson_coef",
-        dataframes = "results/scatterplot_pca_metadata.csv results/scatterplot_mds_metadata.csv results/scatterplot_t-sne_metadata.csv results/scatterplot_umap_metadata.csv"
+        dataframes = "sars-cov-2-nextstrain/results/scatterplot_pca_metadata.csv results/scatterplot_mds_metadata.csv results/scatterplot_t-sne_metadata.csv results/scatterplot_umap_metadata.csv"
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/concatenate_tables.py \
+        python3 notebooks/scripts/concatenate_tables.py \
             --tables {params.dataframes} \
             --separator ',' \
             --sort-by {params.column} \
@@ -593,69 +508,40 @@ rule concat_scatterplot_table:
 rule create_notebook_docs:
     message: "creating linked and grouped charts using the jupyter notebook"
     input:
-        colors = "../notebooks/config/color_schemes.tsv",
+        colors = "notebooks/config/color_schemes.tsv",
 
         #Charts, tree:
-        node_df = "results/table.tsv",
+        node_df = "sars-cov-2-nextstrain/results/table.tsv",
 
-        pca_df = "results/embed_pca.csv",
-        explained_variance_pca = "results/explained_variance_pca.csv",
+        pca_df = "sars-cov-2-nextstrain/results/embed_pca.csv",
+        explained_variance_pca = "sars-cov-2-nextstrain/results/explained_variance_pca.csv",
 
-        mds_df = "results/embed_mds.csv",
-        tsne_df = "results/embed_t-sne.csv",
-        umap_df = "results/embed_umap.csv",
+        mds_df = "sars-cov-2-nextstrain/results/embed_mds.csv",
+        tsne_df = "sars-cov-2-nextstrain/results/embed_t-sne.csv",
+        umap_df = "sars-cov-2-nextstrain/results/embed_umap.csv",
 
         #Scatterplot:
-        scatterplot_pca = "results/scatterplot_pca.csv",
-        scatterplot_pca_metadata = "results/scatterplot_pca_metadata.csv",
+        scatterplot_pca = "sars-cov-2-nextstrain/results/scatterplot_pca.csv",
+        scatterplot_pca_metadata = "sars-cov-2-nextstrain/results/scatterplot_pca_metadata.csv",
 
-        scatterplot_mds = "results/scatterplot_mds.csv",
-        scatterplot_mds_metadata = "results/scatterplot_mds_metadata.csv",
+        scatterplot_mds = "sars-cov-2-nextstrain/results/scatterplot_mds.csv",
+        scatterplot_mds_metadata = "sars-cov-2-nextstrain/results/scatterplot_mds_metadata.csv",
 
-        scatterplot_tsne = "results/scatterplot_t-sne.csv",
-        scatterplot_tsne_metadata = "results/scatterplot_t-sne_metadata.csv",
+        scatterplot_tsne = "sars-cov-2-nextstrain/results/scatterplot_t-sne.csv",
+        scatterplot_tsne_metadata = "sars-cov-2-nextstrain/results/scatterplot_t-sne_metadata.csv",
 
-        scatterplot_umap = "results/scatterplot_umap.csv",
-        scatterplot_umap_metadata = "results/scatterplot_umap_metadata.csv",
+        scatterplot_umap = "sars-cov-2-nextstrain/results/scatterplot_umap.csv",
+        scatterplot_umap_metadata = "sars-cov-2-nextstrain/results/scatterplot_umap_metadata.csv",
     output:
-        Scatterplot = "../docs/FullScatterplotSars-cov-2.png",
-        fullChart = "../docs/FullLinkedChartBrushableSars-cov-2.html",
-        fullChartPNG = "../docs/sars-cov-2-embeddings.png",
-        PCA_Supplement = "../docs/FullPCABrushSupplementSars-cov-2.html",
-        PCA_Supplement_PNG = "../docs/FullPCABrushSupplementSars-cov-2.png",
-        Explained_variance_PCA = "../docs/explainedVarianceSars-cov-2.png",
-        fullChartHDBSCAN = "../docs/fullHDBSCANChartSars-cov-2.html",
-        fullChartHDBSCANPNG = "../docs/fullHDBSCANChartSars-cov-2.png"
+        Scatterplot = "docs/FullScatterplotSars-cov-2.png",
+        fullChart = "docs/FullLinkedChartBrushableSars-cov-2.html",
+        fullChartPNG = "docs/sars-cov-2-embeddings.png",
+        PCA_Supplement = "docs/FullPCABrushSupplementSars-cov-2.html",
+        PCA_Supplement_PNG = "docs/FullPCABrushSupplementSars-cov-2.png",
+        Explained_variance_PCA = "docs/explainedVarianceSars-cov-2.png",
+        fullChartHDBSCAN = "docs/fullHDBSCANChartSars-cov-2.html",
+        fullChartHDBSCANPNG = "docs/fullHDBSCANChartSars-cov-2.png"
 
     conda: "../cartography.yml"
     notebook:
         "2021-05-11FinalNotebookSars.ipynb"
-
-rule clean:
-    message: "Removing directories: {params}"
-    params:
-        "results ",
-        "auspice"
-    conda: "../cartography.yml"
-    shell:
-        "rm -rfv {params}"
-
-#rule embed_alignment:
-#    input:
-#        alignment="results/global-xsmall_alignment.fasta",
-#    output:
-#        node_data="results/{embedding}.json",
-#        figure="results/{embedding}.pdf",
-#    conda:
-#        config["conda_environment"]
-#    params:
-#        embedding_params=lambda wildcards: config.get("embed_alignment", {}).get(wildcards.embedding, "")
-#    shell:
-#        """
-#        python3 ../notebooks/scripts/embed.py \
-#            --alignment {input.alignment} \
-#            --output-node-data {output.node_data} \
-#            --output-figure {output.figure} \
-#            {wildcards.embedding} {params.embedding_params}
-#        """
-
