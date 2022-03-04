@@ -241,6 +241,9 @@ rule mers_cluster_by_parameters:
     params:
         method_parameters=MERS_METHOD_PARAMETERS.instance,
         clade_attribute = "multihost_clade_membership"
+    resources:
+        runtime="0:30:00",
+        mem_mb=4000,
     conda: "../cartography.yml"
     script:
         "notebooks/scripts/cluster_by_parameters.py"
