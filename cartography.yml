@@ -28,7 +28,7 @@ dependencies:
   - tabix
   - pixy
   - pip:
-    - pathogen-embed==0.0.2
+    - pathogen-embed==0.1.0
     - statsmodels
     - statistics
     - svglib
