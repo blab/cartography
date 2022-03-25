@@ -1,0 +1,134 @@
+MERS_MULLER_STRAINS = pd.read_csv(
+    "mers-muller/data/strain_names.txt",
+    header=None,
+    names=["strain"],
+)["strain"].values
+
+rule mers_muller:
+    input:
+        "mers-muller/results/tMRCAs.tsv",
+        "mers-muller/results/embed_mds.pdf",
+        "results/tMRCA_by_embedding_distance.pdf",
+
+rule mers_muller_calculate_strain_tmrcas:
+    input:
+        network="mers-muller/data/mers_all.tree",
+    output:
+        tmrca=temp("mers-muller/results/tMRCAs/{strain}.tsv"),
+    conda: "../cartography.yml"
+    benchmark:
+        "benchmarks/calculate_strain_tmrcas_{strain}.txt",
+    log:
+        "logs/calculate_strain_tmrcas_{strain}.txt",
+    shell:
+        """
+        java -Xmx16g -jar scripts/CommonAncestorHeights.jar \
+            -burnin 0 \
+            -sequence {wildcards.strain:q} \
+            {input.network} \
+            {output.tmrca:q} 2>&1 | tee {log:q};
+        """
+
+rule mers_muller_compress_strain_tmrcas:
+    input:
+        tmrca="mers-muller/results/tMRCAs/{strain}.tsv",
+    output:
+        tmrca="mers-muller/results/tMRCAs/{strain}.tsv.xz",
+    conda: "../cartography.yml"
+    benchmark:
+        "benchmarks/compress_tMRCAs_{strain}.txt",
+    shell:
+        """
+        xz -2 -c {input.tmrca:q} > {output.tmrca:q}
+        """
+
+rule mers_muller_summarize_strain_tmrcas:
+    input:
+        tmrca="mers-muller/results/tMRCAs/{strain}.tsv.xz",
+    output:
+        table="mers-muller/results/tMRCAs_summarized/{strain}.tsv",
+    conda: "../cartography.yml"
+    benchmark:
+        "benchmarks/summarize_tMRCAs_{strain}.txt",
+    shell:
+        """
+        xz -c -d {input.tmrca:q} \
+            | tsv-filter -H --ne position:-1 --ne median:0.0 \
+            | tsv-summarize -H -g name --median median \
+            | awk 'OFS="\\t" {{ if (NR == 1) {{ print "reference_strain",$0 }} else {{ print "{wildcards.strain}",$0 }} }}' > {output.table:q}
+        """
+
+rule mers_muller_aggregate_strain_tmrcas:
+    input:
+        tables=expand("mers-muller/results/tMRCAs_summarized/{strain}.tsv", strain=MERS_MULLER_STRAINS)
+    output:
+        table="mers-muller/results/tMRCAs.tsv",
+    conda: "../cartography.yml"
+    benchmark:
+        "benchmarks/aggregate_tMRCAs.txt",
+    shell:
+        """
+        tsv-append -H {input.tables:q} > {output.table}
+        """
+
+rule mers_muller_extract_subset_of_alignment:
+    input:
+        strains="mers-muller/data/strain_names.txt",
+        alignment="../mers-nextstrain/results/aligned.fasta",
+    output:
+        alignment="mers-muller/results/aligned.fasta",
+    conda: "../cartography.yml"
+    shell:
+        """
+        samtools faidx -r {input.strains} {input.alignment} > {output.alignment}
+        """
+
+rule mers_muller_create_distance_matrix:
+    input:
+        alignment="mers-muller/results/aligned.fasta",
+    output:
+        output="mers-muller/results/distance_matrix.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/hamming_distance_from_fasta.py \
+            --alignment {input.alignment} \
+            --output {output.output}
+        """
+
+rule mers_muller_embed_mds:
+    message: "Creating the embedding for MDS"
+    input:
+        distance_matrix="mers-muller/results/distance_matrix.csv",
+        #cluster="../mers-nextstrain/results/mds_parameters.csv",
+    output:
+        dataframe="mers-muller/results/embed_mds.csv",
+        figure="mers-muller/results/embed_mds.pdf",
+    params:
+        random_seed=RANDOM_SEED,
+        cluster_threshold=2.0,
+        components=4,
+    conda: "../cartography.yml"
+    shell:
+        """
+        embed \
+            --distance-matrix {input.distance_matrix} \
+            --cluster-threshold {params.cluster_threshold} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
+            mds \
+            --components {params.components}
+        """
+
+rule mers_muller_plot_tmrca_vs_embedding_distances:
+    input:
+        tmrcas="mers-muller/results/tMRCAs.tsv",
+        embedding="mers-muller/results/embed_mds.csv",
+    output:
+        distances_figure="mers-muller/results/tMRCA_by_embedding_distance.pdf",
+    conda: "../cartography.yml"
+    log:
+        "logs/notebooks/mers_muller_plot_tmrca_vs_embedding_distances.ipynb"
+    notebook:
+        "notebooks/2022-03-25-plot-tMRCAs-vs-Euclidean-distances.ipynb"

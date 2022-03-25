@@ -27,6 +27,9 @@ dependencies:
   - snp-sites
   - tabix
   - pixy
+  - openjdk=11
+  - tsv-utils
+  - samtools
   - pip:
     - pathogen-embed==0.1.0
     - statsmodels
