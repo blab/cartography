@@ -100,25 +100,22 @@ rule mers_muller_embed_mds:
     message: "Creating the embedding for MDS"
     input:
         distance_matrix="mers-muller/results/distance_matrix.csv",
-        #cluster="../mers-nextstrain/results/mds_parameters.csv",
+        cluster="mers-nextstrain/results/mds_parameters.csv",
     output:
         dataframe="mers-muller/results/embed_mds.csv",
         figure="mers-muller/results/embed_mds.pdf",
     params:
         random_seed=RANDOM_SEED,
-        cluster_threshold=2.0,
-        components=4,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
-            --cluster-threshold {params.cluster_threshold} \
+            --cluster-data {input.cluster} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            mds \
-            --components {params.components}
+            mds
         """
 
 rule mers_muller_plot_tmrca_vs_embedding_distances:
