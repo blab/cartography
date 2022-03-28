@@ -7,29 +7,20 @@ SEASONAL_FLU_METHOD_PARAMETERS = Paramspace(
 
 rule seasonal_flu_training:
     input:
-        expand("seasonal-flu-nextstrain/results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        expand("seasonal-flu-nextstrain/results/distance_matrix_{ancestral}.csv", ancestral=INTERNAL_NODE),
-        expand("seasonal-flu-nextstrain/results/embed_pca_{ancestral}.pdf", ancestral=INTERNAL_NODE),
-        expand("seasonal-flu-nextstrain/results/embed_t-sne_{ancestral}.pdf", ancestral=INTERNAL_NODE),
-        expand("seasonal-flu-nextstrain/results/embed_umap_{ancestral}.pdf", ancestral=INTERNAL_NODE),
-        expand("seasonal-flu-nextstrain/results/embed_mds_{ancestral}.pdf", ancestral=INTERNAL_NODE),
-        expand("seasonal-flu-nextstrain/results/HDBSCAN_metadata_{method}.csv", method=EMBEDDING_METHODS),
+        "docs/figures/flu-2016-2018-ha-embeddings-by-clade.png",
+        "docs/figures/flu-2016-2018-ha-embeddings-by-clade.html",
+        "docs/figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png",
+        "docs/figures/flu-2016-2018-ha-embeddings-by-cluster.png",
+        "docs/figures/flu-2016-2018-ha-embeddings-by-cluster.html",
         "seasonal-flu-nextstrain/results/mcc_by_method_and_distance_threshold.pdf",
         "seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv",
-        "seasonal-flu-nextstrain/results/aligned_ancestral.fasta",
         "auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json",
         "seasonal-flu-nextstrain/results/table.tsv",
         "seasonal-flu-nextstrain/results/full_Scatterplot_metadata.csv",
         "seasonal-flu-nextstrain/results/explained_variance_pca_sequences.csv",
-        "docs/FullScatterplotFlu.png",
-        "docs/FullLinkedChartBrushableFlu.html",
-        "docs/flu-embeddings.png",
         "docs/FullPCABrushSupplementFlu.html",
         "seasonal-flu-nextstrain/results/nucleotide_diversity.txt",
         "docs/explainedVarianceFlu.png",
-         "seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv",
-         "seasonal-flu-nextstrain/results/gridsearch.tsv",
-        expand("seasonal-flu-nextstrain/results/HDBSCAN_metadata_{method}.csv", method=EMBEDDING_METHODS)
 
 rule seasonal_flu_training_files:
     params:
@@ -629,14 +620,14 @@ rule seasonal_flu_training_create_notebook_docs:
         scatterplot_umap = "seasonal-flu-nextstrain/results/scatterplot_umap.csv",
         scatterplot_umap_metadata = "seasonal-flu-nextstrain/results/scatterplot_umap_metadata.csv",
     output:
-        Scatterplot = "docs/FullScatterplotFlu.png",
-        fullChart = "docs/FullLinkedChartBrushableFlu.html",
-        fullChartPNG = "docs/flu-embeddings.png",
+        fullChartPNG = "docs/figures/flu-2016-2018-ha-embeddings-by-clade.png",
+        fullChart = "docs/figures/flu-2016-2018-ha-embeddings-by-clade.html",
+        Scatterplot = "docs/figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png",
+        fullChartHDBSCANPNG = "docs/figures/flu-2016-2018-ha-embeddings-by-cluster.png",
+        fullChartHDBSCAN = "docs/figures/flu-2016-2018-ha-embeddings-by-cluster.html",
         PCA_Supplement = "docs/FullPCABrushSupplementFlu.html",
         PCA_Supplement_PNG = "docs/FullPCABrushSupplementFlu.png",
         Explained_variance_PCA = "docs/explainedVarianceFlu.png",
-        fullChartHDBSCAN = "docs/fullHDBSCANChartFlu.html",
-        fullChartHDBSCANPNG = "docs/fullHDBSCANChartFlu.png",
         SupplementalTSNEHDBSCAN = "docs/tsneSupplementHDBSCANFlu.html",
         SupplementalTSNEHDBSCANPNG = "docs/tsneSupplementHDBSCANFlu.png"
 
