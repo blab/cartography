@@ -288,7 +288,7 @@ rule seasonal_flu_training_export:
         traits = rules.seasonal_flu_training_traits.output.node_data,
         nt_muts = rules.seasonal_flu_training_ancestral.output.node_data,
         aa_muts = rules.seasonal_flu_training_translate.output.node_data,
-        embeddings = expand("seasonal-flu-nextstrain/results/embed_{embedding}_ancestral.json", embedding=EMBEDDING_METHODS),
+        embeddings = expand("seasonal-flu-nextstrain/results/embed_{embedding}_sequences.json", embedding=EMBEDDING_METHODS),
         auspice_config = seasonal_flu_training_files.auspice_config,
         #colors = "config/colors.tsv",
         clades = rules.seasonal_flu_training_clades.output.clade_data,
@@ -492,9 +492,9 @@ rule seasonal_flu_training_embed_mds:
 rule seasonal_flu_training_create_node_output:
     message: "creates node output that is used by augur to create the phylogenies"
     input:
-        dataframe = "seasonal-flu-nextstrain/results/embed_{method}_ancestral.csv"
+        dataframe = "seasonal-flu-nextstrain/results/embed_{method}_{ancestral}.csv"
     output:
-        node_data = "seasonal-flu-nextstrain/results/embed_{method}_ancestral.json"
+        node_data = "seasonal-flu-nextstrain/results/embed_{method}_{ancestral}.json"
     conda: "../cartography.yml"
     shell:
         """

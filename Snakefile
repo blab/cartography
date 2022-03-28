@@ -12,8 +12,7 @@ EMBEDDING_METHODS = [
 ]
 
 INTERNAL_NODE = [
-    "ancestral",
-    "sequences"
+    "sequences",
 ]
 
 RANDOM_SEED = 314159
