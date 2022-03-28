@@ -1,3 +1,5 @@
+localrules: mers_download_elife_tree, mers_download_mcc_tree, mers_unzip,
+
 MERS_METHOD_PARAMETERS = Paramspace(
     pd.read_csv(
         "mers-nextstrain/config/method_parameters.tsv",
