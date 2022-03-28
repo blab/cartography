@@ -1,4 +1,4 @@
-localrules: mers_download_elife_tree, mers_download_mcc_tree, mers_unzip,
+localrules: mers_download_elife_tree, mers_download_mcc_tree, mers_unzip, mers_aggregate_clusters_by_parameters
 
 MERS_METHOD_PARAMETERS = Paramspace(
     pd.read_csv(
