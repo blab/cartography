@@ -149,13 +149,6 @@ docs/cartography.suppinfo
 **/ha-na-ma-nextstrain/results/*
 **/sars-cov-2-nextstrain/results/*
 
-!**/sars-cov-2-nextstrain/results/gridsearch
-!**/zika-nextstrain/results/gridsearch
-!**/mers-nextstrain/results/gridsearch
-!**/seasonal-flu-nextstrain/results/gridsearch
-!**/ha-na-nextstrain/results/gridsearch
-!**/outlier_analysis/results/gridsearch
-!**/ha-na-ma-nextstrain/results/gridsearch
 !**/sars-cov-2-nextstrain/results/gridsearch/gridsearch.tsv
 !**/zika-nextstrain/results/gridsearch/gridsearch.tsv
 !**/mers-nextstrain/results/gridsearch/gridsearch.tsv
@@ -204,9 +197,7 @@ docs/cartography.suppinfo
 !**/outlier_analysis/results/gridsearch/mcc_by_t-sne_parameters.pdf
 !**/ha-na-ma-nextstrain/results/gridsearch/mcc_by_t-sne_parameters.pdf
 
-
-
-
-
-# Ignore SLURM log files.
+# Ignore log files.
+logs/
+slurm_logs/
 *.out
