@@ -373,7 +373,7 @@ rule seasonal_flu_training_cluster_by_parameters:
         mem_mb=4000,
     conda: "../cartography.yml"
     script:
-        "notebooks/scripts/cluster_by_parameters.py"
+        "../notebooks/scripts/cluster_by_parameters.py"
 
 rule seasonal_flu_training_aggregate_clusters_by_parameters:
     input:
