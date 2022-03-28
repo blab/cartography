@@ -328,6 +328,7 @@ rule mers_embed_mds:
 rule mers_embed_tsne:
     message: "Creating the embedding for t-SNE"
     input:
+        alignment="mers-nextstrain/results/aligned.fasta",
         distance_matrix = "mers-nextstrain/results/distance_matrix.csv",
         cluster = "mers-nextstrain/results/t-sne_parameters.csv",
     output:
@@ -339,6 +340,7 @@ rule mers_embed_tsne:
     shell:
         """
         embed \
+            --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --random-seed {params.random_seed} \
