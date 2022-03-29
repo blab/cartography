@@ -520,28 +520,6 @@ rule seasonal_flu_reassortment_tree_to_table:
             --attributes {params.attributes}
         """
 
-rule seasonal_flu_reassortment_concat_scatterplot_table:
-    message: "concatenating all the scatterplot metadata into one csv dataframe"
-    input:
-       dataframe_pca = "ha-na-nextstrain/results/scatterplot_pca_metadata_{ha_concatenated}.csv",
-       dataframe_mds = "ha-na-nextstrain/results/scatterplot_mds_metadata_{ha_concatenated}.csv",
-       dataframe_tsne = "ha-na-nextstrain/results/scatterplot_t-sne_metadata_{ha_concatenated}.csv",
-       dataframe_umap = "ha-na-nextstrain/results/scatterplot_umap_metadata_{ha_concatenated}.csv"
-    output:
-        metadata = "ha-na-nextstrain/results/full_Scatterplot_metadata_{ha_concatenated}.csv"
-    params:
-        column = "pearson_coef",
-        dataframes = "ha-na-nextstrain/results/scatterplot_pca_metadata_{ha_concatenated}.csv ha-na-nextstrain/results/scatterplot_mds_metadata_{ha_concatenated}.csv ha-na-nextstrain/results/scatterplot_t-sne_metadata_{ha_concatenated}.csv ha-na-nextstrain/results/scatterplot_umap_metadata_{ha_concatenated}.csv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 notebooks/scripts/concatenate_tables.py \
-            --tables {params.dataframes} \
-            --separator ',' \
-            --sort-by {params.column} \
-            --output {output.metadata}
-        """
-
 rule seasonal_flu_reassortment_create_distance_dataframe:
     message: "creating distance dataframe for the ha and ha+na for animation"
     input:
