@@ -8,7 +8,7 @@ import re
 from sklearn.metrics import confusion_matrix, matthews_corrcoef
 import sys
 
-from Helpers import get_hamming_distances, get_euclidean_data_frame, get_embedding_columns_by_method
+from Helpers import get_hamming_distances, get_euclidean_data_frame
 
 
 if __name__ == "__main__":
@@ -32,6 +32,26 @@ if __name__ == "__main__":
     metadata_df = pd.read_csv(args.metadata, sep="\t")
     embedding_df = embedding_df.merge(metadata_df[["strain", args.clade_column]], on="strain")
 
+    if args.cluster_data:
+        if args.method == "pca":
+            n_components = 10
+            columns = [
+                f"pca{i}"
+                for i in range(1, n_components + 1)
+            ]
+        elif args.method == "mds":
+            parameters = pd.read_csv(args.cluster_data)
+            n_components = parameters["n_components"].values[0]
+            columns = [
+                f"mds{i}"
+                for i in range(1, n_components + 1)
+            ]
+        else:
+            method = args.method.replace("-", "")
+            columns = [f"{method}_x", f"{method}_y"]
+
+        print(f"Calculate MCC accuracy with the following columns: {columns}")
+
     if args.missing_data_value:
         embedding_df[args.clade_column] = embedding_df[args.clade_column].replace(
             args.missing_data_value,
@@ -47,7 +67,7 @@ if __name__ == "__main__":
         sampled_df=embedding_df,
         column_for_analysis=f"{args.method}_label",
         embedding=args.method,
-        column_list=get_embedding_columns_by_method(args.method)
+        column_list=columns
     )
 
     # Determine clade status from pre-assigned clade or group membership.
@@ -55,7 +75,7 @@ if __name__ == "__main__":
         sampled_df=embedding_df,
         column_for_analysis=args.clade_column,
         embedding=args.method,
-        column_list=get_embedding_columns_by_method(args.method)
+        column_list=columns
     )
 
     # Calculate accuracy of automated cluster labels compared to pre-assigned
