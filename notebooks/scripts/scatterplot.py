@@ -21,6 +21,7 @@ if __name__ == "__main__":
     parser.add_argument("--embedding", required=True, help="an embedding csv matrix - the order of distances per strain MUST be the same as the distance matrix")
     parser.add_argument("--method", required=True, choices = ["pca", "mds", "t-sne", "umap"], help="the embedding used")
     parser.add_argument("--columns", nargs="+", help="the columns which the pdist will be calculated on")
+    parser.add_argument("--method-parameters", help="file with method parameters to use for number of components where appropriate")
     parser.add_argument("--bootstrapping-sample", default=10000, type=int, help="number of times the data is sampled with replacement to find the mean and standard deviation of the pearson coefficient")
     parser.add_argument("--output-figure", help="path for outputting as a PNG")
     parser.add_argument("--output-dataframe", help="path for outputting as a dataframe")
@@ -41,7 +42,29 @@ if __name__ == "__main__":
     assert np.array_equal(distance_matrix.index, embedding_df.index)
 
     #calling Helpers.py scatterplot_xyvalues on the data
-    total_df = scatterplot_xyvalues(list(embedding_df.index), distance_matrix, embedding_df, args.columns, args.method)
+
+    if args.method_parameters:
+        if args.method == "pca":
+            n_components = 10
+            columns = [
+                f"pca{i}"
+                for i in range(1, n_components + 1)
+            ]
+        elif args.method == "mds":
+            parameters = pd.read_csv(args.method_parameters)
+            n_components = parameters["n_components"].values[0]
+            columns = [
+                f"mds{i}"
+                for i in range(1, n_components + 1)
+            ]
+        else:
+            method = args.method.replace("-", "")
+            columns = [f"{method}_x", f"{method}_y"]
+    else:
+        columns = args.columns
+
+    print(f"Prepare scatterplot with the following columns: {columns}")
+    total_df = scatterplot_xyvalues(list(embedding_df.index), distance_matrix, embedding_df, columns, args.method)
 
     r_value_arr = []
     for i in range(0, args.bootstrapping_sample):

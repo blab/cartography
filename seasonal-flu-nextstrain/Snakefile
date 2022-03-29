@@ -12,15 +12,12 @@ rule seasonal_flu_training:
         "docs/figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png",
         "docs/figures/flu-2016-2018-ha-embeddings-by-cluster.png",
         "docs/figures/flu-2016-2018-ha-embeddings-by-cluster.html",
+        "docs/figures/flu-2016-2018-pca-by-clade.html",
+        "docs/figures/flu-2016-2018-pca-by-clade.png",
+        "docs/figures/flu-2016-2018-pca-explained-variance.png",
         "seasonal-flu-nextstrain/results/mcc_by_method_and_distance_threshold.pdf",
-        "seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv",
         "auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json",
-        "seasonal-flu-nextstrain/results/table.tsv",
-        "seasonal-flu-nextstrain/results/full_Scatterplot_metadata.csv",
-        "seasonal-flu-nextstrain/results/explained_variance_pca_sequences.csv",
-        "docs/FullPCABrushSupplementFlu.html",
         "seasonal-flu-nextstrain/results/nucleotide_diversity.txt",
-        "docs/explainedVarianceFlu.png",
 
 rule seasonal_flu_training_files:
     params:
@@ -312,7 +309,7 @@ rule seasonal_flu_training_tree_to_table:
     output:
         table = "seasonal-flu-nextstrain/results/table.tsv"
     params:
-        attributes = "num_date pca1 pca2 pca3 pca4 pca5 pca6 pca7 pca8 pca9 pca10 mds1 mds2 mds3 mds4 tsne_x tsne_y umap_x umap_y clade_membership pca_label mds_label umap_label t-sne_label pca_label_default mds_label_default umap_label_default t-sne_label_default"
+        attributes = "num_date clade_membership"
     conda: "../cartography.yml"
     shell:
         """
@@ -503,27 +500,61 @@ rule seasonal_flu_training_create_node_output:
             --output {output.node_data}
         """
 
+rule seasonal_flu_training_create_distance_dataframe:
+    input:
+        dataframe_pca = "seasonal-flu-nextstrain/results/embed_pca_sequences.csv",
+        dataframe_mds = "seasonal-flu-nextstrain/results/embed_mds_sequences.csv",
+        dataframe_tsne = "seasonal-flu-nextstrain/results/embed_t-sne_sequences.csv",
+        dataframe_umap = "seasonal-flu-nextstrain/results/embed_umap_sequences.csv",
+    output:
+        metadata = "seasonal-flu-nextstrain/results/embedding_data.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/make_table.py \
+            --tables {input} \
+            --separator ',' \
+            --output {output.metadata}
+        """
+
+rule seasonal_flu_training_annotate_embeddings:
+    input:
+        left="seasonal-flu-nextstrain/results/table.tsv",
+        right="seasonal-flu-nextstrain/results/embedding_data.csv",
+    output:
+        table="seasonal-flu-nextstrain/results/annotated_embeddings.tsv",
+    conda: "../cartography.yml"
+    params:
+        join_on="strain",
+    shell:
+        """
+        python3 notebooks/scripts/join_tables.py \
+            --left {input.left} \
+            --right {input.right} \
+            --on {params.join_on} \
+            --output {output.table}
+        """
+
 rule seasonal_flu_training_scatterplot:
     message: "Creating the scatterplot (PNG, dataframe)"
     input:
-        distance_matrix = "seasonal-flu-nextstrain/results/distance_matrix_sequences.csv",
-        embedding = "seasonal-flu-nextstrain/results/embed_{method}_sequences.csv",
+        distance_matrix="seasonal-flu-nextstrain/results/distance_matrix_sequences.csv",
+        embedding="seasonal-flu-nextstrain/results/embed_{method}_sequences.csv",
+        method_parameters="seasonal-flu-nextstrain/results/{method}_parameters.csv",
     output:
         figure = "seasonal-flu-nextstrain/results/scatterplot_{method}.png",
         dataframe = "seasonal-flu-nextstrain/results/scatterplot_{method}.csv",
         metadata = "seasonal-flu-nextstrain/results/scatterplot_{method}_metadata.csv"
     params:
         bootstrap = 100,
-        columns = _get_embedding_columns_by_wildcards,
-        method = "{method}"
     conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/scatterplot.py \
             --distance {input.distance_matrix} \
             --embedding {input.embedding} \
-            --method {params.method} \
-            --columns {params.columns} \
+            --method {wildcards.method} \
+            --method-parameters {input.method_parameters} \
             --bootstrapping-sample {params.bootstrap} \
             --output-figure {output.figure} \
             --output-dataframe {output.dataframe} \
@@ -593,48 +624,36 @@ rule seasonal_flu_training_concat_scatterplot_table:
             --output {output.metadata}
         """
 
-rule seasonal_flu_training_create_notebook_docs:
-    message: "creating linked and grouped charts using the jupyter notebook"
+rule seasonal_flu_training_create_scatterplot_figure:
     input:
-        colors = "notebooks/config/color_schemes.tsv",
-        #Charts, tree:
-        node_df = "seasonal-flu-nextstrain/results/table.tsv",
-
-        pca_df = "seasonal-flu-nextstrain/results/embed_pca_sequences.csv",
-        explained_variance_pca = "seasonal-flu-nextstrain/results/explained_variance_pca_sequences.csv",
-
-        mds_df = "seasonal-flu-nextstrain/results/embed_mds_sequences.csv",
-        tsne_df = "seasonal-flu-nextstrain/results/embed_t-sne_sequences.csv",
-        umap_df = "seasonal-flu-nextstrain/results/embed_umap_sequences.csv",
-
-        #Scatterplot:
+        scatterplot_metadata="seasonal-flu-nextstrain/results/full_Scatterplot_metadata.csv",
         scatterplot_pca = "seasonal-flu-nextstrain/results/scatterplot_pca.csv",
-        scatterplot_pca_metadata = "seasonal-flu-nextstrain/results/scatterplot_pca_metadata.csv",
-
         scatterplot_mds = "seasonal-flu-nextstrain/results/scatterplot_mds.csv",
-        scatterplot_mds_metadata = "seasonal-flu-nextstrain/results/scatterplot_mds_metadata.csv",
-
         scatterplot_tsne = "seasonal-flu-nextstrain/results/scatterplot_t-sne.csv",
-        scatterplot_tsne_metadata = "seasonal-flu-nextstrain/results/scatterplot_t-sne_metadata.csv",
-
         scatterplot_umap = "seasonal-flu-nextstrain/results/scatterplot_umap.csv",
-        scatterplot_umap_metadata = "seasonal-flu-nextstrain/results/scatterplot_umap_metadata.csv",
+    output:
+        scatterplot = "docs/figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png",
+    conda: "../cartography.yml"
+    notebook:
+        "2022-03-29-scatterplot-figure.py.ipynb"
+
+rule seasonal_flu_training_create_notebook_docs:
+    input:
+        colors="notebooks/config/color_schemes.tsv",
+        annotated_embeddings="seasonal-flu-nextstrain/results/annotated_embeddings.tsv",
+        accuracy_table="seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv",
+        explained_variance_pca="seasonal-flu-nextstrain/results/explained_variance_pca_sequences.csv",
     output:
         fullChartPNG = "docs/figures/flu-2016-2018-ha-embeddings-by-clade.png",
         fullChart = "docs/figures/flu-2016-2018-ha-embeddings-by-clade.html",
-        Scatterplot = "docs/figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png",
         fullChartHDBSCANPNG = "docs/figures/flu-2016-2018-ha-embeddings-by-cluster.png",
         fullChartHDBSCAN = "docs/figures/flu-2016-2018-ha-embeddings-by-cluster.html",
-        PCA_Supplement = "docs/FullPCABrushSupplementFlu.html",
-        PCA_Supplement_PNG = "docs/FullPCABrushSupplementFlu.png",
-        Explained_variance_PCA = "docs/explainedVarianceFlu.png",
-        SupplementalTSNEHDBSCAN = "docs/tsneSupplementHDBSCANFlu.html",
-        SupplementalTSNEHDBSCANPNG = "docs/tsneSupplementHDBSCANFlu.png"
-
+        PCA_Supplement = "docs/figures/flu-2016-2018-pca-by-clade.html",
+        PCA_Supplement_PNG = "docs/figures/flu-2016-2018-pca-by-clade.png",
+        Explained_variance_PCA = "docs/figures/flu-2016-2018-pca-explained-variance.png",
     conda: "../cartography.yml"
     notebook:
-        "2019-08-08FinalNotebookFlu.ipynb"
-
+        "2022-03-29-final-figures.py.ipynb"
 
 rule seasonal_flu_training_clean:
     message: "Removing directories: {params}"
