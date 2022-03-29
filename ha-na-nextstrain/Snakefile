@@ -16,15 +16,17 @@ HA_CONCAT = [
 
 rule seasonal_flu_reassortment:
     input:
+        "docs/figures/flu-2016-2018-ha-na-embeddings-by-mcc.html",
+        "docs/figures/flu-2016-2018-ha-na-embeddings-by-mcc.png",
+        "docs/figures/flu-2016-2018-ha-na-pca-by-cluster.html",
+        "docs/figures/flu-2016-2018-ha-na-pca-by-cluster.png",
+        "docs/figures/flu-2016-2018-ha-na-mds-by-cluster.html",
+        "docs/figures/flu-2016-2018-ha-na-mds-by-cluster.png",
+        "docs/figures/flu-2016-2018-ha-na-tsne-by-cluster.html",
+        "docs/figures/flu-2016-2018-ha-na-tsne-by-cluster.png",
+        "docs/figures/flu-2016-2018-ha-na-umap-by-cluster.html",
+        "docs/figures/flu-2016-2018-ha-na-umap-by-cluster.png",
         expand("auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json", segment=SEGMENTS),
-        expand("ha-na-nextstrain/results/table_{segment}.tsv", segment=SEGMENTS),
-        "ha-na-nextstrain/results/ha_concatenated_data.csv",
-        HANAFullChartBrushableMDSHTML = "docs/HANAFullChartBrushableMDS.html",
-        #HANAFullChartBrushableMDSPNG = "docs/HANAFullChartBrushableMDS.png",
-        HANAFullChartBrushableTSNEHTML = "docs/HANAFullChartBrushableTSNE.html",
-        #HANAFullChartBrushableTSNEPNG = "docs/HANAFullChartBrushableTSNE.png",
-        fullChartHTML = "docs/flu-embeddingsHaNa.html",
-        #fullChartPNG = "docs/flu-embeddingsHaNa.png",
 
 rule seasonal_flu_reassortment_files:
     params:
@@ -333,50 +335,6 @@ rule seasonal_flu_reassortment_convert_mccs_to_json:
             --output {output.node_data}
         """
 
-rule seasonal_flu_reassortment_export:
-    message: "Exporting data files for for auspice"
-    input:
-        tree = rules.seasonal_flu_reassortment_refine.output.tree,
-        metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
-        branch_lengths = rules.seasonal_flu_reassortment_refine.output.node_data,
-        traits = rules.seasonal_flu_reassortment_traits.output.node_data,
-        nt_muts = rules.seasonal_flu_reassortment_ancestral.output.node_data,
-        aa_muts = rules.seasonal_flu_reassortment_translate.output.node_data,
-        mccs = "ha-na-nextstrain/results/mccs.json",
-        embeddings = expand("ha-na-nextstrain/results/embed_{embedding}_ha.json", embedding=EMBEDDING_METHODS),
-        embeddings_concat = expand("ha-na-nextstrain/results/embed_{embedding}_concatenated_renamed.json", embedding=EMBEDDING_METHODS),
-        auspice_config = seasonal_flu_reassortment_files.auspice_config,
-        clades = "ha-na-nextstrain/results/clades_ha.json"
-    output:
-        auspice_tree = "auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json"
-    conda: "../cartography.yml"
-    shell:
-        """
-        augur export v2 \
-            --tree {input.tree} \
-            --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} {input.embeddings_concat} {input.mccs} \
-            --auspice-config {input.auspice_config} \
-            --output {output.auspice_tree}
-        """
-
-rule seasonal_flu_reassortment_tree_to_table:
-    message: "creating a table of node data values from the tree attributes"
-    input:
-        tree = rules.seasonal_flu_reassortment_export.output.auspice_tree
-    output:
-        table = "ha-na-nextstrain/results/table_{segment}.tsv"
-    params:
-        attributes = "num_date MCC clade_membership"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 notebooks/scripts/auspice_tree_to_table.py \
-            {input.tree} \
-            {output.table} \
-            --attributes {params.attributes}
-        """
-
 rule seasonal_flu_reassortment_create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
@@ -518,6 +476,50 @@ rule seasonal_flu_reassortment_rename_columns:
             --output {output.node_data}
         """
 
+rule seasonal_flu_reassortment_export:
+    message: "Exporting data files for for auspice"
+    input:
+        tree = rules.seasonal_flu_reassortment_refine.output.tree,
+        metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
+        branch_lengths = rules.seasonal_flu_reassortment_refine.output.node_data,
+        traits = rules.seasonal_flu_reassortment_traits.output.node_data,
+        nt_muts = rules.seasonal_flu_reassortment_ancestral.output.node_data,
+        aa_muts = rules.seasonal_flu_reassortment_translate.output.node_data,
+        mccs = "ha-na-nextstrain/results/mccs.json",
+        embeddings = expand("ha-na-nextstrain/results/embed_{embedding}_ha.json", embedding=EMBEDDING_METHODS),
+        embeddings_concat = expand("ha-na-nextstrain/results/embed_{embedding}_concatenated_renamed.json", embedding=EMBEDDING_METHODS),
+        auspice_config = seasonal_flu_reassortment_files.auspice_config,
+        clades = "ha-na-nextstrain/results/clades_ha.json"
+    output:
+        auspice_tree = "auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json"
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur export v2 \
+            --tree {input.tree} \
+            --metadata {input.metadata} \
+            --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} {input.embeddings_concat} {input.mccs} \
+            --auspice-config {input.auspice_config} \
+            --output {output.auspice_tree}
+        """
+
+rule seasonal_flu_reassortment_tree_to_table:
+    message: "creating a table of node data values from the tree attributes"
+    input:
+        tree = rules.seasonal_flu_reassortment_export.output.auspice_tree
+    output:
+        table = "ha-na-nextstrain/results/table_{segment}.tsv"
+    params:
+        attributes = "num_date MCC clade_membership"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/auspice_tree_to_table.py \
+            {input.tree} \
+            {output.table} \
+            --attributes {params.attributes}
+        """
+
 rule seasonal_flu_reassortment_concat_scatterplot_table:
     message: "concatenating all the scatterplot metadata into one csv dataframe"
     input:
@@ -625,7 +627,6 @@ rule seasonal_flu_reassortment_concat_HDBSCAN_table:
         """
 
 rule seasonal_flu_reassortment_create_notebook_docs:
-    message: "creating linked and grouped charts using the jupyter notebook"
     input:
         colors = "notebooks/config/color_schemes.tsv",
         annotated_embeddings="ha-na-nextstrain/results/annotated_embeddings.tsv",
@@ -633,16 +634,16 @@ rule seasonal_flu_reassortment_create_notebook_docs:
         explained_variance_pca_ha = "ha-na-nextstrain/results/explained_variance_pca_ha.csv",
         explained_variance_pca_concatenated = "ha-na-nextstrain/results/explained_variance_pca_concatenated.csv",
     output:
-        HANAFullChartBrushablePCAHTML = "docs/HANAFullChartBrushablePCA.html",
-        HANAFullChartBrushablePCAPNG = "docs/HANAFullChartBrushablePCA.png",
-        HANAFullChartBrushableMDSHTML = "docs/HANAFullChartBrushableMDS.html",
-        HANAFullChartBrushableMDSPNG = "docs/HANAFullChartBrushableMDS.png",
-        HANAFullChartBrushableTSNEHTML = "docs/HANAFullChartBrushableTSNE.html",
-        HANAFullChartBrushableTSNEPNG = "docs/HANAFullChartBrushableTSNE.png",
-        HANAFullChartBrushableUMAPHTML = "docs/HANAFullChartBrushableUMAP.html",
-        HANAFullChartBrushableUMAPPNG = "docs/HANAFullChartBrushableUMAP.png",
-        fullChartHTML = "docs/flu-embeddingsHaNa.html",
-        fullChartPNG = "docs/flu-embeddingsHaNa.png",
+        fullChartHTML = "docs/figures/flu-2016-2018-ha-na-embeddings-by-mcc.html",
+        fullChartPNG = "docs/figures/flu-2016-2018-ha-na-embeddings-by-mcc.png",
+        HANAFullChartBrushablePCAHTML = "docs/figures/flu-2016-2018-ha-na-pca-by-cluster.html",
+        HANAFullChartBrushablePCAPNG = "docs/figures/flu-2016-2018-ha-na-pca-by-cluster.png",
+        HANAFullChartBrushableMDSHTML = "docs/figures/flu-2016-2018-ha-na-mds-by-cluster.html",
+        HANAFullChartBrushableMDSPNG = "docs/figures/flu-2016-2018-ha-na-mds-by-cluster.png",
+        HANAFullChartBrushableTSNEHTML = "docs/figures/flu-2016-2018-ha-na-tsne-by-cluster.html",
+        HANAFullChartBrushableTSNEPNG = "docs/figures/flu-2016-2018-ha-na-tsne-by-cluster.png",
+        HANAFullChartBrushableUMAPHTML = "docs/figures/flu-2016-2018-ha-na-umap-by-cluster.html",
+        HANAFullChartBrushableUMAPPNG = "docs/figures/flu-2016-2018-ha-na-umap-by-cluster.png",
     conda: "../cartography.yml"
     notebook:
         "2022-02-23-seasonal-flu-ha-na-reassortment.ipynb"
