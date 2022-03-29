@@ -435,13 +435,13 @@ rule seasonal_flu_test_scatterplot:
     input:
         distance_matrix = "seasonal-flu-nextstrain-2018-2020/results/distance_matrix_sequences.csv",
         embedding = "seasonal-flu-nextstrain-2018-2020/results/embed_{method}_sequences.csv",
+        method_parameters = "seasonal-flu-nextstrain/results/{method}_parameters.csv",
     output:
         figure = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_{method}.png",
         dataframe = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_{method}.csv",
         metadata = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_{method}_metadata.csv"
     params:
         bootstrap = 100,
-        columns = _get_embedding_columns_by_wildcards
     conda: "../cartography.yml"
     shell:
         """
@@ -449,7 +449,7 @@ rule seasonal_flu_test_scatterplot:
             --distance {input.distance_matrix} \
             --embedding {input.embedding} \
             --method {wildcards.method} \
-            --columns {params.columns} \
+            --method-parameters {input.method_parameters} \
             --bootstrapping-sample {params.bootstrap} \
             --output-figure {output.figure} \
             --output-dataframe {output.dataframe} \

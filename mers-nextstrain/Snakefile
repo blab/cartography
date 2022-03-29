@@ -391,13 +391,13 @@ rule mers_scatterplot:
     input:
         distance_matrix = "mers-nextstrain/results/distance_matrix.csv",
         embedding = "mers-nextstrain/results/embed_{method}.csv",
+        method_parameters = "mers-nextstrain/results/{method}_parameters.csv",
     output:
         figure = "mers-nextstrain/results/scatterplot_{method}.png",
         dataframe = "mers-nextstrain/results/scatterplot_{method}.csv",
         metadata = "mers-nextstrain/results/scatterplot_{method}_metadata.csv",
     params:
         bootstrap = 100,
-        columns = _get_embedding_columns_by_wildcards
     conda: "../cartography.yml"
     shell:
         """
@@ -405,7 +405,7 @@ rule mers_scatterplot:
             --distance {input.distance_matrix} \
             --embedding {input.embedding} \
             --method {wildcards.method} \
-            --columns {params.columns} \
+            --method-parameters {input.method_parameters} \
             --bootstrapping-sample {params.bootstrap} \
             --output-figure {output.figure} \
             --output-dataframe {output.dataframe} \
