@@ -1,18 +1,9 @@
 rule seasonal_flu_test:
     input:
-        expand("seasonal-flu-nextstrain-2018-2020/results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        expand("seasonal-flu-nextstrain-2018-2020/results/distance_matrix_{ancestral}.csv", ancestral=INTERNAL_NODE),
-        expand("seasonal-flu-nextstrain-2018-2020/results/embed_pca_{ancestral}.pdf", ancestral=INTERNAL_NODE),
-        expand("seasonal-flu-nextstrain-2018-2020/results/embed_t-sne_{ancestral}.pdf", ancestral=INTERNAL_NODE),
-        expand("seasonal-flu-nextstrain-2018-2020/results/embed_umap_{ancestral}.pdf", ancestral=INTERNAL_NODE),
-        expand("seasonal-flu-nextstrain-2018-2020/results/embed_mds_{ancestral}.pdf", ancestral=INTERNAL_NODE),
+        "docs/figures/flu-2018-2020-ha-embeddings-by-cluster.html",
+        "docs/figures/flu-2018-2020-ha-embeddings-by-cluster.png",
         "auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json",
-        "seasonal-flu-nextstrain-2018-2020/results/table.tsv",
-        "seasonal-flu-nextstrain-2018-2020/results/full_Scatterplot_metadata.csv",
-        expand("seasonal-flu-nextstrain-2018-2020/results/explained_variance_pca_{ancestral}.csv", ancestral=INTERNAL_NODE),
         "seasonal-flu-nextstrain-2018-2020/results/nucleotide_diversity.txt",
-        "docs/fullHDBSCANChartFlu2018-2020.html",
-        "docs/fullHDBSCANChartFlu2018-2020.png"
 
 rule seasonal_flu_test_files:
     params:
@@ -428,53 +419,6 @@ rule seasonal_flu_test_create_node_output:
         python3 notebooks/scripts/output_node_data.py \
             --table {input.dataframe} \
             --output {output.node_data}
-        """
-
-rule seasonal_flu_test_scatterplot:
-    message: "Creating the scatterplot (PNG, dataframe)"
-    input:
-        distance_matrix = "seasonal-flu-nextstrain-2018-2020/results/distance_matrix_sequences.csv",
-        embedding = "seasonal-flu-nextstrain-2018-2020/results/embed_{method}_sequences.csv",
-        method_parameters = "seasonal-flu-nextstrain/results/{method}_parameters.csv",
-    output:
-        figure = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_{method}.png",
-        dataframe = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_{method}.csv",
-        metadata = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_{method}_metadata.csv"
-    params:
-        bootstrap = 100,
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 notebooks/scripts/scatterplot.py \
-            --distance {input.distance_matrix} \
-            --embedding {input.embedding} \
-            --method {wildcards.method} \
-            --method-parameters {input.method_parameters} \
-            --bootstrapping-sample {params.bootstrap} \
-            --output-figure {output.figure} \
-            --output-dataframe {output.dataframe} \
-            --output-metadata {output.metadata}
-        """
-
-rule seasonal_flu_test_concat_scatterplot_table:
-    message: "concatenating all the scatterplot metadata into one csv dataframe"
-    input:
-       dataframe_pca = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_pca_metadata.csv",
-       dataframe_mds = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_mds_metadata.csv",
-       dataframe_tsne = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_t-sne_metadata.csv",
-       dataframe_umap = "seasonal-flu-nextstrain-2018-2020/results/scatterplot_umap_metadata.csv"
-    output:
-        metadata = "seasonal-flu-nextstrain-2018-2020/results/full_Scatterplot_metadata.csv"
-    params:
-        column = "pearson_coef",
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 notebooks/scripts/concatenate_tables.py \
-            --tables {input.dataframe_pca} {input.dataframe_mds} {input.dataframe_tsne} {input.dataframe_umap} \
-            --separator ',' \
-            --sort-by {params.column} \
-            --output {output.metadata}
         """
 
 rule seasonal_flu_test_create_notebook_docs:
