@@ -32,9 +32,6 @@ rule all:
         # Interactive version of the paper.
         "docs/cartography.html",
 
-# Include common functions and rules shared across analyses.
-include: "rules/common.smk"
-
 # Include rules for each pathogen.
 include: "seasonal-flu-nextstrain/Snakefile"
 include: "seasonal-flu-nextstrain-2018-2020/Snakefile"
@@ -43,7 +40,6 @@ include: "mers-nextstrain/Snakefile"
 include: "mers-muller/Snakefile"
 include: "sars-cov-2-nextstrain/Snakefile"
 
-# include: "outlier_analysis/Snakefile"
 # include: "zika-nextstrain/Snakefile"
 
 rule pathogens:
