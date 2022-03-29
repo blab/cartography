@@ -14,9 +14,9 @@ import sys
 from Helpers import scatterplot_xyvalues
 
 if __name__ == "__main__":
-        
+
     parser = argparse.ArgumentParser(description = "creates embeddings", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    
+
     parser.add_argument("--distance", required=True, help="a distance matrix of pairwise distances with the strain name as the index")
     parser.add_argument("--embedding", required=True, help="an embedding csv matrix - the order of distances per strain MUST be the same as the distance matrix")
     parser.add_argument("--method", required=True, choices = ["pca", "mds", "t-sne", "umap"], help="the embedding used")
@@ -25,36 +25,36 @@ if __name__ == "__main__":
     parser.add_argument("--output-figure", help="path for outputting as a PNG")
     parser.add_argument("--output-dataframe", help="path for outputting as a dataframe")
     parser.add_argument("--output-metadata", help="output the pearson coefficient, mean, and standard deviation for the scatterplot")
-    
+
     args = parser.parse_args()
-    
+
     #error handling
-    
+
     if args.output_figure is None and args.output_dataframe is None:
         print("You must specify one of the outputs", file=sys.stderr)
         sys.exit(1)
-        
+
     # reading in the distance matrix and embedding csv files, checking to make sure the format is correct
-    
+
     distance_matrix = pd.read_csv(args.distance, index_col=0)
     embedding_df = pd.read_csv(args.embedding, index_col=0)
     assert np.array_equal(distance_matrix.index, embedding_df.index)
 
     #calling Helpers.py scatterplot_xyvalues on the data
     total_df = scatterplot_xyvalues(list(embedding_df.index), distance_matrix, embedding_df, args.columns, args.method)
-    
+
     r_value_arr = []
     for i in range(0, args.bootstrapping_sample):
         sampled_df = total_df.sample(frac=1.0, replace=True)
         regression = linregress(sampled_df["genetic"], sampled_df["euclidean"])
         slope, intercept, r_value, p_value, std_err = regression
         r_value_arr.append(r_value ** 2)
-    
+
     r_value_arr = np.array(r_value_arr)
 
     mean = np.mean(r_value_arr)
     std = np.std(r_value_arr)
-    
+
     mean_euclidean = np.mean(total_df["euclidean"], axis=0)
     std_euclidean  = np.std(total_df["euclidean"], axis=0)
     max_euclidean = max(total_df["euclidean"].values.tolist())
@@ -81,7 +81,7 @@ if __name__ == "__main__":
         PD_Y_values.columns = ["LOWESS_x", "LOWESS_y"]
         regression = linregress(total_df["genetic"], total_df["euclidean"])
         slope, intercept, r_value, p_value, std_err = regression
-        
+
         if args.output_figure is not None:
             fig, ax = plt.subplots(1, 1, figsize=(6, 6))
 
@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
             plt.tight_layout()
             plt.savefig(args.output_figure)
-            
+
     if args.output_dataframe is not None:
         total_df = pd.concat([total_df, PD_Y_values], axis=1)
         total_df.to_csv(args.output_dataframe)
