@@ -284,7 +284,11 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
             chart = base.mark_circle(size=60).encode(
                 x=alt.X(list_of_data[i], title=list_of_titles[i], axis=alt.Axis(labels=False, ticks=False)),
                 y=alt.X(list_of_data[i + 1], title=list_of_titles[i + 1], axis=alt.Axis(labels=False, ticks=False)),
-                color=alt.condition(brush, if_false=alt.ColorValue('gray'), if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_))),
+                color=alt.condition(
+                    brush,
+                    if_false=alt.ColorValue('gray'),
+                    if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_), legend=alt.Legend(symbolLimit=len(domain)))
+                ),
                 tooltip=ToolTip
             ).add_selection(
                 brush
