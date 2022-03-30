@@ -68,15 +68,17 @@ if __name__ == "__main__":
         ax.legend(title="low quality", loc="upper left")
 
     ax.set_xlabel("Bases Missing")
-    ax.set_ylabel(f"PC1")
+    ax.set_ylabel(f"PC 1")
 
     ax.text(
                 0.05,
                 0.95,
-                f"$R^2={mean:.3f} \pm {std}$",
+                f"$R^2={mean:.3f} \pm {std:.3f}$",
                 horizontalalignment='left',
                 verticalalignment='center',
                 transform=ax.transAxes,
             )
 
+    sns.despine()
+    plt.tight_layout()
     plt.savefig(args.output, dpi=300)

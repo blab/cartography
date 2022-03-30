@@ -19,8 +19,8 @@ rule mers:
         "docs/figures/mers-mds-by-clade.html",
         "docs/figures/mers-mds-by-clade.png",
         "docs/figures/mers-euclidean-distance-by-genetic-distance.png",
+        "docs/figures/mers-pc1-by-bases-missing.png",
         "auspice/cartography_mers.json",
-        "docs/bases_missing_vs_pc1_MERS.png",
         "mers-nextstrain/results/nucleotide_diversity.txt",
         "mers-nextstrain/results/mcc_by_method_and_distance_threshold.pdf",
 
@@ -132,7 +132,7 @@ rule mers_bases_missing_vs_pc1:
         pca = "mers-nextstrain/results/embed_pca_before.csv",
         metadata = "mers-nextstrain/results/metadata.tsv"
     output:
-        figure = "docs/bases_missing_vs_pc1_MERS.png"
+        figure = "docs/figures/mers-pc1-by-bases-missing.png"
     params:
         bootstrap = 100
     conda: "../cartography.yml"
