@@ -7,40 +7,16 @@ SARS_COV_2_METHOD_PARAMETERS = Paramspace(
 
 rule sarscov2:
     input:
-        "auspice/cartography_ncov.json",
-        expand("sars-cov-2-nextstrain/results/scatterplot_{method}.png", method=EMBEDDING_METHODS),
-        "sars-cov-2-nextstrain/results/distance_matrix.csv",
-        "sars-cov-2-nextstrain/results/embed_pca.pdf",
-        "sars-cov-2-nextstrain/results/embed_t-sne.pdf",
-        "sars-cov-2-nextstrain/results/embed_umap.pdf",
-        "sars-cov-2-nextstrain/results/embed_mds.pdf",
-        "sars-cov-2-nextstrain/results/table.tsv",
-        "sars-cov-2-nextstrain/results/full_Scatterplot_metadata.csv",
-        "sars-cov-2-nextstrain/results/explained_variance_pca.csv",
-        "docs/FullScatterplotSars-cov-2.png",
         "docs/FullLinkedChartBrushableSars-cov-2.html",
         "docs/sars-cov-2-embeddings.png",
-        "docs/FullPCABrushSupplementSars-cov-2.html",
-        "sars-cov-2-nextstrain/results/alignment_pi.txt",
-        "docs/explainedVarianceSars-cov-2.png",
-        "docs/bases_missing_vs_pc1_Sars.png",
         "docs/fullHDBSCANChartSars-cov-2.png",
+        "docs/explainedVarianceSars-cov-2.png",
+        "docs/FullPCABrushSupplementSars-cov-2.html",
+        "docs/FullScatterplotSars-cov-2.png",
+        "sars-cov-2-nextstrain/results/alignment_pi.txt",
+        "docs/figures/sarscov2-pc1-vs-bases-missing.png",
         "sars-cov-2-nextstrain/results/mcc_by_method_and_distance_threshold.pdf",
-        "sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv",
-        expand("sars-cov-2-nextstrain/results/HDBSCAN_metadata_{method}.csv", method=EMBEDDING_METHODS)
-
-rule sarscov2_annotate_low_quality:
-    input:
-        metadata="sars-cov-2-nextstrain/data/metadata.tsv.xz"
-    output:
-        output ="sars-cov-2-nextstrain/results/metadata_low_quality.tsv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 sars-cov-2-nextstrain/scripts/bad_samples.py \
-            --metadata {input.metadata} \
-            --output {output.output}
-        """
+        "auspice/cartography_ncov.json",
 
 rule sarscov2_embed_pca_before:
     message: "Creating the embedding for PCA bases missing analysis"
@@ -68,12 +44,12 @@ rule sarscov2_bases_missing_vs_pc1:
     message: "creating a bases_missing vs PC1 graph"
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta.xz",
+        metadata = "sars-cov-2-nextstrain/data/metadata.tsv.xz",
         pca = "sars-cov-2-nextstrain/results/embed_pca_before.csv",
-        metadata = "sars-cov-2-nextstrain/results/metadata_low_quality.tsv"
     output:
-        figure = "docs/bases_missing_vs_pc1_Sars.png"
+        figure = "docs/figures/sarscov2-pc1-vs-bases-missing.png"
     params:
-        bootstrap = 100
+        bootstrap = 100,
     conda: "../cartography.yml"
     shell:
         """
