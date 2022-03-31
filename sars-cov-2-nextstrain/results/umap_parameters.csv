@@ -1,2 +1,2 @@
 method,distance_threshold,min_dist,n_neighbors,validation_mcc
-umap,2.0,0.05,50.0,0.6391275629895077
+umap,2.0,0.1,25.0,0.640247789956212
