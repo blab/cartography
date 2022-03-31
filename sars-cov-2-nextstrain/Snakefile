@@ -108,6 +108,10 @@ rule sarscov2_fix_alt_snps:
                             pieces[4] = new_alt
 
                         line = "\t".join(pieces)
+                    elif line[:2] == "##":
+                        # Skip header lines other than the #CHROM line, since
+                        # Pixy complains about these as being "invalid".
+                        continue
 
                     oh.write(line)
 
@@ -153,7 +157,9 @@ rule sarscov2_nucleotide_diversity:
             --populations {input.populations} \
             --window_size {params.window_size} \
             --output_folder {params.output_dir} \
-            --output_prefix {params.output_prefix}
+            --output_prefix {params.output_prefix};
+
+        rm -f sars-cov-2-nextstrain/results/pixy*.tmp
         """
 
 rule sarscov2_make_clades:
