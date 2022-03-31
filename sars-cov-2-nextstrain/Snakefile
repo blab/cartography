@@ -351,7 +351,7 @@ rule sarscov2_annotate_tree:
     conda: "../cartography.yml"
     shell:
         """
-        python3 sars-cov-2-nextstrain/scripts/annotate_tree.py \
+        python3 notebooks/scripts/annotate_tree.py \
             --tree {input.tree} \
             --node-data {input.embeddings} \
             --output {output.auspice_tree}
