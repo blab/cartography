@@ -6,9 +6,7 @@ MERS_MULLER_STRAINS = pd.read_csv(
 
 rule mers_muller:
     input:
-        "mers-muller/results/tMRCAs.tsv",
-        "mers-muller/results/embed_mds.pdf",
-        "results/tMRCA_by_embedding_distance.pdf",
+        "docs/figures/mers-embedding-distance-by-tMRCA.png",
 
 rule mers_muller_calculate_strain_tmrcas:
     input:
@@ -96,6 +94,29 @@ rule mers_muller_create_distance_matrix:
             --output {output.output}
         """
 
+rule mers_muller_embed_pca:
+    input:
+        alignment="mers-muller/results/aligned.fasta",
+        cluster="mers-nextstrain/results/pca_parameters.csv",
+    output:
+        dataframe="mers-muller/results/embed_pca.csv",
+        figure="mers-muller/results/embed_pca.pdf",
+        explained_variance="mers-muller/results/explained_variance_pca.csv",
+    params:
+        random_seed=RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        embed \
+            --alignment {input.alignment} \
+            --cluster-data {input.cluster} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
+            pca \
+            --explained-variance {output.explained_variance}
+        """
+
 rule mers_muller_embed_mds:
     message: "Creating the embedding for MDS"
     input:
@@ -118,12 +139,59 @@ rule mers_muller_embed_mds:
             mds
         """
 
+rule mers_muller_embed_tsne:
+    input:
+        alignment="mers-muller/results/aligned.fasta",
+        distance_matrix="mers-muller/results/distance_matrix.csv",
+        cluster="mers-nextstrain/results/t-sne_parameters.csv",
+    output:
+        dataframe="mers-muller/results/embed_t-sne.csv",
+        figure="mers-muller/results/embed_t-sne.pdf",
+    params:
+        random_seed=RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        embed \
+            --alignment {input.alignment} \
+            --distance-matrix {input.distance_matrix} \
+            --cluster-data {input.cluster} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
+            t-sne
+        """
+
+rule mers_muller_embed_umap:
+    input:
+        distance_matrix="mers-muller/results/distance_matrix.csv",
+        cluster="mers-nextstrain/results/umap_parameters.csv",
+    output:
+        dataframe="mers-muller/results/embed_umap.csv",
+        figure="mers-muller/results/embed_umap.pdf",
+    params:
+        random_seed=RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        embed \
+            --distance-matrix {input.distance_matrix} \
+            --cluster-data {input.cluster} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
+            umap
+        """
+
 rule mers_muller_plot_tmrca_vs_embedding_distances:
     input:
         tmrcas="mers-muller/results/tMRCAs.tsv",
-        embedding="mers-muller/results/embed_mds.csv",
+        embedding_pca="mers-muller/results/embed_pca.csv",
+        embedding_mds="mers-muller/results/embed_mds.csv",
+        embedding_tsne="mers-muller/results/embed_t-sne.csv",
+        embedding_umap="mers-muller/results/embed_umap.csv",
     output:
-        distances_figure="mers-muller/results/tMRCA_by_embedding_distance.pdf",
+        distances_figure="docs/figures/mers-embedding-distance-by-tMRCA.png",
     conda: "../cartography.yml"
     log:
         "logs/notebooks/mers_muller_plot_tmrca_vs_embedding_distances.ipynb"
