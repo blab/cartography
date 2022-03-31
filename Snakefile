@@ -17,6 +17,8 @@ INTERNAL_NODE = [
 
 RANDOM_SEED = 314159
 
+localrules: mers_download_elife_tree, mers_download_mcc_tree, mers_unzip, mers_aggregate_clusters_by_parameters, sarscov2_aggregate_clusters_by_parameters
+
 wildcard_constraints:
     method="(pca|mds|t-sne|umap|genetic)",
     internal_node= "(ancestral|sequences)",
