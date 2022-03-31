@@ -7,12 +7,14 @@ SARS_COV_2_METHOD_PARAMETERS = Paramspace(
 
 rule sarscov2:
     input:
-        "docs/FullLinkedChartBrushableSars-cov-2.html",
-        "docs/sars-cov-2-embeddings.png",
-        "docs/fullHDBSCANChartSars-cov-2.png",
-        "docs/explainedVarianceSars-cov-2.png",
-        "docs/FullPCABrushSupplementSars-cov-2.html",
-        "docs/FullScatterplotSars-cov-2.png",
+        "docs/figures/sarscov2-embeddings-by-clade.html",
+        "docs/figures/sarscov2-embeddings-by-clade.png",
+        "docs/figures/sarscov2-embeddings-by-cluster.html",
+        "docs/figures/sarscov2-embeddings-by-cluster.png",
+        "docs/figures/sarscov2-pca-explained-variance.png",
+        "docs/figures/sarscov2-pca-by-clade.html",
+        "docs/figures/sarscov2-pca-by-clade.png",
+        "docs/figures/sarscov2-euclidean-distance-by-genetic-distance.png",
         "sars-cov-2-nextstrain/results/alignment_pi.txt",
         "docs/figures/sarscov2-pc1-vs-bases-missing.png",
         "sars-cov-2-nextstrain/results/mcc_by_method_and_distance_threshold.pdf",
@@ -370,7 +372,7 @@ rule sarscov2_tree_to_table:
     output:
         table = "sars-cov-2-nextstrain/results/table.tsv"
     params:
-        attributes = "num_date pca1 pca2 pca3 pca4 pca5 pca6 pca7 pca8 pca9 pca10 mds1 mds2 mds3 mds4 tsne_x tsne_y umap_x umap_y clade_membership pango_lineage pca_label mds_label umap_label t-sne_label pca_label_default mds_label_default umap_label_default t-sne_label_default"
+        attributes = "num_date clade_membership pango_lineage"
     conda: "../cartography.yml"
     shell:
         """
@@ -378,6 +380,41 @@ rule sarscov2_tree_to_table:
             {input.tree} \
             {output.table} \
             --attributes {params.attributes}
+        """
+
+rule sarscov2_create_distance_dataframe:
+    input:
+        dataframe_pca = "sars-cov-2-nextstrain/results/embed_pca.csv",
+        dataframe_mds = "sars-cov-2-nextstrain/results/embed_mds.csv",
+        dataframe_tsne = "sars-cov-2-nextstrain/results/embed_t-sne.csv",
+        dataframe_umap = "sars-cov-2-nextstrain/results/embed_umap.csv",
+    output:
+        metadata = "sars-cov-2-nextstrain/results/embedding_data.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/make_table.py \
+            --tables {input} \
+            --separator ',' \
+            --output {output.metadata}
+        """
+
+rule sarscov2_training_annotate_embeddings:
+    input:
+        left="sars-cov-2-nextstrain/results/table.tsv",
+        right="sars-cov-2-nextstrain/results/embedding_data.csv",
+    output:
+        table="sars-cov-2-nextstrain/results/annotated_embeddings.tsv",
+    conda: "../cartography.yml"
+    params:
+        join_on="strain",
+    shell:
+        """
+        python3 notebooks/scripts/join_tables.py \
+            --left {input.left} \
+            --right {input.right} \
+            --on {params.join_on} \
+            --output {output.table}
         """
 
 rule sarscov2_scatterplot:
@@ -415,12 +452,10 @@ rule sarscov2_cluster_metadata:
     output:
         dataframe = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_{method}.csv",
     conda: "../cartography.yml"
-    params:
-        method = "{method}"
     shell:
         """
         python3 notebooks/scripts/metadata_HDBSCAN.py \
-            --method {params.method} \
+            --method {wildcards.method} \
             --embedding {input.embedding} \
             --metadata {input.metadata} \
             --cluster-data {input.cluster} \
@@ -435,79 +470,68 @@ rule sarscov2_concat_HDBSCAN_table:
        dataframe_tsne = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_t-sne.csv",
        dataframe_umap = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_umap.csv",
     output:
-        metadata = "sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv"
+        metadata = "sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv",
     params:
         column = "MCC",
-        dataframes = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_pca.csv results/HDBSCAN_metadata_mds.csv results/HDBSCAN_metadata_t-sne.csv results/HDBSCAN_metadata_umap.csv"
     conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/concatenate_tables.py \
-            --tables {params.dataframes} \
+            --tables {input.dataframe_pca} {input.dataframe_mds} {input.dataframe_tsne} {input.dataframe_umap} \
             --separator ',' \
             --sort-by {params.column} \
             --output {output.metadata}
         """
 
 rule sarscov2_concat_scatterplot_table:
-    message: "concatenating all the scatterplot metadata into one csv dataframe"
     input:
        dataframe_pca = "sars-cov-2-nextstrain/results/scatterplot_pca_metadata.csv",
        dataframe_mds = "sars-cov-2-nextstrain/results/scatterplot_mds_metadata.csv",
        dataframe_tsne = "sars-cov-2-nextstrain/results/scatterplot_t-sne_metadata.csv",
-       dataframe_umap = "sars-cov-2-nextstrain/results/scatterplot_umap_metadata.csv"
+       dataframe_umap = "sars-cov-2-nextstrain/results/scatterplot_umap_metadata.csv",
     output:
-        metadata = "sars-cov-2-nextstrain/results/full_Scatterplot_metadata.csv"
+        metadata = "sars-cov-2-nextstrain/results/full_Scatterplot_metadata.csv",
     params:
         column = "pearson_coef",
-        dataframes = "sars-cov-2-nextstrain/results/scatterplot_pca_metadata.csv results/scatterplot_mds_metadata.csv results/scatterplot_t-sne_metadata.csv results/scatterplot_umap_metadata.csv"
     conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/concatenate_tables.py \
-            --tables {params.dataframes} \
+            --tables {input.dataframe_pca} {input.dataframe_mds} {input.dataframe_tsne} {input.dataframe_umap} \
             --separator ',' \
             --sort-by {params.column} \
             --output {output.metadata}
         """
 
-rule sarscov2_create_notebook_docs:
-    message: "creating linked and grouped charts using the jupyter notebook"
+rule sarscov2_create_scatterplot_figure:
     input:
-        colors = "notebooks/config/color_schemes.tsv",
-
-        #Charts, tree:
-        node_df = "sars-cov-2-nextstrain/results/table.tsv",
-
-        pca_df = "sars-cov-2-nextstrain/results/embed_pca.csv",
-        explained_variance_pca = "sars-cov-2-nextstrain/results/explained_variance_pca.csv",
-
-        mds_df = "sars-cov-2-nextstrain/results/embed_mds.csv",
-        tsne_df = "sars-cov-2-nextstrain/results/embed_t-sne.csv",
-        umap_df = "sars-cov-2-nextstrain/results/embed_umap.csv",
-
-        #Scatterplot:
+        scatterplot_metadata="sars-cov-2-nextstrain/results/full_Scatterplot_metadata.csv",
         scatterplot_pca = "sars-cov-2-nextstrain/results/scatterplot_pca.csv",
-        scatterplot_pca_metadata = "sars-cov-2-nextstrain/results/scatterplot_pca_metadata.csv",
-
         scatterplot_mds = "sars-cov-2-nextstrain/results/scatterplot_mds.csv",
-        scatterplot_mds_metadata = "sars-cov-2-nextstrain/results/scatterplot_mds_metadata.csv",
-
         scatterplot_tsne = "sars-cov-2-nextstrain/results/scatterplot_t-sne.csv",
-        scatterplot_tsne_metadata = "sars-cov-2-nextstrain/results/scatterplot_t-sne_metadata.csv",
-
         scatterplot_umap = "sars-cov-2-nextstrain/results/scatterplot_umap.csv",
-        scatterplot_umap_metadata = "sars-cov-2-nextstrain/results/scatterplot_umap_metadata.csv",
     output:
-        Scatterplot = "docs/FullScatterplotSars-cov-2.png",
-        fullChart = "docs/FullLinkedChartBrushableSars-cov-2.html",
-        fullChartPNG = "docs/sars-cov-2-embeddings.png",
-        PCA_Supplement = "docs/FullPCABrushSupplementSars-cov-2.html",
-        PCA_Supplement_PNG = "docs/FullPCABrushSupplementSars-cov-2.png",
-        Explained_variance_PCA = "docs/explainedVarianceSars-cov-2.png",
-        fullChartHDBSCAN = "docs/fullHDBSCANChartSars-cov-2.html",
-        fullChartHDBSCANPNG = "docs/fullHDBSCANChartSars-cov-2.png"
-
+        scatterplot = "docs/figures/sarscov2-euclidean-distance-by-genetic-distance.png",
     conda: "../cartography.yml"
     notebook:
-        "2021-05-11FinalNotebookSars.ipynb"
+        "2022-03-31-scatterplot-figure.py.ipynb"
+
+rule sarscov2_create_notebook_docs:
+    input:
+        colors="notebooks/config/color_schemes.tsv",
+        annotated_embeddings="sars-cov-2-nextstrain/results/annotated_embeddings.tsv",
+        accuracy_table="sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv",
+        explained_variance_pca = "sars-cov-2-nextstrain/results/explained_variance_pca.csv",
+    output:
+        fullChart="docs/figures/sarscov2-embeddings-by-clade.html",
+        fullChartPNG="docs/figures/sarscov2-embeddings-by-clade.png",
+        fullChartHDBSCAN="docs/figures/sarscov2-embeddings-by-cluster.html",
+        fullChartHDBSCANPNG="docs/figures/sarscov2-embeddings-by-cluster.png",
+        Explained_variance_PCA="docs/figures/sarscov2-pca-explained-variance.png",
+        PCA_Supplement="docs/figures/sarscov2-pca-by-clade.html",
+        PCA_Supplement_PNG="docs/figures/sarscov2-pca-by-clade.png",
+        MDS_Supplement="docs/figures/sarscov2-mds-by-clade.html",
+        MDS_Supplement_PNG="docs/figures/sarscov2-mds-by-clade.png",
+    conda: "../cartography.yml"
+    notebook:
+        "2022-03-29-final-figures.py.ipynb"
