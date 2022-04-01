@@ -1,20 +1,19 @@
-rule all:
+rule manuscript:
     input:
         "cartography.pdf",
         #"cartography.html",
-        "total_HDBSCAN_table.csv"
+        "total_HDBSCAN_table.txt",
 
 rule concat_HDBSCAN_tables:
     input:
-        Flu_KDE = "../seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv",
-        Zika_KDE = "../zika-nextstrain/results/full_HDBSCAN_metadata.csv",
-        MERS_KDE = "../mers-nextstrain/results/full_HDBSCAN_metadata.csv",
-        SARS_KDE = "../sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv"
+        Flu_KDE = "seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv",
+        MERS_KDE = "mers-nextstrain/results/full_HDBSCAN_metadata.csv",
+        SARS_KDE = "sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv"
     output:
         fullKDE = "total_HDBSCAN_table.csv",
         table = "total_HDBSCAN_table.txt"
     params:
-        disease_names = "Influenza Zika MERS Sars-CoV-2",
+        disease_names = "Influenza MERS Sars-CoV-2",
         dataframes = "../seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv ../zika-nextstrain/results/full_HDBSCAN_metadata.csv ../mers-nextstrain/results/full_HDBSCAN_metadata.csv ../sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv"
     conda: "../cartography.yml"
     shell:
@@ -28,17 +27,15 @@ rule concat_HDBSCAN_tables:
 
 rule manuscript_pdf:
     input:
-        manuscript="cartography.tex",
-        bibliography="cartography.bib",
+        *rules.pathogens.input,
+        manuscript="docs/cartography.tex",
+        bibliography="docs/cartography.bib",
     output:
-        manuscript = "cartography.pdf",
+        manuscript = "docs/cartography.pdf",
     conda: "../cartography.yml"
     shell:
         """
-        pdflatex -draftmode {input.manuscript};
-        bibtex cartography;
-        pdflatex -draftmode {input.manuscript};
-        pdflatex {input.manuscript};
+        cd docs && bash build.sh
         """
 
 rule manuscript_html:

@@ -17,7 +17,13 @@ INTERNAL_NODE = [
 
 RANDOM_SEED = 314159
 
-localrules: mers_download_elife_tree, mers_download_mcc_tree, mers_unzip, mers_aggregate_clusters_by_parameters, sarscov2_aggregate_clusters_by_parameters
+localrules:
+    seasonal_flu_training_aggregate_clusters_by_parameters,
+    mers_download_elife_tree,
+    mers_download_mcc_tree,
+    mers_unzip,
+    mers_aggregate_clusters_by_parameters,
+    sarscov2_aggregate_clusters_by_parameters,
 
 wildcard_constraints:
     method="(pca|mds|t-sne|umap|genetic)",
@@ -54,4 +60,4 @@ rule pathogens:
         *rules.sarscov2.input,
 
 # Include rules for the manuscript.
-#include: "docs/Snakefile"
+include: "docs/Snakefile"

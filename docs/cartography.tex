@@ -149,7 +149,7 @@ These results suggest that t-SNE maintains both local and global structure, but 
 
 \begin{figure}[htb]
   \begin{center}
-  \includegraphics[width=\columnwidth]{flu-embeddings}
+  \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-embeddings-by-clade.png}
   \caption{
     The phylogeny of influenza A/H3N2 viruses (top) shows the evolutionary relationships among viruses including clades, or viruses that share the same mutations and descend from the same common ancestor.
     Reduced dimensionality embeddings of genetic sequences into two dimensions by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right) generally recapitulate groups of viruses into clades without inferring ancestral relationships.
@@ -167,7 +167,7 @@ Genomes that differed by more than $\approx$20 nucleotides were equally as likel
 
 \begin{figure}[htb]
   \begin{center}
-  \includegraphics[width=\columnwidth]{FullScatterplotFlu.png}
+  \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png}
   \caption{
     The mapping between Euclidean and Genetic distance assess the strength of both the local and global structure of the embedding recapitulation.
     The scatterplot for PCA (upper left), MDS (upper right), t-SNE (lower left), and UMAP (lower right) consistently exhibit linear relationships for pairs of strains that differ by around 20 nucleotides.
@@ -194,7 +194,7 @@ These results indicate that nonlinear embeddings of t-SNE and UMAP could be bett
 
 \begin{figure}[htb]
   \begin{center}
-  \includegraphics[width=\columnwidth]{fullHDBSCANChartFlu.png}
+  \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-embeddings-by-cluster.png}
   \caption{
     The embeddings colored by their HDBSCAN label, with the distance threshold defined by the threshold that preserved the greatest amount of clade relationships.
     The chart for PCA (top left), MDS (middle left), t-SNE (middle left), and UMAP (bottom left) generally recapitulate groups of viruses into clades without inferring ancestral relationships, and the trees on the righthand side describes how these clade grouping appear on the tree, which does infer ancestral relations.
@@ -206,32 +206,6 @@ These results indicate that nonlinear embeddings of t-SNE and UMAP could be bett
 To understand whether these embedding methods could be used to cluster previously unseen genomes for the same virus, we applied each method to the test dataset spanning 2018--2020, clustered genomes in the embedding space with HDBSCAN, and calculated the accuracy of the cluster assignments based on previously defined clades.
 
 \subsection*{Joint embeddings of hemagglutinin and neuraminidase genomes identify seasonal influenza virus A/H3N2 reassortment events}
-
-\subsection*{Zika virus clusters reveal geographic patterns of the 2013--2018 epidemic}
-
-All four dimensionality reduction methods recapitulated phylogenetic patterns observed in the phylogeny (Figure~\ref{fig:zika-embeddings}).
-PCA, after imputing missing data, had a similar structure to the findings in Metsky et.al., where the clades were loosely clustered on a continuum of different clades instead of tightly clustered as seen in influenza.
-Geographical introductions and outbreaks isolated from others were placed at larger Euclidean distances than related introductions.
-An example is clade c2, an outbreak in Singapore and Thailand separated from the geographical introductions in the Americas.
-Clade c10 is also a good example of a densely sampled outbreak in Colombia (introduced from Brazil) that forms distinct clusters in all the embeddings.
-PC1 and PC2 delineate the variance between c2 and the other clades (variance between Asia and the Americas), and PC3 and PC4 are used to show the variance between clade c4 and c3 compared to clade c6 and c9 (variance within the Americas).
-PC1 and PC2 defined clusters of outbreaks not noted in the phylogenetic tree, such as a small Brazil-only outbreak as well as a cluster from China and Samoa.
-Clade c9 is a second parent of an outbreak in Brazil that spread to the US Virgin Islands and Puerto Rico, where c6 is a child outbreak that spread into neighboring countries.
-All four of the embeddings recognized their relatedness and placed clades c6 and c9 in close proximity to each other.
-Clade c4, a Central American outbreak that spread to Puerto Rico and other neighboring countries, was not placed closely to clades c6 and c9 even given similar geographical locations and introduction times.
-This suggests that strains from the same introduction cluster together, and do not cluster just by where they were introduced.
-
-\begin{figure}[htb]
-  \begin{center}
-  \includegraphics[width=\columnwidth]{zika-embeddings}
-  \caption{
-    Genetic cartography of Zika strains by dimensionality reduction methods.
-    PCA (components 1 and 2 upper left, components 3 and 4 upper right), MDS (middle left and middle right), t-SNE (lower left), and UMAP (lower right) compared to inferred phylogeny (upper plot).
-    PC1 and PC2 delineate the variance between the Americas and Asia, and PC3 and PC4 are included to better display the variance within the Americas.
-  }
-  \label{fig:zika-embeddings}
-  \end{center}
-\end{figure}
 
 \subsection*{MERS-CoV clusters correspond to host-specific outbreaks}
 
