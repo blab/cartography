@@ -1,2 +1,0 @@
-,MCC,accuracy,threshold,embedding,TN,FN,TP,FP,roc_fpr,roc_tpr,roc_thresholds
-0,0.35,0.988,-6.867,MDS,6,2,2560,30,[0.         0.83333333 1.        ],[0.         0.99921936 1.        ],[ 2.  1. -1.]
