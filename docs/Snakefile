@@ -1,25 +1,26 @@
 rule manuscript:
     input:
-        "cartography.pdf",
+        "docs/cartography.pdf",
         #"cartography.html",
-        "total_HDBSCAN_table.txt",
+        "docs/tables/total_HDBSCAN_table.txt",
 
 rule concat_HDBSCAN_tables:
     input:
-        Flu_KDE = "seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv",
-        MERS_KDE = "mers-nextstrain/results/full_HDBSCAN_metadata.csv",
-        SARS_KDE = "sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv"
+        tables=[
+            "seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv",
+            "mers-nextstrain/results/full_HDBSCAN_metadata.csv",
+            "sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv",
+        ]
     output:
-        fullKDE = "total_HDBSCAN_table.csv",
-        table = "total_HDBSCAN_table.txt"
+        fullKDE = "docs/tables/total_HDBSCAN_table.csv",
+        table = "docs/tables/total_HDBSCAN_table.txt"
     params:
-        disease_names = "Influenza MERS Sars-CoV-2",
-        dataframes = "../seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv ../zika-nextstrain/results/full_HDBSCAN_metadata.csv ../mers-nextstrain/results/full_HDBSCAN_metadata.csv ../sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv"
+        disease_names = "H3N2 MERS SARS-CoV-2",
     conda: "../cartography.yml"
     shell:
         """
-        python3 ../notebooks/scripts/concat_KDE_tables.py \
-            --tables {params.dataframes} \
+        python3 notebooks/scripts/concat_KDE_tables.py \
+            --tables {input.tables} \
             --output-csv {output.fullKDE} \
             --output-table {output.table} \
             --disease-names {params.disease_names}
