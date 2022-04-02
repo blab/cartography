@@ -309,13 +309,14 @@ rule seasonal_flu_reassortment_find_mccs:
     output:
         mccs="ha-na-nextstrain/results/treeknit_results/MCCs.dat",
     params:
-        gamma=2,
+        gamma=2.5,
     conda: "../cartography.yml"
     shell:
         """
         ~/.julia/bin/treeknit \
             {input.ha_tree} \
             {input.na_tree} \
+            -o=ha-na-nextstrain/results/treeknit_results \
             -g={params.gamma}
         """
 

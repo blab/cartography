@@ -191,6 +191,7 @@
         "author URL"
     ],
     "filters": [
+      "MCC",
       "pca_label",
       "mds_label",
       "t-sne_label",
