@@ -125,6 +125,20 @@ These results inform our recommendations for future applications of these method
 
 \section*{Results}
 
+\begin{table}[htb]
+  \begin{center}
+    \scalebox{0.95}{
+      \input{tables/accuracy_table.tex}
+    }
+    \caption{
+      Accuracy of embedding methods per human pathogenic virus sorted by Matthew's correlation coefficient (MCC).
+      The corresponding contingency matrix values for true positives (TP), true negatives (TN), false positives (FP), and false negatives (FN) are also included.
+      Threshold refers to the distance threshold used to assign clusters with HDBSCAN.
+    }
+    \label{table_accuracy}
+  \end{center}
+\end{table}
+
 \subsection*{Embedding clusters recapitulate phylogenetic clades for seasonal influenza A/H3N2}
 
 Seasonal influenza A/H3N2's hemagglutinin (HA) sequences provide an ideal positive control to test dimensionality reduction methods and clustering.

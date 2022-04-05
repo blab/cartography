@@ -2,7 +2,6 @@ rule manuscript:
     input:
         "docs/cartography.pdf",
         #"cartography.html",
-        "docs/tables/total_HDBSCAN_table.txt",
 
 rule concat_HDBSCAN_tables:
     input:
@@ -13,9 +12,9 @@ rule concat_HDBSCAN_tables:
         ]
     output:
         fullKDE = "docs/tables/total_HDBSCAN_table.csv",
-        table = "docs/tables/total_HDBSCAN_table.txt"
+        table = "docs/tables/accuracy_table.tex",
     params:
-        disease_names = "H3N2 MERS SARS-CoV-2",
+        disease_names = ["Influenza H3N2", "MERS-CoV", "SARS-CoV-2"],
     conda: "../cartography.yml"
     shell:
         """
@@ -23,7 +22,7 @@ rule concat_HDBSCAN_tables:
             --tables {input.tables} \
             --output-csv {output.fullKDE} \
             --output-table {output.table} \
-            --disease-names {params.disease_names}
+            --disease-names {params.disease_names:q}
         """
 
 rule manuscript_pdf:
@@ -31,6 +30,7 @@ rule manuscript_pdf:
         *rules.pathogens.input,
         manuscript="docs/cartography.tex",
         bibliography="docs/cartography.bib",
+        accuracy_table="docs/tables/accuracy_table.tex",
     output:
         manuscript = "docs/cartography.pdf",
     conda: "../cartography.yml"

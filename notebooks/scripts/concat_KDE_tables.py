@@ -28,12 +28,30 @@ if __name__ == "__main__":
         for i in A:
             if isinstance(i,list): rt.extend(flatten(i))
             else: rt.append(i)
-        return rt  
+        return rt
 
     df.index = flatten(table_index)
+    df.index.name = "Pathogen"
+
+    embedding_name_by_abbreviation = {
+        "pca": "PCA",
+        "mds": "MDS",
+        "t-sne": "t-SNE",
+        "umap": "UMAP",
+    }
+    df["embedding"] = df["embedding"].map(embedding_name_by_abbreviation)
+    df = df.rename(columns={
+        "embedding": "Embedding",
+        "threshold": "Threshold",
+    })
 
     if args.output_csv:
         df.to_csv(args.output_csv, sep=args.separator, header=True, index=True)
+
     if args.output_table:
-        with open(args.output_table, 'w') as f:
-            f.write(df.to_markdown(index=True, tablefmt="grid"))
+        df.reset_index().to_latex(
+            args.output_table,
+            bold_rows=True,
+            index=False,
+            columns=["Pathogen", "Embedding", "MCC", "TP", "TN", "FP", "FN", "Threshold"],
+        )
