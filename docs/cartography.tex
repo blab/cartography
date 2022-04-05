@@ -72,14 +72,15 @@
 \title{Genetic cartography reveals ancestral relationships of human pathogenic viruses}
 
 \author[1]{Sravani Nanduri}
-\author[2]{John Huddleston}
 \author[2]{Allison Black}
-\author[2*]{Trevor Bedford}
+\author[2,3]{Trevor Bedford}
+\author[2*]{John Huddleston}
 
-\affil[1]{Issaquah High School, Issaquah, WA, USA}
+\affil[1]{Paul G. Allen School of Computer Science and Engineering, University of Washington, Seattle, WA, USA}
 \affil[2]{Vaccine and Infectious Disease Division, Fred Hutchinson Cancer Research Center, Seattle, WA, USA}
+\affil[3]{Howard Hughes Medical Institute, Seattle, WA, USA}
 
-\corr{trevor@bedford.io}{TB}
+\corr{jhuddles@fredhutch.org}{JH}
 
 \date{}
 
@@ -156,7 +157,6 @@ We applied this general approach in an exhaustive grid search to identify the op
 All four embedding methods qualitatively recapitulated clade-level groupings observed in the phylogeny (Figure~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}).
 Strains from the same clade generally grouped tightly together in PCA, t-SNE, and UMAP embeddings.
 While MDS followed this general pattern, it also produced separate pairs of A3 and A4 clusters that did not correspond to meaningful subclades.
-\jhc{Is MDS picking up on other characteristics of the sequence data like the number of Ns? Or maybe MDS needs more dimensions to represent these data and the current constraint of 2 dimensions produces suboptimal results.}
 All of the embedding methods clearly delineated larger phylogenetic clades into separate spaces (e.g., A1 and A2) and, with the exception of t-SNE, placed related subclades closer together (e.g., A2 and A2/re or the A1b subclades).
 The t-SNE embedding placed distantly related pairs of clades like 3c3.A and A2 as close together as closely-related clades like A2 and its subclade A2/re.
 These results suggest that t-SNE maintains both local and global structure, but that our interpretation of the absolute distance between points in these embeddings cannot be linear.
@@ -167,7 +167,6 @@ These results suggest that t-SNE maintains both local and global structure, but 
   \caption{
     The phylogeny of influenza A/H3N2 viruses (top) shows the evolutionary relationships among viruses including clades, or viruses that share the same mutations and descend from the same common ancestor.
     Reduced dimensionality embeddings of genetic sequences into two dimensions by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right) generally recapitulate groups of viruses into clades without inferring ancestral relationships.
-    \jhc{We should annotate clade membership in the tooltip of the interactive figure.}
   }
   \label{fig:seasonal-influenza-h3n2-ha-embeddings}
   \end{center}
