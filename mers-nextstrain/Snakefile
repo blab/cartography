@@ -230,12 +230,12 @@ rule mers_cluster_by_parameters:
     input:
         alignment="mers-nextstrain/results/aligned.fasta",
         distance_matrix="mers-nextstrain/results/distance_matrix.csv",
-        clades="mers-nextstrain/data/manual_multihost_clades.json",
+        clades="mers-nextstrain/results/clades.json",
     output:
         table=f"mers-nextstrain/results/gridsearch/{MERS_METHOD_PARAMETERS.wildcard_pattern}.tsv",
     params:
         method_parameters=MERS_METHOD_PARAMETERS.instance,
-        clade_attribute = "multihost_clade_membership"
+        clade_attribute = "clade_membership"
     resources:
         runtime="0:30:00",
         mem_mb=4000,
@@ -412,7 +412,6 @@ rule mers_export:
         branch_lengths = "mers-nextstrain/results/node_data.json",
         embeddings = expand("mers-nextstrain/results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
         clades = "mers-nextstrain/results/clades.json",
-        multihost_clades = "mers-nextstrain/data/manual_multihost_clades.json",
         auspice_config = "mers-nextstrain/config/auspice_config.json",
         colors = "mers-nextstrain/config/colors.tsv",
     output:
@@ -423,7 +422,7 @@ rule mers_export:
         augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.embeddings} {input.clades} {input.multihost_clades} \
+            --node-data {input.branch_lengths} {input.embeddings} {input.clades} \
             --auspice-config {input.auspice_config} \
             --colors {input.colors} \
             --output {output.auspice_tree}
@@ -436,7 +435,7 @@ rule mers_tree_to_table:
     output:
         table = "mers-nextstrain/results/table.tsv"
     params:
-        attributes = "num_date host clade_membership multihost_clade_membership"
+        attributes = "num_date host clade_membership"
     conda: "../cartography.yml"
     shell:
         """
@@ -492,7 +491,7 @@ rule mers_cluster_metadata:
         dataframe = "mers-nextstrain/results/HDBSCAN_metadata_{method}.csv",
     conda: "../cartography.yml"
     params:
-        clade_column="multihost_clade_membership",
+        clade_column="clade_membership",
         missing_data_value="unassigned",
     shell:
         """
