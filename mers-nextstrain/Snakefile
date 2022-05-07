@@ -379,6 +379,25 @@ rule mers_create_node_output:
             --output {output.node_data}
         """
 
+rule mers_calculate_tmrca_distances:
+    input:
+        tree="mers-nextstrain/results/tree.nwk",
+        dates="mers-nextstrain/results/node_data.json",
+    output:
+        distances="mers-nextstrain/results/tmrca_distances.tsv",
+    conda: "../cartography.yml"
+    benchmark:
+        "benchmarks/mers_calculate_tmrca_distances.txt"
+    log:
+        "logs/mers_calculate_tmrca_distances.txt"
+    shell:
+        """
+        python3 notebooks/scripts/calculate_tmrca_distances.py \
+            --tree {input.tree} \
+            --dates {input.dates} \
+            --output {output.distances} &> {log}
+        """
+
 rule mers_scatterplot:
     message: "Creating the scatterplot (PNG, dataframe)"
     input:
