@@ -3,6 +3,7 @@ import argparse
 import Bio.Phylo
 import json
 import numpy as np
+import pandas as pd
 from scipy.spatial.distance import squareform
 
 
@@ -27,7 +28,7 @@ def annotate_parents_for_tree(tree):
     return tree
 
 
-def calculate_distance_between_tips(tree, tip_a, tip_b, dates):
+def calculate_distance_between_tips(tree, tip_a, tip_b, dates, date_attribute):
     """Calculate distance between tips.
     """
     # Find the MRCA of the given tips in the given tree.
@@ -36,20 +37,20 @@ def calculate_distance_between_tips(tree, tip_a, tip_b, dates):
         mrca = mrca.parent
 
     # Calculate the distance from each tip to the MRCA.
-    mrca_date = dates[mrca.name]["num_date"]
-    tip_a_date = dates[tip_a.name]["num_date"]
-    tip_b_date = dates[tip_b.name]["num_date"]
-    latest_tip_date = max(tip_a_date, tip_b_date)
+    mrca_date = dates[mrca.name][date_attribute]
+    tip_a_date = dates[tip_a.name][date_attribute]
+    tip_b_date = dates[tip_b.name][date_attribute]
 
     # Return the maximum distance of the two tips.
-    return latest_tip_date - mrca_date
+    return (tip_a_date - mrca_date) + (tip_b_date - mrca_date)
 
 
 if __name__ == '__main__':
     # Configure command line interface.
     parser = argparse.ArgumentParser()
     parser.add_argument("--tree", required=True, help="Newick tree")
-    parser.add_argument("--dates", required=True, help="Augur node data JSON file with 'num_date' numeric date annotations per node (as from augur refine output)")
+    parser.add_argument("--dates", required=True, help="Augur node data JSON file with numeric date annotations per node (as from augur refine output)")
+    parser.add_argument("--date-attribute", default="num_date", help="name of attribute storing the numeric date per node")
     parser.add_argument("--output", required=True, help="TSV file of pairwise distances to the tMRCA for each pair of tips in the tree, sorted by tip name")
     args = parser.parse_args()
 
@@ -86,8 +87,15 @@ if __name__ == '__main__':
                 tips[i],
                 tips[j],
                 dates,
+                args.date_attribute,
             )
             distances[index] = distance
 
     # Save distances.
-    np.savetxt(args.output, distances)
+    tip_names = [tip.name for tip in tips]
+    distance_matrix = pd.DataFrame(squareform(distances), index=tip_names)
+    pd.DataFrame(distance_matrix).to_csv(
+        args.output,
+        index=True,
+        float_format="%.4f",
+    )

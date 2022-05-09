@@ -384,7 +384,7 @@ rule mers_calculate_tmrca_distances:
         tree="mers-nextstrain/results/tree.nwk",
         dates="mers-nextstrain/results/node_data.json",
     output:
-        distances="mers-nextstrain/results/tmrca_distances.tsv",
+        distances="mers-nextstrain/results/tmrca_distances.csv",
     conda: "../cartography.yml"
     benchmark:
         "benchmarks/mers_calculate_tmrca_distances.txt"
@@ -396,6 +396,47 @@ rule mers_calculate_tmrca_distances:
             --tree {input.tree} \
             --dates {input.dates} \
             --output {output.distances} &> {log}
+        """
+
+rule mers_calculate_euclidean_distances:
+    input:
+        embedding="mers-nextstrain/results/embed_{method}.csv",
+    output:
+        distances="mers-nextstrain/results/euclidean_distances_{method}.csv",
+    conda: "../cartography.yml"
+    benchmark:
+        "benchmarks/mers_calculate_euclidean_distances_{method}.txt"
+    log:
+        "logs/mers_calculate_euclidean_distances_{method}.txt"
+    shell:
+        """
+        python3 notebooks/scripts/calculate_euclidean_distances.py \
+            --embedding {input.embedding} \
+            --output {output.distances} &> {log}
+        """
+
+rule mers_plot_euclidean_distance_by_tmrca_distance:
+    input:
+        tmrca_distances="mers-nextstrain/results/tmrca_distances.csv",
+        euclidean_distances="mers-nextstrain/results/euclidean_distances_{method}.csv",
+    output:
+        figure="mers-nextstrain/results/euclidean_distance_by_tmrca_{method}.pdf",
+    conda: "../cartography.yml"
+    benchmark:
+        "benchmarks/mers_plot_euclidean_distance_by_tmrca_distance_{method}.txt"
+    log:
+        "logs/mers_plot_euclidean_distance_by_tmrca_distance_{method}.txt"
+    params:
+        x_axis_label="Distance to tMRCA (years)",
+        y_axis_label=lambda wildcards: f"Euclidean distance ({wildcards.method})",
+    shell:
+        """
+        python3 notebooks/scripts/plot_distances.py \
+            --x {input.tmrca_distances} \
+            --y {input.euclidean_distances} \
+            --x-axis-label {params.x_axis_label:q} \
+            --y-axis-label {params.y_axis_label:q} \
+            --output {output.figure}
         """
 
 rule mers_scatterplot:
