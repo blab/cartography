@@ -80,7 +80,7 @@ def embed(args):
     # Setting Random seed for numpy
     np.random.seed(seed=args.random_seed)
 
-    if args.output_dataframe is None:
+    if args.output_dataframe is None and args.output_figure is None:
         print("You must specify one of the outputs", file=sys.stderr)
         sys.exit(1)
 
