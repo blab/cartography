@@ -3,6 +3,9 @@ min_version("6.0")
 
 import pandas as pd
 
+# Set snakemake directory
+SNAKEMAKE_DIR = os.path.dirname(workflow.snakefile)
+
 # Define top-level configuration parameters.
 EMBEDDING_METHODS = [
     "pca",
@@ -41,6 +44,7 @@ rule all:
         "docs/cartography.html",
 
 # Include rules for each pathogen.
+include: "simulations/coronavirus-like-recombination/Snakefile"
 include: "seasonal-flu-nextstrain/Snakefile"
 include: "seasonal-flu-nextstrain-2018-2020/Snakefile"
 include: "ha-na-nextstrain/Snakefile"

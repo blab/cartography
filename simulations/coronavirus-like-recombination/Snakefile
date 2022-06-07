@@ -1,0 +1,19 @@
+SIMULATION_RECOMBINATION_RATES = ["low", "moderate", "high"]
+SIMULATION_RECOMBINATION_REPLICATES = list(range(1, 6))
+
+rule simulations_coronavirus_all:
+    input:
+        expand("simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/simulated_sequences.fasta",
+               recombination_rate=SIMULATION_RECOMBINATION_RATES,
+               replicate=SIMULATION_RECOMBINATION_REPLICATES)
+
+rule simulations_coronavirus_run_simulation:
+    input:
+        simulation_config = "simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/simulation_config.xml",
+    output:
+        sequences = "simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/simulated_sequences.fasta",
+    conda: "../../cartography.yaml"
+    shell:
+        """
+        cd $(dirname {output.sequences}) && java -jar {SNAKEMAKE_DIR}/simulations/santa.jar -seed={wildcards.replicate} {SNAKEMAKE_DIR}/{input.simulation_config}
+        """
