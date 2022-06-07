@@ -1,19 +1,123 @@
+SIMULATION_METHOD_PARAMETERS = Paramspace(
+    pd.read_csv(
+        "simulations/method_parameters.tsv",
+        sep="\t",
+        dtype=str,
+    )
+)
+print(SIMULATION_METHOD_PARAMETERS.columns)
 SIMULATION_RECOMBINATION_RATES = ["low", "moderate", "high"]
+SIMULATION_RECOMBINATION_RATES = ["high"]
 SIMULATION_RECOMBINATION_REPLICATES = list(range(1, 6))
+SIMULATION_RECOMBINATION_REPLICATES = [1]
 
 rule simulations_coronavirus_all:
     input:
-        expand("simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/simulated_sequences.fasta",
-               recombination_rate=SIMULATION_RECOMBINATION_RATES,
-               replicate=SIMULATION_RECOMBINATION_REPLICATES)
+        "simulations/coronavirus-like-recombination/gridsearch.tsv",
 
 rule simulations_coronavirus_run_simulation:
     input:
-        simulation_config = "simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/simulation_config.xml",
+        simulation_config="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/simulation_config.xml",
     output:
-        sequences = "simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/simulated_sequences.fasta",
+        sequences="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/simulated_sequences.fasta",
     conda: "../../cartography.yaml"
     shell:
         """
         cd $(dirname {output.sequences}) && java -jar {SNAKEMAKE_DIR}/simulations/santa.jar -seed={wildcards.replicate} {SNAKEMAKE_DIR}/{input.simulation_config}
+        """
+
+rule simulations_coronavirus_parse:
+    input:
+        sequences="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/simulated_sequences.fasta",
+    output:
+        aligned="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/aligned.fasta",
+        metadata="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/metadata.tsv",
+    conda: "../../cartography.yaml"
+    log:
+        "logs/simulations_coronavirus_parse_{recombination_rate}_{replicate}.txt"
+    params:
+        fasta_fields=["strain", "generation", "fitness"]
+    shell:
+        """
+        augur parse \
+            --sequences {input.sequences} \
+            --fields {params.fasta_fields} \
+            --output-sequences {output.aligned} \
+            --output-metadata {output.metadata} &> {log}
+        """
+
+rule simulations_coronavirus_create_distance_matrix:
+    input:
+        alignment="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/aligned.fasta",
+    output:
+        output="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/distance_matrix.csv",
+    conda: "../../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/hamming_distance_from_fasta.py \
+            --alignment {input.alignment} \
+            --output {output.output}
+        """
+
+def _get_method_parameters_argument(wildcards):
+    return " ".join([
+        f"--{key.replace('_', '-')} {value}"
+        for key, value in wildcards.items()
+        if value != "nan" and key not in ["recombination_rate", "replicate", "method"]
+    ])
+
+rule simulations_coronavirus_grid_search_embed:
+    input:
+        alignment="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/aligned.fasta",
+        distance_matrix="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/distance_matrix.csv",
+    output:
+        embedding=f"simulations/coronavirus-like-recombination/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/embedding_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv",
+        figure=f"simulations/coronavirus-like-recombination/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/embedding_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.pdf",
+    params:
+        method_parameters=SIMULATION_METHOD_PARAMETERS.instance,
+        random_seed=RANDOM_SEED,
+        method_parameters_arg=_get_method_parameters_argument,
+    resources:
+        runtime="0:30:00",
+        mem_mb=4000,
+    conda: "../../cartography.yml"
+    shell:
+        """
+        embed \
+            --alignment {input.alignment} \
+            --distance-matrix {input.distance_matrix} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.embedding} \
+            --output-figure {output.figure} \
+            {wildcards.method} \
+            {params.method_parameters_arg}
+        """
+
+rule simulations_coronavirus_grid_search_euclidean_distances:
+    input:
+        embedding=f"simulations/coronavirus-like-recombination/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/embedding_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv",
+    output:
+        distances=f"simulations/coronavirus-like-recombination/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/euclidean_distances_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.npz",
+    conda: "../../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/calculate_euclidean_distances.py \
+            --embedding {input.embedding} \
+            --output {output.distances} \
+        """
+
+rule simulations_coronavirus_aggregate_grid_search:
+    input:
+        tables=expand("simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/gridsearch/embedding_{params}.csv",
+                      recombination_rate=SIMULATION_RECOMBINATION_RATES,
+                      replicate=SIMULATION_RECOMBINATION_REPLICATES,
+                      params=SIMULATION_METHOD_PARAMETERS.instance_patterns)
+    output:
+        table="simulations/coronavirus-like-recombination/gridsearch.tsv"
+    conda: "../../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.tables} \
+            --output {output.table}
         """
