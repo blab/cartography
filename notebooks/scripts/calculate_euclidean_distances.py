@@ -8,7 +8,7 @@ if __name__ == '__main__':
     # Configure command line interface.
     parser = argparse.ArgumentParser()
     parser.add_argument("--embedding", required=True, help="embedding data frame")
-    parser.add_argument("--output", required=True, help="numpy file of pairwise distances for each pair of tips in the embedding, sorted by tip name and in compressed squareform.")
+    parser.add_argument("--output", required=True, help="CSV file of pairwise distances for each pair of tips in the embedding, sorted by tip name.")
     args = parser.parse_args()
 
     # Load embedding.
