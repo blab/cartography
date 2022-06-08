@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import argparse
-import numpy as np
 import pandas as pd
 from scipy.spatial.distance import pdist, squareform
 
@@ -29,11 +28,9 @@ if __name__ == '__main__':
     # Save distances.
     tip_names = embedding.index.values
 
-    np.savez_compressed(args.output, distances, tip_names)
-
-    # distance_matrix = pd.DataFrame(squareform(distances), index=tip_names)
-    # pd.DataFrame(distance_matrix).to_csv(
-    #     args.output,
-    #     index=True,
-    #     float_format="%.4f",
-    # )
+    distance_matrix = pd.DataFrame(squareform(distances), index=tip_names)
+    pd.DataFrame(distance_matrix).to_csv(
+        args.output,
+        index=True,
+        float_format="%.4f",
+    )
