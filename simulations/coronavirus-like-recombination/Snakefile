@@ -23,7 +23,7 @@ rule simulations_coronavirus_run_simulation:
     conda: "../../cartography.yaml"
     shell:
         """
-        cd $(dirname {output.sequences}) && java -jar {SNAKEMAKE_DIR}/simulations/santa.jar -seed={wildcards.replicate} {SNAKEMAKE_DIR}/{input.simulation_config}
+        cd $(dirname {output.sequences}) && java -jar {SNAKEMAKE_DIR}/simulations/santa-sim/dist/santa.jar -seed={wildcards.replicate} {SNAKEMAKE_DIR}/{input.simulation_config}
         """
 
 rule simulations_coronavirus_parse:
@@ -36,7 +36,7 @@ rule simulations_coronavirus_parse:
     log:
         "logs/simulations_coronavirus_parse_{recombination_rate}_{replicate}.txt"
     params:
-        fasta_fields=["strain", "generation", "fitness"]
+        fasta_fields=["strain", "generation", "fitness", "is_recombinant"]
     shell:
         """
         augur parse \
