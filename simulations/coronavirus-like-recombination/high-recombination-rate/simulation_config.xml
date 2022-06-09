@@ -54,23 +54,23 @@
 	        <replicator>
 	            <recombinantReplicator>
 					<dualInfectionProbability>0.1</dualInfectionProbability>
-					<recombinationProbability>0.0001</recombinationProbability>
+					<recombinationProbability>0.013</recombinationProbability>
 				</recombinantReplicator>
 	        </replicator>
 
             <epoch>
                 <name>epoch1</name>
-                <generationCount>500</generationCount>
+                <generationCount>150</generationCount>
             </epoch>
 
             <samplingSchedule>
                 <sampler>
-                    <atFrequency>10</atFrequency>
+                    <atFrequency>1</atFrequency>
                     <fileName>simulated_sequences.fasta</fileName>
                     <alignment>
-                    	<sampleSize>20</sampleSize>
+                    	<sampleSize>15</sampleSize>
 	                    <format>FASTA</format>
-                        <label>sample_%g_%s|%g|%f</label>
+                        <label>sample_%g_%s|%g|%f|%c</label>
                     </alignment>
                 </sampler>
             </samplingSchedule>
