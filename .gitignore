@@ -201,3 +201,6 @@ docs/cartography.suppinfo
 logs/
 slurm_logs/
 *.out
+
+replicate-*/
+benchmarks/
