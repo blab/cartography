@@ -10,13 +10,13 @@ SIMULATION_RECOMBINATION_REPLICATES = list(range(1, 6))
 
 rule simulations_coronavirus_all:
     input:
-        "simulations/coronavirus-like-recombination/summary_scores_by_recombination_rate_and_method.csv",
+        "simulations/coronavirus-like/summary_scores_by_recombination_rate_and_method.csv",
 
 rule simulations_coronavirus_run_simulation:
     input:
-        simulation_config="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/simulation_config.xml",
+        simulation_config="simulations/coronavirus-like/{recombination_rate}-recombination-rate/simulation_config.xml",
     output:
-        sequences="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/simulated_sequences.fasta",
+        sequences="simulations/coronavirus-like/{recombination_rate}-recombination-rate/replicate-{replicate}/simulated_sequences.fasta",
     conda: "../../cartography.yaml"
     resources:
         mem_mb=3000,
@@ -27,10 +27,10 @@ rule simulations_coronavirus_run_simulation:
 
 rule simulations_coronavirus_parse:
     input:
-        sequences="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/simulated_sequences.fasta",
+        sequences="simulations/coronavirus-like/{recombination_rate}-recombination-rate/replicate-{replicate}/simulated_sequences.fasta",
     output:
-        aligned="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/aligned.fasta",
-        metadata="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/metadata.tsv",
+        aligned="simulations/coronavirus-like/{recombination_rate}-recombination-rate/replicate-{replicate}/aligned.fasta",
+        metadata="simulations/coronavirus-like/{recombination_rate}-recombination-rate/replicate-{replicate}/metadata.tsv",
     conda: "../../cartography.yaml"
     log:
         "logs/simulations_coronavirus_parse_{recombination_rate}_{replicate}.txt"
@@ -47,9 +47,9 @@ rule simulations_coronavirus_parse:
 
 rule simulations_coronavirus_create_distance_matrix:
     input:
-        alignment="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/aligned.fasta",
+        alignment="simulations/coronavirus-like/{recombination_rate}-recombination-rate/replicate-{replicate}/aligned.fasta",
     output:
-        output="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/distance_matrix.csv",
+        output="simulations/coronavirus-like/{recombination_rate}-recombination-rate/replicate-{replicate}/distance_matrix.csv",
     conda: "../../cartography.yml"
     shell:
         """
@@ -67,11 +67,11 @@ def _get_method_parameters_argument(wildcards):
 
 rule simulations_coronavirus_grid_search_embed:
     input:
-        alignment="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/aligned.fasta",
-        distance_matrix="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/distance_matrix.csv",
+        alignment="simulations/coronavirus-like/{recombination_rate}-recombination-rate/replicate-{replicate}/aligned.fasta",
+        distance_matrix="simulations/coronavirus-like/{recombination_rate}-recombination-rate/replicate-{replicate}/distance_matrix.csv",
     output:
-        embedding=f"simulations/coronavirus-like-recombination/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/embedding_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv",
-        figure=f"simulations/coronavirus-like-recombination/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/embedding_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.pdf",
+        embedding=f"simulations/coronavirus-like/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/embedding_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv",
+        figure=f"simulations/coronavirus-like/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/embedding_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.pdf",
     params:
         random_seed=RANDOM_SEED,
         method_parameters_arg=_get_method_parameters_argument,
@@ -93,9 +93,9 @@ rule simulations_coronavirus_grid_search_embed:
 
 rule simulations_coronavirus_grid_search_euclidean_distances:
     input:
-        embedding=f"simulations/coronavirus-like-recombination/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/embedding_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv",
+        embedding=f"simulations/coronavirus-like/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/embedding_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv",
     output:
-        distances=f"simulations/coronavirus-like-recombination/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/euclidean_distances_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv.gz",
+        distances=f"simulations/coronavirus-like/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/euclidean_distances_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv.gz",
     conda: "../../cartography.yml"
     shell:
         """
@@ -106,11 +106,11 @@ rule simulations_coronavirus_grid_search_euclidean_distances:
 
 rule simulations_coronavirus_grid_search_plot_euclidean_distances:
     input:
-        genetic_distances="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/replicate-{replicate}/distance_matrix.csv",
-        euclidean_distances=f"simulations/coronavirus-like-recombination/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/euclidean_distances_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv.gz",
+        genetic_distances="simulations/coronavirus-like/{recombination_rate}-recombination-rate/replicate-{replicate}/distance_matrix.csv",
+        euclidean_distances=f"simulations/coronavirus-like/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/euclidean_distances_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv.gz",
     output:
-        figure=f"simulations/coronavirus-like-recombination/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/euclidean_by_genetic_distance_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.pdf",
-        statistics=f"simulations/coronavirus-like-recombination/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/euclidean_by_genetic_distance_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv",
+        figure=f"simulations/coronavirus-like/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/euclidean_by_genetic_distance_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.pdf",
+        statistics=f"simulations/coronavirus-like/{{recombination_rate}}-recombination-rate/replicate-{{replicate}}/gridsearch/euclidean_by_genetic_distance_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv",
     conda: "../../cartography.yml"
     params:
         method_parameters=SIMULATION_METHOD_PARAMETERS.instance,
@@ -129,11 +129,11 @@ rule simulations_coronavirus_grid_search_plot_euclidean_distances:
 
 rule simulations_coronavirus_aggregate_grid_search:
     input:
-        tables=expand("simulations/coronavirus-like-recombination/{{recombination_rate}}-recombination-rate/replicate-{replicate}/gridsearch/euclidean_by_genetic_distance_{params}.csv",
+        tables=expand("simulations/coronavirus-like/{{recombination_rate}}-recombination-rate/replicate-{replicate}/gridsearch/euclidean_by_genetic_distance_{params}.csv",
                       replicate=SIMULATION_RECOMBINATION_REPLICATES,
                       params=SIMULATION_METHOD_PARAMETERS.instance_patterns)
     output:
-        table="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/gridsearch.csv",
+        table="simulations/coronavirus-like/{recombination_rate}-recombination-rate/gridsearch.csv",
     conda: "../../cartography.yml"
     shell:
         """
@@ -144,16 +144,16 @@ rule simulations_coronavirus_aggregate_grid_search:
 
 rule simulations_coronavirus_summarize_grid_search:
     input:
-        table="simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/gridsearch.csv"
+        table="simulations/coronavirus-like/{recombination_rate}-recombination-rate/gridsearch.csv"
     output:
-        pca_parameters = "simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/pca_parameters.csv",
-        mds_parameters = "simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/mds_parameters.csv",
-        tsne_parameters = "simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/t-sne_parameters.csv",
-        umap_parameters = "simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/umap_parameters.csv",
-        score_by_tsne_parameters = "simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/score_by_t-sne_parameters.pdf",
-        score_by_umap_parameters = "simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/score_by_umap_parameters.pdf",
-        score_by_mds_parameters = "simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/score_by_mds_parameters.pdf",
-        summary_score_by_method = "simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/summary_scores_by_method.csv",
+        pca_parameters = "simulations/coronavirus-like/{recombination_rate}-recombination-rate/pca_parameters.csv",
+        mds_parameters = "simulations/coronavirus-like/{recombination_rate}-recombination-rate/mds_parameters.csv",
+        tsne_parameters = "simulations/coronavirus-like/{recombination_rate}-recombination-rate/t-sne_parameters.csv",
+        umap_parameters = "simulations/coronavirus-like/{recombination_rate}-recombination-rate/umap_parameters.csv",
+        score_by_tsne_parameters = "simulations/coronavirus-like/{recombination_rate}-recombination-rate/score_by_t-sne_parameters.pdf",
+        score_by_umap_parameters = "simulations/coronavirus-like/{recombination_rate}-recombination-rate/score_by_umap_parameters.pdf",
+        score_by_mds_parameters = "simulations/coronavirus-like/{recombination_rate}-recombination-rate/score_by_mds_parameters.pdf",
+        summary_score_by_method = "simulations/coronavirus-like/{recombination_rate}-recombination-rate/summary_scores_by_method.csv",
     conda: "../cartography.yml"
     log:
         "logs/simulations_coronavirus/summarize-grid-search-for-{recombination_rate}-recombination-rate.ipynb"
@@ -162,10 +162,10 @@ rule simulations_coronavirus_summarize_grid_search:
 
 rule simulations_coronavirus_aggregate_grid_search_summaries:
     input:
-        tables=expand("simulations/coronavirus-like-recombination/{recombination_rate}-recombination-rate/summary_scores_by_method.csv",
+        tables=expand("simulations/coronavirus-like/{recombination_rate}-recombination-rate/summary_scores_by_method.csv",
                       recombination_rate=SIMULATION_RECOMBINATION_RATES)
     output:
-        table="simulations/coronavirus-like-recombination/summary_scores_by_recombination_rate_and_method.csv",
+        table="simulations/coronavirus-like/summary_scores_by_recombination_rate_and_method.csv",
     conda: "../../cartography.yml"
     shell:
         """
