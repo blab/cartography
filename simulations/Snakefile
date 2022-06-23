@@ -109,7 +109,7 @@ rule simulations_grid_search_euclidean_distances:
 
 rule simulations_grid_search_plot_euclidean_distances:
     input:
-        genetic_distances="simulations/{{virus}}-like/{recombination_rate}/replicate-{replicate}/distance_matrix.csv",
+        genetic_distances="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/distance_matrix.csv",
         euclidean_distances=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/euclidean_distances_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv.gz",
     output:
         figure=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/euclidean_by_genetic_distance_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.pdf",
