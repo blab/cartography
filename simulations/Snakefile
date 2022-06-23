@@ -20,7 +20,7 @@ rule simulations_run_simulation:
         simulation_config="simulations/{virus}-like/{recombination_rate}/simulation_config.xml",
     output:
         sequences="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/simulated_sequences.fasta",
-    conda: "../../cartography.yaml"
+    conda: "../cartography.yml"
     resources:
         mem_mb=3000,
     shell:
@@ -34,7 +34,7 @@ rule simulations_parse:
     output:
         aligned="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/aligned.fasta",
         metadata="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/metadata.tsv",
-    conda: "../../cartography.yaml"
+    conda: "../cartography.yml"
     log:
         "logs/simulations_{virus}_parse_{recombination_rate}_{replicate}.txt"
     params:
@@ -54,7 +54,7 @@ rule simulations_filter:
         metadata="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/metadata.tsv",
     output:
         filtered="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/filtered.fasta",
-    conda: "../../cartography.yaml"
+    conda: "../cartography.yml"
     log:
         "logs/simulations_{virus}_filter_{recombination_rate}_{replicate}.txt"
     params:
@@ -76,7 +76,7 @@ rule simulations_create_distance_matrix:
         alignment="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/filtered.fasta",
     output:
         output="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/distance_matrix.csv",
-    conda: "../../cartography.yml"
+    conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/hamming_distance_from_fasta.py \
@@ -104,7 +104,7 @@ rule simulations_grid_search_embed:
     resources:
         runtime="0:30:00",
         mem_mb=4000,
-    conda: "../../cartography.yml"
+    conda: "../cartography.yml"
     shell:
         """
         embed \
@@ -122,7 +122,7 @@ rule simulations_grid_search_euclidean_distances:
         embedding=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/embedding_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv",
     output:
         distances=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/euclidean_distances_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv.gz",
-    conda: "../../cartography.yml"
+    conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/calculate_euclidean_distances.py \
@@ -137,7 +137,7 @@ rule simulations_grid_search_plot_euclidean_distances:
     output:
         figure=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/euclidean_by_genetic_distance_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.pdf",
         statistics=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/euclidean_by_genetic_distance_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv",
-    conda: "../../cartography.yml"
+    conda: "../cartography.yml"
     params:
         method_parameters=SIMULATION_METHOD_PARAMETERS.instance,
         simulation_parameters=lambda wildcards: {"recombination_rate": wildcards.recombination_rate, "replicate": wildcards.replicate}
@@ -160,7 +160,7 @@ rule simulations_aggregate_grid_search:
                       params=SIMULATION_METHOD_PARAMETERS.instance_patterns)
     output:
         table="simulations/{virus}-like/{recombination_rate}/gridsearch.csv",
-    conda: "../../cartography.yml"
+    conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/concatenate_tables.py \
@@ -192,7 +192,7 @@ rule simulations_coronavirus_aggregate_grid_search_summaries:
                       recombination_rate=SIMULATION_RECOMBINATION_RATES)
     output:
         table="simulations/coronavirus-like/summary_scores_by_recombination_rate_and_method.csv",
-    conda: "../../cartography.yml"
+    conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/concatenate_tables.py \
@@ -206,7 +206,7 @@ rule simulations_influenza_aggregate_grid_search_summaries:
                       recombination_rate=SIMULATION_REASSORTMENT_RATES)
     output:
         table="simulations/influenza-like/summary_scores_by_reassortment_rate_and_method.csv",
-    conda: "../../cartography.yml"
+    conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/concatenate_tables.py \
