@@ -44,7 +44,7 @@ rule all:
         "docs/cartography.html",
 
 # Include rules for each pathogen.
-include: "simulations/coronavirus-like/Snakefile"
+include: "simulations/Snakefile"
 include: "seasonal-flu-nextstrain/Snakefile"
 include: "seasonal-flu-nextstrain-2018-2020/Snakefile"
 include: "ha-na-nextstrain/Snakefile"
