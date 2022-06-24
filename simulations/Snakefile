@@ -184,7 +184,7 @@ rule simulations_summarize_grid_search:
     log:
         "logs/simulations_{virus}/summarize-grid-search-for-{recombination_rate}.ipynb"
     notebook:
-        "../../notebooks/2022-06-09-summarize-grid-search.py.ipynb"
+        "../notebooks/2022-06-09-summarize-grid-search.py.ipynb"
 
 rule simulations_coronavirus_aggregate_grid_search_summaries:
     input:
