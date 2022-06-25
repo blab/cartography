@@ -1,2 +1,2 @@
 method,perplexity,learning_rate,r_squared
-t-sne,100.0,500.0,0.6706243660468143
+t-sne,100.0,200.0,0.6959567715812509
