@@ -19,6 +19,7 @@ INTERNAL_NODE = [
 ]
 
 RANDOM_SEED = 314159
+CLUSTER_THRESHOLD = 2.0
 
 localrules:
     seasonal_flu_training_aggregate_clusters_by_parameters,

@@ -97,19 +97,21 @@ rule mers_muller_create_distance_matrix:
 rule mers_muller_embed_pca:
     input:
         alignment="mers-muller/results/aligned.fasta",
-        cluster="mers-nextstrain/results/pca_parameters.csv",
+        cluster="simulations/coronavirus-like/high-recombination-rate/pca_parameters.csv",
     output:
         dataframe="mers-muller/results/embed_pca.csv",
         figure="mers-muller/results/embed_pca.pdf",
         explained_variance="mers-muller/results/explained_variance_pca.csv",
     params:
         random_seed=RANDOM_SEED,
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --alignment {input.alignment} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -121,18 +123,20 @@ rule mers_muller_embed_mds:
     message: "Creating the embedding for MDS"
     input:
         distance_matrix="mers-muller/results/distance_matrix.csv",
-        cluster="mers-nextstrain/results/mds_parameters.csv",
+        cluster="simulations/coronavirus-like/high-recombination-rate/mds_parameters.csv",
     output:
         dataframe="mers-muller/results/embed_mds.csv",
         figure="mers-muller/results/embed_mds.pdf",
     params:
         random_seed=RANDOM_SEED,
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -143,12 +147,13 @@ rule mers_muller_embed_tsne:
     input:
         alignment="mers-muller/results/aligned.fasta",
         distance_matrix="mers-muller/results/distance_matrix.csv",
-        cluster="mers-nextstrain/results/t-sne_parameters.csv",
+        cluster="simulations/coronavirus-like/high-recombination-rate/t-sne_parameters.csv",
     output:
         dataframe="mers-muller/results/embed_t-sne.csv",
         figure="mers-muller/results/embed_t-sne.pdf",
     params:
         random_seed=RANDOM_SEED,
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
@@ -156,6 +161,7 @@ rule mers_muller_embed_tsne:
             --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -165,18 +171,20 @@ rule mers_muller_embed_tsne:
 rule mers_muller_embed_umap:
     input:
         distance_matrix="mers-muller/results/distance_matrix.csv",
-        cluster="mers-nextstrain/results/umap_parameters.csv",
+        cluster="simulations/coronavirus-like/high-recombination-rate/umap_parameters.csv",
     output:
         dataframe="mers-muller/results/embed_umap.csv",
         figure="mers-muller/results/embed_umap.pdf",
     params:
         random_seed=RANDOM_SEED,
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \

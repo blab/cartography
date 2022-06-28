@@ -354,19 +354,21 @@ rule seasonal_flu_reassortment_embed_pca:
     message: "Creating the embedding for PCA"
     input:
         alignment = "ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta",
-        cluster = "seasonal-flu-nextstrain/results/pca_parameters.csv",
+        cluster = "simulations/influenza-like/no-reassortment/pca_parameters.csv",
     output:
         dataframe = "ha-na-nextstrain/results/embed_pca_{ha_concatenated}.csv",
         figure = "ha-na-nextstrain/results/embed_pca_{ha_concatenated}.pdf",
         explained_variance = "ha-na-nextstrain/results/explained_variance_pca_{ha_concatenated}.csv"
     params:
         random_seed = RANDOM_SEED,
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --alignment {input.alignment} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -378,18 +380,20 @@ rule seasonal_flu_reassortment_embed_mds:
     message: "Creating the embedding for MDS"
     input:
         distance_matrix = rules.seasonal_flu_reassortment_create_distance_matrix.output.output,
-        cluster = "seasonal-flu-nextstrain/results/mds_parameters.csv",
+        cluster = "simulations/influenza-like/no-reassortment/mds_parameters.csv",
     output:
         dataframe = "ha-na-nextstrain/results/embed_mds_{ha_concatenated}.csv",
         figure = "ha-na-nextstrain/results/embed_mds_{ha_concatenated}.pdf"
     params:
         random_seed = RANDOM_SEED,
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -401,12 +405,13 @@ rule seasonal_flu_reassortment_embed_tsne:
     input:
         alignment = "ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta",
         distance_matrix = rules.seasonal_flu_reassortment_create_distance_matrix.output.output,
-        cluster = "seasonal-flu-nextstrain/results/t-sne_parameters.csv",
+        cluster = "simulations/influenza-like/no-reassortment/t-sne_parameters.csv",
     output:
         dataframe = "ha-na-nextstrain/results/embed_t-sne_{ha_concatenated}.csv",
         figure = "ha-na-nextstrain/results/embed_t-sne_{ha_concatenated}.pdf"
     params:
         random_seed = RANDOM_SEED,
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
@@ -414,6 +419,7 @@ rule seasonal_flu_reassortment_embed_tsne:
             --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -424,18 +430,20 @@ rule seasonal_flu_reassortment_embed_umap:
     message: "Creating the embedding for UMAP"
     input:
         distance_matrix = rules.seasonal_flu_reassortment_create_distance_matrix.output.output,
-        cluster = "seasonal-flu-nextstrain/results/umap_parameters.csv",
+        cluster = "simulations/influenza-like/no-reassortment/umap_parameters.csv",
     output:
         dataframe = "ha-na-nextstrain/results/embed_umap_{ha_concatenated}.csv",
         figure = "ha-na-nextstrain/results/embed_umap_{ha_concatenated}.pdf"
     params:
         random_seed = RANDOM_SEED,
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -568,13 +576,14 @@ rule seasonal_flu_reassortment_cluster_metadata:
     input:
         embedding = "ha-na-nextstrain/results/embed_{method}_{ha_concatenated}.csv",
         metadata = "ha-na-nextstrain/results/table_ha.tsv",
-        cluster = "seasonal-flu-nextstrain/results/{method}_parameters.csv",
+        cluster = "simulations/influenza-like/no-reassortment/{method}_parameters.csv",
     output:
         dataframe = "ha-na-nextstrain/results/HDBSCAN_metadata_{method}_{ha_concatenated}.csv",
     conda: "../cartography.yml"
     params:
         clade_column="MCC",
         missing_data_value="unassigned",
+        cluster_threshold = CLUSTER_THRESHOLD,
     shell:
         """
         python3 notebooks/scripts/metadata_HDBSCAN.py \
@@ -585,6 +594,7 @@ rule seasonal_flu_reassortment_cluster_metadata:
             --embedding {input.embedding} \
             --metadata {input.metadata} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --output {output.dataframe}
         """
 

@@ -1,10 +1,3 @@
-MERS_METHOD_PARAMETERS = Paramspace(
-    pd.read_csv(
-        "mers-nextstrain/config/method_parameters.tsv",
-        sep="\t"
-    )
-)
-
 rule mers:
     input:
         "docs/figures/mers-embeddings-by-clade.html",
@@ -20,7 +13,6 @@ rule mers:
         "docs/figures/mers-pc1-by-bases-missing.png",
         "auspice/cartography_mers.json",
         "mers-nextstrain/results/nucleotide_diversity.txt",
-        "mers-nextstrain/results/mcc_by_method_and_distance_threshold.pdf",
 
 rule mers_download_elife_tree:
     output:
@@ -226,71 +218,25 @@ rule mers_clades:
              --output {output.clades}
          """
 
-rule mers_cluster_by_parameters:
-    input:
-        alignment="mers-nextstrain/results/aligned.fasta",
-        distance_matrix="mers-nextstrain/results/distance_matrix.csv",
-        clades="mers-nextstrain/results/clades.json",
-    output:
-        table=f"mers-nextstrain/results/gridsearch/{MERS_METHOD_PARAMETERS.wildcard_pattern}.tsv",
-    params:
-        method_parameters=MERS_METHOD_PARAMETERS.instance,
-        clade_attribute = "clade_membership"
-    resources:
-        runtime="0:30:00",
-        mem_mb=4000,
-    conda: "../cartography.yml"
-    script:
-        "../notebooks/scripts/cluster_by_parameters.py"
-
-rule mers_aggregate_clusters_by_parameters:
-    input:
-        tables=expand("mers-nextstrain/results/gridsearch/{params}.tsv", params=MERS_METHOD_PARAMETERS.instance_patterns)
-    output:
-        table="mers-nextstrain/results/gridsearch.tsv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 notebooks/scripts/concatenate_tables.py \
-            --tables {input.tables} \
-            --output {output.table}
-        """
-
-rule mers_output_grid_search:
-    input:
-        table= "mers-nextstrain/results/gridsearch.tsv",
-    output:
-        pca_parameters = "mers-nextstrain/results/pca_parameters.csv",
-        mds_parameters = "mers-nextstrain/results/mds_parameters.csv",
-        tsne_parameters = "mers-nextstrain/results/t-sne_parameters.csv",
-        umap_parameters = "mers-nextstrain/results/umap_parameters.csv",
-        mcc_by_tsne_parameters = "mers-nextstrain/results/mcc_by_t-sne_parameters.pdf",
-        mcc_by_umap_parameters = "mers-nextstrain/results/mcc_by_umap_parameters.pdf",
-        mcc_by_mds_parameters = "mers-nextstrain/results/mcc_by_mds_parameters.pdf",
-        mcc_by_method_and_distance_threshold = "mers-nextstrain/results/mcc_by_method_and_distance_threshold.pdf"
-    conda: "../cartography.yml"
-    log:
-        "logs/summarize-grid-search.ipynb"
-    notebook:
-        "../notebooks/2021-06-23-summarize-grid-search.ipynb"
-
 rule mers_embed_pca:
     message: "Creating the embedding for PCA"
     input:
         alignment = "mers-nextstrain/results/aligned.fasta",
-        cluster = "mers-nextstrain/results/pca_parameters.csv",
+        cluster = "simulations/coronavirus-like/high-recombination-rate/pca_parameters.csv",
     output:
         dataframe = "mers-nextstrain/results/embed_pca.csv",
         figure = "mers-nextstrain/results/embed_pca.pdf",
         explained_variance = "mers-nextstrain/results/explained_variance_pca.csv",
     params:
         random_seed = RANDOM_SEED,
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --alignment {input.alignment} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -302,18 +248,20 @@ rule mers_embed_mds:
     message: "Creating the embedding for MDS"
     input:
         distance_matrix = "mers-nextstrain/results/distance_matrix.csv",
-        cluster = "mers-nextstrain/results/mds_parameters.csv",
+        cluster = "simulations/coronavirus-like/high-recombination-rate/mds_parameters.csv",
     output:
         dataframe = "mers-nextstrain/results/embed_mds.csv",
         figure = "mers-nextstrain/results/embed_mds.pdf",
     params:
         random_seed = RANDOM_SEED,
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -325,12 +273,13 @@ rule mers_embed_tsne:
     input:
         alignment="mers-nextstrain/results/aligned.fasta",
         distance_matrix = "mers-nextstrain/results/distance_matrix.csv",
-        cluster = "mers-nextstrain/results/t-sne_parameters.csv",
+        cluster = "simulations/coronavirus-like/high-recombination-rate/t-sne_parameters.csv",
     output:
         dataframe = "mers-nextstrain/results/embed_t-sne.csv",
         figure = "mers-nextstrain/results/embed_t-sne.pdf",
     params:
         random_seed = RANDOM_SEED,
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
@@ -338,6 +287,7 @@ rule mers_embed_tsne:
             --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -348,18 +298,20 @@ rule mers_embed_umap:
     message: "Creating the embedding for UMAP"
     input:
         distance_matrix = "mers-nextstrain/results/distance_matrix.csv",
-        cluster = "mers-nextstrain/results/umap_parameters.csv",
+        cluster = "simulations/coronavirus-like/high-recombination-rate/umap_parameters.csv",
     output:
         dataframe = "mers-nextstrain/results/embed_umap.csv",
         figure = "mers-nextstrain/results/embed_umap.pdf"
     params:
         random_seed = RANDOM_SEED,
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -444,7 +396,7 @@ rule mers_scatterplot:
     input:
         distance_matrix = "mers-nextstrain/results/distance_matrix.csv",
         embedding = "mers-nextstrain/results/embed_{method}.csv",
-        method_parameters = "mers-nextstrain/results/{method}_parameters.csv",
+        method_parameters = "simulations/coronavirus-like/high-recombination-rate/{method}_parameters.csv",
     output:
         figure = "mers-nextstrain/results/scatterplot_{method}.png",
         dataframe = "mers-nextstrain/results/scatterplot_{method}.csv",
@@ -546,13 +498,14 @@ rule mers_cluster_metadata:
     input:
         embedding = "mers-nextstrain/results/embed_{method}.csv",
         metadata = "mers-nextstrain/results/table.tsv",
-        cluster = "mers-nextstrain/results/{method}_parameters.csv",
+        cluster = "simulations/coronavirus-like/high-recombination-rate/{method}_parameters.csv",
     output:
         dataframe = "mers-nextstrain/results/HDBSCAN_metadata_{method}.csv",
     conda: "../cartography.yml"
     params:
         clade_column="clade_membership",
         missing_data_value="unassigned",
+        cluster_threshold = CLUSTER_THRESHOLD,
     shell:
         """
         python3 notebooks/scripts/metadata_HDBSCAN.py \
@@ -562,6 +515,7 @@ rule mers_cluster_metadata:
             --embedding {input.embedding} \
             --metadata {input.metadata} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --output {output.dataframe}
         """
 
