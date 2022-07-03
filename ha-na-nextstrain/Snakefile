@@ -27,6 +27,7 @@ rule seasonal_flu_reassortment:
         "docs/figures/flu-2016-2018-ha-na-umap-by-cluster.html",
         "docs/figures/flu-2016-2018-ha-na-umap-by-cluster.png",
         expand("auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json", segment=SEGMENTS),
+        "ha-na-nextstrain/results/mutation_table.tsv"
 
 rule seasonal_flu_reassortment_files:
     params:
@@ -587,6 +588,43 @@ rule seasonal_flu_reassortment_cluster_metadata:
             --cluster-data {input.cluster} \
             --output {output.dataframe}
         """
+
+rule create_consensus_strains_ha_na:
+    message: "finding consensus strain per clade"
+    input:
+        alignment = "ha-na-nextstrain/results/aligned_concatenated.fasta",
+        metadata = "ha-na-nextstrain/results/mccs.json",
+    output:
+        consensus = "ha-na-nextstrain/results/consensus_strains.fasta"
+    shell:"""
+    python3 notebooks/scripts/consensus_strains.py \
+        --alignment {input.alignment} \
+        --metadata {input.metadata} \
+        --output {output.consensus} \
+    """
+
+rule create_consensus_with_reference_ha_na:
+    message: "adding reference to consensus strains"
+    input: 
+        reference = "ha-na-nextstrain/config/reference_h3n2_ha_na.fasta",
+        consensus = "ha-na-nextstrain/results/consensus_strains.fasta"
+    output:
+        consensus_reference = "ha-na-nextstrain/results/consensus_with_reference.fasta"
+    shell:"""
+    cat {input.reference} {input.consensus} > {output.consensus_reference}
+    """
+
+rule create_mutation_table_ha_na:
+    message: "making cluster specific mutation table"
+    input:
+        alignment = "ha-na-nextstrain/results/consensus_with_reference.fasta"
+    output:
+        table = "ha-na-nextstrain/results/mutation_table.tsv"
+    shell:"""
+    python3 notebooks/scripts/make_mutation_table.py \
+        --alignment {input.alignment} \
+        --output {output.table} \
+    """
 
 rule seasonal_flu_reassortment_concat_HDBSCAN_table:
     input:
