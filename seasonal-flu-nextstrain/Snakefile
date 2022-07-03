@@ -204,7 +204,7 @@ rule seasonal_flu_training_output_grid_search:
     log:
         "logs/seasonal-flu-nextstrain/summarize-grid-search.ipynb"
     notebook:
-        "notebooks/2021-06-23-summarize-grid-search.ipynb"
+        "../notebooks/2021-06-23-summarize-grid-search.ipynb"
 
 rule seasonal_flu_training_embed_pca:
     message: "Creating the embedding for PCA"
@@ -592,7 +592,7 @@ rule seasonal_flu_training_concat_HDBSCAN_table:
     output:
         metadata = "seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv"
     params:
-        column = "MCC",
+        column = "normalized_VI",
     conda: "../cartography.yml"
     shell:
         """

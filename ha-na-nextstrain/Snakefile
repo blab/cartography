@@ -594,7 +594,7 @@ rule seasonal_flu_reassortment_concat_HDBSCAN_table:
     output:
         metadata = "ha-na-nextstrain/results/full_HDBSCAN_metadata.csv"
     params:
-        column = "MCC",
+        column = "normalized_VI",
     conda: "../cartography.yml"
     shell:
         """

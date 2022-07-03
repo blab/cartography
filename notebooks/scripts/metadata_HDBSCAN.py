@@ -1,14 +1,8 @@
 import argparse
-import Bio.SeqIO
-from collections import OrderedDict
-import hdbscan
 import numpy as np
 import pandas as pd
-import re
-from sklearn.metrics import confusion_matrix, matthews_corrcoef
-import sys
 
-from Helpers import get_hamming_distances, get_euclidean_data_frame
+from Helpers import variation_of_information
 
 
 if __name__ == "__main__":
@@ -50,7 +44,7 @@ if __name__ == "__main__":
             method = args.method.replace("-", "")
             columns = [f"{method}_x", f"{method}_y"]
 
-        print(f"Calculate MCC accuracy with the following columns: {columns}")
+        print(f"Calculate VI score with the following columns: {columns}")
 
     if args.missing_data_value:
         embedding_df[args.clade_column] = embedding_df[args.clade_column].replace(
@@ -63,31 +57,46 @@ if __name__ == "__main__":
         print(f"Dropped {total_rows - non_missing_rows} missing values in the clade column '{args.clade_column}'.")
 
     # Determine clade status from automated cluster labels.
-    KDE_df_cluster = get_euclidean_data_frame(
-        sampled_df=embedding_df,
-        column_for_analysis=f"{args.method}_label",
-        embedding=args.method,
-        column_list=columns
-    )
+    # KDE_df_cluster = get_euclidean_data_frame(
+    #     sampled_df=embedding_df,
+    #     column_for_analysis=f"{args.method}_label",
+    #     embedding=args.method,
+    #     column_list=columns
+    # )
 
-    # Determine clade status from pre-assigned clade or group membership.
-    KDE_df_normal = get_euclidean_data_frame(
-        sampled_df=embedding_df,
-        column_for_analysis=args.clade_column,
-        embedding=args.method,
-        column_list=columns
-    )
+    # # Determine clade status from pre-assigned clade or group membership.
+    # KDE_df_normal = get_euclidean_data_frame(
+    #     sampled_df=embedding_df,
+    #     column_for_analysis=args.clade_column,
+    #     embedding=args.method,
+    #     column_list=columns
+    # )
 
     # Calculate accuracy of automated cluster labels compared to pre-assigned
     # clade or group membership.
-    confusion_matrix_val = confusion_matrix(
-        KDE_df_normal["clade_status"],
-        KDE_df_cluster["clade_status"]
-    )
-    matthews_cc_val = matthews_corrcoef(
-        KDE_df_normal["clade_status"],
-        KDE_df_cluster["clade_status"]
-    )
+    # confusion_matrix_val = confusion_matrix(
+    #     KDE_df_normal["clade_status"],
+    #     KDE_df_cluster["clade_status"]
+    # )
+    # matthews_cc_val = matthews_corrcoef(
+    #     KDE_df_normal["clade_status"],
+    #     KDE_df_cluster["clade_status"]
+    # )
+
+    # variation of information score
+    cdict = embedding_df[["strain", f"{args.method}_label"]].set_index("strain")
+    clade = cdict.groupby([f"{args.method}_label"])
+    list_clades = [clade.get_group(x) for x in clade.groups]
+    predicted_values = [list(lists.index) for lists in list_clades]
+
+    ldict = embedding_df[["strain", args.clade_column]].set_index("strain")
+    clade = ldict.groupby([args.clade_column])
+    list_clades = [clade.get_group(x) for x in clade.groups]
+    actual_values = [list(lists.index) for lists in list_clades]
+
+
+
+    VI_normalized = variation_of_information(predicted_values, actual_values, normalized=True)
 
     if args.cluster_data is not None:
         max_df = pd.read_csv(args.cluster_data)
@@ -99,15 +108,11 @@ if __name__ == "__main__":
         [
             [
                 args.method,
-                matthews_cc_val,
+                VI_normalized,
                 cluster_threshold,
-                confusion_matrix_val[0][0],
-                confusion_matrix_val[1][0],
-                confusion_matrix_val[1][1],
-                confusion_matrix_val[0][1],
             ]
         ],
-        columns=["embedding", "MCC", "threshold", "TN", "FN", "TP", "FP"]
+        columns=["embedding", "normalized_VI", "threshold"]
     ).round(3)
 
     if args.analysis_name:

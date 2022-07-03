@@ -23,7 +23,7 @@ rule sarscov2:
 rule sarscov2_embed_pca_before:
     message: "Creating the embedding for PCA bases missing analysis"
     input:
-        alignment = "sars-cov-2-nextstrain/data/aligned.fasta.xz",
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_pca_before.csv",
         figure = "sars-cov-2-nextstrain/results/embed_pca_before.pdf",
@@ -33,8 +33,8 @@ rule sarscov2_embed_pca_before:
     conda: "../cartography.yml"
     shell:
         """
-        xz -c -d {input.alignment} | embed \
-            --alignment /dev/stdin \
+        embed \
+            --alignment {input.alignment} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -472,7 +472,7 @@ rule sarscov2_concat_HDBSCAN_table:
     output:
         metadata = "sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv",
     params:
-        column = "MCC",
+        column = "normalized_VI",
     conda: "../cartography.yml"
     shell:
         """
