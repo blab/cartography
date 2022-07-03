@@ -13,6 +13,7 @@ rule mers:
         "docs/figures/mers-pc1-by-bases-missing.png",
         "auspice/cartography_mers.json",
         "mers-nextstrain/results/nucleotide_diversity.txt",
+        "mers-nextstrain/results/mutation_table.tsv",
 
 rule mers_download_elife_tree:
     output:
@@ -560,6 +561,43 @@ rule mers_concat_scatterplot_table:
             --sort-by {params.column} \
             --output {output.metadata}
         """
+
+rule create_consensus_strains_mers:
+    message: "finding consensus strain per clade"
+    input:
+        alignment = "mers-nextstrain/results/aligned.fasta",
+        metadata = "mers-nextstrain/results/table.tsv",
+    output:
+        consensus = "mers-nextstrain/results/consensus_strains.fasta"
+    shell:"""
+    python3 notebooks/scripts/consensus_strains.py \
+        --alignment {input.alignment} \
+        --metadata {input.metadata} \
+        --output {output.consensus} \
+    """
+
+rule create_consensus_with_reference_mers:
+    message: "adding reference to consensus strains"
+    input:
+        reference = "mers-nextstrain/config/reference_mers.fasta",
+        consensus = "mers-nextstrain/results/consensus_strains.fasta"
+    output:
+        consensus_reference = "mers-nextstrain/results/consensus_with_reference.fasta"
+    shell:"""
+    cat {input.reference} {input.consensus} > {output.consensus_reference}
+    """
+
+rule create_mutation_table_mers:
+    message: "making cluster specific mutation table"
+    input:
+        alignment = "mers-nextstrain/results/consensus_with_reference.fasta"
+    output:
+        table = "mers-nextstrain/results/mutation_table.tsv"
+    shell:"""
+    python3 notebooks/scripts/make_mutation_table.py \
+        --alignment {input.alignment} \
+        --output {output.table} \
+    """
 
 rule mers_create_scatterplot_figure:
     input:
