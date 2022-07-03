@@ -593,7 +593,7 @@ rule seasonal_flu_training_concat_HDBSCAN_table:
     output:
         metadata = "seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv"
     params:
-        column = "MCC",
+        column = "normalized_VI",
     conda: "../cartography.yml"
     shell:
         """

@@ -9,8 +9,49 @@ import altair as alt
 import pandas as pd
 import re
 from scipy.spatial.distance import squareform, pdist
-from scipy.stats import linregress
+from scipy.stats import linregress, entropy
 import statsmodels
+
+def joint_entropy(X, Y):
+    n = sum(len(x) for x in X)
+    H_X_Y = 0.0
+    for x in X:
+        for y in Y:
+            p_x_y = len(set(x) & set(y)) / n
+            if p_x_y > 0:
+                H_X_Y -= (p_x_y * np.log2(p_x_y))
+
+    return H_X_Y
+
+def variation_of_information(X, Y, normalized=False):
+    """Calculate Variation of Information score between the ground truth clustering and the proposed clustering.
+    The score is 0 for an exact match, and the log of the total samples in the case of a complete difference.
+    Parameters
+    ----------
+    X : list of list
+        a list of total elements n (where n is number of total samples), partitioned into lists defining
+        separated clusters
+    Y : list of list
+        a list of total elements n (where n is number of total samples), partitioned into lists defining
+        separated clusters
+    normalized : boolean, default = False
+        determines if the VI score is normalized or not
+    Returns
+    -------
+    the variation of information score between two separate clusterings.
+    """
+    H_X = entropy([len(k) for k in X], base=2)
+    H_Y = entropy([len(k) for k in Y], base=2)
+    H_X_Y = joint_entropy(X, Y)
+
+    # From Equation 22 of Meila 2007
+    VI = (2 * H_X_Y) - H_X - H_Y
+
+    if normalized:
+        n = sum(len(x) for x in X)
+        return VI / np.log2(n)
+    else:
+        return VI
 
 def get_embedding_columns_by_method(method):
     if method in ("pca"):
@@ -53,7 +94,6 @@ def get_PCA_feature_matrix(alignment, sequence_names):
 
     numbers = np.array(numbers)
     return numbers
-
 
 def get_y_positions(tree):
     """Create a mapping of each clade to its vertical position. Dict of {clade:

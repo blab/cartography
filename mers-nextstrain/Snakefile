@@ -527,7 +527,7 @@ rule mers_concat_HDBSCAN_table:
     output:
         metadata = "mers-nextstrain/results/full_HDBSCAN_metadata.csv"
     params:
-        column = "MCC",
+        column = "normalized_VI",
     conda: "../cartography.yml"
     shell:
         """
