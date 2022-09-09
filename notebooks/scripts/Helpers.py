@@ -98,7 +98,7 @@ def get_PCA_feature_matrix(alignment, sequence_names):
 def get_hamming_distances(genomes):
     """Calculate pairwise Hamming distances between the given list of genomes
     and return the nonredundant array of values for use with scipy's squareform function.
-    Bases other than standard nucleotides (A, T, C, G) are ignored.
+    Bases other than standard nucleotides (A, T, C, G) are ignored. Treat indels as a single event.
     Parameters
     ----------
     genomes : list
@@ -112,8 +112,15 @@ def get_hamming_distances(genomes):
     [0, 1, 1]
     >>> genomes = ["AT-GCT", "AT--CT", "AC--CT"]
     >>> get_hamming_distances(genomes)
-    [0, 1, 1]
+    [1, 2, 2]
+    >>> genomes = ["ACTGG", "A--GN", "A-NGG"]
+    >>> get_hamming_distances(genomes)
+    [1, 1, 1]
+    >>> genomes = ["ACTGTA", "A--CCA", "A--GT-"]
+    >>> get_hamming_distances(genomes)
+    [3, 2, 4]
     """
+
     # Define an array of valid nucleotides to use in pairwise distance calculations.
     # Using a numpy array of byte strings allows us to apply numpy.isin later.
     nucleotides = np.array([b'A', b'T', b'C', b'G'])
@@ -138,16 +145,19 @@ def get_hamming_distances(genomes):
     for i in range(len(genomes)):
         # Only compare the current genome, i, with all later genomes.
         # This avoids repeating comparisons or comparing each genome to itself.
-        # np_genomes = np.array(list(re.sub("-", "0", genomes[i])))
-        # a = (np_genomes=="0")
-        # num_indel = (a&~np.r_[[False],a[:-1]]).sum()
+        np_genomes = np.array(list(re.sub("-", "0", genomes[i])))
 
         for j in range(i + 1, len(genomes)):
+            np_genomes_b = np.array(list(re.sub("-", "0", genomes[j])))
+            result = np.where(np_genomes_b == "0")
+            np_genomes[result] = 0
+            a = (np_genomes=="0")
+            num_indel = (a&~np.r_[[False],a[:-1]]).sum()
             # Find all mismatches between these two genomes.
             mismatches = genome_arrays[i] != genome_arrays[j]
 
             # Count the number of mismatches where both genomes have valid bases.
-            hamming_distances.append((mismatches & valid_bases[i] & valid_bases[j]).sum()) # + num_indel)
+            hamming_distances.append(((mismatches & valid_bases[i] & valid_bases[j]).sum()) + num_indel)
 
     return hamming_distances
 
