@@ -572,7 +572,7 @@ rule mers_create_scatterplot_figure:
         scatterplot = "docs/figures/mers-euclidean-distance-by-genetic-distance.png",
     conda: "../cartography.yml"
     notebook:
-        "2022-03-30-scatterplot-figure.py.ipynb"
+        "../notebooks/2022-09-26-scatterplot-figure.py.ipynb"
 
 rule mers_create_notebook_docs:
     input:
