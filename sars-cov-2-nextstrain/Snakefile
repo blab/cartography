@@ -1,10 +1,3 @@
-SARS_COV_2_METHOD_PARAMETERS = Paramspace(
-    pd.read_csv(
-        "sars-cov-2-nextstrain/config/method_parameters.tsv",
-        sep="\t"
-    )
-)
-
 rule sarscov2:
     input:
         "docs/figures/sarscov2-embeddings-by-clade.html",
@@ -17,7 +10,6 @@ rule sarscov2:
         "docs/figures/sarscov2-euclidean-distance-by-genetic-distance.png",
         "sars-cov-2-nextstrain/results/alignment_pi.txt",
         "docs/figures/sarscov2-pc1-vs-bases-missing.png",
-        "sars-cov-2-nextstrain/results/mcc_by_method_and_distance_threshold.pdf",
         "auspice/cartography_ncov.json",
 
 rule sarscov2_embed_pca_before:
@@ -194,70 +186,25 @@ rule sarscov2_create_distance_matrix:
             --output {output.output}
         """
 
-rule sarscov2_cluster_by_parameters:
-    input:
-        alignment="sars-cov-2-nextstrain/data/aligned.fasta.xz",
-        distance_matrix="sars-cov-2-nextstrain/results/distance_matrix.csv",
-        clades="sars-cov-2-nextstrain/results/clades.json",
-    output:
-        table=f"sars-cov-2-nextstrain/results/gridsearch/{SARS_COV_2_METHOD_PARAMETERS.wildcard_pattern}.tsv",
-    params:
-        method_parameters=SARS_COV_2_METHOD_PARAMETERS.instance,
-    resources:
-        runtime="0:30:00",
-        mem_mb=4000,
-    conda: "../cartography.yml"
-    script:
-        "../notebooks/scripts/cluster_by_parameters.py"
-
-rule sarscov2_aggregate_clusters_by_parameters:
-    input:
-        tables=expand("sars-cov-2-nextstrain/results/gridsearch/{params}.tsv", params=SARS_COV_2_METHOD_PARAMETERS.instance_patterns)
-    output:
-        table="sars-cov-2-nextstrain/results/gridsearch.tsv"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 notebooks/scripts/concatenate_tables.py \
-            --tables {input.tables} \
-            --output {output.table}
-        """
-
-rule sarscov2_output_grid_search:
-    input:
-        table= "sars-cov-2-nextstrain/results/gridsearch.tsv",
-    output:
-        pca_parameters = "sars-cov-2-nextstrain/results/pca_parameters.csv",
-        mds_parameters = "sars-cov-2-nextstrain/results/mds_parameters.csv",
-        tsne_parameters = "sars-cov-2-nextstrain/results/t-sne_parameters.csv",
-        umap_parameters = "sars-cov-2-nextstrain/results/umap_parameters.csv",
-        mcc_by_tsne_parameters = "sars-cov-2-nextstrain/results/mcc_by_t-sne_parameters.pdf",
-        mcc_by_umap_parameters = "sars-cov-2-nextstrain/results/mcc_by_umap_parameters.pdf",
-        mcc_by_mds_parameters = "sars-cov-2-nextstrain/results/mcc_by_mds_parameters.pdf",
-        mcc_by_method_and_distance_threshold = "sars-cov-2-nextstrain/results/mcc_by_method_and_distance_threshold.pdf"
-    conda: "../cartography.yml"
-    log:
-        "logs/summarize-grid-search.ipynb"
-    notebook:
-        "../notebooks/2021-06-23-summarize-grid-search.ipynb"
-
 rule sarscov2_embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
-        cluster = "sars-cov-2-nextstrain/results/pca_parameters.csv",
+        cluster = "simulations/coronavirus-like/low-recombination-rate/pca_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_pca.csv",
         figure = "sars-cov-2-nextstrain/results/embed_pca.pdf",
         explained_variance = "sars-cov-2-nextstrain/results/explained_variance_pca.csv"
     params:
         random_seed = RANDOM_SEED,
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --alignment {input.alignment} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -269,18 +216,20 @@ rule sarscov2_embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
-        cluster = "sars-cov-2-nextstrain/results/mds_parameters.csv",
+        cluster = "simulations/coronavirus-like/low-recombination-rate/mds_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_mds.csv",
         figure = "sars-cov-2-nextstrain/results/embed_mds.pdf"
     params:
         random_seed = RANDOM_SEED,
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -292,12 +241,13 @@ rule sarscov2_embed_tsne:
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
-        cluster = "sars-cov-2-nextstrain/results/t-sne_parameters.csv",
+        cluster = "simulations/coronavirus-like/low-recombination-rate/t-sne_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_t-sne.csv",
         figure = "sars-cov-2-nextstrain/results/embed_t-sne.pdf"
     params:
         random_seed = RANDOM_SEED,
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
@@ -305,6 +255,7 @@ rule sarscov2_embed_tsne:
             --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -315,18 +266,20 @@ rule sarscov2_embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
-        cluster = "sars-cov-2-nextstrain/results/umap_parameters.csv",
+        cluster = "simulations/coronavirus-like/low-recombination-rate/umap_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_umap.csv",
         figure = "sars-cov-2-nextstrain/results/embed_umap.pdf"
     params:
         random_seed = RANDOM_SEED,
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
         embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -422,7 +375,7 @@ rule sarscov2_scatterplot:
     input:
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
         embedding = "sars-cov-2-nextstrain/results/embed_{method}.csv",
-        method_parameters = "sars-cov-2-nextstrain/results/{method}_parameters.csv",
+        method_parameters = "simulations/coronavirus-like/low-recombination-rate/{method}_parameters.csv",
     output:
         figure = "sars-cov-2-nextstrain/results/scatterplot_{method}.png",
         dataframe = "sars-cov-2-nextstrain/results/scatterplot_{method}.csv",
@@ -451,6 +404,8 @@ rule sarscov2_cluster_metadata:
         cluster = "sars-cov-2-nextstrain/results/{method}_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_{method}.csv",
+    params:
+        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
@@ -459,6 +414,7 @@ rule sarscov2_cluster_metadata:
             --embedding {input.embedding} \
             --metadata {input.metadata} \
             --cluster-data {input.cluster} \
+            --cluster-threshold {params.cluster_threshold} \
             --output {output.dataframe}
         """
 

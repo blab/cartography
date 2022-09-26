@@ -30,10 +30,11 @@ dependencies:
   - openjdk=11
   - tsv-utils
   - samtools
+  - joblib=1.1.0 # required for hdbscan to work
+  - hdbscan=0.8.28
+  - statsmodels
   - pip:
     - pathogen-embed==0.1.0
-    - statsmodels
     - statistics
     - svglib
-    - hdbscan
     - tabulate

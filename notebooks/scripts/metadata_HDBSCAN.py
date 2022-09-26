@@ -41,7 +41,7 @@ if __name__ == "__main__":
             ]
         elif args.method == "mds":
             parameters = pd.read_csv(args.cluster_data)
-            n_components = parameters["n_components"].values[0]
+            n_components = int(parameters["components"].values[0])
             columns = [
                 f"mds{i}"
                 for i in range(1, n_components + 1)
@@ -89,11 +89,13 @@ if __name__ == "__main__":
         KDE_df_cluster["clade_status"]
     )
 
-    if args.cluster_data is not None:
+    if args.cluster_threshold is not None:
+        cluster_threshold = args.cluster_threshold
+    elif args.cluster_data is not None:
         max_df = pd.read_csv(args.cluster_data)
         cluster_threshold = float(max_df['distance_threshold'].values.tolist()[0])
     else:
-        cluster_threshold = args.cluster_threshold
+        pass
 
     output_df = pd.DataFrame(
         [

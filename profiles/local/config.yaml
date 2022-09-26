@@ -1,3 +1,5 @@
 use-conda: true
 conda-frontend: mamba
 printshellcmds: True
+cores: 8
+resources: mem_mb=12000

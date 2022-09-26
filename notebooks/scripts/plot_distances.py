@@ -15,7 +15,9 @@ if __name__ == '__main__':
     parser.add_argument("--y", required=True, help="data frame of distances to plot on the y-axis")
     parser.add_argument("--x-axis-label", required=True, help="x-axis label")
     parser.add_argument("--y-axis-label", required=True, help="y-axis label")
-    parser.add_argument("--output", required=True, help="figure of distances plotted against each other")
+    parser.add_argument("--output-figure", required=True, help="figure of distances plotted against each other")
+    parser.add_argument("--output-statistics", help="table of statistics from the linear regression for the given plot")
+    parser.add_argument("--annotations", nargs="*", help="annotations to add to statistics table")
     args = parser.parse_args()
 
     # Load distances.
@@ -48,29 +50,58 @@ if __name__ == '__main__':
     #     alpha=0.25,
     # )
     data = pd.DataFrame({"x": x_array, "y": y_array})
-    sns.boxplot(
-        x="x",
-        y="y",
-        data=data,
-        linewidth=0.75,
-        fliersize=0.1,
-        color="#CCCCCC",
-        ax=ax
+    # sns.boxplot(
+    #     x="x",
+    #     y="y",
+    #     data=data,
+    #     linewidth=0.75,
+    #     fliersize=0.1,
+    #     color="#CCCCCC",
+    #     ax=ax
+    # )
+    g = sns.jointplot(
+        x=x_array,
+        y=y_array,
+        kind="hex",
+        color="#4CB391",
+        height=8,
     )
+    g.set_axis_labels(args.x_axis_label, args.y_axis_label)
 
-    ax.text(
+    g.ax_joint.text(
         0.05,
         0.95,
         f"$R^2={r_value**2:.3f}$",
         horizontalalignment='left',
         verticalalignment='center',
-        transform=ax.transAxes,
+        transform=g.ax_joint.transAxes,
     )
 
-    ax.set_xlabel(args.x_axis_label)
-    ax.set_ylabel(args.y_axis_label)
+    #ax.set_xlabel(args.x_axis_label)
+    #ax.set_ylabel(args.y_axis_label)
 
     sns.despine()
 
-    plt.tight_layout()
-    plt.savefig(args.output)
+    #plt.tight_layout()
+    plt.savefig(args.output_figure)
+
+    if args.output_statistics:
+        statistics = pd.DataFrame([{
+            "slope": slope,
+            "intercept": intercept,
+            "r_value": r_value,
+            "r_squared": r_value ** 2,
+            "p_value": p_value,
+            "std_err": std_err,
+        }])
+
+        if args.annotations:
+            for annotations in args.annotations:
+                annotations = eval(annotations)
+                for key, value in annotations.items():
+                    statistics[key] = value
+
+        statistics.to_csv(
+            args.output_statistics,
+            index=False,
+        )

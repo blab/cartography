@@ -8,7 +8,7 @@ if __name__ == '__main__':
     # Configure command line interface.
     parser = argparse.ArgumentParser()
     parser.add_argument("--embedding", required=True, help="embedding data frame")
-    parser.add_argument("--output", required=True, help="TSV file of pairwise distances to the tMRCA for each pair of tips in the tree, sorted by tip name")
+    parser.add_argument("--output", required=True, help="CSV file of pairwise distances for each pair of tips in the embedding, sorted by tip name.")
     args = parser.parse_args()
 
     # Load embedding.
@@ -27,6 +27,7 @@ if __name__ == '__main__':
 
     # Save distances.
     tip_names = embedding.index.values
+
     distance_matrix = pd.DataFrame(squareform(distances), index=tip_names)
     pd.DataFrame(distance_matrix).to_csv(
         args.output,

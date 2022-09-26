@@ -52,7 +52,7 @@ if __name__ == "__main__":
             ]
         elif args.method == "mds":
             parameters = pd.read_csv(args.method_parameters)
-            n_components = parameters["n_components"].values[0]
+            n_components = int(parameters["components"].values[0])
             columns = [
                 f"mds{i}"
                 for i in range(1, n_components + 1)

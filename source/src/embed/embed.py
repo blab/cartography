@@ -109,14 +109,22 @@ def embed(args):
             distance_matrix.index = sequence_names
 
     # Calculate Embedding
+    clusterer = None
+
+    if args.cluster_threshold is not None:
+        cluster_threshold = float(args.cluster_threshold)
+        clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=cluster_threshold)
 
     # Load embedding and cluster parameters from an external CSV file, if
     # possible.
-    clusterer = None
     cluster_data = None
     if args.cluster_data is not None:
         max_df = pd.read_csv(args.cluster_data)
-        clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=float(max_df.where(max_df["method"] == args.command).dropna(subset = ['distance_threshold'])[["distance_threshold"]].values.tolist()[0][0]))
+
+        # Look for cluster distance threshold in the cluster data, if the user
+        # has not provided a value from the command line.
+        if args.cluster_threshold is None:
+            clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=float(max_df.where(max_df["method"] == args.command).dropna(subset = ['distance_threshold'])[["distance_threshold"]].values.tolist()[0][0]))
 
         # Get a dictionary of additional parameters provided by the cluster data
         # to override defaults for the current method.
@@ -126,10 +134,6 @@ def embed(args):
         n_components = cluster_data["n_components"]
     else:
         n_components = args.components
-
-    if args.cluster_threshold is not None:
-        cluster_threshold = float(args.cluster_threshold)
-        clusterer = hdbscan.HDBSCAN(cluster_selection_epsilon=cluster_threshold)
 
     # Use PCA as its own embedding or as an initialization for t-SNE.
     if args.command == "pca" or args.command == "t-sne":
