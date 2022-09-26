@@ -22,12 +22,9 @@ RANDOM_SEED = 314159
 CLUSTER_THRESHOLD = 2.0
 
 localrules:
-    seasonal_flu_training_aggregate_clusters_by_parameters,
     mers_download_elife_tree,
     mers_download_mcc_tree,
     mers_unzip,
-    mers_aggregate_clusters_by_parameters,
-    sarscov2_aggregate_clusters_by_parameters,
 
 wildcard_constraints:
     method="(pca|mds|t-sne|umap|genetic)",
