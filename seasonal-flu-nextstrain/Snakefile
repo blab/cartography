@@ -590,7 +590,7 @@ rule seasonal_flu_training_create_scatterplot_figure:
         scatterplot = "docs/figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png",
     conda: "../cartography.yml"
     notebook:
-        "2022-03-29-scatterplot-figure.py.ipynb"
+        "../notebooks/2022-09-26-scatterplot-figure.py.ipynb"
 
 rule seasonal_flu_training_create_notebook_docs:
     input:
