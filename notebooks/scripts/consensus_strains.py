@@ -1,5 +1,7 @@
 import argparse
 from Bio import SeqIO
+from Bio.Align import MultipleSeqAlignment
+from Bio.Align.AlignInfo import SummaryInfo
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 import numpy as np
@@ -16,6 +18,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("--alignment", required=True, help="the name of the aligned file to create consensus strains from")
     parser.add_argument("--metadata", required=True, help="clade information to create cluster per clade.")
+    parser.add_argument("--group-by", default="clade_membership", help="attribute name in metadata to group sequences from the alignment to find a consensus for")
     parser.add_argument("--output", required=True, help="outputting a csv file of metadata info for HDBSCAN results")
 
     args = parser.parse_args()
@@ -37,7 +40,7 @@ if __name__ == "__main__":
             if strain in sequences_by_name
         ])
         clade_annotations = clade_annotations.set_index("strain")
-    else: 
+    else:
         clade_annotations = pd.read_csv(args.metadata, sep="\t").set_index("strain")
         clade_annotations = clade_annotations[["clade_membership"]]
         clade_annotations.columns=["clade"]
@@ -47,9 +50,21 @@ if __name__ == "__main__":
     # merge strain information (make a dictionary)
     for clades in list_clades:
         sequences = []
+        records = []
         for index, row in clades.iterrows():
             sequences.append(sequences_by_name[index])
+            records.append(
+                SeqRecord(Seq(sequences_by_name[index]), id=index)
+            )
         clades["sequence"] = sequences
+
+        alignment = MultipleSeqAlignment(records)
+        consensus_sequence = SummaryInfo(alignment).dumb_consensus(threshold=0.5)
+        alignment.append(SeqRecord(consensus_sequence, id="consensus"))
+
+        cluster_id = clades["clade"].drop_duplicates().values[0]
+        with open(f"alignment_{cluster_id}.fasta", "w") as handle:
+            SeqIO.write(alignment, handle, "fasta")
 
     total_consensus_per_group = []
     for clades in list_clades:
@@ -67,9 +82,9 @@ if __name__ == "__main__":
     # for clade, consensus in zip(clade.groups, total_consensus_per_group):
     #     record = SeqRecord(consensus, clade)
     #     fasta_output.append(record)
-    
+
     # SeqIO.write(fasta_output, args.output, "fasta")
-    
+
     #Output FASTA file
     with open(args.output, "w") as output_handle:
         for strains, genomes in clade_consensus_strain.items():

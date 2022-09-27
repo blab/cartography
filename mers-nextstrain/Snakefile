@@ -566,13 +566,17 @@ rule create_consensus_strains_mers:
     message: "finding consensus strain per clade"
     input:
         alignment = "mers-nextstrain/results/aligned.fasta",
-        metadata = "mers-nextstrain/results/table.tsv",
+        metadata = "mers-nextstrain/results/annotated_embeddings.tsv",
     output:
-        consensus = "mers-nextstrain/results/consensus_strains.fasta"
-    shell:"""
+        consensus = "mers-nextstrain/results/consensus_strains_{embedding}.fasta"
+    params:
+        group_by = lambda wildcards: f"{wildcards.embedding.tolower()}_label" # mds_label
+    shell:
+    """
     python3 notebooks/scripts/consensus_strains.py \
         --alignment {input.alignment} \
         --metadata {input.metadata} \
+        --group-by {params.group_by} \
         --output {output.consensus} \
     """
 
