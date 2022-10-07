@@ -42,12 +42,20 @@ if __name__ == "__main__":
         clade_annotations = clade_annotations.set_index("strain")
     else:
         clade_annotations = pd.read_csv(args.metadata, sep="\t").set_index("strain")
-        clade_annotations = clade_annotations[["clade_membership"]]
+ 
+        if (args.group_by == "tsne_label"):
+            clade_annotations = clade_annotations[["t-sne_label"]]
+        else:
+            clade_annotations = clade_annotations[[args.group_by]]
+        
         clade_annotations.columns=["clade"]
 
     clade = clade_annotations.groupby(["clade"])
     list_clades = [clade.get_group(x) for x in clade.groups]
+
     # merge strain information (make a dictionary)
+
+    alignments = []
     for clades in list_clades:
         sequences = []
         records = []
@@ -56,41 +64,36 @@ if __name__ == "__main__":
             records.append(
                 SeqRecord(Seq(sequences_by_name[index]), id=index)
             )
-        clades["sequence"] = sequences
+        clades["strain"] = sequences
 
         alignment = MultipleSeqAlignment(records)
         consensus_sequence = SummaryInfo(alignment).dumb_consensus(threshold=0.5)
         alignment.append(SeqRecord(consensus_sequence, id="consensus"))
 
         cluster_id = clades["clade"].drop_duplicates().values[0]
-        with open(f"alignment_{cluster_id}.fasta", "w") as handle:
+        alignments.append(alignment)
+
+    with open(args.output, "w") as handle:
+        for alignment in alignments:
             SeqIO.write(alignment, handle, "fasta")
 
-    total_consensus_per_group = []
-    for clades in list_clades:
-        consensus = []
-        for (name, data) in clades[["sequence"]].iteritems():
-            split_data = pd.Series(data[0]).apply(lambda x: pd.Series(list(x)))
-            consensus.append(split_data.value_counts().idxmax())
-        str_consensus = "".join(list(consensus[0]))
-        total_consensus_per_group.append(str_consensus)
+    # total_consensus_per_group = []
+    # for clades in list_clades:
+    #     consensus = []
+    #     for (name, data) in clades[["sequence"]].iteritems():
+    #         split_data = pd.Series(data[0]).apply(lambda x: pd.Series(list(x)))
+    #         consensus.append(split_data.value_counts().idxmax())
+    #     str_consensus = "".join(list(consensus[0]))
+    #     total_consensus_per_group.append(str_consensus)
 
-    clade_consensus_strain = dict(zip(clade.groups, total_consensus_per_group))
+    # clade_consensus_strain = dict(zip(clade.groups, total_consensus_per_group))
 
-    # fasta_output = []
-    # fasta_output.append()
-    # for clade, consensus in zip(clade.groups, total_consensus_per_group):
-    #     record = SeqRecord(consensus, clade)
-    #     fasta_output.append(record)
-
-    # SeqIO.write(fasta_output, args.output, "fasta")
-
-    #Output FASTA file
-    with open(args.output, "w") as output_handle:
-        for strains, genomes in clade_consensus_strain.items():
-            record = SeqRecord(
-            Seq(genomes),
-            id=strains,
-            description=""
-            )
-            SeqIO.write(record, output_handle, "fasta")
+    # #Output FASTA file
+    # with open(args.output, "w") as output_handle:
+    #     for strains, genomes in clade_consensus_strain.items():
+    #         record = SeqRecord(
+    #         Seq(genomes),
+    #         id=strains,
+    #         description=""
+    #         )
+    #         SeqIO.write(record, output_handle, "fasta")
