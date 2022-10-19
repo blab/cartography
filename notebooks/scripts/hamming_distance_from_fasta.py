@@ -19,6 +19,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--alignment", required=True, help="aligned FASTA file of diseases")
     parser.add_argument("--output", required=True, help="path for the csv output")
+    parser.add_argument("--indel-distance", action="store_true", help="add indel distances to genetic distances")
 
     args = parser.parse_args()
 
@@ -30,7 +31,8 @@ if __name__ == "__main__":
     sequence_names = list(sequences_by_name.keys())
     # Calculate Distance Matrix
     hamming_distances = get_hamming_distances(
-        sequences_by_name.values()
+        sequences_by_name.values(),
+        args.indel_distance
     )
     distance_matrix = squareform(hamming_distances)
 

@@ -28,6 +28,7 @@ if __name__ == "__main__":
     parser.add_argument("--random-seed", default = 314159, type=int, help="an integer used as the random seed for reproducible results")
     parser.add_argument("--output-node-data", help="outputting a node data JSON file")
     parser.add_argument("--output-dataframe", help="outputting a csv file")
+    parser.add_argument("--indel-distance", action="store_true", help="add indel distances to genetic distances")
     parser.add_argument("--output-figure", help="plot of the embedding, for debugging purposes")
 
     #parser.add_argument("--method-params" help="csv file from grid search")
@@ -82,7 +83,8 @@ if __name__ == "__main__":
             # Calculate Distance Matrix
 
             hamming_distances = get_hamming_distances(
-                sequences_by_name.values()
+                sequences_by_name.values(),
+                args.indel_distance
             )
             distance_matrix = pd.DataFrame(squareform(hamming_distances))
             distance_matrix.index = sequence_names

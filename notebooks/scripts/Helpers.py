@@ -55,7 +55,7 @@ def get_PCA_feature_matrix(alignment, sequence_names):
     return numbers
 
 
-def get_hamming_distances(genomes):
+def get_hamming_distances(genomes, count_indels=False):
     """Calculate pairwise Hamming distances between the given list of genomes
     and return the nonredundant array of values for use with scipy's squareform function.
     Bases other than standard nucleotides (A, T, C, G) are ignored. Treat indels as a single event.
@@ -63,6 +63,9 @@ def get_hamming_distances(genomes):
     ----------
     genomes : list
         a list of strings corresponding to genomes that should be compared
+    count_indels : boolean
+        true means indels are counted in the distance calculation, false if not.
+        the default value is false. 
     Returns
     -------
     list
@@ -105,19 +108,24 @@ def get_hamming_distances(genomes):
     for i in range(len(genomes)):
         # Only compare the current genome, i, with all later genomes.
         # This avoids repeating comparisons or comparing each genome to itself.
-        np_genomes = np.array(list(re.sub("-", "0", genomes[i])))
+        if count_indels:
+            np_genomes = np.array(list(re.sub("-", "0", genomes[i])))
 
         for j in range(i + 1, len(genomes)):
-            np_genomes_b = np.array(list(re.sub("-", "0", genomes[j])))
-            result = np.where(np_genomes_b == "0")
-            np_genomes[result] = 0
-            a = (np_genomes=="0")
-            num_indel = (a&~np.r_[[False],a[:-1]]).sum()
+            if count_indels:
+                np_genomes_b = np.array(list(re.sub("-", "0", genomes[j])))
+                result = np.where(np_genomes_b == "0")
+                np_genomes[result] = 0
+                a = (np_genomes=="0")
+                num_indel = (a&~np.r_[[False],a[:-1]]).sum()
             # Find all mismatches between these two genomes.
             mismatches = genome_arrays[i] != genome_arrays[j]
 
             # Count the number of mismatches where both genomes have valid bases.
-            hamming_distances.append(((mismatches & valid_bases[i] & valid_bases[j]).sum()) + num_indel)
+            if count_indels:
+                hamming_distances.append(((mismatches & valid_bases[i] & valid_bases[j]).sum()) + num_indel)
+            else:
+                hamming_distances.append((mismatches & valid_bases[i] & valid_bases[j]).sum())
 
     return hamming_distances
 
