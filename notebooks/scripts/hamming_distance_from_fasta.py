@@ -31,7 +31,7 @@ if __name__ == "__main__":
     sequence_names = list(sequences_by_name.keys())
     # Calculate Distance Matrix
     hamming_distances = get_hamming_distances(
-        sequences_by_name.values(),
+        list(sequences_by_name.values()),
         args.indel_distance
     )
     distance_matrix = squareform(hamming_distances)

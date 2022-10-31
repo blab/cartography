@@ -71,17 +71,29 @@ def get_hamming_distances(genomes, count_indels=False):
     list
         a list of distinct Hamming distances as a vector-form distance vector
     >>> genomes = ["ATGCT", "ATGCT", "ACGCT"]
+    >>> get_hamming_distances(genomes, True)
+    [0, 1, 1]
+    >>> genomes = ["AT-GCT", "AT--CT", "AC--CT"]
+    >>> get_hamming_distances(genomes, True)
+    [1, 2, 2]
+    >>> genomes = ["ACTGG", "A--GN", "A-NGG"]
+    >>> get_hamming_distances(genomes, True)
+    [1, 1, 1]
+    >>> genomes = ["ACTGTA", "A--CCA", "A--GT-"]
+    >>> get_hamming_distances(genomes, True)
+    [3, 2, 4]
+    >>> genomes = ["ATGCT", "ATGCT", "ACGCT"]
     >>> get_hamming_distances(genomes)
     [0, 1, 1]
     >>> genomes = ["AT-GCT", "AT--CT", "AC--CT"]
     >>> get_hamming_distances(genomes)
-    [1, 2, 2]
+    [0, 1, 1]
     >>> genomes = ["ACTGG", "A--GN", "A-NGG"]
     >>> get_hamming_distances(genomes)
-    [1, 1, 1]
+    [0, 0, 0]
     >>> genomes = ["ACTGTA", "A--CCA", "A--GT-"]
     >>> get_hamming_distances(genomes)
-    [3, 2, 4]
+    [2, 0, 2]
     """
 
     # Define an array of valid nucleotides to use in pairwise distance calculations.
