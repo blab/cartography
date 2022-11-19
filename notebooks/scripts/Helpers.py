@@ -73,15 +73,17 @@ def get_hamming_distances(genomes, count_indels=False):
     >>> genomes = ["ATGCT", "ATGCT", "ACGCT"]
     >>> get_hamming_distances(genomes, True)
     [0, 1, 1]
+    >>> get_hamming_distances(["AT--CT", "AC--CT"], True)
+    [1]
     >>> genomes = ["AT-GCT", "AT--CT", "AC--CT"]
     >>> get_hamming_distances(genomes, True)
-    [1, 2, 2]
+    [1, 2, 1]
     >>> genomes = ["ACTGG", "A--GN", "A-NGG"]
     >>> get_hamming_distances(genomes, True)
     [1, 1, 1]
     >>> genomes = ["ACTGTA", "A--CCA", "A--GT-"]
     >>> get_hamming_distances(genomes, True)
-    [3, 2, 4]
+    [3, 2, 3]
     >>> genomes = ["ATGCT", "ATGCT", "ACGCT"]
     >>> get_hamming_distances(genomes)
     [0, 1, 1]
