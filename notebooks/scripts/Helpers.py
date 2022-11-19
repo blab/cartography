@@ -55,6 +55,45 @@ def get_PCA_feature_matrix(alignment, sequence_names):
     return numbers
 
 
+def find_ranges(positions):
+    """
+    Find ranges of adjacent integers in the given list of integers and
+    return a dictionary of gap lengths indexed by start position.
+
+    >>> find_ranges([])
+    {}
+    >>> find_ranges([0])
+    {0: 1}
+    >>> find_ranges([0, 2, 3, 4])
+    {0: 1, 2: 3}
+    >>> find_ranges([2, 3, 4])
+    {2: 3}
+    >>> find_ranges([2, 3, 4, 6, 7, 9])
+    {2: 3, 6: 2, 9: 1}
+
+    """
+    ranges = {}
+    start = 0
+    end = 0
+    for i in range(len(positions)):
+        # If the next position is one greater than the current position, update
+        # the end point to the next position.
+        if i < len(positions) - 1 and positions[i] + 1 == positions[i + 1]:
+            end = i + 1
+        # Otherwise, if the next position is more than one away or we're at the
+        # end of the list, save the current range and set the next range to
+        # start and end at the next position.
+        else:
+            # If the range is a singleton, output only that value. Otherwise,
+            # output the range from start to end.
+            ranges[positions[start]] = end - start + 1
+
+            start = i + 1
+            end = i + 1
+
+    return ranges
+
+
 def get_hamming_distances(genomes, count_indels=False):
     """Calculate pairwise Hamming distances between the given list of genomes
     and return the nonredundant array of values for use with scipy's squareform function.
@@ -123,23 +162,28 @@ def get_hamming_distances(genomes, count_indels=False):
         # Only compare the current genome, i, with all later genomes.
         # This avoids repeating comparisons or comparing each genome to itself.
         if count_indels:
-            np_genomes = np.array(list(re.sub("-", "0", genomes[i])))
+            i_gaps = np.where(genome_arrays[i] == b"-")
+            i_gap_ranges = find_ranges(i_gaps[0])
 
         for j in range(i + 1, len(genomes)):
-            if count_indels:
-                np_genomes_b = np.array(list(re.sub("-", "0", genomes[j])))
-                result = np.where(np_genomes_b == "0")
-                np_genomes[result] = 0
-                a = (np_genomes=="0")
-                num_indel = (a&~np.r_[[False],a[:-1]]).sum()
-            # Find all mismatches between these two genomes.
-            mismatches = genome_arrays[i] != genome_arrays[j]
+            # Find all mismatches at valid nucleotide bases.
+            distance = ((genome_arrays[i] != genome_arrays[j]) & valid_bases[i] & valid_bases[j]).sum()
 
-            # Count the number of mismatches where both genomes have valid bases.
             if count_indels:
-                hamming_distances.append(((mismatches & valid_bases[i] & valid_bases[j]).sum()) + num_indel)
-            else:
-                hamming_distances.append((mismatches & valid_bases[i] & valid_bases[j]).sum())
+                j_gaps = np.where(genome_arrays[j] == b"-")
+                j_gap_ranges = find_ranges(j_gaps[0])
+
+                # Mismatched gaps include total number of different start
+                # positions plus the number of the same start positions with
+                # different lengths.
+                num_indel = 0
+                for gap_start, gap_length  in j_gap_ranges.items():
+                    if gap_start not in i_gap_ranges or i_gap_ranges[gap_start] != gap_length:
+                        num_indel += 1
+
+                distance += num_indel
+
+            hamming_distances.append(distance)
 
     return hamming_distances
 
