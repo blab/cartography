@@ -104,7 +104,7 @@ def get_hamming_distances(genomes, count_indels=False):
         a list of strings corresponding to genomes that should be compared
     count_indels : boolean
         true means indels are counted in the distance calculation, false if not.
-        the default value is false. 
+        the default value is false.
     Returns
     -------
     list
