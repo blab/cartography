@@ -98,6 +98,7 @@ def get_hamming_distances(genomes, count_indels=False):
     """Calculate pairwise Hamming distances between the given list of genomes
     and return the nonredundant array of values for use with scipy's squareform function.
     Bases other than standard nucleotides (A, T, C, G) are ignored. Treat indels as a single event.
+
     Parameters
     ----------
     genomes : list
@@ -105,10 +106,12 @@ def get_hamming_distances(genomes, count_indels=False):
     count_indels : boolean
         true means indels are counted in the distance calculation, false if not.
         the default value is false.
+
     Returns
     -------
     list
         a list of distinct Hamming distances as a vector-form distance vector
+
     >>> genomes = ["ATGCT", "ATGCT", "ACGCT"]
     >>> get_hamming_distances(genomes, True)
     [0, 1, 1]
@@ -120,9 +123,19 @@ def get_hamming_distances(genomes, count_indels=False):
     >>> genomes = ["ACTGG", "A--GN", "A-NGG"]
     >>> get_hamming_distances(genomes, True)
     [1, 1, 1]
+
+    When counting indels, we ignore leading and trailing gaps that indicate
+    different sequence lengths and not biological events.
+
     >>> genomes = ["ACTGTA", "A--CCA", "A--GT-"]
     >>> get_hamming_distances(genomes, True)
-    [3, 2, 3]
+    [3, 1, 2]
+    >>> genomes = ["ACTGTA", "A--CCA", "---GT-"]
+    >>> get_hamming_distances(genomes, True)
+    [3, 0, 2]
+
+    When not counting indels, we ignore gaps altogether.
+
     >>> genomes = ["ATGCT", "ATGCT", "ACGCT"]
     >>> get_hamming_distances(genomes)
     [0, 1, 1]
@@ -135,6 +148,7 @@ def get_hamming_distances(genomes, count_indels=False):
     >>> genomes = ["ACTGTA", "A--CCA", "A--GT-"]
     >>> get_hamming_distances(genomes)
     [2, 0, 2]
+
     """
 
     # Define an array of valid nucleotides to use in pairwise distance calculations.
@@ -157,15 +171,17 @@ def get_hamming_distances(genomes, count_indels=False):
     # The resulting list is a reduced representation of a symmetric matrix that can be
     # converted to a square matrix with scipy's squareform function:
     # https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.squareform.html
+    total_genomes = len(genomes)
+    alignment_length = len(genomes[0])
     hamming_distances = []
-    for i in range(len(genomes)):
+    for i in range(total_genomes):
         # Only compare the current genome, i, with all later genomes.
         # This avoids repeating comparisons or comparing each genome to itself.
         if count_indels:
             i_gaps = np.where(genome_arrays[i] == b"-")
             i_gap_ranges = find_ranges(i_gaps[0])
 
-        for j in range(i + 1, len(genomes)):
+        for j in range(i + 1, total_genomes):
             # Find all mismatches at valid nucleotide bases.
             distance = ((genome_arrays[i] != genome_arrays[j]) & valid_bases[i] & valid_bases[j]).sum()
 
@@ -175,9 +191,19 @@ def get_hamming_distances(genomes, count_indels=False):
 
                 # Mismatched gaps include total number of different start
                 # positions plus the number of the same start positions with
-                # different lengths.
+                # different lengths. Note that we ignore gaps that start at the
+                # beginning of the alignment which occur because of differing
+                # sequence lengths and not necessarily a biological event.
                 num_indel = 0
                 for gap_start, gap_length  in j_gap_ranges.items():
+                    # Skip leading gaps.
+                    if gap_start == 0:
+                        continue
+
+                    # Skip trailing gaps.
+                    if gap_start + gap_length == alignment_length:
+                        continue
+
                     if gap_start not in i_gap_ranges or i_gap_ranges[gap_start] != gap_length:
                         num_indel += 1
 
