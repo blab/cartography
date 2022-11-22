@@ -42,10 +42,10 @@ if __name__ == "__main__":
         clade_annotations = clade_annotations[clade_annotations.clade != "unassigned"]
     elif args.metadata.endswith(".csv") :
         clade_annotations = pd.read_csv(args.metadata)
-        clade_annotations.set_index("strain")
         clade_annotations["clade"] = clade_annotations[args.metadata_column]
-        clade_annotations = clade_annotations[clade_annotations.clade != "-1"]
+        clade_annotations = clade_annotations[clade_annotations.clade != -1]
         clade_annotations = clade_annotations[["strain", "clade"]]
+        clade_annotations = clade_annotations.set_index("strain")
 
     # Find mutations per cluster relative to reference as Python dictionary of sets indexed by cluster name
     clade = clade_annotations.groupby(["clade"])
@@ -57,6 +57,7 @@ if __name__ == "__main__":
     mutations_per_cluster_reference = {}
     for clade in strains_per_cluster_reference:
         mutations=[]
+        print(strains_per_cluster_reference)
         for name in strains_per_cluster_reference[clade]:
             strain = sequences_by_name[name]
             # compare each strain to the reference
@@ -108,4 +109,5 @@ if __name__ == "__main__":
                         }
                     )
     mutations_df = pd.DataFrame(mutations)
+    print(mutations_df)
     mutations_df.to_csv(args.output, index=False)              
