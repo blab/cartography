@@ -105,11 +105,12 @@ rule mers_pca_before:
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        python3 notebooks/scripts/embed.py \
             --alignment {input.alignment} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
+            --indel-distance \
             pca \
             --components {params.components} \
             --explained-variance {output.explained_variance}
@@ -165,10 +166,11 @@ rule mers_pca_after:
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        python3 notebooks/scripts/embed.py \
             --alignment {input.alignment} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
+            --indel-distance \
             --output-figure {output.figure} \
             pca \
             --components {params.components} \
@@ -233,13 +235,14 @@ rule mers_embed_pca:
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        python3 notebooks/scripts/embed.py \
             --alignment {input.alignment} \
             --cluster-data {input.cluster} \
             --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
+            --indel-distance \
             pca \
             --explained-variance {output.explained_variance}
         """
@@ -255,17 +258,20 @@ rule mers_embed_mds:
     params:
         random_seed = RANDOM_SEED,
         cluster_threshold = CLUSTER_THRESHOLD,
+        components = 6
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        python3 notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
+            --indel-distance \
             --output-figure {output.figure} \
-            mds
+            mds \
+            --components {params.components}
         """
 
 rule mers_embed_tsne:
@@ -283,13 +289,14 @@ rule mers_embed_tsne:
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        python3 notebooks/scripts/embed.py \
             --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
+            --indel-distance \
             --output-figure {output.figure} \
             t-sne
         """
@@ -308,10 +315,11 @@ rule mers_embed_umap:
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        python3 notebooks/scripts/embed.py \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --cluster-threshold {params.cluster_threshold} \
+            --indel-distance \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
