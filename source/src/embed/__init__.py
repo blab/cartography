@@ -21,6 +21,7 @@ def make_parser():
     parser.add_argument("--cluster-data", help="The file (same separator as distance-matrix) that contains the distance threshold by which to cluster data in the embedding and assign labels given via HDBSCAN (https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html). If no value is given in cluster-data or cluster-threshold, the default distance threshold of 0.0 will be used. If any additional columns in this file match embedding-specific parameters (e.g., 'n_components' or 'learning_rate'), the values from the first record of this file will override default values or values provided by the command line arguments.")
     parser.add_argument("--cluster-threshold", type=float, help="The float value for the distance threshold by which to cluster data in the embedding and assign labels via HDBSCAN. If no value is given in cluster-data or cluster-threshold, the default distance threshold of 0.0 will be used.")
     parser.add_argument("--random-seed", default = 314159, type=int, help="an integer used for reproducible results.")
+    parser.add_argument("--indel-distance", action="store_true", help="include insertions/deletions in genetic distance calculations")
     parser.add_argument("--output-dataframe", help="a csv file outputting the embedding with the strain name and its components.")
     parser.add_argument("--output-figure", help="outputs a PNG plot of the embedding")
 
