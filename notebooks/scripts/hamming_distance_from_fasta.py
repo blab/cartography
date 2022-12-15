@@ -1,9 +1,6 @@
 """
 takes the output from bases_missing.py and outputs a distance matrix
 """
-import sys
-sys.path.append("../")
-
 import argparse
 from augur.io import read_sequences
 from collections import OrderedDict
@@ -12,7 +9,7 @@ import numpy as np
 from pathlib import Path
 from scipy.spatial.distance import squareform, pdist
 
-from Helpers import get_hamming_distances
+from embed import get_hamming_distances
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

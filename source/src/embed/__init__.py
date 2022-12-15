@@ -10,7 +10,7 @@ __credits__ = 'Bedford Lab, Vaccine and Infectious Disease Division, Fred Hutchi
 
 import argparse
 import sys
-from .embed import embed
+from .embed import embed, get_hamming_distances
 
 def make_parser():
     parser = argparse.ArgumentParser(description = "Reduced dimension embeddings for pathogen sequences", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
