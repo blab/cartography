@@ -186,6 +186,7 @@ rule mers_create_distance_matrix:
         """
         python3 notebooks/scripts/hamming_distance_from_fasta.py \
             --alignment {input.alignment} \
+            --indel-distance \
             --output {output.output}
         """
 
@@ -219,7 +220,6 @@ rule mers_clades:
          """
 
 rule mers_embed_pca:
-    message: "Creating the embedding for PCA"
     input:
         alignment = "mers-nextstrain/results/aligned.fasta",
         cluster = "simulations/coronavirus-like/high-recombination-rate/pca_parameters.csv",
@@ -245,7 +245,6 @@ rule mers_embed_pca:
         """
 
 rule mers_embed_mds:
-    message: "Creating the embedding for MDS"
     input:
         distance_matrix = "mers-nextstrain/results/distance_matrix.csv",
         cluster = "simulations/coronavirus-like/high-recombination-rate/mds_parameters.csv",
@@ -269,7 +268,6 @@ rule mers_embed_mds:
         """
 
 rule mers_embed_tsne:
-    message: "Creating the embedding for t-SNE"
     input:
         alignment="mers-nextstrain/results/aligned.fasta",
         distance_matrix = "mers-nextstrain/results/distance_matrix.csv",
@@ -295,7 +293,6 @@ rule mers_embed_tsne:
         """
 
 rule mers_embed_umap:
-    message: "Creating the embedding for UMAP"
     input:
         distance_matrix = "mers-nextstrain/results/distance_matrix.csv",
         cluster = "simulations/coronavirus-like/high-recombination-rate/umap_parameters.csv",

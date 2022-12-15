@@ -183,6 +183,7 @@ rule sarscov2_create_distance_matrix:
         """
         python3 notebooks/scripts/hamming_distance_from_fasta.py \
             --alignment {input.alignment} \
+            --indel-distance \
             --output {output.output}
         """
 
