@@ -183,6 +183,7 @@ rule sarscov2_create_distance_matrix:
         """
         python3 notebooks/scripts/hamming_distance_from_fasta.py \
             --alignment {input.alignment} \
+            --indel-distance \
             --output {output.output}
         """
 
@@ -201,14 +202,13 @@ rule sarscov2_embed_pca:
     conda: "../cartography.yml"
     shell:
         """
-        python3 notebooks/scripts/embed.py \
+        embed \
             --alignment {input.alignment} \
             --cluster-data {input.cluster} \
             --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            --indel-distance \
             pca \
             --explained-variance {output.explained_variance}
         """
@@ -227,14 +227,13 @@ rule sarscov2_embed_mds:
     conda: "../cartography.yml"
     shell:
         """
-        python3 notebooks/scripts/embed.py \
+        embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            --indel-distance \
             mds
         """
 
@@ -253,7 +252,7 @@ rule sarscov2_embed_tsne:
     conda: "../cartography.yml"
     shell:
         """
-        python3 notebooks/scripts/embed.py \
+        embed \
             --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
@@ -261,7 +260,6 @@ rule sarscov2_embed_tsne:
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            --indel-distance \
             t-sne
         """
 
@@ -279,14 +277,13 @@ rule sarscov2_embed_umap:
     conda: "../cartography.yml"
     shell:
         """
-        python3 notebooks/scripts/embed.py \
+        embed \
             --distance-matrix {input.distance_matrix} \
             --cluster-data {input.cluster} \
             --cluster-threshold {params.cluster_threshold} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            --indel-distance \
             umap
         """
 
