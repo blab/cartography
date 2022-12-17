@@ -12,16 +12,31 @@ if __name__ == "__main__":
     parser.add_argument("--alignment", required=True, help="aligned FASTA file of diseases")
     parser.add_argument("--metadata", required=True, help="metadata with clade information")
     parser.add_argument("--metadata-column", default="MCC", help="metadata column to find clade information")
+    parser.add_argument("--ignored-characters", nargs="+", default=["X"], help="list of characters to ignore in pairwise comparisons with the reference")
     parser.add_argument("--output", help="the name of the csv file to be outputted")
 
     args = parser.parse_args()
 
-    reference = []
-    for sequence in read_sequences(args.reference_alignment):
-        reference.append(str(sequence.seq))
+    reference = str(next(read_sequences(args.reference_alignment)).seq)
 
-    reference = reference[0]
+    # Create a list of gap sites at the beginning and end of the reference
+    # sequence to ignore from the alignment. This happens when the reference is
+    # missing sequences that are present in the consensus sequences. These
+    # differences usually reflect missing data in the original sequencing of the
+    # reference and not a biologically-relevant insertion.
+    ignored_sites = []
+    site = 0
+    while reference[site] == "-" and site < len(reference):
+        ignored_sites.append(site)
+        site += 1
 
+    site = len(reference) - 1
+    while reference[site] == "-" and site >= 0:
+        ignored_sites.append(site)
+        site -= 1
+
+    print(f"Ignoring leading and trailing gaps in the reference at sites: {ignored_sites}")
+    print(f"Ignoring characters: {args.ignored_characters}")
     sequences_by_name = OrderedDict()
 
     for sequence in read_sequences(args.alignment):
@@ -57,12 +72,16 @@ if __name__ == "__main__":
     mutations_per_cluster_reference = {}
     for clade in strains_per_cluster_reference:
         mutations=[]
-        print(strains_per_cluster_reference)
         for name in strains_per_cluster_reference[clade]:
             strain = sequences_by_name[name]
             # compare each strain to the reference
             for site in range(len(reference)):
-                if strain[site] != reference[site]:
+                if all((
+                    site not in ignored_sites,
+                    strain[site] != reference[site],
+                    strain[site] not in args.ignored_characters,
+                    reference[site] not in args.ignored_characters,
+                )):
                     # Report the site in 1-based coordinates.
                     mutations.append(
                         {
@@ -75,19 +94,17 @@ if __name__ == "__main__":
 
         mutations = pd.DataFrame(mutations)
         mutations["mutation"] = mutations.apply(
-            lambda row: row["reference_allele"] + str(row["site"]) + row["alternate_allele"],
+            lambda row: str(row["site"]) + row["alternate_allele"],
             axis=1,
         )
         mutations_per_cluster_reference[clade] = set(mutations["mutation"])
-
-    # print(mutations_per_cluster_reference)
 
     # Remove mutations that are present in all clusters (reference-only mutations)
     # Intersection of all sets in sets by cluster name to find shared mutations
     shared_reference_mutations = mutations_per_cluster_reference[list(mutations_per_cluster_reference)[0]]
     for mutation in mutations_per_cluster_reference:
         shared_reference_mutations = shared_reference_mutations.intersection(mutations_per_cluster_reference[mutation])
-        
+
     # Remove resulting intersection from each cluster set
     for mutation in mutations_per_cluster_reference:
         mutations_per_cluster_reference[mutation] = mutations_per_cluster_reference[mutation] - shared_reference_mutations
@@ -109,5 +126,4 @@ if __name__ == "__main__":
                         }
                     )
     mutations_df = pd.DataFrame(mutations)
-    print(mutations_df)
-    mutations_df.to_csv(args.output, index=False)              
+    mutations_df.to_csv(args.output, index=False)
