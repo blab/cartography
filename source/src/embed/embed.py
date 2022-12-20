@@ -130,8 +130,9 @@ def embed(args):
         # to override defaults for the current method.
         cluster_data = max_df.to_dict("records")[0]
 
-    if cluster_data is not None and "n_components" in cluster_data:
-        n_components = cluster_data["n_components"]
+    if cluster_data is not None and "components" in cluster_data:
+        n_components = int(cluster_data["components"])
+        cluster_data["n_components"] = n_components
     else:
         n_components = args.components
 
