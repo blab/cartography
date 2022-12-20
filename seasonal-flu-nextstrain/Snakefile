@@ -557,7 +557,7 @@ rule create_consensus_strains_flu:
 
 rule create_consensus_with_reference_flu:
     message: "adding reference to consensus strains"
-    input: 
+    input:
         reference = "seasonal-flu-nextstrain/config/reference_h3n2_ha.fasta",
         consensus = "seasonal-flu-nextstrain/results/consensus_strains.fasta"
     output:
@@ -577,7 +577,7 @@ rule create_mutation_table_flu:
         --alignment {input.alignment} \
         --output {output.table} \
     """
-    
+
 rule seasonal_flu_training_concat_HDBSCAN_table:
     message: "concatenating all the HDBSCAN data into one csv dataframe"
     input:
