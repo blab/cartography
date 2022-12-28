@@ -63,9 +63,8 @@ if __name__ == "__main__":
         clade_annotations = clade_annotations.set_index("strain")
 
     # Find mutations per cluster relative to reference as Python dictionary of sets indexed by cluster name
-    clade = clade_annotations.groupby(["clade"])
     strains_per_cluster_reference = {}
-    for clade in clade_annotations.groupby(["clade"]):
+    for clade in clade_annotations.groupby("clade"):
         strains_per_cluster = set(clade[1].index)
         strains_per_cluster_reference[clade[0]] = strains_per_cluster
 
