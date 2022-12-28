@@ -8,7 +8,7 @@ import argparse
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--reference-alignment", required=True, help="aligned FASTA file with the reference strain")
+    parser.add_argument("--reference-sequence", required=True, help="FASTA file of the reference sequence used for the alignment")
     parser.add_argument("--alignment", required=True, help="aligned FASTA file of diseases")
     parser.add_argument("--metadata", required=True, help="metadata with clade information")
     parser.add_argument("--metadata-column", default="MCC", help="metadata column to find clade information")
@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    reference = str(next(read_sequences(args.reference_alignment)).seq)
+    reference = str(next(read_sequences(args.reference_sequence)).seq)
 
     # Create a list of gap sites at the beginning and end of the reference
     # sequence to ignore from the alignment. This happens when the reference is
