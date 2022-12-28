@@ -1,8 +1,8 @@
+import argparse
 from augur.io import read_sequences
 from augur.utils import read_node_data
 from collections import OrderedDict
 import pandas as pd
-import argparse
 
 
 if __name__ == "__main__":
