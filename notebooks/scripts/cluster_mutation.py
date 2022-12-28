@@ -12,7 +12,7 @@ if __name__ == "__main__":
     parser.add_argument("--alignment", required=True, help="aligned FASTA file of diseases")
     parser.add_argument("--metadata", required=True, help="metadata with clade information")
     parser.add_argument("--metadata-column", default="MCC", help="metadata column to find clade information")
-    parser.add_argument("--ignored-characters", nargs="+", default=["X"], help="list of characters to ignore in pairwise comparisons with the reference")
+    parser.add_argument("--valid-characters", nargs="+", default=["A", "C", "T", "G", "-"], help="list of valid characters to consider in pairwise comparisons with the reference")
     parser.add_argument("--output", help="the name of the csv file to be outputted")
 
     args = parser.parse_args()
@@ -36,7 +36,7 @@ if __name__ == "__main__":
         site -= 1
 
     print(f"Ignoring leading and trailing gaps in the reference at sites: {ignored_sites}")
-    print(f"Ignoring characters: {args.ignored_characters}")
+    print(f"Valid characters: {args.valid_characters}")
     sequences_by_name = OrderedDict()
 
     for sequence in read_sequences(args.alignment):
@@ -79,8 +79,8 @@ if __name__ == "__main__":
                 if all((
                     site not in ignored_sites,
                     strain[site] != reference[site],
-                    strain[site] not in args.ignored_characters,
-                    reference[site] not in args.ignored_characters,
+                    strain[site] in args.valid_characters,
+                    reference[site] in args.valid_characters,
                 )):
                     # Report the site in 1-based coordinates.
                     mutations.append(
