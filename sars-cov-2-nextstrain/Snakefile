@@ -11,7 +11,7 @@ rule sarscov2:
         "sars-cov-2-nextstrain/results/alignment_pi.txt",
         "docs/figures/sarscov2-pc1-vs-bases-missing.png",
         "auspice/cartography_ncov.json",
-        "sars-cov-2-nextstrain/results/mutation_table.tsv"
+        "sars-cov-2-nextstrain/results/mutation_table.csv",
 
 rule sarscov2_embed_pca_before:
     message: "Creating the embedding for PCA bases missing analysis"
@@ -287,43 +287,6 @@ rule sarscov2_embed_umap:
             umap
         """
 
-rule create_consensus_strains_sars_cov_2:
-    message: "finding consensus strain per clade"
-    input:
-        alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
-        metadata = "sars-cov-2-nextstrain/results/table.tsv"
-    output:
-        consensus = "sars-cov-2-nextstrain/results/consensus_strains.fasta"
-    shell:"""
-    python3 notebooks/scripts/consensus_strains.py \
-        --alignment {input.alignment} \
-        --metadata {input.metadata} \
-        --output {output.consensus} \
-    """
-
-rule create_consensus_with_reference_sars_cov_2:
-    message: "adding reference to consensus strains"
-    input: 
-        reference = "sars-cov-2-nextstrain/config/reference_sars-cov-2.fasta",
-        consensus = "sars-cov-2-nextstrain/results/consensus_strains.fasta"
-    output:
-        consensus_reference = "sars-cov-2-nextstrain/results/consensus_with_reference.fasta"
-    shell:"""
-    cat {input.reference} {input.consensus} > {output.consensus_reference}
-    """
-
-rule create_mutation_table_sars_cov_2:
-    message: "making cluster specific mutation table"
-    input:
-        alignment = "sars-cov-2-nextstrain/results/consensus_with_reference.fasta"
-    output:
-        table = "sars-cov-2-nextstrain/results/mutation_table.tsv"
-    shell:"""
-    python3 notebooks/scripts/make_mutation_table.py \
-        --alignment {input.alignment} \
-        --output {output.table} \
-    """
-
 rule sarscov2_create_node_output:
     message: "creates node output that is used by augur to create the phylogenies"
     input:
@@ -509,6 +472,48 @@ rule sarscov2_create_scatterplot_figure:
     conda: "../cartography.yml"
     notebook:
         "../notebooks/2022-09-26-scatterplot-figure.py.ipynb"
+
+rule sarscov2_create_mutation_table:
+    input:
+        reference = "sars-cov-2-nextstrain/config/reference_sars-cov-2.fasta",
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
+        embedding = "sars-cov-2-nextstrain/results/embed_{method}.csv",
+    output:
+        table = "sars-cov-2-nextstrain/results/mutation_table_{method}.csv",
+    params:
+        min_allele_count=10,
+    conda: "../cartography.yml"
+    benchmark:
+        "benchmarks/sarscov2_create_mutation_table_{method}.txt"
+    log:
+        "logs/sarscov2_create_mutation_table_{method}.txt"
+    shell:
+        """
+        python3 notebooks/scripts/cluster_mutation.py \
+            --reference-sequence {input.reference} \
+            --alignment {input.alignment} \
+            --metadata {input.embedding} \
+            --metadata-column {wildcards.method}_label \
+            --min-allele-count {params.min_allele_count} \
+            --output {output.table} 2>&1 | tee {log}
+        """
+
+rule sarscov2_concat_mutation_tables:
+    input:
+        mutation_tables=expand("sars-cov-2-nextstrain/results/mutation_table_{method}.csv", method=EMBEDDING_METHODS),
+    output:
+        metadata = "sars-cov-2-nextstrain/results/mutation_table.csv",
+    params:
+        column = "metadata_column",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.mutation_tables} \
+            --separator ',' \
+            --sort-by {params.column} \
+            --output {output.metadata}
+        """
 
 rule sarscov2_create_notebook_docs:
     input:
