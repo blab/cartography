@@ -14,9 +14,16 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.output is not None:
-        embedding_dict = pd.read_csv(
+        embedding = pd.read_csv(
             args.table,
             sep=args.separator,
-            index_col=0
-        ).transpose().to_dict()
+            index_col=0,
+        )
+
+        # Convert label to strings
+        for column in embedding.columns:
+            if "label" in column:
+                embedding[column] = embedding[column].astype(str)
+
+        embedding_dict = embedding.transpose().to_dict()
         write_json({args.node_name: embedding_dict}, args.output)

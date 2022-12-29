@@ -11,6 +11,7 @@ rule sarscov2:
         "sars-cov-2-nextstrain/results/alignment_pi.txt",
         "docs/figures/sarscov2-pc1-vs-bases-missing.png",
         "auspice/cartography_ncov.json",
+        "sars-cov-2-nextstrain/results/mutation_table.csv",
 
 rule sarscov2_embed_pca_before:
     message: "Creating the embedding for PCA bases missing analysis"
@@ -270,7 +271,7 @@ rule sarscov2_embed_umap:
         cluster = "simulations/coronavirus-like/low-recombination-rate/umap_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_umap.csv",
-        figure = "sars-cov-2-nextstrain/results/embed_umap.pdf"
+        figure = "sars-cov-2-nextstrain/results/embed_umap.pdf",
     params:
         random_seed = RANDOM_SEED,
         cluster_threshold = CLUSTER_THRESHOLD,
@@ -472,6 +473,48 @@ rule sarscov2_create_scatterplot_figure:
     conda: "../cartography.yml"
     notebook:
         "../notebooks/2022-09-26-scatterplot-figure.py.ipynb"
+
+rule sarscov2_create_mutation_table:
+    input:
+        reference = "sars-cov-2-nextstrain/config/reference_sars-cov-2.fasta",
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
+        embedding = "sars-cov-2-nextstrain/results/embed_{method}.csv",
+    output:
+        table = "sars-cov-2-nextstrain/results/mutation_table_{method}.csv",
+    params:
+        min_allele_count=10,
+    conda: "../cartography.yml"
+    benchmark:
+        "benchmarks/sarscov2_create_mutation_table_{method}.txt"
+    log:
+        "logs/sarscov2_create_mutation_table_{method}.txt"
+    shell:
+        """
+        python3 notebooks/scripts/cluster_mutation.py \
+            --reference-sequence {input.reference} \
+            --alignment {input.alignment} \
+            --metadata {input.embedding} \
+            --metadata-column {wildcards.method}_label \
+            --min-allele-count {params.min_allele_count} \
+            --output {output.table} 2>&1 | tee {log}
+        """
+
+rule sarscov2_concat_mutation_tables:
+    input:
+        mutation_tables=expand("sars-cov-2-nextstrain/results/mutation_table_{method}.csv", method=EMBEDDING_METHODS),
+    output:
+        metadata = "sars-cov-2-nextstrain/results/mutation_table.csv",
+    params:
+        column = "metadata_column",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.mutation_tables} \
+            --separator ',' \
+            --sort-by {params.column} \
+            --output {output.metadata}
+        """
 
 rule sarscov2_create_notebook_docs:
     input:

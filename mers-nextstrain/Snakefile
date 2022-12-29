@@ -13,6 +13,7 @@ rule mers:
         "docs/figures/mers-pc1-by-bases-missing.png",
         "auspice/cartography_mers.json",
         "mers-nextstrain/results/nucleotide_diversity.txt",
+        "mers-nextstrain/results/mutation_table.csv",
 
 rule mers_download_elife_tree:
     output:
@@ -570,6 +571,48 @@ rule mers_create_scatterplot_figure:
     conda: "../cartography.yml"
     notebook:
         "../notebooks/2022-09-26-scatterplot-figure.py.ipynb"
+
+rule mers_create_mutation_table:
+    input:
+        reference = "mers-nextstrain/config/reference_mers.fasta",
+        alignment = "mers-nextstrain/results/aligned.fasta",
+        embedding = "mers-nextstrain/results/embed_{method}.csv",
+    output:
+        table = "mers-nextstrain/results/mutation_table_{method}.csv",
+    params:
+        min_allele_count=10,
+    conda: "../cartography.yml"
+    benchmark:
+        "benchmarks/mers_create_mutation_table_{method}.txt"
+    log:
+        "logs/mers_create_mutation_table_{method}.txt"
+    shell:
+        """
+        python3 notebooks/scripts/cluster_mutation.py \
+            --reference-sequence {input.reference} \
+            --alignment {input.alignment} \
+            --metadata {input.embedding} \
+            --metadata-column {wildcards.method}_label \
+            --min-allele-count {params.min_allele_count} \
+            --output {output.table} 2>&1 | tee {log}
+        """
+
+rule mers_concat_mutation_tables:
+    input:
+        mutation_tables=expand("mers-nextstrain/results/mutation_table_{method}.csv", method=EMBEDDING_METHODS),
+    output:
+        metadata = "mers-nextstrain/results/mutation_table.csv",
+    params:
+        column = "metadata_column",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.mutation_tables} \
+            --separator ',' \
+            --sort-by {params.column} \
+            --output {output.metadata}
+        """
 
 rule mers_create_notebook_docs:
     input:

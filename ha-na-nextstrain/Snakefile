@@ -27,6 +27,7 @@ rule seasonal_flu_reassortment:
         "docs/figures/flu-2016-2018-ha-na-umap-by-cluster.html",
         "docs/figures/flu-2016-2018-ha-na-umap-by-cluster.png",
         expand("auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json", segment=SEGMENTS),
+        "ha-na-nextstrain/results/mutation_table.csv",
 
 rule seasonal_flu_reassortment_files:
     params:
@@ -610,6 +611,48 @@ rule seasonal_flu_reassortment_concat_HDBSCAN_table:
         """
         python3 notebooks/scripts/concatenate_tables.py \
             --tables {input.dataframes} \
+            --separator ',' \
+            --sort-by {params.column} \
+            --output {output.metadata}
+        """
+
+rule seasonal_flu_reassortment_create_mutation_table:
+    input:
+        reference = "ha-na-nextstrain/config/reference_h3n2_ha_na.fasta",
+        alignment = "ha-na-nextstrain/results/aligned_concatenated.fasta",
+        embedding = "ha-na-nextstrain/results/embed_{method}_concatenated.csv",
+    output:
+        table = "ha-na-nextstrain/results/mutation_table_{method}.csv",
+    params:
+        min_allele_count=10,
+    conda: "../cartography.yml"
+    benchmark:
+        "benchmarks/seasonal_flu_reassortment_create_mutation_table_{method}.txt"
+    log:
+        "logs/seasonal_flu_reassortment_create_mutation_table_{method}.txt"
+    shell:
+        """
+        python3 notebooks/scripts/cluster_mutation.py \
+            --reference-sequence {input.reference} \
+            --alignment {input.alignment} \
+            --metadata {input.embedding} \
+            --metadata-column {wildcards.method}_label \
+            --min-allele-count {params.min_allele_count} \
+            --output {output.table} 2>&1 | tee {log}
+        """
+
+rule seasonal_flu_reassortment_concat_mutation_tables:
+    input:
+        mutation_tables=expand("ha-na-nextstrain/results/mutation_table_{method}.csv", method=EMBEDDING_METHODS),
+    output:
+        metadata = "ha-na-nextstrain/results/mutation_table.csv",
+    params:
+        column = "metadata_column",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.mutation_tables} \
             --separator ',' \
             --sort-by {params.column} \
             --output {output.metadata}

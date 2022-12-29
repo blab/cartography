@@ -4,6 +4,7 @@ rule seasonal_flu_test:
         "docs/figures/flu-2018-2020-ha-embeddings-by-cluster.png",
         "auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json",
         "seasonal-flu-nextstrain-2018-2020/results/nucleotide_diversity.txt",
+        "seasonal-flu-nextstrain-2018-2020/results/mutation_table.csv",
 
 rule seasonal_flu_test_files:
     params:
@@ -503,6 +504,48 @@ rule seasonal_flu_test_concat_HDBSCAN_table:
         """
         python3 notebooks/scripts/concatenate_tables.py \
             --tables {input.dataframe_pca} {input.dataframe_mds} {input.dataframe_tsne} {input.dataframe_umap} \
+            --separator ',' \
+            --sort-by {params.column} \
+            --output {output.metadata}
+        """
+
+rule seasonal_flu_test_create_mutation_table:
+    input:
+        reference = "seasonal-flu-nextstrain-2018-2020/config/reference_h3n2_ha.fasta",
+        alignment = "seasonal-flu-nextstrain-2018-2020/results/aligned_sequences.fasta",
+        embedding = "seasonal-flu-nextstrain-2018-2020/results/embed_{method}_sequences.csv",
+    output:
+        table = "seasonal-flu-nextstrain-2018-2020/results/mutation_table_{method}.csv",
+    params:
+        min_allele_count=10,
+    conda: "../cartography.yml"
+    benchmark:
+        "benchmarks/seasonal_flu_test_create_mutation_table_{method}.txt"
+    log:
+        "logs/seasonal_flu_test_create_mutation_table_{method}.txt"
+    shell:
+        """
+        python3 notebooks/scripts/cluster_mutation.py \
+            --reference-sequence {input.reference} \
+            --alignment {input.alignment} \
+            --metadata {input.embedding} \
+            --metadata-column {wildcards.method}_label \
+            --min-allele-count {params.min_allele_count} \
+            --output {output.table} 2>&1 | tee {log}
+        """
+
+rule seasonal_flu_test_concat_mutation_tables:
+    input:
+        mutation_tables=expand("seasonal-flu-nextstrain-2018-2020/results/mutation_table_{method}.csv", method=EMBEDDING_METHODS),
+    output:
+        metadata = "seasonal-flu-nextstrain-2018-2020/results/mutation_table.csv",
+    params:
+        column = "metadata_column",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.mutation_tables} \
             --separator ',' \
             --sort-by {params.column} \
             --output {output.metadata}
