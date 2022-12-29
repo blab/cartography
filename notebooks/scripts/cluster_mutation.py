@@ -12,6 +12,7 @@ if __name__ == "__main__":
     parser.add_argument("--alignment", required=True, help="aligned FASTA file of diseases")
     parser.add_argument("--metadata", required=True, help="metadata with clade information")
     parser.add_argument("--metadata-column", default="MCC", help="metadata column to find clade information")
+    parser.add_argument("--ignored-clusters", nargs="+", default=["-1", "unassigned"], help="list of cluster labels to ignore when calculating cluster-specific mutations")
     parser.add_argument("--valid-characters", nargs="+", default=["A", "C", "T", "G", "-"], help="list of valid characters to consider in pairwise comparisons with the reference")
     parser.add_argument("--min-allele-count", type=int, default=10, help="minimum number of strains in a cluster with a given alternate allele required to include the allele in cluster-specific mutations")
     parser.add_argument("--output", help="the name of the csv file to be outputted")
@@ -45,27 +46,31 @@ if __name__ == "__main__":
 
     sequence_names = list(sequences_by_name.keys())
 
-    # Index cluster name by sequence name (Python dict) from metadata
-    # NOTE TO JOHN: Not sure if json is necessary here since it's the default MCC value given
+    # Index cluster name by sequence name from metadata.
     if args.metadata.endswith(".json"):
         node_data = read_node_data(args.metadata)
         clade_annotations = pd.DataFrame([
-            {"strain": strain, "clade": annotations[args.metadata_column]}
+            {"strain": strain, "cluster": annotations[args.metadata_column]}
             for strain, annotations in node_data["nodes"].items()
             if strain in sequences_by_name
         ])
-        clade_annotations = clade_annotations.set_index("strain")
-        clade_annotations = clade_annotations[clade_annotations.clade != "unassigned"]
     elif args.metadata.endswith(".csv") :
         clade_annotations = pd.read_csv(args.metadata)
-        clade_annotations["clade"] = clade_annotations[args.metadata_column]
-        clade_annotations = clade_annotations[clade_annotations.clade != -1]
-        clade_annotations = clade_annotations[["strain", "clade"]]
-        clade_annotations = clade_annotations.set_index("strain")
+        clade_annotations["cluster"] = clade_annotations[args.metadata_column]
+        clade_annotations = clade_annotations[["strain", "cluster"]]
+
+    clade_annotations = clade_annotations.set_index("strain")
+
+    # Remove records for cluster labels we ignore. For example, we often ignore
+    # cluster labels that represent unclustered samples ("-1").
+    clade_annotations["cluster"] = clade_annotations["cluster"].astype(str)
+    clade_annotations = clade_annotations[
+        ~clade_annotations["cluster"].isin(args.ignored_clusters)
+    ].copy()
 
     # Find mutations per cluster relative to reference as Python dictionary of sets indexed by cluster name
     strains_per_cluster_reference = {}
-    for clade in clade_annotations.groupby("clade"):
+    for clade in clade_annotations.groupby("cluster"):
         strains_per_cluster = set(clade[1].index)
         strains_per_cluster_reference[clade[0]] = strains_per_cluster
 
@@ -109,7 +114,6 @@ if __name__ == "__main__":
     # Count the number of clusters with each distinct alternate allele and find
     # the specific clusters with each allele.
     all_mutation_counts = pd.concat(all_mutation_counts, ignore_index=True)
-    all_mutation_counts["cluster"] = all_mutation_counts["cluster"].astype(str)
 
     mutation_cluster_counts = all_mutation_counts.groupby(
         "mutation"
