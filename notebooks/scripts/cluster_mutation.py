@@ -13,6 +13,7 @@ if __name__ == "__main__":
     parser.add_argument("--metadata", required=True, help="metadata with clade information")
     parser.add_argument("--metadata-column", default="MCC", help="metadata column to find clade information")
     parser.add_argument("--valid-characters", nargs="+", default=["A", "C", "T", "G", "-"], help="list of valid characters to consider in pairwise comparisons with the reference")
+    parser.add_argument("--min-allele-count", type=int, default=10, help="minimum number of strains in a cluster with a given alternate allele required to include the allele in cluster-specific mutations")
     parser.add_argument("--output", help="the name of the csv file to be outputted")
 
     args = parser.parse_args()
@@ -68,26 +69,28 @@ if __name__ == "__main__":
         strains_per_cluster = set(clade[1].index)
         strains_per_cluster_reference[clade[0]] = strains_per_cluster
 
-    mutations_per_cluster_reference = {}
-    for clade in strains_per_cluster_reference:
-        mutations=[]
-        for name in strains_per_cluster_reference[clade]:
-            strain = sequences_by_name[name]
-            # compare each strain to the reference
+    all_mutation_counts = []
+    for cluster, cluster_strains in strains_per_cluster_reference.items():
+        mutations = []
+        for strain in cluster_strains:
+            strain_sequence = sequences_by_name[strain]
+
+            # Compare each strain to the reference.
             for site in range(len(reference)):
                 if all((
                     site not in ignored_sites,
-                    strain[site] != reference[site],
-                    strain[site] in args.valid_characters,
+                    strain_sequence[site] != reference[site],
+                    strain_sequence[site] in args.valid_characters,
                     reference[site] in args.valid_characters,
                 )):
                     # Report the site in 1-based coordinates.
                     mutations.append(
                         {
-                            "cluster": name,
+                            "cluster": cluster,
+                            "strain": strain,
                             "site": site + 1,
                             "reference_allele": reference[site],
-                            "alternate_allele": strain[site],
+                            "alternate_allele": strain_sequence[site],
                         }
                     )
 
@@ -96,33 +99,33 @@ if __name__ == "__main__":
             lambda row: str(row["site"]) + row["alternate_allele"],
             axis=1,
         )
-        mutations_per_cluster_reference[clade] = set(mutations["mutation"])
 
-    # Remove mutations that are present in all clusters (reference-only mutations)
-    # Intersection of all sets in sets by cluster name to find shared mutations
-    shared_reference_mutations = mutations_per_cluster_reference[list(mutations_per_cluster_reference)[0]]
-    for mutation in mutations_per_cluster_reference:
-        shared_reference_mutations = shared_reference_mutations.intersection(mutations_per_cluster_reference[mutation])
+        mutation_counts = mutations.groupby("mutation")["strain"].count().reset_index().rename(columns={"strain": "count"})
+        mutation_counts = mutation_counts[mutation_counts["count"] >= args.min_allele_count].copy()
+        mutation_counts["cluster"] = cluster
 
-    # Remove resulting intersection from each cluster set
-    for mutation in mutations_per_cluster_reference:
-        mutations_per_cluster_reference[mutation] = mutations_per_cluster_reference[mutation] - shared_reference_mutations
+        all_mutation_counts.append(mutation_counts)
 
-    # For each pair of clusters, find mutations that only exist in “from” and “to” clusters
-    # Nested for loop of clusters, excluding self-comparisons
-    mutations = []
-    for mutation_1 in mutations_per_cluster_reference:
-        for mutation_2 in mutations_per_cluster_reference:
-            if (mutation_1 != mutation_2):
-                # Find set difference for from and to (from - to)
-                set_diff = mutations_per_cluster_reference[mutation_1] - mutations_per_cluster_reference[mutation_2]
-                # Report from cluster, to cluster, mutation (e.g., 750G)
-                for item in set_diff:
-                    mutations.append(
-                        { "from": mutation_1,
-                        "to": mutation_2,
-                        "mutation": item
-                        }
-                    )
-    mutations_df = pd.DataFrame(mutations)
-    mutations_df.to_csv(args.output, index=False)
+    # Count the number of clusters with each distinct alternate allele and find
+    # the specific clusters with each allele.
+    all_mutation_counts = pd.concat(all_mutation_counts, ignore_index=True)
+    all_mutation_counts["cluster"] = all_mutation_counts["cluster"].astype(str)
+
+    mutation_cluster_counts = all_mutation_counts.groupby(
+        "mutation"
+    ).aggregate(
+        cluster_count=("cluster", "count"),
+        distinct_clusters=("cluster", "unique")
+    ).reset_index()
+
+    # Remove mutations that are present in all clusters (reference-only mutations).
+    total_clusters = all_mutation_counts["cluster"].drop_duplicates().shape[0]
+    mutation_cluster_counts = mutation_cluster_counts[mutation_cluster_counts["cluster_count"] < total_clusters].copy()
+
+    # Format distinct clusters as a comma-delimited list of names.
+    mutation_cluster_counts["distinct_clusters"] = mutation_cluster_counts["distinct_clusters"].apply(
+        lambda clusters: ",".join(clusters)
+    )
+
+    # Save mutations and their cluster information.
+    mutation_cluster_counts.to_csv(args.output, index=False)
