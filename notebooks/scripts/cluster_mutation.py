@@ -131,5 +131,8 @@ if __name__ == "__main__":
         lambda clusters: ",".join(clusters)
     )
 
+    # Annotate column used for clusters.
+    mutation_cluster_counts["metadata_column"] = args.metadata_column
+
     # Save mutations and their cluster information.
     mutation_cluster_counts.to_csv(args.output, index=False)
