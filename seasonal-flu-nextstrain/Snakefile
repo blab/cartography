@@ -10,7 +10,7 @@ rule seasonal_flu_training:
         "docs/figures/flu-2016-2018-pca-explained-variance.png",
         "auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json",
         "seasonal-flu-nextstrain/results/nucleotide_diversity.txt",
-        "seasonal-flu-nextstrain/results/mutation_table.tsv"
+        "seasonal-flu-nextstrain/results/mutation_table.csv",
 
 rule seasonal_flu_training_files:
     params:
@@ -541,43 +541,47 @@ rule seasonal_flu_training_cluster_metadata:
             --output {output.dataframe}
         """
 
-
-rule create_consensus_strains_flu:
-    message: "finding consensus strain per clade"
-    input:
-        alignment = "seasonal-flu-nextstrain/results/aligned_sequences.fasta",
-        metadata = "seasonal-flu-nextstrain/results/table.tsv"
-    output:
-        consensus = "seasonal-flu-nextstrain/results/consensus_strains.fasta"
-    shell:"""
-    python3 notebooks/scripts/consensus_strains.py \
-        --alignment {input.alignment} \
-        --metadata {input.metadata} \
-        --output {output.consensus} \
-    """
-
-rule create_consensus_with_reference_flu:
-    message: "adding reference to consensus strains"
+rule seasonal_flu_training_create_mutation_table:
     input:
         reference = "seasonal-flu-nextstrain/config/reference_h3n2_ha.fasta",
-        consensus = "seasonal-flu-nextstrain/results/consensus_strains.fasta"
+        alignment = "seasonal-flu-nextstrain/results/aligned_sequences.fasta",
+        embedding = "seasonal-flu-nextstrain/results/embed_{method}_sequences.csv",
     output:
-        consensus_reference = "seasonal-flu-nextstrain/results/consensus_with_reference.fasta"
-    shell:"""
-    cat {input.reference} {input.consensus} > {output.consensus_reference}
-    """
+        table = "seasonal-flu-nextstrain/results/mutation_table_{method}.csv",
+    params:
+        min_allele_count=10,
+    conda: "../cartography.yml"
+    benchmark:
+        "benchmarks/seasonal_flu_training_create_mutation_table_{method}.txt"
+    log:
+        "logs/seasonal_flu_training_create_mutation_table_{method}.txt"
+    shell:
+        """
+        python3 notebooks/scripts/cluster_mutation.py \
+            --reference-sequence {input.reference} \
+            --alignment {input.alignment} \
+            --metadata {input.embedding} \
+            --metadata-column {wildcards.method}_label \
+            --min-allele-count {params.min_allele_count} \
+            --output {output.table} 2>&1 | tee {log}
+        """
 
-rule create_mutation_table_flu:
-    message: "making cluster specific mutation table"
+rule seasonal_flu_training_concat_mutation_tables:
     input:
-        alignment = "seasonal-flu-nextstrain/results/consensus_with_reference.fasta"
+        mutation_tables=expand("seasonal-flu-nextstrain/results/mutation_table_{method}.csv", method=EMBEDDING_METHODS),
     output:
-        table = "seasonal-flu-nextstrain/results/mutation_table.tsv"
-    shell:"""
-    python3 notebooks/scripts/make_mutation_table.py \
-        --alignment {input.alignment} \
-        --output {output.table} \
-    """
+        metadata = "seasonal-flu-nextstrain/results/mutation_table.csv",
+    params:
+        column = "metadata_column",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.mutation_tables} \
+            --separator ',' \
+            --sort-by {params.column} \
+            --output {output.metadata}
+        """
 
 rule seasonal_flu_training_concat_HDBSCAN_table:
     message: "concatenating all the HDBSCAN data into one csv dataframe"
