@@ -24,8 +24,10 @@ def joint_entropy(X, Y):
     return H_X_Y
 
 def variation_of_information(X, Y, normalized=False):
-    """Calculate Variation of Information score between the ground truth clustering and the proposed clustering.
-    The score is 0 for an exact match, and the log of the total samples in the case of a complete difference.
+    """Calculate variation of information (VI) score between the ground truth
+    clustering and the proposed clustering. The score is 0 for an exact match,
+    and the log of the total samples in the case of a complete difference.
+
     Parameters
     ----------
     X : list of list
@@ -36,9 +38,12 @@ def variation_of_information(X, Y, normalized=False):
         separated clusters
     normalized : boolean, default = False
         determines if the VI score is normalized or not
+
     Returns
     -------
-    the variation of information score between two separate clusterings.
+    float :
+        the variation of information score between two separate clusterings.
+
     """
     H_X = entropy([len(k) for k in X], base=2)
     H_Y = entropy([len(k) for k in Y], base=2)
