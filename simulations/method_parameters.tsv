@@ -1,6 +1,7 @@
 components	perplexity	learning_rate	method	nearest_neighbors	min_dist
 			pca
 2			mds
+3			mds
 4			mds
 6			mds
 	15.0	100.0	t-sne

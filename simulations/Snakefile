@@ -8,7 +8,8 @@ SIMULATION_METHOD_PARAMETERS = Paramspace(
 SIMULATION_RECOMBINATION_RATES = ["low-recombination-rate", "moderate-recombination-rate", "high-recombination-rate"]
 SIMULATION_REASSORTMENT_RATES = ["no-reassortment"]
 SIMULATION_REPLICATES = list(range(1, 6))
-
+SIMULATION_TOTAL_TRAIN_TEST_SPLITS = 5
+SIMULATION_TRAIN_TEST_SPLITS = list(range(SIMULATION_TOTAL_TRAIN_TEST_SPLITS))
 
 rule simulations_all:
     input:
@@ -88,7 +89,7 @@ def _get_method_parameters_argument(wildcards):
     return " ".join([
         f"--{key.replace('_', '-')} {value}"
         for key, value in wildcards.items()
-        if value != "nan" and key not in ["virus", "recombination_rate", "replicate", "method"]
+        if value != "nan" and key not in ["virus", "recombination_rate", "replicate", "method", "train_test_split"]
     ])
 
 rule simulations_grid_search_embed:
@@ -117,46 +118,86 @@ rule simulations_grid_search_embed:
             {params.method_parameters_arg}
         """
 
-rule simulations_grid_search_euclidean_distances:
+rule simulations_grid_search_create_train_test_split:
     input:
-        embedding=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/embedding_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv",
+        metadata="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/metadata.tsv",
+        alignment="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/filtered.fasta",
+        distance_matrix="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/distance_matrix.csv",
     output:
-        distances=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/euclidean_distances_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv.gz",
+        training_alignment="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/gridsearch/train_test_{train_test_split}/training_alignment.fasta",
+        training_genetic_distances="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/gridsearch/train_test_{train_test_split}/training_genetic_distances.csv",
+        test_genetic_distances="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/gridsearch/train_test_{train_test_split}/test_genetic_distances.csv",
+    conda: "../cartography.yml"
+    log:
+        "logs/simulations_grid_search_create_train_test_split_{virus}_{recombination_rate}_{replicate}_{train_test_split}.txt"
+    params:
+        time_column="generation",
+    shell:
+        """
+        python3 notebooks/scripts/create_time_series_train_test_split.py \
+            --metadata {input.metadata} \
+            --alignment {input.alignment} \
+            --distance-matrix {input.distance_matrix} \
+            --time-column {params.time_column} \
+            --total-train-test-splits {SIMULATION_TOTAL_TRAIN_TEST_SPLITS} \
+            --train-test-split {wildcards.train_test_split} \
+            --output-training-alignment {output.training_alignment} \
+            --output-training-genetic-distances {output.training_genetic_distances} \
+            --output-test-genetic-distances {output.test_genetic_distances} 2>&1 | tee {log}
+        """
+
+rule simulations_grid_search_embed_training_data:
+    input:
+        alignment="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/gridsearch/train_test_{train_test_split}/training_alignment.fasta",
+        distance_matrix="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/gridsearch/train_test_{train_test_split}/training_genetic_distances.csv",
+    output:
+        embedding=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/train_test_{{train_test_split}}/params_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}/training_embedding.csv",
+    params:
+        random_seed=RANDOM_SEED,
+        method_parameters_arg=_get_method_parameters_argument,
+    resources:
+        runtime="0:30:00",
+        mem_mb=4000,
     conda: "../cartography.yml"
     shell:
         """
-        python3 notebooks/scripts/calculate_euclidean_distances.py \
-            --embedding {input.embedding} \
-            --output {output.distances} \
+        embed \
+            --alignment {input.alignment} \
+            --distance-matrix {input.distance_matrix} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.embedding} \
+            {wildcards.method} \
+            {params.method_parameters_arg}
         """
 
-rule simulations_grid_search_plot_euclidean_distances:
+rule simulations_grid_search_accuracy:
     input:
-        genetic_distances="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/distance_matrix.csv",
-        euclidean_distances=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/euclidean_distances_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv.gz",
+        full_embedding=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/embedding_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv",
+        training_genetic_distances="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/gridsearch/train_test_{train_test_split}/training_genetic_distances.csv",
+        test_genetic_distances="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/gridsearch/train_test_{train_test_split}/test_genetic_distances.csv",
+        training_embedding=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/train_test_{{train_test_split}}/params_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}/training_embedding.csv",
     output:
-        figure=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/euclidean_by_genetic_distance_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.pdf",
-        statistics=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/euclidean_by_genetic_distance_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv",
+        statistics=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/train_test_{{train_test_split}}/params_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}/embedding_accuracy.csv",
     conda: "../cartography.yml"
     params:
         method_parameters=SIMULATION_METHOD_PARAMETERS.instance,
-        simulation_parameters=lambda wildcards: {"recombination_rate": wildcards.recombination_rate, "replicate": wildcards.replicate}
+        simulation_parameters=lambda wildcards: {"recombination_rate": wildcards.recombination_rate, "replicate": wildcards.replicate, "train_test_split": wildcards.train_test_split}
     shell:
         """
-        python3 notebooks/scripts/plot_distances.py \
-            --x {input.genetic_distances} \
-            --y {input.euclidean_distances} \
-            --x-axis-label "Genetic distance" \
-            --y-axis-label "Euclidean distance ({wildcards.method})" \
-            --output-figure {output.figure} \
-            --output-statistics {output.statistics} \
+        python3 notebooks/scripts/calculate_embedding_accuracy.py \
+            --full-embedding {input.full_embedding} \
+            --training-genetic-distances {input.training_genetic_distances} \
+            --test-genetic-distances {input.test_genetic_distances} \
+            --training-embedding {input.training_embedding} \
+            --output {output.statistics} \
             --annotations {params.method_parameters:q} {params.simulation_parameters:q}
         """
 
 rule simulations_aggregate_grid_search:
     input:
-        tables=expand("simulations/{{virus}}-like/{{recombination_rate}}/replicate-{replicate}/gridsearch/euclidean_by_genetic_distance_{params}.csv",
+        tables=expand("simulations/{{virus}}-like/{{recombination_rate}}/replicate-{replicate}/gridsearch/train_test_{train_test_split}/params_{params}/embedding_accuracy.csv",
                       replicate=SIMULATION_REPLICATES,
+                      train_test_split=SIMULATION_TRAIN_TEST_SPLITS,
                       params=SIMULATION_METHOD_PARAMETERS.instance_patterns)
     output:
         table="simulations/{virus}-like/{recombination_rate}/gridsearch.csv",
