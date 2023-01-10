@@ -1,2 +1,2 @@
-method,components,r_squared
-mds,6.0,0.968546234877237
+method,components,mse
+mds,2.0,0.0004039250141866584

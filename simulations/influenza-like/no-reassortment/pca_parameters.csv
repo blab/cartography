@@ -1,2 +1,2 @@
-method,r_squared
-pca,0.7751866813392356
+method,components,mse
+pca,5.0,0.00020867729947947715
