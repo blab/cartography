@@ -42,7 +42,18 @@ if __name__ == '__main__':
     }
 
     time_units = metadata[args.time_column].drop_duplicates().values
-    time_series_cv = TimeSeriesSplit(n_splits=args.total_train_test_splits)
+
+    # Generate time series train/test splits with an equal size for both train
+    # and test data.
+    n_samples = time_units.shape[0]
+    n_splits = args.total_train_test_splits
+    max_split_size = int(n_samples / (n_splits + 1))
+
+    time_series_cv = TimeSeriesSplit(
+        n_splits=n_splits,
+        max_train_size=max_split_size,
+        test_size=max_split_size,
+    )
 
     for i, (train_time_index, test_time_index) in enumerate(time_series_cv.split(time_units)):
         # Only output data for the requested train/test split.
