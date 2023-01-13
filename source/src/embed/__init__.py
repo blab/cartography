@@ -54,8 +54,4 @@ def make_parser():
 
 def run(argv):
     args = make_parser().parse_args(argv)
-    try:
-        return embed(args)
-    except Exception as error:
-        print(error, file=sys.stderr)
-        sys.exit(1)
+    return embed(args)
