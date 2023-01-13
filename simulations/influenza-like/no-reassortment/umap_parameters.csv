@@ -1,2 +1,2 @@
 method,min_dist,nearest_neighbors,mse
-umap,0.05,100.0,0.00025406960506054637
+umap,0.1,25.0,0.00016012188707259273
