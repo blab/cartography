@@ -1,2 +1,2 @@
-method,r_squared
-pca,0.7753217251642444
+method,components,mse,virus,recombination_rate
+pca,2.0,0.0002990708172431166,coronavirus,high-recombination-rate

@@ -1,2 +1,2 @@
-method,components,mse
-pca,2.0,0.00033812408762202756
+method,components,mse,virus,recombination_rate
+pca,2.0,0.00033812408762202756,influenza,no-reassortment
