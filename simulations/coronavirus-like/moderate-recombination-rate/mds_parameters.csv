@@ -1,2 +1,2 @@
-method,components,r_squared
-mds,6.0,0.9640343503935197
+method,components,mse,virus,recombination_rate
+mds,2.0,0.0002599894977339657,coronavirus,moderate-recombination-rate

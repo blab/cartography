@@ -1,2 +1,2 @@
-method,perplexity,learning_rate,mse
-t-sne,200.0,100.0,0.00018913231636421134
+method,perplexity,learning_rate,mse,virus,recombination_rate
+t-sne,200.0,100.0,0.00018913231636421134,influenza,no-reassortment

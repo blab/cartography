@@ -1,5 +1,5 @@
-method,recombination_rate,replicate_count,mse_mean,mse_std
-umap,no-reassortment,25,0.00016012188707259273,0.00012741883793777146
-t-sne,no-reassortment,25,0.00018913231636421134,0.0002328399380532724
-pca,no-reassortment,25,0.00033812408762202756,0.0003228573274778025
-mds,no-reassortment,25,0.00038381974280637195,0.0003174734617261272
+virus,recombination_rate,method,components,perplexity,learning_rate,nearest_neighbors,min_dist,mse
+influenza,no-reassortment,pca,2.0,,,,,0.00033812408762202756
+influenza,no-reassortment,mds,2.0,,,,,0.00038381974280637195
+influenza,no-reassortment,t-sne,,200.0,100.0,,,0.00018913231636421134
+influenza,no-reassortment,umap,,,,25.0,0.1,0.00016012188707259273

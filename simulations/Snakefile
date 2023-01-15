@@ -13,8 +13,7 @@ SIMULATION_TRAIN_TEST_SPLITS = list(range(SIMULATION_TOTAL_TRAIN_TEST_SPLITS))
 
 rule simulations_all:
     input:
-        "simulations/influenza-like/summary_scores_by_reassortment_rate_and_method.csv",
-        "simulations/coronavirus-like/summary_scores_by_recombination_rate_and_method.csv",
+        "simulations/summary_scores_by_virus_reassortment_rate_and_method.csv",
 
 rule simulations_run_simulation:
     input:
@@ -104,7 +103,7 @@ rule simulations_grid_search_embed:
         method_parameters_arg=_get_method_parameters_argument,
     resources:
         runtime="0:30:00",
-        mem_mb=4000,
+        mem_mb=2000,
     conda: "../cartography.yml"
     shell:
         """
@@ -157,7 +156,7 @@ rule simulations_grid_search_embed_training_data:
         method_parameters_arg=_get_method_parameters_argument,
     resources:
         runtime="0:30:00",
-        mem_mb=4000,
+        mem_mb=2000,
     conda: "../cartography.yml"
     shell:
         """
@@ -248,6 +247,22 @@ rule simulations_influenza_aggregate_grid_search_summaries:
                       recombination_rate=SIMULATION_REASSORTMENT_RATES)
     output:
         table="simulations/influenza-like/summary_scores_by_reassortment_rate_and_method.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.tables} \
+            --output {output.table}
+        """
+
+rule simulations_aggregate_all_grid_search_summaries:
+    input:
+        tables=[
+            "simulations/influenza-like/summary_scores_by_reassortment_rate_and_method.csv",
+            "simulations/coronavirus-like/summary_scores_by_recombination_rate_and_method.csv",
+        ],
+    output:
+        table="simulations/summary_scores_by_virus_reassortment_rate_and_method.csv",
     conda: "../cartography.yml"
     shell:
         """

@@ -1,2 +1,2 @@
-method,min_dist,nearest_neighbors,r_squared
-umap,0.05,100.0,0.48334928922627246
+method,min_dist,nearest_neighbors,mse,virus,recombination_rate
+umap,0.05,25.0,0.00010664995525190153,coronavirus,low-recombination-rate

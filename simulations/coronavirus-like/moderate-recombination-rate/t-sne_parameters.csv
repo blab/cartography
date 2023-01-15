@@ -1,2 +1,2 @@
-method,perplexity,learning_rate,r_squared
-t-sne,100.0,500.0,0.6827547348693066
+method,perplexity,learning_rate,mse,virus,recombination_rate
+t-sne,200.0,200.0,5.995040993888835e-05,coronavirus,moderate-recombination-rate
