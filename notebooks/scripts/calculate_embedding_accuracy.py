@@ -34,6 +34,7 @@ if __name__ == '__main__':
         index_col=0,
     )
 
+    # Load test embedding.
     test_embedding = pd.read_csv(
         args.test_embedding,
         index_col=0,
