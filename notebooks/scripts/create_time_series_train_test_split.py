@@ -84,6 +84,12 @@ if __name__ == '__main__':
         args.output_training_genetic_distances,
     )
 
+    # Only output test subset of the alignment.
+    with open(args.output_test_alignment, "w") as oh:
+        for sequence in read_sequences(args.alignment):
+            if sequence.name in strains_test:
+                write_sequences(sequence, oh)
+
     # Output test subset.
     distances_test = distances.loc[strains_test, strains_test].copy()
     distances_test.to_csv(
