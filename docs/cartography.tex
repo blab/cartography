@@ -271,6 +271,23 @@ These results inform our recommendations for future applications of these method
 
 \section*{Materials and methods}
 
+\subsection*{Simulation of influenza-like and coronavirus-like populations}
+
+To avoid overfitting parameters for each embedding method to the limited data available for natural viral populations, we simulated influenza-like and coronavirus-like populations using SANTA-SIM \cite{Jariani2019}.
+For each population type described below, we simulated five independent replicates with different, fixed random seeds and filtered out the first 10 years of simulated populations as a burn-in period leaving 5 years of simulated data to analyze.
+
+We simulated 1,700 bp hemagglutinin sequences for influenza-like populations, as previously described where we scaled the number of simulated generations per real year to 200 per year to match the observed mutation rate for natural H3N2 HA sequences \cite{Huddleston2020}.
+Using the same settings from this previous study, we sampled 10 genomes every 4 generations for 3000 generations (or 15 years of real time).
+
+We simulated coronavirus-like populations as previously described for human seasonal coronaviruses with genomes of 21,285 bp \cite{Muller2022}.
+For the current study, we assigned 30 generations per real year to obtain mutation rates similar to the $9.57 \times 10^{-4}$ substitutions per site per year calculated for MERS-CoV \cite{Dudas2018}.
+To assess the effect of recombination on optimal method parameters, we simulated separate coronavirus-like populations with low, moderate, and high recombination rates.
+We expected human seasonal coronaviruses to recombine at a rate of $10^{-5}$ events per site per year and MERS-CoV to recombine at three times that rate \cite{Muller2022}.
+We calibrated the overall recombination probability in SANTA-SIM such that the number of observed recombination events per year for the ``high'' recombination populations matched the expected number for MERS-CoV (1 per year) and recombination events for ``moderate'' recombination populations matched the expected number for human seasonal coronaviruses (0.3 per year).
+We calibrated the ``low'' recombination populations to have approximately 1\% of the total recombination events in the ``moderate'' population, to represent the first two years of SARS-CoV-2 populations for which the recombination rate was likely lower \cite{Carabelli2023}.
+To assist with this calibration of recombination events per year, we modified the SANTA-SIM source code to emit a boolean status of ``is recombinant'' for each sampled genome.
+This change allowed us to identify recombinant genomes by their metadata in downstream analyses and calculate the number of recombination events observed per year.
+
 \subsection*{Hyperparameter optimization}
 
 To test whether embeddings from each method could recapitulate phylogenetic clades, we performed a grid search of each method's parameter space during which we applied an embedding method to a randomly selected 50\% of the sequences in the multiple sequence alignment, identified clusters in the embedding with HDBSCAN \cite{hdbscan}, and calculated the accuracy of the cluster labels for each sequence compared to the known clade labels (see methods).
