@@ -10,6 +10,7 @@ SIMULATION_REASSORTMENT_RATES = ["no-reassortment"]
 SIMULATION_REPLICATES = list(range(1, 6))
 SIMULATION_TOTAL_TRAIN_TEST_SPLITS = 10
 SIMULATION_TRAIN_TEST_SPLITS = list(range(SIMULATION_TOTAL_TRAIN_TEST_SPLITS))
+SIMULATION_GAP_BETWEEN_TRAIN_TEST = 20
 
 rule simulations_all:
     input:
@@ -132,6 +133,8 @@ rule simulations_grid_search_create_train_test_split:
         "logs/simulations_grid_search_create_train_test_split_{virus}_{recombination_rate}_{replicate}_{train_test_split}.txt"
     params:
         time_column="generation",
+        total_train_test_splits=SIMULATION_TOTAL_TRAIN_TEST_SPLITS,
+        gap=SIMULATION_GAP_BETWEEN_TRAIN_TEST,
     shell:
         """
         python3 notebooks/scripts/create_time_series_train_test_split.py \
@@ -139,7 +142,8 @@ rule simulations_grid_search_create_train_test_split:
             --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
             --time-column {params.time_column} \
-            --total-train-test-splits {SIMULATION_TOTAL_TRAIN_TEST_SPLITS} \
+            --total-train-test-splits {params.total_train_test_splits} \
+            --gap {params.gap} \
             --train-test-split {wildcards.train_test_split} \
             --output-training-alignment {output.training_alignment} \
             --output-training-genetic-distances {output.training_genetic_distances} \
