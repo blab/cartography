@@ -16,6 +16,7 @@ if __name__ == '__main__':
     parser.add_argument("--time-column", required=True, help="integer column in the metadata to use for time series subsetting (e.g., generation, year, etc.)")
     parser.add_argument("--total-train-test-splits", type=int, required=True, help="total number of train/test splits to create")
     parser.add_argument("--train-test-split", type=int, required=True, help="index of specific train/test splits to output subset data for")
+    parser.add_argument("--gap", default=0, type=int, help="gap between train/test time points in units of the given time column")
     parser.add_argument("--output-training-alignment", required=True, help="alignment FASTA for training")
     parser.add_argument("--output-training-genetic-distances", required=True, help="genetic distance matrix for training")
     parser.add_argument("--output-test-alignment", required=True, help="alignment FASTA for testing")
@@ -54,6 +55,7 @@ if __name__ == '__main__':
         n_splits=n_splits,
         max_train_size=max_split_size,
         test_size=max_split_size,
+        gap=args.gap,
     )
 
     for i, (train_time_index, test_time_index) in enumerate(time_series_cv.split(time_units)):
