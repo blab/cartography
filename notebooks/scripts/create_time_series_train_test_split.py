@@ -18,6 +18,7 @@ if __name__ == '__main__':
     parser.add_argument("--train-test-split", type=int, required=True, help="index of specific train/test splits to output subset data for")
     parser.add_argument("--output-training-alignment", required=True, help="alignment FASTA for training")
     parser.add_argument("--output-training-genetic-distances", required=True, help="genetic distance matrix for training")
+    parser.add_argument("--output-test-alignment", required=True, help="alignment FASTA for testing")
     parser.add_argument("--output-test-genetic-distances", required=True, help="genetic distance matrix for testing")
 
     args = parser.parse_args()
@@ -68,11 +69,14 @@ if __name__ == '__main__':
 
             break
 
-    # Only output training subset of the alignment.
-    with open(args.output_training_alignment, "w") as oh:
-        for sequence in read_sequences(args.alignment):
-            if sequence.name in strains_train:
-                write_sequences(sequence, oh)
+    # Only output training or test subsets of the alignment.
+    with open(args.output_training_alignment, "w") as oh_training:
+        with open(args.output_test_alignment, "w") as oh_test:
+            for sequence in read_sequences(args.alignment):
+                if sequence.name in strains_train:
+                    write_sequences(sequence, oh_training)
+                elif sequence.name in strains_test:
+                    write_sequences(sequence, oh_test)
 
     # Output training subset
     distances_train = distances.loc[strains_train, strains_train].copy()
