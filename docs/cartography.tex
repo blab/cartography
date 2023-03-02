@@ -228,7 +228,91 @@ To understand whether these embedding methods could be used to cluster previousl
 
 \section*{Materials and methods}
 
+\subsection*{Phylogenetic analysis}
+
+The genome data we used for H3N2 HA influenza is from the NCBI influenza database.
+The SARS-CoV-2 is sourced from INSDC databases and curated by Nextstrain \citep{Hadfield2018}.
+Clades for both H3N2 HA and SARS-CoV-2 were defined by reasonable phylogenetic signal.
+The MERS data is from e-life \citep{dudas_carvalho_rambaut_bedford_2018}.
+
+We parsed metadata including viral sample name, database accession, collection date, and sequence authors from the sequence headers with \texttt{augur parse}.
+We analyzed influenza A/H3N2 and SARS-CoV-2 by creating a FASTA file of multiple sequence alignments with MAFFT v7.407 \citep{Katoh2002} via augur align \citep{Hadfield2018} and phylogenies with IQ-TREE v1.6.10 \citep{Nguyen2014} via augur tree version 9.0.0.
+We inferred a time tree with TreeTime 0.9.4 \citep{Sagulenko2018}.
+For improved reproducibility, we automated the execution of these tasks in a Snakemake workflow \citep{molder_2021}.
+
+Clade membership metadata was provided by a .json build of the influenza H3N2 tree and SARS-CoV-2 trees.
+For MERS, the host data was given via the Newick tree, and clade membership was defined using BioPython as outbreaks with a monophyletic host status (strictly camel or human).
+
+We dropped 4 strains in the H3N2 analysis, as they were direct animal to human transmissions where the genomes resembled swine flu (seen through NCBI's BLAST).
+Imputation was tested for MERS, but due to entire columns of missing data, we dropped all strains with over 3 standard deviations of missing bases in its genome from the MERS analysis.
+
+\subsection*{Data Transformations}
+
+We used two different methods of transforming the data; scaling and centering the data, and a Hamming distance similarity matrix.
+For scaling and centering the data, we performed PCA on the matrix of nucleotides from the multiple sequence alignment using scikit-learn \citep{jolliffe_cadima_2016}.
+An explained variance plot was created to determine the amount of PCs used for distance calulations and visualization.
+A separate bases missing vs PC1 was also created to help reveal the level of relation between missing bases and outliers in PCA.
+
+To create the Hamming distance similarity matrix, each genome was split into separate nucleotides and compared to nucleotides in the same site on other genomes.
+Only differences between the main nucleotide pairs (AGCT) were counted.
+Gaps (N, -, etc.) were handled differently per pathogen.
+For H3N2 HA Influenza, gaps were not counted - some sequences were significantly shorter than others, and counting gaps implied that a shorter strain corresponds to genetic dissimilarity, which is not necessarily true.
+For SARS-CoV-2 and MERS, indel events were counted - gaps that started at the beginning of the alignment were ignored as they can occur because of differing sequence lengths and not necessarily a biological event.
+
+\subsection*{Embedding methods}
+We reduced the matrix of nucleotides using Principal Component Analysis \citep{jolliffe_cadima_2016}.
+We reduced the similarity distance matrix using Multi-Dimensional Scaling \citep{hout_papesh_goldinger_2012}, t-distributed Stochastic Neighborhood Embedding \citep{maaten2008visualizing}, and Uniform Manifold Approximation and Projection \citep{lel2018umap}, plotted using Altair \citep{VanderPlas2018}, and colored by clade assignment. 
+We used the scikit-learn implementation of PCA, MDS, and t-SNE, and UMAP using umap-learn. 
+
+We further analyzed these embeddings ability to accurately capture the multidimensional data, specifically assessing its ability to capture reassortment, recombination, and cluster-specific mutations.
+
+\subsection*{Hamming distance vs Euclidean distance boxplot}
+
+Hamming distance vs Euclidean distance plots assess the local and global structure of the embedding as well as assess the overall strength of the embedding recapitulation.
+Constant correlation means the embedding tends to capture and retain global patterns, whereas and a splayed structure points to local structure preservation.
+The Hamming distance between nucleotide sequences is plotted on the x axis, and the Euclidean distance between the points in the embedding are plotted on the y axis.
+PCA and MDS's distances were calculated using 4 components, while t-SNE and UMAP were calculated with 2.
+The plots were bootstrapped to find the Pearson Coefficient with a confidence interval.
+The density and overall relationship of the data was qualitatively assesed through the line created by the Q1 to Q3 box of each individual boxplot in each plot.
+
+\subsection*{HDBSCAN clade analysis}
+We used HDBSCAN \citep{campello2015hierarchical} on our reductions from PCA, MDS, t-SNE, and UMAP to understand the clustering structure of the strains in these spaces.
+These clustering labels were then compared to the clade labels for the strains to understand the accuracy of the reduction's structure.
+We used Variation of Information (VI) in order to compare these labelings \citep{meilua2003comparing}.
+The Variation of Information is a distance metric based on information theory principles, which measures the distance between clusterings in a given space.
+The measure is unnormalized and varies between 0 and log(N) where N is the number of clustered elements.
+Larger values correspond to greater dissimilarity between the clusterings.
+
+\subsection*{Cluster-specific mutation table}
+In order to further understand the phylogenetic relevance of these HDBSCAN clusters, we found the cluster specific mutations for all HDBSCAN clusters.
+\jhc{should I discuss the reasoning behind this analysis more?}
+We found all mutations relative to the reference (where the reference determines the alignment of the genomes).
+We then found all mutations specific to each cluster by removing all mutations found in other clusters and the reference.
+For every pathogen studied, we create a table with columns for the embedding method, the mutational (position and derived allele), the number of clusters that the mutation appears in, and the list of distinct clusters with the mutation.
+
+\jhc{should I add more?}
+
+\subsection*{Joint embeddings of hemagglutinin and neuraminidase genomes in H3N2 Influenza}
+
+For H3N2, we only assess hemagglutinin (HA) for the above analyses.
+However, NA (Neuraminidase) is also an important component in understanding and studying H3N2 evolution.
+Influenza viruses are named based on the subtype of their hemagglutinin (HA) and neuraminidase (NA) proteins, which are both important surface glycoproteins that are involved in the virus life cycle.
+In order to assess how strong our genetic cartography approach at recognizing clade groupings without being biologically-informed, we conducted a H3N2 HA and NA joint analysis to see how well our approach would recapitulate clades derived from both HA/NA sequences. 
+
+We concatenated together the HA and NA portions of the H3N2 strain and ran the embedding methods on these strains (PCA, MDS, t-SNE, and UMAP).
+We ran HDBSCAN \citep{campello2015hierarchical} on these reductions, generating groupings for these strains.
+
+We used TreeKnit \citep{barrat2022treeknit} to define the phylogenetically accurate clades for the analysis.
+TreeKnit greedily walks through the HA and NA trees looking for groups of strains that most likely share a common ancestor in both trees.   
+It infers ancestral reassortment graphs (ARG) from two segment trees, finding groups of strains that descend from the same reassortment events and splitting strains into different groups when it finds a topological inconsistency between the trees. 
+
+For any two segment trees, TreeKnit can output the Maximum Clade Compatibility (MCCs) for every strain, creating groupings that are phylogenetically the clades that these strains would be most compatible in. 
+
+We use Variation of Information (VI) in order to assess the groupings found using HDBSCAN from each embedding against these MCC groupings to quantify the accuracy of our approach.
+
 \subsection*{Hyperparameter optimization}
+
+\jhc{Change this section? Based on this slack comment: First, I chose to optimize a linear model between genetic distance and Euclidean distance in the embedding. To perform cross-validation, I fit the full embedding with all data, selected subsets of training data to create training embeddings, projected each training embedding onto the full embeddings coordinate space with a Procrustes analysis, fit a linear model between genetic and Euclidean distances for the training embedding, estimated the Euclidean distances of the test data, and calculated the mean squared error between those estimated distances per strain and the known distances from the full embedding.}
 
 To test whether embeddings from each method could recapitulate phylogenetic clades, we performed a grid search of each method's parameter space during which we applied an embedding method to a randomly selected 50\% of the sequences in the multiple sequence alignment, identified clusters in the embedding with HDBSCAN \citep{hdbscan}, and calculated the accuracy of the cluster labels for each sequence compared to the known clade labels (see methods).
 We used the resulting classification accuracies to identify the optimal distance threshold for HDBSCAN.
