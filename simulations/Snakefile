@@ -8,7 +8,7 @@ SIMULATION_METHOD_PARAMETERS = Paramspace(
 SIMULATION_RECOMBINATION_RATES = ["low-recombination-rate", "moderate-recombination-rate", "high-recombination-rate"]
 SIMULATION_REASSORTMENT_RATES = ["no-reassortment"]
 SIMULATION_REPLICATES = list(range(1, 6))
-SIMULATION_TOTAL_TRAIN_TEST_SPLITS = 5
+SIMULATION_TOTAL_TRAIN_TEST_SPLITS = 10
 SIMULATION_TRAIN_TEST_SPLITS = list(range(SIMULATION_TOTAL_TRAIN_TEST_SPLITS))
 
 rule simulations_all:
