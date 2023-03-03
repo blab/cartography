@@ -60,7 +60,7 @@
 
             <epoch>
                 <name>epoch1</name>
-                <generationCount>450</generationCount>
+                <generationCount>1700</generationCount>
             </epoch>
 
             <samplingSchedule>
