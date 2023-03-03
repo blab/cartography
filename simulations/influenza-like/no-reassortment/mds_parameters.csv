@@ -1,2 +1,2 @@
-method,components,mse,virus,recombination_rate
-mds,2.0,0.00038381974280637195,influenza,no-reassortment
+method,components,mae,virus,recombination_rate
+mds,3.0,3.3488351826059777,influenza,no-reassortment
