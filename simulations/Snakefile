@@ -10,7 +10,10 @@ SIMULATION_REASSORTMENT_RATES = ["no-reassortment"]
 SIMULATION_REPLICATES = list(range(1, 6))
 SIMULATION_TOTAL_TRAIN_TEST_SPLITS = 10
 SIMULATION_TRAIN_TEST_SPLITS = list(range(SIMULATION_TOTAL_TRAIN_TEST_SPLITS))
-SIMULATION_GAP_BETWEEN_TRAIN_TEST = 0
+SIMULATION_GAP_BETWEEN_TRAIN_TEST_INFLUENZA = 200
+SIMULATION_GAP_BETWEEN_TRAIN_TEST_CORONAVIRUS = 30
+SIMULATION_TRAIN_TEST_SIZE_INFLUENZA = 800 # 4 years of flu-like evolution is 200 generations/year * 4 years.
+SIMULATION_TRAIN_TEST_SIZE_CORONAVIRUS = 120 # 4 years of coronavirus-like evolution is 30 generations/year * 4 years.
 
 rule simulations_all:
     input:
@@ -134,7 +137,8 @@ rule simulations_grid_search_create_train_test_split:
     params:
         time_column="generation",
         total_train_test_splits=SIMULATION_TOTAL_TRAIN_TEST_SPLITS,
-        gap=SIMULATION_GAP_BETWEEN_TRAIN_TEST,
+        gap=lambda wildcards: SIMULATION_GAP_BETWEEN_TRAIN_TEST_INFLUENZA if wildcards.virus == "influenza" else SIMULATION_GAP_BETWEEN_TRAIN_TEST_CORONAVIRUS,
+        train_test_size=lambda wildcards: SIMULATION_TRAIN_TEST_SIZE_INFLUENZA if wildcards.virus == "influenza" else SIMULATION_TRAIN_TEST_SIZE_CORONAVIRUS,
     shell:
         """
         python3 notebooks/scripts/create_time_series_train_test_split.py \
@@ -145,6 +149,7 @@ rule simulations_grid_search_create_train_test_split:
             --total-train-test-splits {params.total_train_test_splits} \
             --gap {params.gap} \
             --train-test-split {wildcards.train_test_split} \
+            --train-test-size {params.train_test_size} \
             --output-training-alignment {output.training_alignment} \
             --output-training-genetic-distances {output.training_genetic_distances} \
             --output-test-alignment {output.test_alignment} \
