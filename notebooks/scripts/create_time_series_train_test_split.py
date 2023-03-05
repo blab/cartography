@@ -12,22 +12,15 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--metadata", required=True, help="metadata TSV to use for subsetting by time column")
     parser.add_argument("--alignment", required=True, help="alignment FASTA to subset")
-    parser.add_argument("--distance-matrix", required=True, help="genetic distance matrix to subset")
     parser.add_argument("--time-column", required=True, help="integer column in the metadata to use for time series subsetting (e.g., generation, year, etc.)")
     parser.add_argument("--total-train-test-splits", type=int, required=True, help="total number of train/test splits to create")
     parser.add_argument("--train-test-split", type=int, required=True, help="index of specific train/test splits to output subset data for")
     parser.add_argument("--train-test-size", type=int, required=True, help="number of indices to include in train/test splits")
     parser.add_argument("--gap", default=0, type=int, help="gap between train/test time points in units of the given time column")
     parser.add_argument("--output-training-alignment", required=True, help="alignment FASTA for training")
-    parser.add_argument("--output-training-genetic-distances", required=True, help="genetic distance matrix for training")
     parser.add_argument("--output-test-alignment", required=True, help="alignment FASTA for testing")
-    parser.add_argument("--output-test-genetic-distances", required=True, help="genetic distance matrix for testing")
 
     args = parser.parse_args()
-
-    # Load distances.
-    distances = pd.read_csv(args.distance_matrix, index_col=0)
-    distances.columns = distances.index.values
 
     # Load metadata.
     metadata = pd.read_csv(
@@ -35,9 +28,6 @@ if __name__ == '__main__':
         index_col=0,
         sep="\t",
     )
-
-    # Filter metadata to only those strains considered in the distance matrix.
-    metadata = metadata.loc[distances.index.values].copy()
 
     strains_by_time = {
         strain: set(strain_group.index.tolist())
@@ -87,21 +77,3 @@ if __name__ == '__main__':
                     write_sequences(sequence, oh_training)
                 elif sequence.name in strains_test:
                     write_sequences(sequence, oh_test)
-
-    # Output training subset
-    distances_train = distances.loc[strains_train, strains_train].copy()
-    distances_train.to_csv(
-        args.output_training_genetic_distances,
-    )
-
-    # Only output test subset of the alignment.
-    with open(args.output_test_alignment, "w") as oh:
-        for sequence in read_sequences(args.alignment):
-            if sequence.name in strains_test:
-                write_sequences(sequence, oh)
-
-    # Output test subset.
-    distances_test = distances.loc[strains_test, strains_test].copy()
-    distances_test.to_csv(
-        args.output_test_genetic_distances,
-    )

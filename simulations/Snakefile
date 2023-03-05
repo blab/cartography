@@ -37,7 +37,7 @@ rule simulations_parse:
         sequences="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/simulated_sequences.fasta",
     output:
         aligned="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/aligned.fasta",
-        metadata="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/metadata.tsv",
+        metadata="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/complete_metadata.tsv",
     conda: "../cartography.yml"
     log:
         "logs/simulations_{virus}_parse_{recombination_rate}_{replicate}.txt"
@@ -55,9 +55,10 @@ rule simulations_parse:
 rule simulations_filter:
     input:
         aligned="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/aligned.fasta",
-        metadata="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/metadata.tsv",
+        metadata="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/complete_metadata.tsv",
     output:
         filtered="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/filtered.fasta",
+        metadata="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/metadata.tsv",
     conda: "../cartography.yml"
     log:
         "logs/simulations_{virus}_filter_{recombination_rate}_{replicate}.txt"
@@ -72,7 +73,8 @@ rule simulations_filter:
             --sequences {input.aligned} \
             --metadata {input.metadata} \
             --query "(generation > {params.minimum_generations})" \
-            --output-sequences {output.filtered} 2>&1 | tee {log}
+            --output-sequences {output.filtered} \
+            --output-metadata {output.metadata} 2>&1 | tee {log}
         """
 
 rule simulations_create_distance_matrix:
@@ -125,12 +127,9 @@ rule simulations_grid_search_create_train_test_split:
     input:
         metadata="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/metadata.tsv",
         alignment="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/filtered.fasta",
-        distance_matrix="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/distance_matrix.csv",
     output:
         training_alignment="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/gridsearch/train_test_{train_test_split}/training_alignment.fasta",
-        training_genetic_distances="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/gridsearch/train_test_{train_test_split}/training_genetic_distances.csv",
         test_alignment="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/gridsearch/train_test_{train_test_split}/test_alignment.fasta",
-        test_genetic_distances="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/gridsearch/train_test_{train_test_split}/test_genetic_distances.csv",
     conda: "../cartography.yml"
     log:
         "logs/simulations_grid_search_create_train_test_split_{virus}_{recombination_rate}_{replicate}_{train_test_split}.txt"
@@ -144,16 +143,26 @@ rule simulations_grid_search_create_train_test_split:
         python3 notebooks/scripts/create_time_series_train_test_split.py \
             --metadata {input.metadata} \
             --alignment {input.alignment} \
-            --distance-matrix {input.distance_matrix} \
             --time-column {params.time_column} \
             --total-train-test-splits {params.total_train_test_splits} \
             --gap {params.gap} \
             --train-test-split {wildcards.train_test_split} \
             --train-test-size {params.train_test_size} \
             --output-training-alignment {output.training_alignment} \
-            --output-training-genetic-distances {output.training_genetic_distances} \
-            --output-test-alignment {output.test_alignment} \
-            --output-test-genetic-distances {output.test_genetic_distances} 2>&1 | tee {log}
+            --output-test-alignment {output.test_alignment} 2>&1 | tee {log}
+        """
+
+rule simulations_create_training_or_test_distance_matrix:
+    input:
+        alignment="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/gridsearch/train_test_{train_test_split}/{training_or_test}_alignment.fasta",
+    output:
+        output="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/gridsearch/train_test_{train_test_split}/{training_or_test}_genetic_distances.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/hamming_distance_from_fasta.py \
+            --alignment {input.alignment} \
+            --output {output.output}
         """
 
 rule simulations_grid_search_embed_training_or_test_data:
