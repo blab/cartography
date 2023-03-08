@@ -11,7 +11,7 @@
     },
     "align": {
         "partition": "campus-new",
-        "time": "0:30:00",
+        "time": "30m",
         "memory": "16384",
         "cores": 4
     },
