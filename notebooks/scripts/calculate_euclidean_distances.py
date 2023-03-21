@@ -8,7 +8,7 @@ if __name__ == '__main__':
     # Configure command line interface.
     parser = argparse.ArgumentParser()
     parser.add_argument("--embedding", required=True, help="embedding data frame")
-    parser.add_argument("--output", required=True, help="CSV file of pairwise distances for each pair of tips in the embedding, sorted by tip name.")
+    parser.add_argument("--output", required=True, help="CSV file of pairwise distances for each pair of tips in the embedding.")
     args = parser.parse_args()
 
     # Load embedding.
@@ -20,7 +20,6 @@ if __name__ == '__main__':
     # Drop label columns.
     label_columns = [column for column in embedding.columns if "label" in column]
     embedding = embedding.drop(columns=label_columns)
-    embedding = embedding.sort_index()
 
     # Calculate Euclidean distance.
     distances = pdist(embedding)

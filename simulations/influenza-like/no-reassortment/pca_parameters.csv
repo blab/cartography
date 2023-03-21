@@ -1,2 +1,2 @@
-method,r_squared
-pca,0.7751866813392356
+method,components,mae,virus,recombination_rate
+pca,2.0,9.992713175954531,influenza,no-reassortment

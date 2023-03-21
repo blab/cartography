@@ -259,7 +259,7 @@ def embed(args):
         genomes_df.columns = ["Site " + str(k) for k in range(0,len(numbers[i]))]
 
         #performing PCA on my pandas dataframe
-        pca = PCA(n_components=n_components, svd_solver='full') #can specify n, since with no prior knowledge, I use None
+        pca = PCA(n_components=n_components, svd_solver='auto')
         principalComponents = pca.fit_transform(genomes_df)
 
         # Create a data frame from the PCA embedding.

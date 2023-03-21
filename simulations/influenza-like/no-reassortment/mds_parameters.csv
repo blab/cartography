@@ -1,2 +1,2 @@
-method,components,r_squared
-mds,6.0,0.968546234877237
+method,components,mae,virus,recombination_rate
+mds,3.0,4.295000364216697,influenza,no-reassortment
