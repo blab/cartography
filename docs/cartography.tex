@@ -273,9 +273,9 @@ These results inform our recommendations for future applications of these method
 
 \subsection*{Simulation of influenza-like and coronavirus-like populations}
 
-Given the relative lack of prior application of dimensionality reduction methods to human pathogenic viruses, we first attempted to understand the behavior and optimal parameter values for these methods when applied to simulated viral population with well-defined evolutionary parameters.
+Given the relative lack of prior application of dimensionality reduction methods to human pathogenic viruses, we first attempted to understand the behavior and optimal parameter values for these methods when applied to simulated viral populations with well-defined evolutionary parameters.
 To this end, we simulated populations of influenza-like and coronavirus-like viruses using SANTA-SIM \cite{Jariani2019}.
-These simulated populations allowed us to identifying optimal parameters for each embedding method, without overfitting to the limited data available for natural viral populations.
+These simulated populations allowed us to identify optimal parameters for each embedding method, without overfitting to the limited data available for natural viral populations.
 For each population type described below, we simulated five independent replicates with fixed random seeds for over 55 years, filtered out the first 10 years of each population as a burn-in period, and analyzed the remaining 45 years.
 
 For influenza-like populations, we simulated 1,700 bp hemagglutinin sequences, as previously described where we scaled the number of simulated generations per real year to 200 per year to match the observed mutation rate for natural H3N2 HA sequences \cite{Huddleston2020}.
@@ -289,16 +289,21 @@ We calibrated the overall recombination probability in SANTA-SIM such that the n
 We calibrated the ``low'' recombination populations to have approximately 1\% of the total recombination events in the ``moderate'' population, to represent the first two years of SARS-CoV-2 populations for which the recombination rate was likely lower \cite{Carabelli2023}.
 To assist with this calibration of recombination events per year, we modified the SANTA-SIM source code to emit a boolean status of ``is recombinant'' for each sampled genome.
 This change allowed us to identify recombinant genomes by their metadata in downstream analyses and calculate the number of recombination events observed per year.
-For each recombination rate, we sampled 15 genomes every generation for 1,700 generations (or approximately 56 years of real time).
+For each replicate of each recombination rate, we sampled 15 genomes every generation for 1,700 generations (or approximately 56 years of real time).
 
 \subsection*{Optimization of embedding method parameters}
 
-We identified optimal parameter values for each embedding method with time series cross-validation of embeddings based on simulated populations.
-We defined parameters as ``optimal'' when they maximized the linear relationship between pairwise genetic distance of viral genomes and the corresponding Euclidean distance between those same genomes in an embedding.
-We chose this definition to increase the interpretability of the resulting embedding space and determine the degree to which each method could recapitulate this linear relationship.
+We identified optimal parameter values for each embedding method with time series cross-validation of embeddings based on simulated populations \cite{HyndmanAthanasopoulos2021}.
+To increase the interpretability of embedding space, we defined parameters as ``optimal'' when they maximized the linear relationship between pairwise genetic distance of viral genomes and the corresponding Euclidean distance between those same genomes in an embedding.
+This optimization approach allowed us to also determine the degree to which each method could recapitulate this linear relationship.
 
-For each simulated population replicate, we created 10 training and test datasets that each consisted of 4 years of real-time evolution with a 1-year gap between training and test time periods.
-For each training and test dataset, embedding method, and combination of method parameters, we created an embedding from the training data, fit a linear model to estimate pairwise genetic distance from pairwise Euclidean distance in the embedding, created an embedding from the test data, estimated the pairwise genetic distance for genomes in the test data based on their Euclidean distances and the linear model fit to the training data, and calculated the mean absolute error (MAE) between estimated and observed genetic distances in the test data.
+For each simulated population replicate, we created 10 training and test datasets that each consisted of 4 years of training data and 4 years of test data preceded by a 1-year gap from the end of the training time period.
+For each combination of training/test dataset, embedding method, and method parameters, we applied the following steps.
+We created an embedding from the training data with the given parameters, fit a linear model to estimate pairwise genetic distance from pairwise Euclidean distance in the embedding, created an embedding from the test data, estimated the pairwise genetic distance for genomes in the test data based on their Euclidean distances and the linear model fit to the training data, and calculated the mean absolute error (MAE) between estimated and observed genetic distances in the test data.
+We summarized the error for a given population type, method, and method parameters across all population replicates and training/test data by calculating the median of the MAE.
+For all method parameters except those controlling the number of components used for the embedding, we selected the optimal parameters as those that minimized the median MAE for a given embedding method.
+Since increasing the number of components used by PCA and MDS allows these methods to overfit to available data, we selected the optimal number of components for these methods as the number beyond which the median MAE did not decrease by at least 1 nucleotide.
+This approach follows the same concept from the MDS algorithm itself where optimization occurs iteratively until some predefined error threshold is reached.
 
 TKTK: specific parameter values tested per method.
 
