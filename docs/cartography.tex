@@ -298,6 +298,7 @@ To increase the interpretability of embedding space, we defined parameters as ``
 This optimization approach allowed us to also determine the degree to which each method could recapitulate this linear relationship.
 
 For each simulated population replicate, we created 10 training and test datasets that each consisted of 4 years of training data and 4 years of test data preceded by a 1-year gap from the end of the training time period.
+These settings produced training/test data with 2000 samples each for influenza-like populations and 1800 samples each for coronavirus-like populations.
 For each combination of training/test dataset, embedding method, and method parameters, we applied the following steps.
 We created an embedding from the training data with the given parameters, fit a linear model to estimate pairwise genetic distance from pairwise Euclidean distance in the embedding, created an embedding from the test data, estimated the pairwise genetic distance for genomes in the test data based on their Euclidean distances and the linear model fit to the training data, and calculated the mean absolute error (MAE) between estimated and observed genetic distances in the test data.
 We summarized the error for a given population type, method, and method parameters across all population replicates and training/test data by calculating the median of the MAE.
@@ -388,16 +389,6 @@ It infers ancestral reassortment graphs (ARG) from two segment trees, finding gr
 For any two segment trees, TreeKnit can output the Maximum Clade Compatibility (MCCs) for every strain, creating groupings that are phylogenetically the clades that these strains would be most compatible in.
 
 We use Variation of Information (VI) in order to assess the groupings found using HDBSCAN from each embedding against these MCC groupings to quantify the accuracy of our approach.
-
-\subsection*{Hyperparameter optimization}
-
-\jhc{Change this section? Based on this slack comment: First, I chose to optimize a linear model between genetic distance and Euclidean distance in the embedding. To perform cross-validation, I fit the full embedding with all data, selected subsets of training data to create training embeddings, projected each training embedding onto the full embeddings coordinate space with a Procrustes analysis, fit a linear model between genetic and Euclidean distances for the training embedding, estimated the Euclidean distances of the test data, and calculated the mean squared error between those estimated distances per strain and the known distances from the full embedding.}
-
-To test whether embeddings from each method could recapitulate phylogenetic clades, we performed a grid search of each method's parameter space during which we applied an embedding method to a randomly selected 50\% of the sequences in the multiple sequence alignment, identified clusters in the embedding with HDBSCAN \citep{hdbscan}, and calculated the accuracy of the cluster labels for each sequence compared to the known clade labels (see methods).
-We used the resulting classification accuracies to identify the optimal distance threshold for HDBSCAN.
-We fixed the HDBSCAN threshold to its optimal value and repeated the same procedure on the other 50\% of the sequences.
-We used the resulting accuracies to identify the optimal t-SNE and UMAP parameters.
-Finally, we applied each embedding method to the full training dataset with the optimal method parameters, clustered the embeddings with HDBSCAN's optimal distance threshold, and evaluated the accuracy of the cluster classifications.
 
 \subsection*{Data and software availability}
 
