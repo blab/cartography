@@ -73,7 +73,6 @@ rule simulations_filter:
             --sequences {input.aligned} \
             --metadata {input.metadata} \
             --query "(generation > {params.minimum_generations})" \
-            --subsample-seed {wildcards.replicate} \
             --output-sequences {output.filtered} \
             --output-metadata {output.metadata} 2>&1 | tee {log}
         """
