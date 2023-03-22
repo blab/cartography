@@ -1,2 +1,2 @@
-method,perplexity,learning_rate,mse,virus,recombination_rate
-t-sne,200.0,100.0,7.17927863704715e-05,coronavirus,high-recombination-rate
+method,perplexity,learning_rate,mae,virus,recombination_rate
+t-sne,100.0,100.0,14.777080631088133,coronavirus,high-recombination-rate

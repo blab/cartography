@@ -1,2 +1,2 @@
-method,components,mse,virus,recombination_rate
-mds,2.0,0.000318276625531232,coronavirus,low-recombination-rate
+method,components,mae,virus,recombination_rate
+mds,3.0,6.809124081128553,coronavirus,low-recombination-rate
