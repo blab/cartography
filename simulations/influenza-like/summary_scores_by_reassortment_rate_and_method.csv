@@ -1,5 +1,5 @@
-virus,recombination_rate,method,components,perplexity,learning_rate,nearest_neighbors,min_dist,mse
-influenza,no-reassortment,pca,2.0,,,,,0.00033812408762202756
-influenza,no-reassortment,mds,2.0,,,,,0.00038381974280637195
-influenza,no-reassortment,t-sne,,200.0,100.0,,,0.00018913231636421134
-influenza,no-reassortment,umap,,,,25.0,0.1,0.00016012188707259273
+virus,recombination_rate,method,components,perplexity,learning_rate,nearest_neighbors,min_dist,mae
+influenza,no-reassortment,pca,2.0,,,,,9.992713175954531
+influenza,no-reassortment,mds,3.0,,,,,4.295000364216697
+influenza,no-reassortment,t-sne,,100.0,200.0,,,11.634782558063417
+influenza,no-reassortment,umap,,,,100.0,0.25,14.341264882029538
