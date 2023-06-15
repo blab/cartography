@@ -10,7 +10,7 @@ if __name__ == "__main__":
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
 
-    parser.add_argument("--true-clusters", required=True, help="metadata TSV with true cluster labels per strain")
+    parser.add_argument("--true-clusters", required=True, help="metadata TSV or CSV with true cluster labels per strain")
     parser.add_argument("--true-clusters-column", required=True, help="column with true cluster labels in the given input table")
     parser.add_argument("--predicted-clusters", required=True, help="embedding CSV file with predicted cluster labels per strain")
     parser.add_argument("--predicted-clusters-column", required=True, help="column with predicted cluster labels in the given input table")
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     # Load true clusters.
     true_clusters = pd.read_csv(
         args.true_clusters,
-        sep="\t",
+        sep="\t" if args.true_clusters.endswith(".tsv") else ",",
         index_col="strain",
         usecols=["strain", args.true_clusters_column],
         dtype=str,
