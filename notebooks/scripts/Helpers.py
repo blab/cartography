@@ -44,6 +44,26 @@ def variation_of_information(X, Y, normalized=False):
     float :
         the variation of information score between two separate clusterings.
 
+
+    For maximally separated clusters, VI should be log_2(n) = log_2(4) = 2.
+
+    >>> X = [[1], [2], [3], [4]]
+    >>> Y = [[1, 2, 3, 4]]
+    >>> variation_of_information(X, Y) == np.log2(len(X))
+    True
+
+    For the same maximally separated clusters, the normalized VI should be 1.0.
+
+    >>> variation_of_information(X, Y, normalized=True) == 1.0
+    True
+
+    For identical clusters, VI should be 0.
+
+    >>> X = [[1], [2], [3], [4]]
+    >>> Y = [[1], [2], [3], [4]]
+    >>> variation_of_information(X, Y) == 0.0
+    True
+
     """
     H_X = entropy([len(k) for k in X], base=2)
     H_Y = entropy([len(k) for k in Y], base=2)
