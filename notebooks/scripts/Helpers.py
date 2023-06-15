@@ -245,7 +245,7 @@ def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip,
     return chart
 
 
-def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color, ToolTip, domain=None, range_=None):
+def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color, legend_title, ToolTip, domain=None, range_=None, legend_columns=1):
     """Creates a linked brushable altair plot with the tree and the charts appended
     Parameters
     -----------
@@ -257,6 +257,8 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
         list of all the TITLES you want for each axis: goes in order of[x1,y1,x2,y2,x3,y3] etc.
     color: string
         what the data should be colored by (ex. by clade, by region)
+    legend_title: string
+        title to use for the color legend
     ToolTip: list
         when hovering over the data, what data should be shown
 
@@ -299,7 +301,11 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
                 color=alt.condition(
                     brush,
                     if_false=alt.ColorValue('gray'),
-                    if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_), legend=alt.Legend(symbolLimit=len(domain)))
+                    if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_), legend=alt.Legend(
+                        symbolLimit=len(domain),
+                        columns=legend_columns,
+                        title=legend_title,
+                    ))
                 ),
                 tooltip=ToolTip
             ).add_selection(
