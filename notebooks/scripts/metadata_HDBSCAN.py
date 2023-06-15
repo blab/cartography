@@ -74,7 +74,7 @@ if __name__ == "__main__":
     output_df = pd.DataFrame([{
         "method": args.method,
         "predicted_clusters_column": args.predicted_clusters_column,
-        "normalized_vi": normalized_vi,
+        "normalized_vi": np.round(normalized_vi, 2),
         "n_predicted_clusters": predicted_clusters.shape[0],
         "n_ignored_predicted_clusters": n_ignored_predicted_clusters,
         "n_true_clusters": true_clusters.shape[0],
