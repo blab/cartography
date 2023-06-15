@@ -21,11 +21,6 @@ INTERNAL_NODE = [
 RANDOM_SEED = 314159
 CLUSTER_THRESHOLD = 2.0
 
-localrules:
-    mers_download_elife_tree,
-    mers_download_mcc_tree,
-    mers_unzip,
-
 wildcard_constraints:
     method="(pca|mds|t-sne|umap|genetic)",
     internal_node= "(ancestral|sequences)",
@@ -46,19 +41,13 @@ include: "simulations/Snakefile"
 include: "seasonal-flu-nextstrain/Snakefile"
 include: "seasonal-flu-nextstrain-2018-2020/Snakefile"
 include: "ha-na-nextstrain/Snakefile"
-include: "mers-nextstrain/Snakefile"
-include: "mers-muller/Snakefile"
 include: "sars-cov-2-nextstrain/Snakefile"
-
-# include: "zika-nextstrain/Snakefile"
 
 rule pathogens:
     input:
         *rules.seasonal_flu_training.input,
         *rules.seasonal_flu_test.input,
         *rules.seasonal_flu_reassortment.input,
-        *rules.mers.input,
-        *rules.mers_muller.input,
         *rules.sarscov2.input,
 
 # Include rules for the manuscript.
