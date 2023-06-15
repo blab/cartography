@@ -10,6 +10,7 @@ if __name__ == "__main__":
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
 
+    parser.add_argument("--method", required=True, help="name of the embedding method")
     parser.add_argument("--true-clusters", required=True, help="metadata TSV or CSV with true cluster labels per strain")
     parser.add_argument("--true-clusters-column", required=True, help="column with true cluster labels in the given input table")
     parser.add_argument("--predicted-clusters", required=True, help="embedding CSV file with predicted cluster labels per strain")
@@ -71,6 +72,7 @@ if __name__ == "__main__":
     )
 
     output_df = pd.DataFrame([{
+        "method": args.method,
         "predicted_clusters_column": args.predicted_clusters_column,
         "normalized_vi": normalized_vi,
         "n_predicted_clusters": predicted_clusters.shape[0],

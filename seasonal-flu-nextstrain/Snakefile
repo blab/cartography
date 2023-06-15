@@ -530,6 +530,7 @@ rule seasonal_flu_training_cluster_accuracy:
     shell:
         """
         python3 notebooks/scripts/metadata_HDBSCAN.py \
+            --method {wildcards.method} \
             --true-clusters {input.metadata} \
             --true-clusters-column {params.clade_column:q} \
             --predicted-clusters {input.embedding} \
