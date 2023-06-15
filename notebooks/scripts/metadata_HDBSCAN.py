@@ -37,10 +37,12 @@ if __name__ == "__main__":
     )
 
     # Drop ignored cluster labels from both inputs.
+    n_ignored_true_clusters = true_clusters[args.true_clusters_column].isin(args.ignored_clusters).sum()
     true_clusters = true_clusters[
         ~true_clusters[args.true_clusters_column].isin(args.ignored_clusters)
     ].copy()
 
+    n_ignored_predicted_clusters = predicted_clusters[args.predicted_clusters_column].isin(args.ignored_clusters).sum()
     predicted_clusters = predicted_clusters[
         ~predicted_clusters[args.predicted_clusters_column].isin(args.ignored_clusters)
     ].copy()
@@ -71,5 +73,10 @@ if __name__ == "__main__":
     output_df = pd.DataFrame([{
         "predicted_clusters_column": args.predicted_clusters_column,
         "normalized_vi": normalized_vi,
+        "n_predicted_clusters": predicted_clusters.shape[0],
+        "n_ignored_predicted_clusters": n_ignored_predicted_clusters,
+        "n_true_clusters": true_clusters.shape[0],
+        "n_ignored_true_clusters": n_ignored_true_clusters,
+        "n_vi_clusters": clusters.shape[0],
     }])
     output_df.to_csv(args.output, index=False)
