@@ -9,8 +9,74 @@ import altair as alt
 import pandas as pd
 import re
 from scipy.spatial.distance import squareform, pdist
-from scipy.stats import linregress
+from scipy.stats import linregress, entropy
 import statsmodels
+
+def joint_entropy(X, Y):
+    n = sum(len(x) for x in X)
+    H_X_Y = 0.0
+    for x in X:
+        for y in Y:
+            p_x_y = len(set(x) & set(y)) / n
+            if p_x_y > 0:
+                H_X_Y -= (p_x_y * np.log2(p_x_y))
+
+    return H_X_Y
+
+def variation_of_information(X, Y, normalized=False):
+    """Calculate variation of information (VI) score between the ground truth
+    clustering and the proposed clustering. The score is 0 for an exact match,
+    and the log of the total samples in the case of a complete difference.
+
+    Parameters
+    ----------
+    X : list of list
+        a list of total elements n (where n is number of total samples), partitioned into lists defining
+        separated clusters
+    Y : list of list
+        a list of total elements n (where n is number of total samples), partitioned into lists defining
+        separated clusters
+    normalized : boolean, default = False
+        determines if the VI score is normalized or not
+
+    Returns
+    -------
+    float :
+        the variation of information score between two separate clusterings.
+
+
+    For maximally separated clusters, VI should be log_2(n) = log_2(4) = 2.
+
+    >>> X = [[1], [2], [3], [4]]
+    >>> Y = [[1, 2, 3, 4]]
+    >>> variation_of_information(X, Y) == np.log2(len(X))
+    True
+
+    For the same maximally separated clusters, the normalized VI should be 1.0.
+
+    >>> variation_of_information(X, Y, normalized=True) == 1.0
+    True
+
+    For identical clusters, VI should be 0.
+
+    >>> X = [[1], [2], [3], [4]]
+    >>> Y = [[1], [2], [3], [4]]
+    >>> variation_of_information(X, Y) == 0.0
+    True
+
+    """
+    H_X = entropy([len(k) for k in X], base=2)
+    H_Y = entropy([len(k) for k in Y], base=2)
+    H_X_Y = joint_entropy(X, Y)
+
+    # From Equation 22 of Meila 2007
+    VI = (2 * H_X_Y) - H_X - H_Y
+
+    if normalized:
+        n = sum(len(x) for x in X)
+        return VI / np.log2(n)
+    else:
+        return VI
 
 def get_embedding_columns_by_method(method):
     if method in ("pca"):
@@ -53,7 +119,6 @@ def get_PCA_feature_matrix(alignment, sequence_names):
 
     numbers = np.array(numbers)
     return numbers
-
 
 def get_y_positions(tree):
     """Create a mapping of each clade to its vertical position. Dict of {clade:
@@ -180,7 +245,7 @@ def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip,
     return chart
 
 
-def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color, ToolTip, domain=None, range_=None):
+def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color, legend_title, ToolTip, domain=None, range_=None, legend_columns=1):
     """Creates a linked brushable altair plot with the tree and the charts appended
     Parameters
     -----------
@@ -192,6 +257,8 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
         list of all the TITLES you want for each axis: goes in order of[x1,y1,x2,y2,x3,y3] etc.
     color: string
         what the data should be colored by (ex. by clade, by region)
+    legend_title: string
+        title to use for the color legend
     ToolTip: list
         when hovering over the data, what data should be shown
 
@@ -234,7 +301,11 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
                 color=alt.condition(
                     brush,
                     if_false=alt.ColorValue('gray'),
-                    if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_), legend=alt.Legend(symbolLimit=len(domain)))
+                    if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_), legend=alt.Legend(
+                        symbolLimit=len(domain),
+                        columns=legend_columns,
+                        title=legend_title,
+                    ))
                 ),
                 tooltip=ToolTip
             ).add_selection(

@@ -1,5 +1,0 @@
-virus,recombination_rate,method,components,perplexity,learning_rate,nearest_neighbors,min_dist,mae
-coronavirus,low-recombination-rate,pca,2.0,,,,,12.715054644896306
-coronavirus,low-recombination-rate,mds,3.0,,,,,6.809124081128553
-coronavirus,low-recombination-rate,t-sne,,200.0,200.0,,,13.521475376084357
-coronavirus,low-recombination-rate,umap,,,,50.0,0.1,16.865232622847614

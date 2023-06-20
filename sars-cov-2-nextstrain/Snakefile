@@ -16,7 +16,7 @@ rule sarscov2:
 rule sarscov2_embed_pca_before:
     message: "Creating the embedding for PCA bases missing analysis"
     input:
-        alignment = "sars-cov-2-nextstrain/data/aligned.fasta.xz",
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_pca_before.csv",
         figure = "sars-cov-2-nextstrain/results/embed_pca_before.pdf",
@@ -26,8 +26,8 @@ rule sarscov2_embed_pca_before:
     conda: "../cartography.yml"
     shell:
         """
-        xz -c -d {input.alignment} | embed \
-            --alignment /dev/stdin \
+        embed \
+            --alignment {input.alignment} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -192,7 +192,7 @@ rule sarscov2_embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
-        cluster = "simulations/coronavirus-like/low-recombination-rate/pca_parameters.csv",
+        cluster = "simulations/coronavirus-like/moderate-recombination-rate/pca_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_pca.csv",
         figure = "sars-cov-2-nextstrain/results/embed_pca.pdf",
@@ -218,7 +218,7 @@ rule sarscov2_embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
-        cluster = "simulations/coronavirus-like/low-recombination-rate/mds_parameters.csv",
+        cluster = "simulations/coronavirus-like/moderate-recombination-rate/mds_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_mds.csv",
         figure = "sars-cov-2-nextstrain/results/embed_mds.pdf"
@@ -243,7 +243,7 @@ rule sarscov2_embed_tsne:
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
-        cluster = "simulations/coronavirus-like/low-recombination-rate/t-sne_parameters.csv",
+        cluster = "simulations/coronavirus-like/moderate-recombination-rate/t-sne_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_t-sne.csv",
         figure = "sars-cov-2-nextstrain/results/embed_t-sne.pdf"
@@ -268,7 +268,7 @@ rule sarscov2_embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
-        cluster = "simulations/coronavirus-like/low-recombination-rate/umap_parameters.csv",
+        cluster = "simulations/coronavirus-like/moderate-recombination-rate/umap_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_umap.csv",
         figure = "sars-cov-2-nextstrain/results/embed_umap.pdf",
@@ -377,7 +377,7 @@ rule sarscov2_scatterplot:
     input:
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
         embedding = "sars-cov-2-nextstrain/results/embed_{method}.csv",
-        method_parameters = "simulations/coronavirus-like/low-recombination-rate/{method}_parameters.csv",
+        method_parameters = "simulations/coronavirus-like/moderate-recombination-rate/{method}_parameters.csv",
     output:
         figure = "sars-cov-2-nextstrain/results/scatterplot_{method}.png",
         dataframe = "sars-cov-2-nextstrain/results/scatterplot_{method}.csv",
@@ -398,44 +398,39 @@ rule sarscov2_scatterplot:
             --output-metadata {output.metadata}
         """
 
-rule sarscov2_cluster_metadata:
-    message: "Creating the metadata dataframe for HDBSCAN results for main paper"
+rule sarscov2_cluster_accuracy:
     input:
-        embedding = "sars-cov-2-nextstrain/results/embed_{method}.csv",
         metadata = "sars-cov-2-nextstrain/results/table.tsv",
-        cluster = "sars-cov-2-nextstrain/results/{method}_parameters.csv",
+        embedding = "sars-cov-2-nextstrain/results/embed_{method}.csv",
     output:
-        dataframe = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_{method}.csv",
+        dataframe = "sars-cov-2-nextstrain/results/cluster_accuracy_{method}.csv",
     params:
-        cluster_threshold = CLUSTER_THRESHOLD,
+        clade_column="pango_lineage",
     conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/metadata_HDBSCAN.py \
             --method {wildcards.method} \
-            --embedding {input.embedding} \
-            --metadata {input.metadata} \
-            --cluster-data {input.cluster} \
-            --cluster-threshold {params.cluster_threshold} \
+            --true-clusters {input.metadata} \
+            --true-clusters-column {params.clade_column:q} \
+            --predicted-clusters {input.embedding} \
+            --predicted-clusters-column "{wildcards.method}_label" \
+            --ignored-clusters "-1" "unassigned" "None" "unclassifiable" "" \
             --output {output.dataframe}
         """
 
 rule sarscov2_concat_HDBSCAN_table:
-    message: "concatenating all the HDBSCAN data into one csv dataframe"
     input:
-       dataframe_pca = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_pca.csv",
-       dataframe_mds = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_mds.csv",
-       dataframe_tsne = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_t-sne.csv",
-       dataframe_umap = "sars-cov-2-nextstrain/results/HDBSCAN_metadata_umap.csv",
+        accuracies=expand("seasonal-flu-nextstrain/results/cluster_accuracy_{method}.csv", method=EMBEDDING_METHODS)
     output:
         metadata = "sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv",
     params:
-        column = "MCC",
+        column = "normalized_vi",
     conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/concatenate_tables.py \
-            --tables {input.dataframe_pca} {input.dataframe_mds} {input.dataframe_tsne} {input.dataframe_umap} \
+            --tables {input.accuracies} \
             --separator ',' \
             --sort-by {params.column} \
             --output {output.metadata}
@@ -532,6 +527,8 @@ rule sarscov2_create_notebook_docs:
         PCA_Supplement_PNG="docs/figures/sarscov2-pca-by-clade.png",
         MDS_Supplement="docs/figures/sarscov2-mds-by-clade.html",
         MDS_Supplement_PNG="docs/figures/sarscov2-mds-by-clade.png",
+    params:
+        clade_membership="pango_lineage",
     conda: "../cartography.yml"
     notebook:
         "2022-03-29-final-figures.py.ipynb"

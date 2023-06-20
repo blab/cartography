@@ -465,45 +465,39 @@ rule seasonal_flu_test_annotate_embeddings:
             --output {output.table}
         """
 
-rule seasonal_flu_test_cluster_metadata:
-    message: "Creating the metadata dataframe for HDBSCAN results for main paper"
+rule seasonal_flu_test_cluster_accuracy:
     input:
-        embedding = "seasonal-flu-nextstrain-2018-2020/results/embed_{method}_sequences.csv",
         metadata = "seasonal-flu-nextstrain-2018-2020/results/table.tsv",
-        cluster = "simulations/influenza-like/no-reassortment/{method}_parameters.csv",
+        embedding = "seasonal-flu-nextstrain-2018-2020/results/embed_{method}_sequences.csv",
     output:
-        dataframe = "seasonal-flu-nextstrain-2018-2020/results/HDBSCAN_metadata_{method}.csv",
+        dataframe = "seasonal-flu-nextstrain-2018-2020/results/cluster_accuracy_{method}.csv",
     conda: "../cartography.yml"
     params:
-        method = "{method}",
-        cluster_threshold = CLUSTER_THRESHOLD,
+        clade_column="clade_membership",
     shell:
         """
         python3 notebooks/scripts/metadata_HDBSCAN.py \
-            --method {params.method} \
-            --embedding {input.embedding} \
-            --metadata {input.metadata} \
-            --cluster-data {input.cluster} \
-            --cluster-threshold {params.cluster_threshold} \
+            --method {wildcards.method} \
+            --true-clusters {input.metadata} \
+            --true-clusters-column {params.clade_column:q} \
+            --predicted-clusters {input.embedding} \
+            --predicted-clusters-column "{wildcards.method}_label" \
             --output {output.dataframe}
         """
 
 rule seasonal_flu_test_concat_HDBSCAN_table:
     message: "concatenating all the HDBSCAN data into one csv dataframe"
     input:
-       dataframe_pca = "seasonal-flu-nextstrain-2018-2020/results/HDBSCAN_metadata_pca.csv",
-       dataframe_mds = "seasonal-flu-nextstrain-2018-2020/results/HDBSCAN_metadata_mds.csv",
-       dataframe_tsne = "seasonal-flu-nextstrain-2018-2020/results/HDBSCAN_metadata_t-sne.csv",
-       dataframe_umap = "seasonal-flu-nextstrain-2018-2020/results/HDBSCAN_metadata_umap.csv",
+        accuracies=expand("seasonal-flu-nextstrain-2018-2020/results/cluster_accuracy_{method}.csv", method=EMBEDDING_METHODS)
     output:
         metadata = "seasonal-flu-nextstrain-2018-2020/results/full_HDBSCAN_metadata.csv"
     params:
-        column = "MCC",
+        column = "normalized_vi",
     conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/concatenate_tables.py \
-            --tables {input.dataframe_pca} {input.dataframe_mds} {input.dataframe_tsne} {input.dataframe_umap} \
+            --tables {input.accuracies} \
             --separator ',' \
             --sort-by {params.column} \
             --output {output.metadata}

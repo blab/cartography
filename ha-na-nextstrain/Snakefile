@@ -573,39 +573,33 @@ rule seasonal_flu_reassortment_annotate_embeddings:
             --output {output.table}
         """
 
-rule seasonal_flu_reassortment_cluster_metadata:
+rule seasonal_flu_reassortment_cluster_accuracy:
     input:
-        embedding = "ha-na-nextstrain/results/embed_{method}_{ha_concatenated}.csv",
         metadata = "ha-na-nextstrain/results/table_ha.tsv",
-        cluster = "simulations/influenza-like/no-reassortment/{method}_parameters.csv",
+        embedding = "ha-na-nextstrain/results/embed_{method}_{ha_concatenated}.csv",
     output:
-        dataframe = "ha-na-nextstrain/results/HDBSCAN_metadata_{method}_{ha_concatenated}.csv",
+        dataframe = "ha-na-nextstrain/results/cluster_accuracy_{method}_{ha_concatenated}.csv",
     conda: "../cartography.yml"
     params:
         clade_column="MCC",
-        missing_data_value="unassigned",
-        cluster_threshold = CLUSTER_THRESHOLD,
     shell:
         """
         python3 notebooks/scripts/metadata_HDBSCAN.py \
             --method {wildcards.method} \
-            --clade-column {params.clade_column} \
-            --missing-data-value {params.missing_data_value} \
-            --analysis-name {wildcards.ha_concatenated} \
-            --embedding {input.embedding} \
-            --metadata {input.metadata} \
-            --cluster-data {input.cluster} \
-            --cluster-threshold {params.cluster_threshold} \
+            --true-clusters {input.metadata} \
+            --true-clusters-column {params.clade_column:q} \
+            --predicted-clusters {input.embedding} \
+            --predicted-clusters-column "{wildcards.method}_label" \
             --output {output.dataframe}
         """
 
 rule seasonal_flu_reassortment_concat_HDBSCAN_table:
     input:
-       dataframes = expand("ha-na-nextstrain/results/HDBSCAN_metadata_{method}_{ha_concatenated}.csv", method=EMBEDDING_METHODS, ha_concatenated=HA_CONCAT)
+        dataframes = expand("ha-na-nextstrain/results/cluster_accuracy_{method}_{{ha_concatenated}}.csv", method=EMBEDDING_METHODS)
     output:
-        metadata = "ha-na-nextstrain/results/full_HDBSCAN_metadata.csv"
+        metadata = "ha-na-nextstrain/results/full_HDBSCAN_metadata_{ha_concatenated}.csv"
     params:
-        column = "MCC",
+        column = "normalized_vi",
     conda: "../cartography.yml"
     shell:
         """
@@ -662,7 +656,8 @@ rule seasonal_flu_reassortment_create_notebook_docs:
     input:
         colors = "notebooks/config/color_schemes.tsv",
         annotated_embeddings="ha-na-nextstrain/results/annotated_embeddings.tsv",
-        accuracy_table="ha-na-nextstrain/results/full_HDBSCAN_metadata.csv",
+        accuracy_table_ha="ha-na-nextstrain/results/full_HDBSCAN_metadata_ha.csv",
+        accuracy_table_concatenated="ha-na-nextstrain/results/full_HDBSCAN_metadata_concatenated.csv",
         explained_variance_pca_ha = "ha-na-nextstrain/results/explained_variance_pca_ha.csv",
         explained_variance_pca_concatenated = "ha-na-nextstrain/results/explained_variance_pca_concatenated.csv",
     output:
@@ -676,6 +671,8 @@ rule seasonal_flu_reassortment_create_notebook_docs:
         HANAFullChartBrushableTSNEPNG = "docs/figures/flu-2016-2018-ha-na-tsne-by-cluster.png",
         HANAFullChartBrushableUMAPHTML = "docs/figures/flu-2016-2018-ha-na-umap-by-cluster.html",
         HANAFullChartBrushableUMAPPNG = "docs/figures/flu-2016-2018-ha-na-umap-by-cluster.png",
+    params:
+        accuracy_column="normalized_vi",
     conda: "../cartography.yml"
     notebook:
         "2022-02-23-seasonal-flu-ha-na-reassortment.ipynb"

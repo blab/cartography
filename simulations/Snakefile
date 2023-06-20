@@ -5,7 +5,7 @@ SIMULATION_METHOD_PARAMETERS = Paramspace(
         dtype=str,
     )
 )
-SIMULATION_RECOMBINATION_RATES = ["low-recombination-rate", "moderate-recombination-rate", "high-recombination-rate"]
+SIMULATION_RECOMBINATION_RATES = ["moderate-recombination-rate"]
 SIMULATION_REASSORTMENT_RATES = ["no-reassortment"]
 SIMULATION_REPLICATES = list(range(1, 6))
 SIMULATION_TOTAL_TRAIN_TEST_SPLITS = 10
