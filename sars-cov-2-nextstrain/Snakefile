@@ -527,6 +527,8 @@ rule sarscov2_create_notebook_docs:
         PCA_Supplement_PNG="docs/figures/sarscov2-pca-by-clade.png",
         MDS_Supplement="docs/figures/sarscov2-mds-by-clade.html",
         MDS_Supplement_PNG="docs/figures/sarscov2-mds-by-clade.png",
+    params:
+        clade_membership="pango_lineage",
     conda: "../cartography.yml"
     notebook:
         "2022-03-29-final-figures.py.ipynb"
