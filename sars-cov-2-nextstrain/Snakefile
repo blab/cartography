@@ -192,7 +192,7 @@ rule sarscov2_embed_pca:
     message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
-        cluster = "simulations/coronavirus-like/low-recombination-rate/pca_parameters.csv",
+        cluster = "simulations/coronavirus-like/moderate-recombination-rate/pca_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_pca.csv",
         figure = "sars-cov-2-nextstrain/results/embed_pca.pdf",
@@ -218,7 +218,7 @@ rule sarscov2_embed_mds:
     message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
-        cluster = "simulations/coronavirus-like/low-recombination-rate/mds_parameters.csv",
+        cluster = "simulations/coronavirus-like/moderate-recombination-rate/mds_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_mds.csv",
         figure = "sars-cov-2-nextstrain/results/embed_mds.pdf"
@@ -243,7 +243,7 @@ rule sarscov2_embed_tsne:
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
-        cluster = "simulations/coronavirus-like/low-recombination-rate/t-sne_parameters.csv",
+        cluster = "simulations/coronavirus-like/moderate-recombination-rate/t-sne_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_t-sne.csv",
         figure = "sars-cov-2-nextstrain/results/embed_t-sne.pdf"
@@ -268,7 +268,7 @@ rule sarscov2_embed_umap:
     message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
-        cluster = "simulations/coronavirus-like/low-recombination-rate/umap_parameters.csv",
+        cluster = "simulations/coronavirus-like/moderate-recombination-rate/umap_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_umap.csv",
         figure = "sars-cov-2-nextstrain/results/embed_umap.pdf",
@@ -377,7 +377,7 @@ rule sarscov2_scatterplot:
     input:
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
         embedding = "sars-cov-2-nextstrain/results/embed_{method}.csv",
-        method_parameters = "simulations/coronavirus-like/low-recombination-rate/{method}_parameters.csv",
+        method_parameters = "simulations/coronavirus-like/moderate-recombination-rate/{method}_parameters.csv",
     output:
         figure = "sars-cov-2-nextstrain/results/scatterplot_{method}.png",
         dataframe = "sars-cov-2-nextstrain/results/scatterplot_{method}.csv",
