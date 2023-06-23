@@ -13,6 +13,17 @@ rule sarscov2:
         "auspice/cartography_ncov.json",
         "sars-cov-2-nextstrain/results/mutation_table.csv",
 
+rule sarscov2_uncompress_alignment:
+    input:
+        alignment="sars-cov-2-nextstrain/data/aligned.fasta.zst",
+    output:
+        alignment="sars-cov-2-nextstrain/data/aligned.fasta",
+    conda: "../cartography.yml"
+    shell:
+        """
+        zstd -c -d {input.alignment} > {output.alignment}
+        """
+
 rule sarscov2_embed_pca_before:
     message: "Creating the embedding for PCA bases missing analysis"
     input:
@@ -38,8 +49,8 @@ rule sarscov2_embed_pca_before:
 rule sarscov2_bases_missing_vs_pc1:
     message: "creating a bases_missing vs PC1 graph"
     input:
-        alignment = "sars-cov-2-nextstrain/data/aligned.fasta.xz",
-        metadata = "sars-cov-2-nextstrain/data/metadata.tsv.xz",
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
+        metadata = "sars-cov-2-nextstrain/data/metadata.tsv.zst",
         pca = "sars-cov-2-nextstrain/results/embed_pca_before.csv",
     output:
         figure = "docs/figures/sarscov2-pc1-vs-bases-missing.png"
@@ -59,17 +70,6 @@ rule sarscov2_bases_missing_vs_pc1:
 
 # Calculate nucleotide diversity by calling SNPs (with monomorphic sites) and
 # using Pixy to calculate unbiased value of Pi.
-rule sarscov2_uncompress_alignment:
-    input:
-        alignment="sars-cov-2-nextstrain/data/aligned.fasta.xz",
-    output:
-        alignment=temp("sars-cov-2-nextstrain/data/aligned.fasta"),
-    conda: "../cartography.yml"
-    shell:
-        """
-        xz -c -d {input.alignment} > {output.alignment}
-        """
-
 rule sarscov2_call_snps:
     input:
         alignment="sars-cov-2-nextstrain/data/aligned.fasta",
@@ -160,7 +160,7 @@ rule sarscov2_nucleotide_diversity:
 rule sarscov2_make_clades:
     message: "creating the clades file to be used in the rest of the analysis"
     input:
-        metadata = "sars-cov-2-nextstrain/data/metadata.tsv.xz"
+        metadata = "sars-cov-2-nextstrain/data/metadata.tsv.zst"
     output:
         output = "sars-cov-2-nextstrain/results/clades.json"
     params:
@@ -176,7 +176,7 @@ rule sarscov2_make_clades:
 rule sarscov2_create_distance_matrix:
     message: "creating the distance matrix to be used in the rest of the analysis"
     input:
-        alignment = "sars-cov-2-nextstrain/data/aligned.fasta.xz",
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
     output:
         output = "sars-cov-2-nextstrain/results/distance_matrix.csv"
     conda: "../cartography.yml"

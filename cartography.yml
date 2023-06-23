@@ -33,6 +33,7 @@ dependencies:
   - joblib=1.1.0 # required for hdbscan to work
   - hdbscan=0.8.28
   - statsmodels
+  - zstd
   - pip:
     - pathogen-embed==0.1.0
     - statistics
