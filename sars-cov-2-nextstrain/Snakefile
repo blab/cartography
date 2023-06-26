@@ -13,6 +13,67 @@ rule sarscov2:
         "auspice/cartography_ncov.json",
         "sars-cov-2-nextstrain/results/mutation_table.csv",
 
+rule sarscov2_download_filtered_metadata:
+    output:
+        metadata=temp("sars-cov-2-nextstrain/data/filtered_metadata.tsv.zst"),
+    params:
+        metadata_url="https://data.nextstrain.org/files/workflows/cartography/filtered_metadata_2023-06-26.tsv.zst",
+    conda: "../cartography.yml"
+    shell:
+        """
+        curl -o {output.metadata} {params.metadata_url}
+        """
+
+rule sarscov2_subsample_early_samples:
+    input:
+        metadata="sars-cov-2-nextstrain/data/filtered_metadata.tsv.zst",
+        reference="sars-cov-2-nextstrain/config/reference.txt",
+    output:
+        strains="sars-cov-2-nextstrain/data/strains.txt",
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur filter \
+            --metadata {input.metadata} \
+            --include {input.reference} \
+            --min-date 2020-01-01 \
+            --max-date 2022-01-01 \
+            --group-by region year month \
+            --subsample-max-sequences 2000 \
+            --output-strains {output.strains}
+        """
+
+rule sarscov2_download_all_aligned_sequences:
+    output:
+        alignment=temp("sars-cov-2-nextstrain/data/all_aligned.fasta.zst"),
+    params:
+        alignment_url="https://data.nextstrain.org/files/ncov/open/aligned.fasta.zst",
+    conda: "../cartography.yml"
+    shell:
+        """
+        curl -o {output.alignment} {params.alignment_url}
+        """
+
+rule sarscov2_extract_subsampled_data:
+    input:
+        metadata="sars-cov-2-nextstrain/data/filtered_metadata.tsv.zst",
+        alignment="sars-cov-2-nextstrain/data/all_aligned.fasta.zst",
+        strains="sars-cov-2-nextstrain/data/strains.txt",
+    output:
+        metadata="sars-cov-2-nextstrain/data/metadata.tsv.zst",
+        alignment="sars-cov-2-nextstrain/data/aligned.fasta.zst",
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur filter \
+            --metadata {input.metadata} \
+            --sequences {input.alignment} \
+            --exclude-all \
+            --include {input.strains} \
+            --output-metadata {output.metadata} \
+            --output-sequences {output.alignment}
+        """
+
 rule sarscov2_uncompress_alignment:
     input:
         alignment="sars-cov-2-nextstrain/data/aligned.fasta.zst",

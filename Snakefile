@@ -42,6 +42,7 @@ include: "seasonal-flu-nextstrain/Snakefile"
 include: "seasonal-flu-nextstrain-2018-2020/Snakefile"
 include: "ha-na-nextstrain/Snakefile"
 include: "sars-cov-2-nextstrain/Snakefile"
+include: "sars-cov-2-nextstrain-2022-2023/Snakefile"
 
 rule pathogens:
     input:

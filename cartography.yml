@@ -4,13 +4,13 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - augur=13.1.2
+  - augur=22.0.3
   - pip
   - seaborn
   - altair
   - altair_saver
   - dendropy
-  - python=3.7*
+  - python=3.*
   - scikit-learn
   - umap-learn
   - jsonschema
@@ -35,7 +35,7 @@ dependencies:
   - statsmodels
   - zstd
   - pip:
-    - pathogen-embed==0.1.0
+    - pathogen-embed==0.1.1
     - statistics
     - svglib
     - tabulate
