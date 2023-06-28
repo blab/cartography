@@ -44,15 +44,18 @@ if __name__ == "__main__":
     #calling Helpers.py scatterplot_xyvalues on the data
 
     if args.method_parameters:
+        parameters = pd.read_csv(args.method_parameters)
+
+        n_components = None
+        if "components" in parameters.columns:
+            n_components = int(parameters["components"].values[0])
+
         if args.method == "pca":
-            n_components = 10
             columns = [
                 f"pca{i}"
                 for i in range(1, n_components + 1)
             ]
         elif args.method == "mds":
-            parameters = pd.read_csv(args.method_parameters)
-            n_components = int(parameters["components"].values[0])
             columns = [
                 f"mds{i}"
                 for i in range(1, n_components + 1)
