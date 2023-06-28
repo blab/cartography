@@ -139,15 +139,14 @@ rule seasonal_flu_training_nucleotide_diversity:
         """
 
 rule seasonal_flu_training_create_distance_matrix:
-    message: "creating the distance matrix to be used in the rest of the analysis"
     input:
-        alignment = "seasonal-flu-nextstrain/results/aligned_{ancestral}.fasta"
+        alignment = "seasonal-flu-nextstrain/results/aligned_{ancestral}.fasta",
     output:
-        output = "seasonal-flu-nextstrain/results/distance_matrix_{ancestral}.csv"
+        output = "seasonal-flu-nextstrain/results/distance_matrix_{ancestral}.csv",
     conda: "../cartography.yml"
     shell:
         """
-        python3 notebooks/scripts/hamming_distance_from_fasta.py \
+        pathogen-distance \
             --alignment {input.alignment} \
             --output {output.output}
         """
@@ -156,21 +155,19 @@ rule seasonal_flu_training_embed_pca:
     message: "Creating the embedding for PCA"
     input:
         alignment = "seasonal-flu-nextstrain/results/aligned_{ancestral}.fasta",
-        cluster = "simulations/influenza-like/no-reassortment/pca_parameters.csv",
+        parameters = "simulations/influenza-like/no-reassortment/pca_parameters.csv",
     output:
         dataframe = "seasonal-flu-nextstrain/results/embed_pca_{ancestral}.csv",
         figure = "seasonal-flu-nextstrain/results/embed_pca_{ancestral}.pdf",
         explained_variance = "seasonal-flu-nextstrain/results/explained_variance_pca_{ancestral}.csv"
     params:
         random_seed = RANDOM_SEED,
-        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        pathogen-embed \
             --alignment {input.alignment} \
-            --cluster-data {input.cluster} \
-            --cluster-threshold {params.cluster_threshold} \
+            --embedding-parameters {input.parameters} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -181,21 +178,21 @@ rule seasonal_flu_training_embed_pca:
 rule seasonal_flu_training_embed_mds:
     message: "Creating the embedding for MDS"
     input:
+        alignment = "seasonal-flu-nextstrain/results/aligned_{ancestral}.fasta",
         distance_matrix = "seasonal-flu-nextstrain/results/distance_matrix_{ancestral}.csv",
-        cluster = "simulations/influenza-like/no-reassortment/mds_parameters.csv",
+        parameters = "simulations/influenza-like/no-reassortment/mds_parameters.csv",
     output:
         dataframe = "seasonal-flu-nextstrain/results/embed_mds_{ancestral}.csv",
         figure = "seasonal-flu-nextstrain/results/embed_mds_{ancestral}.pdf"
     params:
         random_seed = RANDOM_SEED,
-        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        pathogen-embed \
+            --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
-            --cluster-data {input.cluster} \
-            --cluster-threshold {params.cluster_threshold} \
+            --embedding-parameters {input.parameters} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -207,21 +204,19 @@ rule seasonal_flu_training_embed_tsne:
     input:
         alignment = "seasonal-flu-nextstrain/results/aligned_{ancestral}.fasta",
         distance_matrix = "seasonal-flu-nextstrain/results/distance_matrix_{ancestral}.csv",
-        cluster = "simulations/influenza-like/no-reassortment/t-sne_parameters.csv",
+        parameters = "simulations/influenza-like/no-reassortment/t-sne_parameters.csv",
     output:
         dataframe = "seasonal-flu-nextstrain/results/embed_t-sne_{ancestral}.csv",
         figure = "seasonal-flu-nextstrain/results/embed_t-sne_{ancestral}.pdf"
     params:
         random_seed = RANDOM_SEED,
-        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        pathogen-embed \
             --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
-            --cluster-data {input.cluster} \
-            --cluster-threshold {params.cluster_threshold} \
+            --embedding-parameters {input.parameters} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -231,21 +226,21 @@ rule seasonal_flu_training_embed_tsne:
 rule seasonal_flu_training_embed_umap:
     message: "Creating the embedding for UMAP"
     input:
+        alignment = "seasonal-flu-nextstrain/results/aligned_{ancestral}.fasta",
         distance_matrix = "seasonal-flu-nextstrain/results/distance_matrix_{ancestral}.csv",
-        cluster = "simulations/influenza-like/no-reassortment/umap_parameters.csv",
+        parameters = "simulations/influenza-like/no-reassortment/umap_parameters.csv",
     output:
         dataframe = "seasonal-flu-nextstrain/results/embed_umap_{ancestral}.csv",
         figure = "seasonal-flu-nextstrain/results/embed_umap_{ancestral}.pdf"
     params:
         random_seed = RANDOM_SEED,
-        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        pathogen-embed \
+            --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
-            --cluster-data {input.cluster} \
-            --cluster-threshold {params.cluster_threshold} \
+            --embedding-parameters {input.parameters} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
