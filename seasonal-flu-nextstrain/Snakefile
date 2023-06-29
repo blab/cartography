@@ -481,6 +481,25 @@ rule seasonal_flu_training_clades:
             --output {output.clade_data}
         """
 
+rule seasonal_flu_training_create_table_from_tree_and_node_data:
+    input:
+        tree="seasonal-flu-nextstrain/results/tree.nwk",
+        clades="seasonal-flu-nextstrain/results/clades.json",
+        branch_lengths="seasonal-flu-nextstrain/results/branch_lengths.json",
+    output:
+        table="seasonal-flu-nextstrain/results/table.tsv",
+    params:
+        attributes="numdate clade_membership"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/node_data_to_table.py \
+            --tree {input.tree} \
+            --node-data {input.clades} {input.branch_lengths} \
+            --attributes {params.attributes} \
+            --output {output.table}
+        """
+
 rule seasonal_flu_training_traits:
     message: "Inferring ancestral traits for {params.columns!s}"
     input:
@@ -528,23 +547,6 @@ rule seasonal_flu_training_export:
             --include-root-sequence \
             --minify-json \
             --output {output.auspice_tree}
-        """
-
-rule seasonal_flu_training_tree_to_table:
-    message: "creating a table of node data values from the tree attributes"
-    input:
-        tree = rules.seasonal_flu_training_export.output.auspice_tree
-    output:
-        table = "seasonal-flu-nextstrain/results/table.tsv"
-    params:
-        attributes = "num_date clade_membership"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 notebooks/scripts/auspice_tree_to_table.py \
-            {input.tree} \
-            {output.table} \
-            --attributes {params.attributes}
         """
 
 rule seasonal_flu_training_create_distance_dataframe:
