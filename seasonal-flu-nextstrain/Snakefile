@@ -247,8 +247,103 @@ rule seasonal_flu_training_embed_umap:
             umap
         """
 
+rule seasonal_flu_training_cluster:
+    input:
+        embedding="seasonal-flu-nextstrain/results/embed_{method}_sequences.csv",
+    output:
+        dataframe="seasonal-flu-nextstrain/results/cluster/{method}/{distance_threshold}.csv",
+        figure="seasonal-flu-nextstrain/results/cluster/{method}/{distance_threshold}.pdf",
+    params:
+        min_size=CLUSTER_MIN_SIZE,
+        min_samples=CLUSTER_MIN_SAMPLES,
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-cluster \
+            --embedding {input.embedding} \
+            --min-size {params.min_size} \
+            --min-samples {params.min_samples} \
+            --distance-threshold {wildcards.distance_threshold} \
+            --label-attribute "{wildcards.method}_cluster_at_{wildcards.distance_threshold}" \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure}
+        """
+
+rule seasonal_flu_training_cluster_accuracy:
+    input:
+        metadata = "seasonal-flu-nextstrain/results/table.tsv",
+        clusters="seasonal-flu-nextstrain/results/cluster/{method}/{distance_threshold}.csv",
+    output:
+        dataframe="seasonal-flu-nextstrain/results/cluster_accuracy/{method}/{distance_threshold}.csv",
+    params:
+        clade_column="clade_membership",
+        ignored_clusters="unassigned",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/metadata_HDBSCAN.py \
+            --method {wildcards.method} \
+            --true-clusters {input.metadata} \
+            --true-clusters-column {params.clade_column:q} \
+            --predicted-clusters {input.clusters} \
+            --predicted-clusters-column "{wildcards.method}_cluster_at_{wildcards.distance_threshold}" \
+            --ignored-clusters {params.ignored_clusters:q} \
+            --output {output.dataframe}
+        """
+
+rule seasonal_flu_training_concat_cluster_accuracy:
+    input:
+        accuracies=expand("seasonal-flu-nextstrain/results/cluster_accuracy/{method}/{distance_threshold}.csv", method=EMBEDDING_METHODS, distance_threshold=DISTANCE_THRESHOLDS)
+    output:
+        metadata = "seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv"
+    params:
+        column = "normalized_vi",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.accuracies} \
+            --separator ',' \
+            --sort-by {params.column} \
+            --output {output.metadata}
+        """
+
+rule seasonal_flu_training_get_optimal_cluster_parameters_and_accuracies:
+    input:
+        accuracies="seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv",
+    output:
+        accuracies="seasonal-flu-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk uniq -f method -n 1 {input.accuracies} \
+            | csvtk mutate -f predicted_clusters_column -n distance_threshold -p "[pca|mds|t\-sne|umap]_cluster_at_(.*)" > {output.accuracies}
+        """
+
+rule seasonal_flu_training_cluster_with_optimal_parameters:
+    input:
+        embedding="seasonal-flu-nextstrain/results/embed_{method}_{ancestral}.csv",
+        parameters="seasonal-flu-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
+    output:
+        clustered_embedding="seasonal-flu-nextstrain/results/cluster_embed_{method}_{ancestral}.csv",
+        clustered_embedding_figure="seasonal-flu-nextstrain/results/cluster_embed_{method}_{ancestral}.pdf",
+    conda: "../cartography.yml"
+    params:
+        min_size=CLUSTER_MIN_SIZE,
+        min_samples=CLUSTER_MIN_SAMPLES,
+    shell:
+        """
+        pathogen-cluster \
+            --embedding {input.embedding} \
+            --label-attribute "{wildcards.method}_label" \
+            --min-size {params.min_size} \
+            --min-samples {params.min_samples} \
+            --distance-threshold "$(csvtk filter2 -f '$method=="{wildcards.method}"' {input.parameters} | csvtk cut -f distance_threshold | csvtk del-header)" \
+            --output-dataframe {output.clustered_embedding} \
+            --output-figure {output.clustered_embedding_figure}
+        """
+
 rule seasonal_flu_training_create_node_output:
-    message: "creates node output that is used by augur to create the phylogenies"
     input:
         dataframe = "seasonal-flu-nextstrain/results/embed_{method}_{ancestral}.csv"
     output:
@@ -513,26 +608,6 @@ rule seasonal_flu_training_scatterplot:
             --output-metadata {output.metadata}
         """
 
-rule seasonal_flu_training_cluster_accuracy:
-    input:
-        metadata = "seasonal-flu-nextstrain/results/table.tsv",
-        embedding = "seasonal-flu-nextstrain/results/embed_{method}_sequences.csv",
-    output:
-        dataframe = "seasonal-flu-nextstrain/results/cluster_accuracy_{method}.csv",
-    params:
-        clade_column="clade_membership",
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 notebooks/scripts/metadata_HDBSCAN.py \
-            --method {wildcards.method} \
-            --true-clusters {input.metadata} \
-            --true-clusters-column {params.clade_column:q} \
-            --predicted-clusters {input.embedding} \
-            --predicted-clusters-column "{wildcards.method}_label" \
-            --output {output.dataframe}
-        """
-
 rule seasonal_flu_training_create_mutation_table:
     input:
         reference = "seasonal-flu-nextstrain/config/reference_h3n2_ha.fasta",
@@ -570,24 +645,6 @@ rule seasonal_flu_training_concat_mutation_tables:
         """
         python3 notebooks/scripts/concatenate_tables.py \
             --tables {input.mutation_tables} \
-            --separator ',' \
-            --sort-by {params.column} \
-            --output {output.metadata}
-        """
-
-rule seasonal_flu_training_concat_HDBSCAN_table:
-    message: "concatenating all the HDBSCAN data into one csv dataframe"
-    input:
-        accuracies=expand("seasonal-flu-nextstrain/results/cluster_accuracy_{method}.csv", method=EMBEDDING_METHODS)
-    output:
-        metadata = "seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv"
-    params:
-        column = "normalized_vi",
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 notebooks/scripts/concatenate_tables.py \
-            --tables {input.accuracies} \
             --separator ',' \
             --sort-by {params.column} \
             --output {output.metadata}
