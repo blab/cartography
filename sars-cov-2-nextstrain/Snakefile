@@ -10,7 +10,7 @@ rule sarscov2:
         "docs/figures/sarscov2-euclidean-distance-by-genetic-distance.png",
         "sars-cov-2-nextstrain/results/alignment_pi.txt",
         "docs/figures/sarscov2-pc1-vs-bases-missing.png",
-        "auspice/cartography_ncov.json",
+        "auspice/cartography_ncov_2020-2022.json",
         "sars-cov-2-nextstrain/results/mutation_table.csv",
 
 rule sarscov2_download_filtered_metadata:
@@ -98,7 +98,7 @@ rule sarscov2_embed_pca_before:
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        pathogen-embed \
             --alignment {input.alignment} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
@@ -234,40 +234,167 @@ rule sarscov2_make_clades:
             --col-name {params.col_name}
         """
 
-rule sarscov2_create_distance_matrix:
-    message: "creating the distance matrix to be used in the rest of the analysis"
+rule sarscov2_tree:
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
     output:
-        output = "sars-cov-2-nextstrain/results/distance_matrix.csv"
+        tree = "sars-cov-2-nextstrain/results/tree_raw.nwk",
+    conda: "../cartography.yml"
+    threads: 4
+    resources:
+        mem_mb=16000,
+        runtime="2:00:00",
+        partition="campus-new",
+        qos="campus-new",
+    shell:
+        """
+        augur tree \
+            --alignment {input.alignment} \
+            --output {output.tree} \
+            --nthreads {threads}
+        """
+
+rule sarscov2_refine:
+    input:
+        tree = "sars-cov-2-nextstrain/results/tree_raw.nwk",
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
+        metadata = "sars-cov-2-nextstrain/data/metadata.tsv.zst",
+    output:
+        tree = "sars-cov-2-nextstrain/results/tree.nwk",
+        node_data = "sars-cov-2-nextstrain/results/branch_lengths.json",
+    log:
+        "logs/sars-cov-2-nextstrain/refine.txt",
+    params:
+        coalescent = "opt",
+        date_inference = "marginal",
+        clock_rate = 0.0008,
+        clock_std_dev = 0.0004,
+        divergence_units="mutations",
+    conda: "../cartography.yml"
+    resources:
+        mem_mb=16000,
+        runtime="4:00:00",
+        partition="campus-new",
+        qos="campus-new",
+    shell:
+        """
+        augur refine \
+            --tree {input.tree} \
+            --alignment {input.alignment} \
+            --metadata {input.metadata} \
+            --output-tree {output.tree} \
+            --output-node-data {output.node_data} \
+            --timetree \
+            --coalescent {params.coalescent} \
+            --date-confidence \
+            --date-inference {params.date_inference} \
+            --divergence-units {params.divergence_units} \
+            --clock-rate {params.clock_rate} \
+            --clock-std-dev {params.clock_std_dev} 2>&1 | tee {log}
+        """
+
+rule sarscov2_ancestral:
+    input:
+        tree = "sars-cov-2-nextstrain/results/tree.nwk",
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
+    output:
+        node_data = "sars-cov-2-nextstrain/results/nt_muts.json",
+        sequences = "sars-cov-2-nextstrain/results/aligned_ancestral.fasta",
+    params:
+        inference = "joint",
+    conda: "../cartography.yml"
+    resources:
+        mem_mb=4000,
+        runtime="0:15:00",
+    shell:
+        """
+        augur ancestral \
+            --tree {input.tree} \
+            --alignment {input.alignment} \
+            --output-node-data {output.node_data} \
+            --output-sequences {output.sequences} \
+            --inference {params.inference}
+        """
+
+rule sarscov2_translate:
+    input:
+        tree = "sars-cov-2-nextstrain/results/tree.nwk",
+        node_data = "sars-cov-2-nextstrain/results/nt_muts.json",
+        gene_map = "sars-cov-2-nextstrain/config/annotation.gff",
+    output:
+        node_data = "sars-cov-2-nextstrain/results/aa_muts.json",
+    conda: "../cartography.yml"
+    params:
+        genes=["ORF1a", "ORF1b", "S", "ORF3a", "E", "M", "ORF6", "ORF7a", "ORF7b", "ORF8", "N", "ORF9b"]
+    shell:
+        """
+        augur translate \
+            --tree {input.tree} \
+            --ancestral-sequences {input.node_data} \
+            --reference-sequence {input.gene_map} \
+            --genes {params.genes:q} \
+            --output {output.node_data}
+        """
+
+rule sarscov2_export:
+    message: "Exporting data files for for auspice"
+    input:
+        tree = "sars-cov-2-nextstrain/results/tree.nwk",
+        metadata = "sars-cov-2-nextstrain/data/metadata.tsv.zst",
+        branch_lengths = "sars-cov-2-nextstrain/results/branch_lengths.json",
+        nt_muts = "sars-cov-2-nextstrain/results/nt_muts.json",
+        aa_muts = "sars-cov-2-nextstrain/results/aa_muts.json",
+        embeddings = expand("sars-cov-2-nextstrain/results/cluster_embed_{embedding}.json", embedding=EMBEDDING_METHODS),
+        auspice_config = "sars-cov-2-nextstrain/config/auspice_config.json",
+    output:
+        auspice_tree = "auspice/cartography_ncov_2020-2022.json",
+        root_sequence = "auspice/cartography_ncov_2020-2022_root-sequence.json",
+    conda: "../cartography.yml"
+    params:
+        color_by="Nextstrain_clade Nextclade_pango"
+    shell:
+        """
+        augur export v2 \
+            --tree {input.tree} \
+            --metadata {input.metadata} \
+            --node-data {input.branch_lengths} {input.nt_muts} {input.aa_muts} {input.embeddings} \
+            --auspice-config {input.auspice_config} \
+            --include-root-sequence \
+            --color-by-metadata {params.color_by} \
+            --minify-json \
+            --output {output.auspice_tree}
+        """
+
+rule sarscov2_create_distance_matrix:
+    input:
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
+    output:
+        output = "sars-cov-2-nextstrain/results/distance_matrix.csv",
     conda: "../cartography.yml"
     shell:
         """
-        python3 notebooks/scripts/hamming_distance_from_fasta.py \
+        pathogen-distance \
             --alignment {input.alignment} \
             --indel-distance \
             --output {output.output}
         """
 
 rule sarscov2_embed_pca:
-    message: "Creating the embedding (dataframe, node JSON) for PCA"
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
-        cluster = "simulations/coronavirus-like/moderate-recombination-rate/pca_parameters.csv",
+        parameters = "simulations/coronavirus-like/moderate-recombination-rate/pca_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_pca.csv",
         figure = "sars-cov-2-nextstrain/results/embed_pca.pdf",
         explained_variance = "sars-cov-2-nextstrain/results/explained_variance_pca.csv"
     params:
         random_seed = RANDOM_SEED,
-        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        pathogen-embed \
             --alignment {input.alignment} \
-            --cluster-data {input.cluster} \
-            --cluster-threshold {params.cluster_threshold} \
+            --embedding-parameters {input.parameters} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -276,23 +403,22 @@ rule sarscov2_embed_pca:
         """
 
 rule sarscov2_embed_mds:
-    message: "Creating the embedding (dataframe, node JSON) for MDS"
     input:
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
-        cluster = "simulations/coronavirus-like/moderate-recombination-rate/mds_parameters.csv",
+        parameters = "simulations/coronavirus-like/moderate-recombination-rate/mds_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_mds.csv",
         figure = "sars-cov-2-nextstrain/results/embed_mds.pdf"
     params:
         random_seed = RANDOM_SEED,
-        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        pathogen-embed \
+            --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
-            --cluster-data {input.cluster} \
-            --cluster-threshold {params.cluster_threshold} \
+            --embedding-parameters {input.parameters} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -300,25 +426,22 @@ rule sarscov2_embed_mds:
         """
 
 rule sarscov2_embed_tsne:
-    message: "Creating the embedding (dataframe, node JSON) for t-SNE"
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
-        cluster = "simulations/coronavirus-like/moderate-recombination-rate/t-sne_parameters.csv",
+        parameters = "simulations/coronavirus-like/moderate-recombination-rate/t-sne_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_t-sne.csv",
         figure = "sars-cov-2-nextstrain/results/embed_t-sne.pdf"
     params:
         random_seed = RANDOM_SEED,
-        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        pathogen-embed \
             --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
-            --cluster-data {input.cluster} \
-            --cluster-threshold {params.cluster_threshold} \
+            --embedding-parameters {input.parameters} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -326,35 +449,130 @@ rule sarscov2_embed_tsne:
         """
 
 rule sarscov2_embed_umap:
-    message: "Creating the embedding (dataframe, node JSON) for UMAP"
     input:
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
-        cluster = "simulations/coronavirus-like/moderate-recombination-rate/umap_parameters.csv",
+        parameters = "simulations/coronavirus-like/moderate-recombination-rate/umap_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_umap.csv",
         figure = "sars-cov-2-nextstrain/results/embed_umap.pdf",
     params:
         random_seed = RANDOM_SEED,
-        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        pathogen-embed \
+            --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
-            --cluster-data {input.cluster} \
-            --cluster-threshold {params.cluster_threshold} \
+            --embedding-parameters {input.parameters} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             umap
         """
 
+rule sarscov2_cluster:
+    input:
+        embedding="sars-cov-2-nextstrain/results/embed_{method}.csv",
+    output:
+        dataframe="sars-cov-2-nextstrain/results/cluster/{method}/{distance_threshold}.csv",
+        figure="sars-cov-2-nextstrain/results/cluster/{method}/{distance_threshold}.pdf",
+    params:
+        min_size=CLUSTER_MIN_SIZE,
+        min_samples=CLUSTER_MIN_SAMPLES,
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-cluster \
+            --embedding {input.embedding} \
+            --min-size {params.min_size} \
+            --min-samples {params.min_samples} \
+            --distance-threshold {wildcards.distance_threshold} \
+            --label-attribute "{wildcards.method}_cluster_at_{wildcards.distance_threshold}" \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure}
+        """
+
+rule sarscov2_cluster_accuracy:
+    input:
+        metadata = "sars-cov-2-nextstrain/data/metadata.tsv.zst",
+        clusters="sars-cov-2-nextstrain/results/cluster/{method}/{distance_threshold}.csv",
+    output:
+        dataframe="sars-cov-2-nextstrain/results/cluster_accuracy/{method}/{distance_threshold}.csv",
+    params:
+        clade_column="Nextclade_pango",
+        ignored_clusters="unassigned",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/metadata_HDBSCAN.py \
+            --method {wildcards.method} \
+            --true-clusters {input.metadata} \
+            --true-clusters-column {params.clade_column:q} \
+            --predicted-clusters {input.clusters} \
+            --predicted-clusters-column "{wildcards.method}_cluster_at_{wildcards.distance_threshold}" \
+            --ignored-clusters {params.ignored_clusters:q} \
+            --output {output.dataframe}
+        """
+
+rule sarscov2_concat_cluster_accuracy:
+    input:
+        accuracies=expand("sars-cov-2-nextstrain/results/cluster_accuracy/{method}/{distance_threshold}.csv", method=EMBEDDING_METHODS, distance_threshold=DISTANCE_THRESHOLDS)
+    output:
+        metadata = "sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv"
+    params:
+        column = "normalized_vi",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.accuracies} \
+            --separator ',' \
+            --sort-by {params.column} \
+            --output {output.metadata}
+        """
+
+rule sarscov2_get_optimal_cluster_parameters_and_accuracies:
+    input:
+        accuracies="sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv",
+    output:
+        accuracies="sars-cov-2-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk uniq -f method -n 1 {input.accuracies} \
+            | csvtk mutate -f predicted_clusters_column -n distance_threshold -p "[pca|mds|t\-sne|umap]_cluster_at_(.*)" > {output.accuracies}
+        """
+
+rule sarscov2_cluster_with_optimal_parameters:
+    input:
+        embedding="sars-cov-2-nextstrain/results/embed_{method}.csv",
+        parameters="sars-cov-2-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
+    output:
+        clustered_embedding="sars-cov-2-nextstrain/results/cluster_embed_{method}.csv",
+        clustered_embedding_figure="sars-cov-2-nextstrain/results/cluster_embed_{method}.pdf",
+    conda: "../cartography.yml"
+    params:
+        min_size=CLUSTER_MIN_SIZE,
+        min_samples=CLUSTER_MIN_SAMPLES,
+    shell:
+        """
+        pathogen-cluster \
+            --embedding {input.embedding} \
+            --label-attribute "{wildcards.method}_label" \
+            --min-size {params.min_size} \
+            --min-samples {params.min_samples} \
+            --distance-threshold "$(csvtk filter2 -f '$method=="{wildcards.method}"' {input.parameters} | csvtk cut -f distance_threshold | csvtk del-header)" \
+            --output-dataframe {output.clustered_embedding} \
+            --output-figure {output.clustered_embedding_figure}
+        """
+
 rule sarscov2_create_node_output:
     message: "creates node output that is used by augur to create the phylogenies"
     input:
-        dataframe = "sars-cov-2-nextstrain/results/embed_{method}.csv"
+        dataframe = "sars-cov-2-nextstrain/results/cluster_embed_{method}.csv"
     output:
-        node_data = "sars-cov-2-nextstrain/results/embed_{method}.json"
+        node_data = "sars-cov-2-nextstrain/results/cluster_embed_{method}.json"
     shell:
         """
         python3 notebooks/scripts/output_node_data.py \
@@ -365,7 +583,7 @@ rule sarscov2_create_node_output:
 rule sarscov2_annotate_tree:
     input:
         tree="sars-cov-2-nextstrain/data/ncov_open_global.json",
-        embeddings=expand("sars-cov-2-nextstrain/results/embed_{embedding}.json", embedding=EMBEDDING_METHODS),
+        embeddings=expand("sars-cov-2-nextstrain/results/cluster_embed_{embedding}.json", embedding=EMBEDDING_METHODS),
     output:
         auspice_tree="auspice/cartography_ncov.json",
     log:
@@ -384,11 +602,11 @@ rule sarscov2_annotate_tree:
 rule sarscov2_tree_to_table:
     message: "creating a table of node data values from the tree attributes"
     input:
-        tree = "auspice/cartography_ncov.json",
+        tree = "auspice/cartography_ncov_2020-2022.json",
     output:
-        table = "sars-cov-2-nextstrain/results/table.tsv"
+        table = "sars-cov-2-nextstrain/results/table.tsv",
     params:
-        attributes = "num_date clade_membership pango_lineage"
+        attributes = "num_date Nextstrain_clade Nextclade_pango"
     conda: "../cartography.yml"
     shell:
         """
@@ -400,10 +618,10 @@ rule sarscov2_tree_to_table:
 
 rule sarscov2_create_distance_dataframe:
     input:
-        dataframe_pca = "sars-cov-2-nextstrain/results/embed_pca.csv",
-        dataframe_mds = "sars-cov-2-nextstrain/results/embed_mds.csv",
-        dataframe_tsne = "sars-cov-2-nextstrain/results/embed_t-sne.csv",
-        dataframe_umap = "sars-cov-2-nextstrain/results/embed_umap.csv",
+        dataframe_pca = "sars-cov-2-nextstrain/results/cluster_embed_pca.csv",
+        dataframe_mds = "sars-cov-2-nextstrain/results/cluster_embed_mds.csv",
+        dataframe_tsne = "sars-cov-2-nextstrain/results/cluster_embed_t-sne.csv",
+        dataframe_umap = "sars-cov-2-nextstrain/results/cluster_embed_umap.csv",
     output:
         metadata = "sars-cov-2-nextstrain/results/embedding_data.csv",
     conda: "../cartography.yml"
@@ -415,7 +633,7 @@ rule sarscov2_create_distance_dataframe:
             --output {output.metadata}
         """
 
-rule sarscov2_training_annotate_embeddings:
+rule sarscov2_annotate_embeddings:
     input:
         left="sars-cov-2-nextstrain/results/table.tsv",
         right="sars-cov-2-nextstrain/results/embedding_data.csv",
@@ -437,7 +655,7 @@ rule sarscov2_scatterplot:
     message: "Creating the scatterplot (PNG, dataframe)"
     input:
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
-        embedding = "sars-cov-2-nextstrain/results/embed_{method}.csv",
+        embedding = "sars-cov-2-nextstrain/results/cluster_embed_{method}.csv",
         method_parameters = "simulations/coronavirus-like/moderate-recombination-rate/{method}_parameters.csv",
     output:
         figure = "sars-cov-2-nextstrain/results/scatterplot_{method}.png",
@@ -457,44 +675,6 @@ rule sarscov2_scatterplot:
             --output-figure {output.figure} \
             --output-dataframe {output.dataframe} \
             --output-metadata {output.metadata}
-        """
-
-rule sarscov2_cluster_accuracy:
-    input:
-        metadata = "sars-cov-2-nextstrain/results/table.tsv",
-        embedding = "sars-cov-2-nextstrain/results/embed_{method}.csv",
-    output:
-        dataframe = "sars-cov-2-nextstrain/results/cluster_accuracy_{method}.csv",
-    params:
-        clade_column="pango_lineage",
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 notebooks/scripts/metadata_HDBSCAN.py \
-            --method {wildcards.method} \
-            --true-clusters {input.metadata} \
-            --true-clusters-column {params.clade_column:q} \
-            --predicted-clusters {input.embedding} \
-            --predicted-clusters-column "{wildcards.method}_label" \
-            --ignored-clusters "-1" "unassigned" "None" "unclassifiable" "" \
-            --output {output.dataframe}
-        """
-
-rule sarscov2_concat_HDBSCAN_table:
-    input:
-        accuracies=expand("seasonal-flu-nextstrain/results/cluster_accuracy_{method}.csv", method=EMBEDDING_METHODS)
-    output:
-        metadata = "sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv",
-    params:
-        column = "normalized_vi",
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 notebooks/scripts/concatenate_tables.py \
-            --tables {input.accuracies} \
-            --separator ',' \
-            --sort-by {params.column} \
-            --output {output.metadata}
         """
 
 rule sarscov2_concat_scatterplot_table:
@@ -576,7 +756,7 @@ rule sarscov2_create_notebook_docs:
     input:
         colors="notebooks/config/color_schemes.tsv",
         annotated_embeddings="sars-cov-2-nextstrain/results/annotated_embeddings.tsv",
-        accuracy_table="sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv",
+        accuracy_table="sars-cov-2-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
         explained_variance_pca = "sars-cov-2-nextstrain/results/explained_variance_pca.csv",
     output:
         fullChart="docs/figures/sarscov2-embeddings-by-clade.html",
