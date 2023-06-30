@@ -551,10 +551,10 @@ rule seasonal_flu_training_export:
 
 rule seasonal_flu_training_create_distance_dataframe:
     input:
-        dataframe_pca = "seasonal-flu-nextstrain/results/embed_pca_sequences.csv",
-        dataframe_mds = "seasonal-flu-nextstrain/results/embed_mds_sequences.csv",
-        dataframe_tsne = "seasonal-flu-nextstrain/results/embed_t-sne_sequences.csv",
-        dataframe_umap = "seasonal-flu-nextstrain/results/embed_umap_sequences.csv",
+        dataframe_pca = "seasonal-flu-nextstrain/results/cluster_embed_pca_sequences.csv",
+        dataframe_mds = "seasonal-flu-nextstrain/results/cluster_embed_mds_sequences.csv",
+        dataframe_tsne = "seasonal-flu-nextstrain/results/cluster_embed_t-sne_sequences.csv",
+        dataframe_umap = "seasonal-flu-nextstrain/results/cluster_embed_umap_sequences.csv",
     output:
         metadata = "seasonal-flu-nextstrain/results/embedding_data.csv",
     conda: "../cartography.yml"
@@ -690,7 +690,7 @@ rule seasonal_flu_training_create_notebook_docs:
     input:
         colors="notebooks/config/color_schemes.tsv",
         annotated_embeddings="seasonal-flu-nextstrain/results/annotated_embeddings.tsv",
-        accuracy_table="seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv",
+        accuracy_table="seasonal-flu-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
         explained_variance_pca="seasonal-flu-nextstrain/results/explained_variance_pca_sequences.csv",
     output:
         fullChartPNG = "docs/figures/flu-2016-2018-ha-embeddings-by-clade.png",
