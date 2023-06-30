@@ -35,7 +35,7 @@ dependencies:
   - statsmodels
   - zstd
   - pip:
-    - pathogen-embed==0.1.1
+    - pathogen-embed==1.0.0
     - statistics
     - svglib
     - tabulate
