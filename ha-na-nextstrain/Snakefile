@@ -338,7 +338,6 @@ rule seasonal_flu_reassortment_convert_mccs_to_json:
         """
 
 rule seasonal_flu_reassortment_create_distance_matrix:
-    message: "creating the distance matrix to be used in the rest of the analysis"
     input:
         alignment = "ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta"
     output:
@@ -346,30 +345,27 @@ rule seasonal_flu_reassortment_create_distance_matrix:
     conda: "../cartography.yml"
     shell:
         """
-        python3 notebooks/scripts/hamming_distance_from_fasta.py \
+        pathogen-distance \
             --alignment {input.alignment} \
             --output {output.output}
         """
 
 rule seasonal_flu_reassortment_embed_pca:
-    message: "Creating the embedding for PCA"
     input:
         alignment = "ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta",
-        cluster = "simulations/influenza-like/no-reassortment/pca_parameters.csv",
+        parameters="simulations/influenza-like/no-reassortment/pca_parameters.csv",
     output:
         dataframe = "ha-na-nextstrain/results/embed_pca_{ha_concatenated}.csv",
         figure = "ha-na-nextstrain/results/embed_pca_{ha_concatenated}.pdf",
         explained_variance = "ha-na-nextstrain/results/explained_variance_pca_{ha_concatenated}.csv"
     params:
         random_seed = RANDOM_SEED,
-        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        pathogen-embed \
             --alignment {input.alignment} \
-            --cluster-data {input.cluster} \
-            --cluster-threshold {params.cluster_threshold} \
+            --embedding-parameters {input.parameters} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -378,23 +374,22 @@ rule seasonal_flu_reassortment_embed_pca:
         """
 
 rule seasonal_flu_reassortment_embed_mds:
-    message: "Creating the embedding for MDS"
     input:
+        alignment = "ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta",
         distance_matrix = rules.seasonal_flu_reassortment_create_distance_matrix.output.output,
-        cluster = "simulations/influenza-like/no-reassortment/mds_parameters.csv",
+        parameters="simulations/influenza-like/no-reassortment/mds_parameters.csv",
     output:
         dataframe = "ha-na-nextstrain/results/embed_mds_{ha_concatenated}.csv",
         figure = "ha-na-nextstrain/results/embed_mds_{ha_concatenated}.pdf"
     params:
         random_seed = RANDOM_SEED,
-        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        pathogen-embed \
+            --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
-            --cluster-data {input.cluster} \
-            --cluster-threshold {params.cluster_threshold} \
+            --embedding-parameters {input.parameters} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -402,25 +397,22 @@ rule seasonal_flu_reassortment_embed_mds:
         """
 
 rule seasonal_flu_reassortment_embed_tsne:
-    message: "Creating the embedding for t-SNE"
     input:
         alignment = "ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta",
         distance_matrix = rules.seasonal_flu_reassortment_create_distance_matrix.output.output,
-        cluster = "simulations/influenza-like/no-reassortment/t-sne_parameters.csv",
+        parameters="simulations/influenza-like/no-reassortment/t-sne_parameters.csv",
     output:
         dataframe = "ha-na-nextstrain/results/embed_t-sne_{ha_concatenated}.csv",
         figure = "ha-na-nextstrain/results/embed_t-sne_{ha_concatenated}.pdf"
     params:
         random_seed = RANDOM_SEED,
-        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        pathogen-embed \
             --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
-            --cluster-data {input.cluster} \
-            --cluster-threshold {params.cluster_threshold} \
+            --embedding-parameters {input.parameters} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
@@ -428,35 +420,57 @@ rule seasonal_flu_reassortment_embed_tsne:
         """
 
 rule seasonal_flu_reassortment_embed_umap:
-    message: "Creating the embedding for UMAP"
     input:
+        alignment = "ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta",
         distance_matrix = rules.seasonal_flu_reassortment_create_distance_matrix.output.output,
-        cluster = "simulations/influenza-like/no-reassortment/umap_parameters.csv",
+        parameters="simulations/influenza-like/no-reassortment/umap_parameters.csv",
     output:
         dataframe = "ha-na-nextstrain/results/embed_umap_{ha_concatenated}.csv",
         figure = "ha-na-nextstrain/results/embed_umap_{ha_concatenated}.pdf"
     params:
         random_seed = RANDOM_SEED,
-        cluster_threshold = CLUSTER_THRESHOLD,
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        pathogen-embed \
+            --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
-            --cluster-data {input.cluster} \
-            --cluster-threshold {params.cluster_threshold} \
+            --embedding-parameters {input.parameters} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             umap
         """
 
+rule seasonal_flu_reassortment_cluster_with_optimal_parameters:
+    input:
+        embedding="ha-na-nextstrain/results/embed_{method}_{ha_concatenated}.csv",
+        parameters="seasonal-flu-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
+    output:
+        clustered_embedding="ha-na-nextstrain/results/cluster_embed_{method}_{ha_concatenated}.csv",
+        clustered_embedding_figure="ha-na-nextstrain/results/cluster_embed_{method}_{ha_concatenated}.pdf",
+    conda: "../cartography.yml"
+    params:
+        min_size=CLUSTER_MIN_SIZE,
+        min_samples=CLUSTER_MIN_SAMPLES,
+    shell:
+        """
+        pathogen-cluster \
+            --embedding {input.embedding} \
+            --label-attribute "{wildcards.method}_label" \
+            --min-size {params.min_size} \
+            --min-samples {params.min_samples} \
+            --distance-threshold "$(csvtk filter2 -f '$method=="{wildcards.method}"' {input.parameters} | csvtk cut -f distance_threshold | csvtk del-header)" \
+            --output-dataframe {output.clustered_embedding} \
+            --output-figure {output.clustered_embedding_figure}
+        """
+
 rule seasonal_flu_reassortment_create_node_output:
     message: "creates node output that is used by augur to create the phylogenies"
     input:
-        dataframe = "ha-na-nextstrain/results/embed_{method}_{ha_concatenated}.csv"
+        dataframe = "ha-na-nextstrain/results/cluster_embed_{method}_{ha_concatenated}.csv"
     output:
-        node_data = "ha-na-nextstrain/results/embed_{method}_{ha_concatenated}.json"
+        node_data = "ha-na-nextstrain/results/cluster_embed_{method}_{ha_concatenated}.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -468,10 +482,10 @@ rule seasonal_flu_reassortment_create_node_output:
 rule seasonal_flu_reassortment_rename_columns:
     message: "renaming columns for the concat so it can be exported to aupice (concat and ha colorbys)"
     input:
-        clades = "ha-na-nextstrain/results/embed_{method}_concatenated.json",
-        embedding = "ha-na-nextstrain/results/embed_{method}_concatenated.csv"
+        clades = "ha-na-nextstrain/results/cluster_embed_{method}_concatenated.json",
+        embedding = "ha-na-nextstrain/results/cluster_embed_{method}_concatenated.csv"
     output:
-        node_data = "ha-na-nextstrain/results/embed_{method}_concatenated_renamed.json"
+        node_data = "ha-na-nextstrain/results/cluster_embed_{method}_concatenated_renamed.json"
     conda: "../cartography.yml"
     params:
         rename_column = "{method}_label_ha_na",
@@ -533,14 +547,14 @@ rule seasonal_flu_reassortment_tree_to_table:
 rule seasonal_flu_reassortment_create_distance_dataframe:
     message: "creating distance dataframe for the ha and ha+na for animation"
     input:
-        dataframe_pca = "ha-na-nextstrain/results/embed_pca_ha.csv",
-        dataframe_mds = "ha-na-nextstrain/results/embed_mds_ha.csv",
-        dataframe_tsne = "ha-na-nextstrain/results/embed_t-sne_ha.csv",
-        dataframe_umap = "ha-na-nextstrain/results/embed_umap_ha.csv",
-        dataframe_pca_na = "ha-na-nextstrain/results/embed_pca_concatenated.csv",
-        dataframe_mds_na = "ha-na-nextstrain/results/embed_mds_concatenated.csv",
-        dataframe_tsne_na = "ha-na-nextstrain/results/embed_t-sne_concatenated.csv",
-        dataframe_umap_na = "ha-na-nextstrain/results/embed_umap_concatenated.csv"
+        dataframe_pca = "ha-na-nextstrain/results/cluster_embed_pca_ha.csv",
+        dataframe_mds = "ha-na-nextstrain/results/cluster_embed_mds_ha.csv",
+        dataframe_tsne = "ha-na-nextstrain/results/cluster_embed_t-sne_ha.csv",
+        dataframe_umap = "ha-na-nextstrain/results/cluster_embed_umap_ha.csv",
+        dataframe_pca_na = "ha-na-nextstrain/results/cluster_embed_pca_concatenated.csv",
+        dataframe_mds_na = "ha-na-nextstrain/results/cluster_embed_mds_concatenated.csv",
+        dataframe_tsne_na = "ha-na-nextstrain/results/cluster_embed_t-sne_concatenated.csv",
+        dataframe_umap_na = "ha-na-nextstrain/results/cluster_embed_umap_concatenated.csv"
     output:
         metadata = "ha-na-nextstrain/results/ha_concatenated_data.csv"
     conda: "../cartography.yml"
@@ -576,7 +590,7 @@ rule seasonal_flu_reassortment_annotate_embeddings:
 rule seasonal_flu_reassortment_cluster_accuracy:
     input:
         metadata = "ha-na-nextstrain/results/table_ha.tsv",
-        embedding = "ha-na-nextstrain/results/embed_{method}_{ha_concatenated}.csv",
+        embedding = "ha-na-nextstrain/results/cluster_embed_{method}_{ha_concatenated}.csv",
     output:
         dataframe = "ha-na-nextstrain/results/cluster_accuracy_{method}_{ha_concatenated}.csv",
     conda: "../cartography.yml"
@@ -614,7 +628,7 @@ rule seasonal_flu_reassortment_create_mutation_table:
     input:
         reference = "ha-na-nextstrain/config/reference_h3n2_ha_na.fasta",
         alignment = "ha-na-nextstrain/results/aligned_concatenated.fasta",
-        embedding = "ha-na-nextstrain/results/embed_{method}_concatenated.csv",
+        embedding = "ha-na-nextstrain/results/cluster_embed_{method}_concatenated.csv",
     output:
         table = "ha-na-nextstrain/results/mutation_table_{method}.csv",
     params:
