@@ -74,6 +74,17 @@ rule sarscov2_extract_subsampled_data:
             --output-sequences {output.alignment}
         """
 
+rule sarscov2_uncompress_metadata:
+    input:
+        metadata="sars-cov-2-nextstrain/data/metadata.tsv.zst",
+    output:
+        metadata="sars-cov-2-nextstrain/data/metadata.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        zstd -c -d {input.metadata} > {output.metadata}
+        """
+
 rule sarscov2_uncompress_alignment:
     input:
         alignment="sars-cov-2-nextstrain/data/aligned.fasta.zst",
@@ -111,7 +122,7 @@ rule sarscov2_bases_missing_vs_pc1:
     message: "creating a bases_missing vs PC1 graph"
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
-        metadata = "sars-cov-2-nextstrain/data/metadata.tsv.zst",
+        metadata = "sars-cov-2-nextstrain/data/metadata.tsv",
         pca = "sars-cov-2-nextstrain/results/embed_pca_before.csv",
     output:
         figure = "docs/figures/sarscov2-pc1-vs-bases-missing.png"
@@ -221,7 +232,7 @@ rule sarscov2_nucleotide_diversity:
 rule sarscov2_make_clades:
     message: "creating the clades file to be used in the rest of the analysis"
     input:
-        metadata = "sars-cov-2-nextstrain/data/metadata.tsv.zst"
+        metadata = "sars-cov-2-nextstrain/data/metadata.tsv"
     output:
         output = "sars-cov-2-nextstrain/results/clades.json"
     params:
@@ -258,7 +269,7 @@ rule sarscov2_refine:
     input:
         tree = "sars-cov-2-nextstrain/results/tree_raw.nwk",
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
-        metadata = "sars-cov-2-nextstrain/data/metadata.tsv.zst",
+        metadata = "sars-cov-2-nextstrain/data/metadata.tsv",
     output:
         tree = "sars-cov-2-nextstrain/results/tree.nwk",
         node_data = "sars-cov-2-nextstrain/results/branch_lengths.json",
@@ -340,7 +351,7 @@ rule sarscov2_export:
     message: "Exporting data files for for auspice"
     input:
         tree = "sars-cov-2-nextstrain/results/tree.nwk",
-        metadata = "sars-cov-2-nextstrain/data/metadata.tsv.zst",
+        metadata = "sars-cov-2-nextstrain/data/metadata.tsv",
         branch_lengths = "sars-cov-2-nextstrain/results/branch_lengths.json",
         nt_muts = "sars-cov-2-nextstrain/results/nt_muts.json",
         aa_muts = "sars-cov-2-nextstrain/results/aa_muts.json",
@@ -495,7 +506,7 @@ rule sarscov2_cluster:
 
 rule sarscov2_cluster_accuracy:
     input:
-        metadata = "sars-cov-2-nextstrain/data/metadata.tsv.zst",
+        metadata = "sars-cov-2-nextstrain/data/metadata.tsv",
         clusters="sars-cov-2-nextstrain/results/cluster/{method}/{distance_threshold}.csv",
     output:
         dataframe="sars-cov-2-nextstrain/results/cluster_accuracy/{method}/{distance_threshold}.csv",
