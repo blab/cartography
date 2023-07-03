@@ -229,22 +229,6 @@ rule sarscov2_nucleotide_diversity:
         rm -f sars-cov-2-nextstrain/results/pixy*.tmp
         """
 
-rule sarscov2_make_clades:
-    message: "creating the clades file to be used in the rest of the analysis"
-    input:
-        metadata = "sars-cov-2-nextstrain/data/metadata.tsv"
-    output:
-        output = "sars-cov-2-nextstrain/results/clades.json"
-    params:
-        col_name = "Nextstrain_clade"
-    shell:
-        """
-        python3 notebooks/scripts/make_clades.py \
-            --metadata {input.metadata} \
-            --output {output.output} \
-            --col-name {params.col_name}
-        """
-
 rule sarscov2_tree:
     input:
         alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
@@ -589,25 +573,6 @@ rule sarscov2_create_node_output:
         python3 notebooks/scripts/output_node_data.py \
             --table {input.dataframe} \
             --output {output.node_data}
-        """
-
-rule sarscov2_annotate_tree:
-    input:
-        tree="sars-cov-2-nextstrain/data/ncov_open_global.json",
-        embeddings=expand("sars-cov-2-nextstrain/results/cluster_embed_{embedding}.json", embedding=EMBEDDING_METHODS),
-    output:
-        auspice_tree="auspice/cartography_ncov.json",
-    log:
-        "logs/sars-cov-2_annotate_tree.txt",
-    benchmark:
-        "benchmarks/sars-cov-2_annotate_tree.txt",
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 notebooks/scripts/annotate_tree.py \
-            --tree {input.tree} \
-            --node-data {input.embeddings} \
-            --output {output.auspice_tree}
         """
 
 rule sarscov2_tree_to_table:
