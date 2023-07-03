@@ -29,6 +29,7 @@ dependencies:
   - pixy
   - openjdk=11
   - tsv-utils
+  - csvtk
   - samtools
   - joblib=1.1.0 # required for hdbscan to work
   - hdbscan=0.8.28
