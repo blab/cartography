@@ -260,6 +260,7 @@ rule sarscov2_refine:
     log:
         "logs/sars-cov-2-nextstrain/refine.txt",
     params:
+        root = "Wuhan-Hu-1/2019",
         coalescent = "opt",
         date_inference = "marginal",
         clock_rate = 0.0008,
@@ -279,6 +280,7 @@ rule sarscov2_refine:
             --metadata {input.metadata} \
             --output-tree {output.tree} \
             --output-node-data {output.node_data} \
+            --root {params.root} \
             --timetree \
             --coalescent {params.coalescent} \
             --date-confidence \
