@@ -246,6 +246,7 @@ rule sarscov2_tree:
         augur tree \
             --alignment {input.alignment} \
             --output {output.tree} \
+            --tree-builder-args="-ninit 10 -n 4" \
             --nthreads {threads}
         """
 
