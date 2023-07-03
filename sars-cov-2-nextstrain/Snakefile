@@ -568,6 +568,7 @@ rule sarscov2_create_node_output:
         dataframe = "sars-cov-2-nextstrain/results/cluster_embed_{method}.csv"
     output:
         node_data = "sars-cov-2-nextstrain/results/cluster_embed_{method}.json"
+    conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/output_node_data.py \
