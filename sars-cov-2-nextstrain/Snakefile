@@ -15,9 +15,9 @@ rule sarscov2:
 
 rule sarscov2_download_filtered_metadata:
     output:
-        metadata=temp("sars-cov-2-nextstrain/data/filtered_metadata.tsv.zst"),
+        metadata="sars-cov-2-nextstrain/data/filtered_metadata.tsv.zst",
     params:
-        metadata_url="https://data.nextstrain.org/files/workflows/cartography/filtered_metadata_2023-06-26.tsv.zst",
+        metadata_url="https://data.nextstrain.org/files/workflows/cartography/filtered_metadata_2023-07-05.tsv.zst",
     conda: "../cartography.yml"
     shell:
         """
@@ -28,6 +28,7 @@ rule sarscov2_subsample_early_samples:
     input:
         metadata="sars-cov-2-nextstrain/data/filtered_metadata.tsv.zst",
         reference="sars-cov-2-nextstrain/config/reference.txt",
+        outliers="sars-cov-2-nextstrain/config/exclude.txt",
     output:
         strains="sars-cov-2-nextstrain/data/strains.txt",
     conda: "../cartography.yml"
@@ -36,6 +37,7 @@ rule sarscov2_subsample_early_samples:
         augur filter \
             --metadata {input.metadata} \
             --include {input.reference} \
+            --exclude {input.outliers} \
             --min-date 2020-01-01 \
             --max-date 2022-01-01 \
             --group-by region year month \
