@@ -316,8 +316,9 @@ rule seasonal_flu_training_get_optimal_cluster_parameters_and_accuracies:
     conda: "../cartography.yml"
     shell:
         """
-        csvtk uniq -f method -n 1 {input.accuracies} \
-            | csvtk mutate -f predicted_clusters_column -n distance_threshold -p "[pca|mds|t\-sne|umap]_cluster_at_(.*)" > {output.accuracies}
+        csvtk mutate -f predicted_clusters_column -n distance_threshold -p "[pca|mds|t\-sne|umap]_cluster_at_(.*)" {input.accuracies} \
+            | csvtk sort -k normalized_vi -k method -k distance_threshold \
+            | csvtk uniq -f method -n 1 > {output.accuracies}
         """
 
 rule seasonal_flu_training_cluster_with_optimal_parameters:
