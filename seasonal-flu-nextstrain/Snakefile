@@ -9,7 +9,6 @@ rule seasonal_flu_training:
         "docs/figures/flu-2016-2018-pca-by-clade.png",
         "docs/figures/flu-2016-2018-pca-explained-variance.png",
         "auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json",
-        "seasonal-flu-nextstrain/results/nucleotide_diversity.txt",
         "seasonal-flu-nextstrain/results/mutation_table.csv",
 
 rule seasonal_flu_training_files:
@@ -122,20 +121,6 @@ rule seasonal_flu_training_align:
             --fill-gaps \
             --remove-reference \
             --nthreads {threads}
-        """
-
-rule seasonal_flu_training_nucleotide_diversity:
-    message: "finding the nucleotide diversity of an aligned FASTA file"
-    input:
-        alignment = "seasonal-flu-nextstrain/results/aligned_sequences.fasta"
-    output:
-        output = "seasonal-flu-nextstrain/results/nucleotide_diversity.txt"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 notebooks/scripts/nucleotide_diversity.py \
-            --alignment {input.alignment} \
-            --output {output.output}
         """
 
 rule seasonal_flu_training_create_distance_matrix:

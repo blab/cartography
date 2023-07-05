@@ -3,7 +3,6 @@ rule seasonal_flu_test:
         "docs/figures/flu-2018-2020-ha-embeddings-by-cluster.html",
         "docs/figures/flu-2018-2020-ha-embeddings-by-cluster.png",
         "auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json",
-        "seasonal-flu-nextstrain-2018-2020/results/nucleotide_diversity.txt",
         "seasonal-flu-nextstrain-2018-2020/results/mutation_table.csv",
 
 rule seasonal_flu_test_files:
@@ -242,20 +241,6 @@ rule seasonal_flu_test_traits:
             --output {output.node_data} \
             --columns {params.columns} \
             --confidence
-        """
-
-rule seasonal_flu_test_nucleotide_diversity:
-    message: "finding the nucleotide diversity of an aligned FASTA file"
-    input:
-        alignment = "seasonal-flu-nextstrain-2018-2020/results/aligned_sequences.fasta"
-    output:
-        output = "seasonal-flu-nextstrain-2018-2020/results/nucleotide_diversity.txt"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 notebooks/scripts/nucleotide_diversity.py \
-            --alignment {input.alignment} \
-            --output {output.output}
         """
 
 rule seasonal_flu_test_create_distance_matrix:
