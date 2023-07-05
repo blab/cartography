@@ -193,6 +193,7 @@ rule sarscov2_refine:
             --output-tree {output.tree} \
             --output-node-data {output.node_data} \
             --root {params.root} \
+            --stochastic-resolve \
             --timetree \
             --coalescent {params.coalescent} \
             --date-confidence \
