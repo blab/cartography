@@ -28,6 +28,8 @@ DISTANCE_THRESHOLDS = [
     5.0,
     5.5,
     6.0,
+    6.5,
+    7.0,
 ]
 CLUSTER_MIN_SIZE = 10
 CLUSTER_MIN_SAMPLES = 5
