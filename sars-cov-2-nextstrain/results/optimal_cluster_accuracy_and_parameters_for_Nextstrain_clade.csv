@@ -1,0 +1,5 @@
+normalized_vi,method,predicted_clusters_column,n_predicted_clusters,n_ignored_predicted_clusters,n_true_clusters,n_ignored_true_clusters,n_vi_clusters,distance_threshold
+0.04,t-sne,t-sne_cluster_at_1.5,1734,0,1734,0,1734,1.5
+0.14,mds,mds_cluster_at_4.5,1734,0,1734,0,1734,4.5
+0.14,umap,umap_cluster_at_0.5,1734,0,1734,0,1734,0.5
+0.37,pca,pca_cluster_at_3.5,1734,0,1734,0,1734,3.5

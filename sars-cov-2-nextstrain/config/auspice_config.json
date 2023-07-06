@@ -1,10 +1,36 @@
 {
-  "title": "Genomic epidemiology of novel coronavirus",
-  "build_url": "https://github.com/nextstrain/ncov",
+  "title": "Genetic cartography of SARS-CoV-2",
+  "build_url": "https://github.com/blab/cartography",
   "maintainers": [
-    {"name": "the Nextstrain team", "url": "https://nextstrain.org/"}
+    {"name": "Sravani Nanduri"},
+    {"name": "John Huddleston"}
   ],
   "colorings": [
+    {
+      "key": "pca1",
+      "title": "PCA 1",
+      "type": "continuous"
+    },
+    {
+      "key": "pca2",
+      "title": "PCA 2",
+      "type": "continuous"
+    },
+    {
+      "key": "mds1",
+      "title": "MDS 1",
+      "type": "continuous"
+    },
+    {
+      "key": "mds2",
+      "title": "MDS 2",
+      "type": "continuous"
+    },
+    {
+      "key": "mds3",
+      "title": "MDS 3",
+      "type": "continuous"
+    },
     {
       "key": "tsne_x",
       "title": "t-SNE x",
@@ -31,18 +57,48 @@
       "type": "categorical"
     },
     {
-      "key": "pango_lineage",
-      "title": "PANGO Lineage",
+      "key": "Nextclade_pango",
+      "title": "Nextclade pango",
       "type": "categorical"
     },
     {
-      "key": "GISAID_clade",
-      "title": "GISAID Clade",
+      "key": "pca_label_for_Nextstrain_clade",
+      "title": "PCA cluster (Nextstrain clade)",
       "type": "categorical"
     },
     {
-      "key": "location",
-      "title": "Location",
+      "key": "mds_label_for_Nextstrain_clade",
+      "title": "MDS cluster (Nextstrain clade)",
+      "type": "categorical"
+    },
+    {
+      "key": "t-sne_label_for_Nextstrain_clade",
+      "title": "t-SNE cluster (Nextstrain clade)",
+      "type": "categorical"
+    },
+    {
+      "key": "umap_label_for_Nextstrain_clade",
+      "title": "UMAP cluster (Nextstrain clade)",
+      "type": "categorical"
+    },
+    {
+      "key": "pca_label_for_Nextclade_pango",
+      "title": "PCA cluster (Nextclade pango)",
+      "type": "categorical"
+    },
+    {
+      "key": "mds_label_for_Nextclade_pango",
+      "title": "MDS cluster (Nextclade pango)",
+      "type": "categorical"
+    },
+    {
+      "key": "t-sne_label_for_Nextclade_pango",
+      "title": "t-SNE cluster (Nextclade pango)",
+      "type": "categorical"
+    },
+    {
+      "key": "umap_label_for_Nextclade_pango",
+      "title": "UMAP cluster (Nextclade pango)",
       "type": "categorical"
     },
     {
@@ -61,21 +117,6 @@
       "type": "categorical"
     },
     {
-      "key": "host",
-      "title": "Host",
-      "type": "categorical"
-    },
-    {
-      "key": "age",
-      "title": "Age",
-      "type": "continuous"
-    },
-    {
-      "key": "sex",
-      "title": "Sex",
-      "type": "categorical"
-    },
-    {
       "key": "author",
       "title": "Authors",
       "type": "categorical"
@@ -91,16 +132,11 @@
       "type": "categorical"
     },
     {
-      "key": "gisaid_epi_isl",
-      "type": "categorical"
-    },
-    {
       "key": "genbank_accession",
       "type": "categorical"
     }
   ],
   "geo_resolutions": [
-    "location",
     "division",
     "country",
     "region"
@@ -113,11 +149,18 @@
   },
   "filters": [
     "Nextstrain_clade",
-    "pango_lineage",
+    "Nextclade_pango",
+    "pca_label_for_Nextstrain_clade",
+    "mds_label_for_Nextstrain_clade",
+    "t-sne_label_for_Nextstrain_clade",
+    "umap_label_for_Nextstrain_clade",
+    "pca_label_for_Nextclade_pango",
+    "mds_label_for_Nextclade_pango",
+    "t-sne_label_for_Nextclade_pango",
+    "umap_label_for_Nextclade_pango",
     "region",
     "country",
-    "division",
-    "location"
+    "division"
   ],
   "panels": [
     "tree"

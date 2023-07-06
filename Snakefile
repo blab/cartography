@@ -44,7 +44,8 @@ wildcard_constraints:
     internal_node= "(ancestral|sequences)",
     segment="(ha|na)",
     ha_concatenated="(ha|na|concatenated)",
-    ha_concat="(ha|concatenated)"
+    ha_concat="(ha|concatenated)",
+    clade_membership="(Nextstrain_clade|Nextclade_pango)",
 
 # Define final outputs for the workflow.
 rule all:
