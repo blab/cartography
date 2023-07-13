@@ -1,6 +1,6 @@
 SARS_COV_2_CLADE_MEMBERSHIPS = [
     "Nextstrain_clade",
-    "Nextclade_pango",
+    "Nextclade_pango_collapsed",
 ]
 
 rule sarscov2:
@@ -84,11 +84,33 @@ rule sarscov2_uncompress_metadata:
     input:
         metadata="sars-cov-2-nextstrain/data/metadata.tsv.zst",
     output:
-        metadata="sars-cov-2-nextstrain/data/metadata.tsv",
+        metadata="sars-cov-2-nextstrain/data/original_metadata.tsv",
     conda: "../cartography.yml"
     shell:
         """
         zstd -c -d {input.metadata} > {output.metadata}
+        """
+
+rule sarscov2_collapse_pango_lineages:
+    input:
+        metadata="sars-cov-2-nextstrain/data/original_metadata.tsv",
+    output:
+        metadata="sars-cov-2-nextstrain/data/metadata.tsv",
+    conda: "../cartography.yml"
+    log:
+        "logs/sars-cov-2-nextstrain/collapse_pango_lineages.txt",
+    params:
+        min_samples=10,
+        pango_column="Nextclade_pango",
+        new_column="Nextclade_pango_collapsed",
+    shell:
+        """
+        python3 notebooks/scripts/collapse_pango_lineages.py \
+            --metadata {input.metadata} \
+            --min-samples {params.min_samples} \
+            --pango-column {params.pango_column} \
+            --new-column {params.new_column} \
+            --output {output.metadata} 2>&1 | tee {log}
         """
 
 rule sarscov2_uncompress_alignment:
@@ -267,7 +289,7 @@ rule sarscov2_export:
         root_sequence = "auspice/cartography_ncov_2020-2022_root-sequence.json",
     conda: "../cartography.yml"
     params:
-        color_by="Nextstrain_clade Nextclade_pango"
+        color_by="Nextstrain_clade Nextclade_pango Nextclade_pango_collapsed"
     shell:
         """
         augur export v2 \
@@ -504,7 +526,7 @@ rule sarscov2_tree_to_table:
     output:
         table = "sars-cov-2-nextstrain/results/table.tsv",
     params:
-        attributes = "num_date Nextstrain_clade Nextclade_pango"
+        attributes = "num_date Nextstrain_clade Nextclade_pango Nextclade_pango_collapsed"
     conda: "../cartography.yml"
     shell:
         """

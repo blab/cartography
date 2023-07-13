@@ -47,7 +47,7 @@ wildcard_constraints:
     segment="(ha|na)",
     ha_concatenated="(ha|na|concatenated)",
     ha_concat="(ha|concatenated)",
-    clade_membership="(Nextstrain_clade|Nextclade_pango)",
+    clade_membership="(Nextstrain_clade|Nextclade_pango|Nextclade_pango_collapsed)",
 
 # Define final outputs for the workflow.
 rule all:

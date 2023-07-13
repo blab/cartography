@@ -19,6 +19,7 @@ dependencies:
   - matplotlib=3.4.2
   - pandoc=2.14.1
   - pandoc-crossref=0.3.12.0
+  - pango_aliasor=0.3.0
   - selenium=3.141.0
   - python-chromedriver-binary=92.0.4515.43.0
   - reportlab=3.5.68
