@@ -1,5 +1,5 @@
 {
-  "title": "Genetic cartography of SARS-CoV-2",
+  "title": "Genetic cartography of SARS-CoV-2 (Jan 2020-Jan 2022)",
   "build_url": "https://github.com/blab/cartography",
   "maintainers": [
     {"name": "Sravani Nanduri"},
@@ -62,6 +62,11 @@
       "type": "categorical"
     },
     {
+      "key": "Nextclade_pango_collapsed",
+      "title": "Nextclade pango (collapsed)",
+      "type": "categorical"
+    },
+    {
       "key": "pca_label_for_Nextstrain_clade",
       "title": "PCA cluster (Nextstrain clade)",
       "type": "categorical"
@@ -82,22 +87,22 @@
       "type": "categorical"
     },
     {
-      "key": "pca_label_for_Nextclade_pango",
+      "key": "pca_label_for_Nextclade_pango_collapsed",
       "title": "PCA cluster (Nextclade pango)",
       "type": "categorical"
     },
     {
-      "key": "mds_label_for_Nextclade_pango",
+      "key": "mds_label_for_Nextclade_pango_collapsed",
       "title": "MDS cluster (Nextclade pango)",
       "type": "categorical"
     },
     {
-      "key": "t-sne_label_for_Nextclade_pango",
+      "key": "t-sne_label_for_Nextclade_pango_collapsed",
       "title": "t-SNE cluster (Nextclade pango)",
       "type": "categorical"
     },
     {
-      "key": "umap_label_for_Nextclade_pango",
+      "key": "umap_label_for_Nextclade_pango_collapsed",
       "title": "UMAP cluster (Nextclade pango)",
       "type": "categorical"
     },
@@ -149,15 +154,15 @@
   },
   "filters": [
     "Nextstrain_clade",
-    "Nextclade_pango",
+    "Nextclade_pango_collapsed",
     "pca_label_for_Nextstrain_clade",
     "mds_label_for_Nextstrain_clade",
     "t-sne_label_for_Nextstrain_clade",
     "umap_label_for_Nextstrain_clade",
-    "pca_label_for_Nextclade_pango",
-    "mds_label_for_Nextclade_pango",
-    "t-sne_label_for_Nextclade_pango",
-    "umap_label_for_Nextclade_pango",
+    "pca_label_for_Nextclade_pango_collapsed",
+    "mds_label_for_Nextclade_pango_collapsed",
+    "t-sne_label_for_Nextclade_pango_collapsed",
+    "umap_label_for_Nextclade_pango_collapsed",
     "region",
     "country",
     "division"
