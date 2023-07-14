@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 from augur.io import read_metadata
+from collections import defaultdict
 from pango_aliasor.aliasor import Aliasor
 
 
@@ -19,11 +20,24 @@ if __name__ == '__main__':
     metadata = read_metadata(args.metadata)
 
     pango_counts = metadata[args.pango_column].value_counts()
-    count_by_lineage = pango_counts.to_dict()
-    low_count_lineages = pango_counts[pango_counts < args.min_samples].to_dict()
+    count_by_lineage = pango_counts.to_dict(defaultdict(int))
+
+    # Sort lineages by count in ascending order so we collapse the smaller
+    # lineages into their parents first, allowing larger small lineages to get
+    # populated first so they don't need to be collapsed.
+    low_count_lineages = pango_counts[
+        pango_counts < args.min_samples
+    ].sort_values().to_dict()
 
     new_lineage_by_old = {}
     for lineage, count in low_count_lineages.items():
+        # Check whether the current lineage is still below the threshold, given
+        # that earlier iterations could have incremented its counts above and we
+        # no longer want to collapse this lineage.
+        if count_by_lineage.get(lineage, 0) >= args.min_samples:
+            print(f"{lineage} is now big enough to skip collapsing (N={count_by_lineage[lineage]})")
+            continue
+
         parent = aliasor.parent(lineage)
 
         # When we reach the top of the pango hierarchy, the parent will be an
@@ -47,10 +61,15 @@ if __name__ == '__main__':
                 parent = aliasor.parent(parent)
 
         if parent == "":
-            # If there is no parent, move on to the next lineage, keeping counts
-            # for this lineage as they are.
-            print(f"Ran out of parents for {lineage}")
-            new_lineage_by_old[lineage] = lineage
+            # If there is no parent, then we either try to collapse the current
+            # lineage into the highest level parent we could reach or we keep
+            # the lineage as it is.
+            if lineage in new_lineage_by_old:
+                print(f"Ran out of parents for {lineage}, adding its {count_by_lineage[lineage]} samples to {new_lineage_by_old[lineage]}")
+                parent = new_lineage_by_old[lineage]
+                count_by_lineage[parent] += count_by_lineage.pop(lineage)
+            else:
+                print(f"Could not find any parents for {lineage}")
 
     # Map lineages, keeping the old if new not defined.
     metadata[args.new_column] = metadata[args.pango_column].apply(
