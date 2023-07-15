@@ -14,6 +14,26 @@ EMBEDDING_METHODS = [
     "umap"
 ]
 
+DISTANCE_THRESHOLDS = [
+    0.0,
+    0.5,
+    1.0,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    3.5,
+    4.0,
+    4.5,
+    5.0,
+    5.5,
+    6.0,
+    6.5,
+    7.0,
+]
+CLUSTER_MIN_SIZE = 10
+CLUSTER_MIN_SAMPLES = 5
+
 INTERNAL_NODE = [
     "sequences",
 ]
@@ -26,7 +46,8 @@ wildcard_constraints:
     internal_node= "(ancestral|sequences)",
     segment="(ha|na)",
     ha_concatenated="(ha|na|concatenated)",
-    ha_concat="(ha|concatenated)"
+    ha_concat="(ha|concatenated)",
+    clade_membership="(Nextstrain_clade|Nextclade_pango|Nextclade_pango_collapsed)",
 
 # Define final outputs for the workflow.
 rule all:

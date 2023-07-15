@@ -1,0 +1,173 @@
+{
+  "title": "Genetic cartography of SARS-CoV-2 (Jan 2022-Jul 2023)",
+  "build_url": "https://github.com/blab/cartography",
+  "maintainers": [
+    {"name": "Sravani Nanduri"},
+    {"name": "John Huddleston"}
+  ],
+  "colorings": [
+    {
+      "key": "pca1",
+      "title": "PCA 1",
+      "type": "continuous"
+    },
+    {
+      "key": "pca2",
+      "title": "PCA 2",
+      "type": "continuous"
+    },
+    {
+      "key": "mds1",
+      "title": "MDS 1",
+      "type": "continuous"
+    },
+    {
+      "key": "mds2",
+      "title": "MDS 2",
+      "type": "continuous"
+    },
+    {
+      "key": "mds3",
+      "title": "MDS 3",
+      "type": "continuous"
+    },
+    {
+      "key": "tsne_x",
+      "title": "t-SNE x",
+      "type": "continuous"
+    },
+    {
+      "key": "tsne_y",
+      "title": "t-SNE y",
+      "type": "continuous"
+    },
+    {
+      "key": "umap_x",
+      "title": "UMAP x",
+      "type": "continuous"
+    },
+    {
+      "key": "umap_y",
+      "title": "UMAP y",
+      "type": "continuous"
+    },
+    {
+      "key": "Nextstrain_clade",
+      "title": "Clade",
+      "type": "categorical"
+    },
+    {
+      "key": "Nextclade_pango",
+      "title": "Nextclade pango",
+      "type": "categorical"
+    },
+    {
+      "key": "Nextclade_pango_collapsed",
+      "title": "Nextclade pango (collapsed)",
+      "type": "categorical"
+    },
+    {
+      "key": "pca_label_for_Nextstrain_clade",
+      "title": "PCA cluster (Nextstrain clade)",
+      "type": "categorical"
+    },
+    {
+      "key": "mds_label_for_Nextstrain_clade",
+      "title": "MDS cluster (Nextstrain clade)",
+      "type": "categorical"
+    },
+    {
+      "key": "t-sne_label_for_Nextstrain_clade",
+      "title": "t-SNE cluster (Nextstrain clade)",
+      "type": "categorical"
+    },
+    {
+      "key": "umap_label_for_Nextstrain_clade",
+      "title": "UMAP cluster (Nextstrain clade)",
+      "type": "categorical"
+    },
+    {
+      "key": "pca_label_for_Nextclade_pango_collapsed",
+      "title": "PCA cluster (Nextclade pango)",
+      "type": "categorical"
+    },
+    {
+      "key": "mds_label_for_Nextclade_pango_collapsed",
+      "title": "MDS cluster (Nextclade pango)",
+      "type": "categorical"
+    },
+    {
+      "key": "t-sne_label_for_Nextclade_pango_collapsed",
+      "title": "t-SNE cluster (Nextclade pango)",
+      "type": "categorical"
+    },
+    {
+      "key": "umap_label_for_Nextclade_pango_collapsed",
+      "title": "UMAP cluster (Nextclade pango)",
+      "type": "categorical"
+    },
+    {
+      "key": "division",
+      "title": "Admin Division",
+      "type": "categorical"
+    },
+    {
+      "key": "country",
+      "title": "Country",
+      "type": "categorical"
+    },
+    {
+      "key": "region",
+      "title": "Region",
+      "type": "categorical"
+    },
+    {
+      "key": "author",
+      "title": "Authors",
+      "type": "categorical"
+    },
+    {
+      "key": "originating_lab",
+      "title": "Originating Lab",
+      "type": "categorical"
+    },
+    {
+      "key": "submitting_lab",
+      "title": "Submitting Lab",
+      "type": "categorical"
+    },
+    {
+      "key": "genbank_accession",
+      "type": "categorical"
+    }
+  ],
+  "geo_resolutions": [
+    "division",
+    "country",
+    "region"
+  ],
+  "display_defaults": {
+    "color_by": "Nextstrain_clade",
+    "distance_measure": "num_date",
+    "geo_resolution": "division",
+    "map_triplicate": true
+  },
+  "filters": [
+    "Nextstrain_clade",
+    "Nextclade_pango_collapsed",
+    "pca_label_for_Nextstrain_clade",
+    "mds_label_for_Nextstrain_clade",
+    "t-sne_label_for_Nextstrain_clade",
+    "umap_label_for_Nextstrain_clade",
+    "pca_label_for_Nextclade_pango_collapsed",
+    "mds_label_for_Nextclade_pango_collapsed",
+    "t-sne_label_for_Nextclade_pango_collapsed",
+    "umap_label_for_Nextclade_pango_collapsed",
+    "region",
+    "country",
+    "division"
+  ],
+  "panels": [
+    "tree"
+  ]
+}
