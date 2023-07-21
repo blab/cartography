@@ -109,7 +109,7 @@ rule seasonal_flu_training_align:
     threads: 4
     resources:
         mem_mb=16000,
-        runtime="30m",
+        time="30m",
         partition="campus-new",
         qos="campus-new",
     shell:
@@ -352,7 +352,7 @@ rule seasonal_flu_training_tree:
     threads: 4
     resources:
         mem_mb=16000,
-        runtime="2:00:00",
+        time="2:00:00",
         partition="campus-new",
         qos="campus-new",
     shell:
@@ -388,7 +388,7 @@ rule seasonal_flu_training_refine:
     conda: "../cartography.yml"
     resources:
         mem_mb=16000,
-        runtime="4:00:00",
+        time="4:00:00",
         partition="campus-new",
         qos="campus-new",
     shell:
@@ -420,7 +420,7 @@ rule seasonal_flu_training_ancestral:
     conda: "../cartography.yml"
     resources:
         mem_mb=4000,
-        runtime="0:15:00",
+        time="0:15:00",
     shell:
         """
         augur ancestral \

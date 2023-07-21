@@ -108,7 +108,7 @@ rule simulations_grid_search_embed:
         random_seed=RANDOM_SEED,
         method_parameters_arg=_get_method_parameters_argument,
     resources:
-        runtime="30m",
+        time="00:30:00",
         mem_mb=2000,
     conda: "../cartography.yml"
     shell:
@@ -175,7 +175,7 @@ rule simulations_grid_search_embed_training_or_test_data:
         random_seed=RANDOM_SEED,
         method_parameters_arg=_get_method_parameters_argument,
     resources:
-        runtime="30m",
+        time="00:30:00",
         mem_mb=2000,
     conda: "../cartography.yml"
     shell:
