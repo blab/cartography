@@ -7,7 +7,7 @@ rule sarscov2_test_download_filtered_metadata:
     conda: "../cartography.yml"
     shell:
         """
-        curl -o {output.metadata} {params.metadata_url}
+        curl -fsSL --proto '=https' -o {output.metadata} {params.metadata_url}
         """
 
 rule sarscov2_test_prioritize_recombinant_samples:
@@ -54,7 +54,7 @@ rule sarscov2_test_download_all_aligned_sequences:
     conda: "../cartography.yml"
     shell:
         """
-        curl -o {output.alignment} {params.alignment_url}
+        curl -fsSL --proto '=https' -o {output.alignment} {params.alignment_url}
         """
 
 rule sarscov2_test_extract_subsampled_data:
