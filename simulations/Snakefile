@@ -120,7 +120,7 @@ rule simulations_grid_search_embed:
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        pathogen-embed \
             --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
             --random-seed {params.random_seed} \
@@ -187,7 +187,7 @@ rule simulations_grid_search_embed_training_or_test_data:
     conda: "../cartography.yml"
     shell:
         """
-        embed \
+        pathogen-embed \
             --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
             --random-seed {params.random_seed} \
