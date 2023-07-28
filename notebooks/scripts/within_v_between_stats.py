@@ -42,8 +42,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = "creates embeddings", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     # group column instead of cluster (naming)
-    parser.add_argument("--distance-matrix", required=True, help="the path to a csv genetic distance matrix")
-    parser.add_argument("--group", required=True, help="a CSV/TSV path to the clade status of the different strains in the build")
+    parser.add_argument("--distance-matrix", required=True, help="the path to a CSV genetic distance matrix")
+    parser.add_argument("--metadata", required=True, help="a CSV/TSV path to a metadata table with the group status of the different strains in the build")
     parser.add_argument("--group-column", required=True, help="the column corresponding to grouping status")
     parser.add_argument("--output", required=True,  help="path for outputting as a dataframe")
     
@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     distance_matrix = pd.read_csv(args.distance_matrix, index_col=0)
 
-    node_data = pd.read_csv(args.group)
+    node_data = pd.read_csv(args.metadata, sep="\t" if args.metadata.endswith(".tsv") else ",")
     node_data.index = node_data["strain"]
     node_data.drop("strain", axis=1, inplace=True)
     node_dict = node_data.transpose().to_dict()
@@ -82,10 +82,10 @@ if __name__ == "__main__":
     group_within = describe_dict(np.array(distance_group_df[distance_group_df["clade_status"] == 1]["distance"]))
 
     final_dict = {
-        f"group_between" : group_btw,
-        f"group_within" : group_within
+        "between": group_btw,
+        "within": group_within
     }
-    
-    pd.DataFrame.from_dict(final_dict, orient='index').to_csv(args.output)
 
-    # TODO: separate notebook to generate figure (aggregate across pathogens? etc. )
+    output_df = pd.DataFrame.from_dict(final_dict, orient='index')
+    output_df.index = output_df.index.rename("comparison")
+    output_df.to_csv(args.output)

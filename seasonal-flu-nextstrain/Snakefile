@@ -9,7 +9,6 @@ rule seasonal_flu_training:
         "docs/figures/flu-2016-2018-mds-by-clade.png",
         "auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json",
         "seasonal-flu-nextstrain/results/mutation_table.csv",
-        "seasonal-flu-nextstrain/results/within_between_stats_pca.csv",
         "seasonal-flu-nextstrain/results/full_within_between_stats.csv"
 
 rule seasonal_flu_training_files:
@@ -637,24 +636,22 @@ rule seasonal_flu_training_concat_scatterplot_table:
 rule seasonal_flu_training_within_between_stats:
     input:
         distance_matrix = "seasonal-flu-nextstrain/results/distance_matrix_sequences.csv",
-        group = "seasonal-flu-nextstrain/results/cluster_embed_{method}_sequences.csv",
-    params:
-        group_column = "{method}_label"
+        annotated_embeddings = "seasonal-flu-nextstrain/results/annotated_embeddings.tsv",
     output:
-        dataframe = "seasonal-flu-nextstrain/results/within_between_stats_{method}.csv"
+        dataframe = "seasonal-flu-nextstrain/results/within_between_stats/{group_column}.csv"
     conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/within_v_between_stats.py \
             --distance-matrix {input.distance_matrix} \
-            --group {input.group} \
-            --group-column {params.group_column} \
+            --metadata {input.annotated_embeddings} \
+            --group-column {wildcards.group_column} \
             --output {output.dataframe}
         """
 
 rule seasonal_flu_training_concat_within_between_stats:
     input:
-        tables=expand("seasonal-flu-nextstrain/results/within_between_stats_{method}.csv", method=EMBEDDING_METHODS)
+        tables=expand("seasonal-flu-nextstrain/results/within_between_stats/{group_column}.csv", group_column=["clade_membership"] + [f"{method}_label" for method in EMBEDDING_METHODS])
     output:
         metadata = "seasonal-flu-nextstrain/results/full_within_between_stats.csv"
     conda: "../cartography.yml"
