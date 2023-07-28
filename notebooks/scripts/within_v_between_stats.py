@@ -1,6 +1,6 @@
 """
-calculate the average and std dev genetic distance within and between groups given a distance matrix, 
-a per-strain "group" definition file (e.g., a TSV with Nextstrain clade or a CSV with HDBSCAN cluster 
+calculate the average and std dev genetic distance within and between groups given a distance matrix,
+a per-strain "group" definition file (e.g., a TSV with Nextstrain clade or a CSV with HDBSCAN cluster
 labels from a t-SNE embedding), and the column of the given file to use for groups.
 """
 import sys
@@ -27,7 +27,7 @@ def is_json_file(filename):
 # mean, median, std_dev
 
 def describe_dict(result):
-    
+
     description_dict = {
         "mean": np.mean(result),
         "median" : np.median(result),
@@ -37,7 +37,7 @@ def describe_dict(result):
     return description_dict
 
 if __name__ == "__main__":
-        
+
     # Initialize parsers
     parser = argparse.ArgumentParser(description = "creates embeddings", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     parser.add_argument("--metadata", required=True, help="a CSV/TSV path to a metadata table with the group status of the different strains in the build")
     parser.add_argument("--group-column", required=True, help="the column corresponding to grouping status")
     parser.add_argument("--output", required=True,  help="path for outputting as a dataframe")
-    
+
     args = parser.parse_args()
 
     distance_matrix = pd.read_csv(args.distance_matrix, index_col=0)
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     # difference between clusters
     merged_group_df = distance_matrix.merge(group_annotations, on="strain")
     distance_group_df = get_euclidean_data_frame(sampled_df=merged_group_df, column_for_analysis=args.group_column, embedding="genetic")
-    
+
     # between cluster
     group_btw = describe_dict(np.array(distance_group_df[distance_group_df["clade_status"] == 0]["distance"]))
 
