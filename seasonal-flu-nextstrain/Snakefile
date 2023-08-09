@@ -21,13 +21,26 @@ rule seasonal_flu_training_files:
 
 seasonal_flu_training_files = rules.seasonal_flu_training_files.params
 
+rule seasonal_flu_training_deduplicate_sequences:
+    input:
+        sequences = seasonal_flu_training_files.input_fasta,
+    output:
+        sequences = "seasonal-flu-nextstrain/results/deduplicated_sequences.fasta",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 seasonal-flu-nextstrain/scripts/deduplicate_sequences.py \
+            --sequences {input.sequences} \
+            --output {output.sequences}
+        """
+
 rule seasonal_flu_training_parse:
     message: "Parsing fasta into sequences and metadata"
     input:
-        sequences = seasonal_flu_training_files.input_fasta
+        sequences = "seasonal-flu-nextstrain/results/deduplicated_sequences.fasta",
     output:
         sequences = "seasonal-flu-nextstrain/results/sequences.fasta",
-        metadata = "seasonal-flu-nextstrain/results/metadata.tsv"
+        metadata = "seasonal-flu-nextstrain/results/metadata.tsv",
     params:
         fasta_fields = "strain date accession country region"
     conda: "../cartography.yml"
@@ -40,23 +53,6 @@ rule seasonal_flu_training_parse:
             --fields {params.fasta_fields}
         """
 
-rule seasonal_flu_training_deduplicate_sequences:
-    message:
-        """
-        Deduplicating sequences
-        """
-    input:
-        sequences = rules.seasonal_flu_training_parse.output.sequences
-    output:
-        sequences = "seasonal-flu-nextstrain/results/deduplicated_sequences.fasta"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 seasonal-flu-nextstrain/scripts/deduplicate_sequences.py \
-            --sequences {input.sequences} \
-            --output {output.sequences}
-        """
-
 rule seasonal_flu_training_filter:
     message:
         """
@@ -66,9 +62,9 @@ rule seasonal_flu_training_filter:
           - excluding strains in {input.exclude}
         """
     input:
-        sequences = rules.seasonal_flu_training_deduplicate_sequences.output.sequences,
-        metadata = rules.seasonal_flu_training_parse.output.metadata,
-        exclude = seasonal_flu_training_files.dropped_strains
+        sequences = "seasonal-flu-nextstrain/results/sequences.fasta",
+        metadata = "seasonal-flu-nextstrain/results/metadata.tsv",
+        exclude = seasonal_flu_training_files.dropped_strains,
     output:
         sequences = "seasonal-flu-nextstrain/results/filtered.fasta"
     params:
