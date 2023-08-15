@@ -1,5 +1,5 @@
 normalized_vi,method,predicted_clusters_column,n_predicted_clusters,n_ignored_predicted_clusters,n_true_clusters,n_ignored_true_clusters,n_vi_clusters
-0.18,t-sne,t-sne_label_for_Nextclade_pango_collapsed,1892,0,1892,0,1892
-0.27,umap,umap_label_for_Nextclade_pango_collapsed,1892,0,1892,0,1892
-0.28,mds,mds_label_for_Nextclade_pango_collapsed,1892,0,1892,0,1892
-0.5,pca,pca_label_for_Nextclade_pango_collapsed,1892,0,1892,0,1892
+0.17,t-sne,t-sne_label_for_Nextclade_pango_collapsed,1839,0,2072,0,1839
+0.28,umap,umap_label_for_Nextclade_pango_collapsed,1839,0,2072,0,1839
+0.3,mds,mds_label_for_Nextclade_pango_collapsed,1839,0,2072,0,1839
+0.51,pca,pca_label_for_Nextclade_pango_collapsed,1839,0,2072,0,1839
