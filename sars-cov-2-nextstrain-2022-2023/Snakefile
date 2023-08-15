@@ -82,6 +82,7 @@ rule sarscov2_test_extract_subsampled_data:
         metadata="sars-cov-2-nextstrain-2022-2023/data/filtered_metadata.tsv.zst",
         alignment="sars-cov-2-nextstrain-2022-2023/data/all_aligned.fasta.zst",
         strains="sars-cov-2-nextstrain-2022-2023/data/strains.txt",
+        recombinant_strains="sars-cov-2-nextstrain-2022-2023/data/known_recombinant_and_parental_strains.txt",
     output:
         metadata="sars-cov-2-nextstrain-2022-2023/data/metadata.tsv.zst",
         alignment="sars-cov-2-nextstrain-2022-2023/data/aligned.fasta.zst",
@@ -92,7 +93,7 @@ rule sarscov2_test_extract_subsampled_data:
             --metadata {input.metadata} \
             --sequences {input.alignment} \
             --exclude-all \
-            --include {input.strains} \
+            --include {input.strains} {input.recombinant_strains} \
             --output-metadata {output.metadata} \
             --output-sequences {output.alignment}
         """
