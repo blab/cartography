@@ -46,6 +46,27 @@ rule sarscov2_test_subsample_late_samples:
             --output-strains {output.strains}
         """
 
+rule sarscov2_test_subsample_late_recombinant_samples_and_parental_lineages:
+    input:
+        metadata="sars-cov-2-nextstrain-2022-2023/data/filtered_metadata.tsv.zst",
+        outliers="sars-cov-2-nextstrain/config/exclude.txt",
+    output:
+        strains="sars-cov-2-nextstrain-2022-2023/data/known_recombinant_and_parental_strains.txt",
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur filter \
+            --metadata {input.metadata} \
+            --exclude {input.outliers} \
+            --query "Nextclade_pango in ['AY.29', 'AY.4', 'AY.45', 'B.1.1.7', 'B.1.617', 'BA.1', 'BA.2', 'BA.2.75', 'BA.4', 'BA.5', 'BA.5.2.3', 'BJ.1', 'BM.1.1.1', 'CJ.1', 'XAY', 'XBB', 'XBB.1', 'XBC', 'XBF', 'XBL', 'XC', 'XD', 'XE', 'XF', 'XG']" \
+            --min-date 2022-01-01 \
+            --max-date 2023-07-05 \
+            --exclude-ambiguous-dates-by any \
+            --group-by Nextclade_pango \
+            --sequences-per-group 10 \
+            --output-strains {output.strains}
+        """
+
 rule sarscov2_test_download_all_aligned_sequences:
     output:
         alignment=temp("sars-cov-2-nextstrain-2022-2023/data/all_aligned.fasta.zst"),
@@ -62,6 +83,7 @@ rule sarscov2_test_extract_subsampled_data:
         metadata="sars-cov-2-nextstrain-2022-2023/data/filtered_metadata.tsv.zst",
         alignment="sars-cov-2-nextstrain-2022-2023/data/all_aligned.fasta.zst",
         strains="sars-cov-2-nextstrain-2022-2023/data/strains.txt",
+        recombinant_strains="sars-cov-2-nextstrain-2022-2023/data/known_recombinant_and_parental_strains.txt",
     output:
         metadata="sars-cov-2-nextstrain-2022-2023/data/metadata.tsv.zst",
         alignment="sars-cov-2-nextstrain-2022-2023/data/aligned.fasta.zst",
@@ -72,7 +94,7 @@ rule sarscov2_test_extract_subsampled_data:
             --metadata {input.metadata} \
             --sequences {input.alignment} \
             --exclude-all \
-            --include {input.strains} \
+            --include {input.strains} {input.recombinant_strains} \
             --output-metadata {output.metadata} \
             --output-sequences {output.alignment}
         """
