@@ -308,17 +308,26 @@ This approach follows the same concept from the MDS algorithm itself where optim
 
 TKTK: specific parameter values tested per method.
 
+\begin{figure}[!h]
+% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
+\includegraphics[width=\columnwidth]{figures/simulated-populations-representative-embeddings.png}
+\caption{{\bf Representative embeddings for simulated populations using optimal parameters per pathogen (rows) and embedding method (columns).}
+  Each panel represents an embedding method for a single replicate population for the corresponding pathogen type.
+  Each point represents a simulated genome colored by its generation with darker values representing later generations.}
+\label{fig:simulated-populations-representative-embeddings}
+\end{figure}
+
 \subsection*{Phylogenetic analysis}
 
 The genome data we used for H3N2 HA influenza is from the NCBI influenza database.
-The SARS-CoV-2 is sourced from INSDC databases and curated by Nextstrain \citep{Hadfield2018}.
+The SARS-CoV-2 is sourced from INSDC databases and curated by Nextstrain \cite{Hadfield2018}.
 Clades for both H3N2 HA and SARS-CoV-2 were defined by reasonable phylogenetic signal.
-The MERS data is from e-life \citep{dudas_carvalho_rambaut_bedford_2018}.
+The MERS data is from e-life \cite{dudas_carvalho_rambaut_bedford_2018}.
 
 We parsed metadata including viral sample name, database accession, collection date, and sequence authors from the sequence headers with \texttt{augur parse}.
-We analyzed influenza A/H3N2 and SARS-CoV-2 by creating a FASTA file of multiple sequence alignments with MAFFT v7.407 \citep{Katoh2002} via augur align \citep{Hadfield2018} and phylogenies with IQ-TREE v1.6.10 \citep{Nguyen2014} via augur tree version 9.0.0.
-We inferred a time tree with TreeTime 0.9.4 \citep{Sagulenko2018}.
-For improved reproducibility, we automated the execution of these tasks in a Snakemake workflow \citep{molder_2021}.
+We analyzed influenza A/H3N2 and SARS-CoV-2 by creating a FASTA file of multiple sequence alignments with MAFFT v7.407 \cite{Katoh2002} via augur align \cite{Hadfield2018} and phylogenies with IQ-TREE v1.6.10 \cite{Nguyen2014} via augur tree version 9.0.0.
+We inferred a time tree with TreeTime 0.9.4 \cite{Sagulenko2018}.
+For improved reproducibility, we automated the execution of these tasks in a Snakemake workflow \cite{molder_2021}.
 
 Clade membership metadata was provided by a .json build of the influenza H3N2 tree and SARS-CoV-2 trees.
 For MERS, the host data was given via the Newick tree, and clade membership was defined using BioPython as outbreaks with a monophyletic host status (strictly camel or human).
@@ -329,7 +338,7 @@ Imputation was tested for MERS, but due to entire columns of missing data, we dr
 \subsection*{Data Transformations}
 
 We used two different methods of transforming the data; scaling and centering the data, and a Hamming distance similarity matrix.
-For scaling and centering the data, we performed PCA on the matrix of nucleotides from the multiple sequence alignment using scikit-learn \citep{jolliffe_cadima_2016}.
+For scaling and centering the data, we performed PCA on the matrix of nucleotides from the multiple sequence alignment using scikit-learn \cite{jolliffe_cadima_2016}.
 An explained variance plot was created to determine the amount of PCs used for distance calulations and visualization.
 A separate bases missing vs PC1 was also created to help reveal the level of relation between missing bases and outliers in PCA.
 
@@ -340,8 +349,8 @@ For H3N2 HA Influenza, gaps were not counted - some sequences were significantly
 For SARS-CoV-2 and MERS, indel events were counted - gaps that started at the beginning of the alignment were ignored as they can occur because of differing sequence lengths and not necessarily a biological event.
 
 \subsection*{Embedding methods}
-We reduced the matrix of nucleotides using Principal Component Analysis \citep{jolliffe_cadima_2016}.
-We reduced the similarity distance matrix using Multi-Dimensional Scaling \citep{hout_papesh_goldinger_2012}, t-distributed Stochastic Neighborhood Embedding \citep{maaten2008visualizing}, and Uniform Manifold Approximation and Projection \citep{lel2018umap}, plotted using Altair \citep{VanderPlas2018}, and colored by clade assignment.
+We reduced the matrix of nucleotides using Principal Component Analysis \cite{jolliffe_cadima_2016}.
+We reduced the similarity distance matrix using Multi-Dimensional Scaling \cite{hout_papesh_goldinger_2012}, t-distributed Stochastic Neighborhood Embedding \cite{maaten2008visualizing}, and Uniform Manifold Approximation and Projection \cite{lel2018umap}, plotted using Altair \cite{VanderPlas2018}, and colored by clade assignment.
 We used the scikit-learn implementation of PCA, MDS, and t-SNE, and UMAP using umap-learn.
 
 We further analyzed these embeddings ability to accurately capture the multidimensional data, specifically assessing its ability to capture reassortment, recombination, and cluster-specific mutations.
@@ -356,9 +365,9 @@ The plots were bootstrapped to find the Pearson Coefficient with a confidence in
 The density and overall relationship of the data was qualitatively assesed through the line created by the Q1 to Q3 box of each individual boxplot in each plot.
 
 \subsection*{HDBSCAN clade analysis}
-We used HDBSCAN \citep{campello2015hierarchical} on our reductions from PCA, MDS, t-SNE, and UMAP to understand the clustering structure of the strains in these spaces.
+We used HDBSCAN \cite{campello2015hierarchical} on our reductions from PCA, MDS, t-SNE, and UMAP to understand the clustering structure of the strains in these spaces.
 These clustering labels were then compared to the clade labels for the strains to understand the accuracy of the reduction's structure.
-We used Variation of Information (VI) in order to compare these labelings \citep{meilua2003comparing}.
+We used Variation of Information (VI) in order to compare these labelings \cite{meilua2003comparing}.
 The Variation of Information is a distance metric based on information theory principles, which measures the distance between clusterings in a given space.
 The measure is unnormalized and varies between 0 and log(N) where N is the number of clustered elements.
 Larger values correspond to greater dissimilarity between the clusterings.
@@ -380,9 +389,9 @@ Influenza viruses are named based on the subtype of their hemagglutinin (HA) and
 In order to assess how strong our genetic cartography approach at recognizing clade groupings without being biologically-informed, we conducted a H3N2 HA and NA joint analysis to see how well our approach would recapitulate clades derived from both HA/NA sequences.
 
 We concatenated together the HA and NA portions of the H3N2 strain and ran the embedding methods on these strains (PCA, MDS, t-SNE, and UMAP).
-We ran HDBSCAN \citep{campello2015hierarchical} on these reductions, generating groupings for these strains.
+We ran HDBSCAN \cite{campello2015hierarchical} on these reductions, generating groupings for these strains.
 
-We used TreeKnit \citep{barrat2022treeknit} to define the phylogenetically accurate clades for the analysis.
+We used TreeKnit \cite{barrat2022treeknit} to define the phylogenetically accurate clades for the analysis.
 TreeKnit greedily walks through the HA and NA trees looking for groups of strains that most likely share a common ancestor in both trees.
 It infers ancestral reassortment graphs (ARG) from two segment trees, finding groups of strains that descend from the same reassortment events and splitting strains into different groups when it finds a topological inconsistency between the trees.
 
@@ -478,16 +487,56 @@ These results indicate that nonlinear embeddings of t-SNE and UMAP could be bett
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-embeddings-by-cluster.png}
 \caption{{\bf The embeddings colored by their HDBSCAN label, with the distance threshold defined by the threshold that preserved the greatest amount of clade relationships.}
 The chart for PCA (top left), MDS (middle left), t-SNE (middle left), and UMAP (bottom left) generally recapitulate groups of viruses into clades without inferring ancestral relationships, and the trees on the righthand side describes how these clade grouping appear on the tree, which does infer ancestral relations.}
-\label{fig:seasonal-influenza-h3n2-ha-clusters}
+\label{fig:seasonal-influenza-h3n2-ha-2016-2018-clusters}
 \end{figure}
 
 To understand whether these embedding methods could be used to cluster previously unseen genomes for the same virus, we applied each method to the test dataset spanning 2018--2020, clustered genomes in the embedding space with HDBSCAN, and calculated the accuracy of the cluster assignments based on previously defined clades.
 
+\begin{figure}[!h]
+\includegraphics[width=\columnwidth]{figures/flu-2018-2020-ha-embeddings-by-cluster.png}
+\caption{{\bf The embeddings colored by their HDBSCAN label, with the distance threshold defined by the threshold that preserved the greatest amount of clade relationships.}
+The chart for PCA (top left), MDS (middle left), t-SNE (middle left), and UMAP (bottom left) generally recapitulate groups of viruses into clades without inferring ancestral relationships, and the trees on the righthand side describes how these clade grouping appear on the tree, which does infer ancestral relations.}
+\label{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters}
+\end{figure}
+
 \subsection*{Joint embeddings of hemagglutinin and neuraminidase genomes identify seasonal influenza virus A/H3N2 reassortment events}
 
-\subsection*{MERS-CoV clusters correspond to host-specific outbreaks}
+\begin{figure}[!h]
+\includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-embeddings-by-mcc.png}
+\caption{{\bf Embeddings of seasonal influenza HA-only (first column) and concatenated HA/NA sequences (second column) colored by TreeKnit Maximally Compatible Clades (MCC) label.}
+}
+\label{fig:seasonal-influenza-h3n2-ha-na-2016-2018-embeddings}
+\end{figure}
 
 \subsection*{SARS-CoV-2 clusters recapitulate emerging lineage designations}
+
+\begin{figure}[!h]
+\includegraphics[width=\columnwidth]{figures/sarscov2-embeddings-by-Nextstrain_clade-clade.png}
+\caption{{\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2020 and January 1, 2021 colored by Nextstrain clade label.}
+}
+\label{fig:sars-cov-2-2020-2021-embeddings}
+\end{figure}
+
+\begin{figure}[!h]
+\includegraphics[width=\columnwidth]{figures/sarscov2-euclidean-distance-by-genetic-distance.png}
+\caption{{\bf The mapping between Euclidean and genetic distance assess the strength of both the local and global structure of the embedding recapitulation.}
+The scatterplot for PCA (upper left), MDS (upper right), t-SNE (lower left), and UMAP (lower right) consistently exhibit linear relationships for pairs of strains that differ by around 20 nucleotides.}
+\label{fig:sars-cov-2-pairwise-distances}
+\end{figure}
+
+\begin{figure}[!h]
+\includegraphics[width=\columnwidth]{figures/sarscov2-embeddings-by-cluster-vs-Nextstrain_clade.png}
+\caption{{\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2020 and January 1, 2021 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (Nextstrain clade).}
+}
+\label{fig:sars-cov-2-2020-2021-clusters-vs-Nextstrain-clade}
+\end{figure}
+
+\begin{figure}[!h]
+\includegraphics[width=\columnwidth]{figures/sarscov2-test-embeddings-by-cluster-vs-Nextstrain_clade.png}
+\caption{{\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2022 and July 5, 2023 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (Nextstrain clade).}
+}
+\label{fig:sars-cov-2-2022-2023-clusters-vs-Nextstrain-clade}
+\end{figure}
 
 \section*{Discussion}
 
