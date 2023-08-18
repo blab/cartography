@@ -6,15 +6,15 @@ rule manuscript:
 rule concat_HDBSCAN_tables:
     input:
         tables=[
-            "seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv",
-            "mers-nextstrain/results/full_HDBSCAN_metadata.csv",
-            "sars-cov-2-nextstrain/results/full_HDBSCAN_metadata.csv",
+            "seasonal-flu-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
+            "sars-cov-2-nextstrain/results/optimal_cluster_accuracy_and_parameters_for_Nextstrain_clade.csv",
+            "sars-cov-2-nextstrain/results/optimal_cluster_accuracy_and_parameters_for_Nextclade_pango_collapsed.csv",
         ]
     output:
         fullKDE = "docs/tables/total_HDBSCAN_table.csv",
         table = "docs/tables/accuracy_table.tex",
     params:
-        disease_names = ["Influenza H3N2", "MERS-CoV", "SARS-CoV-2"],
+        disease_names = ["Influenza H3N2", "SARS-CoV-2 (Nextstrain clade)", "SARS-CoV-2 (Nextclade pango)"],
     conda: "../cartography.yml"
     shell:
         """

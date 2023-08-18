@@ -14,7 +14,7 @@ if __name__ == "__main__":
 
     # Concatenate tables.
     df = pd.concat([
-        pd.read_csv(table_file, sep=args.separator).sort_values(by='MCC', ascending=False)
+        pd.read_csv(table_file, sep=args.separator)
         for table_file in args.tables
     ], ignore_index=True)
 
@@ -53,5 +53,5 @@ if __name__ == "__main__":
             args.output_table,
             bold_rows=True,
             index=False,
-            columns=["Pathogen", "Embedding", "MCC", "TP", "TN", "FP", "FN", "Threshold"],
+            #columns=["Pathogen", "Embedding", "MCC", "TP", "TN", "FP", "FN", "Threshold"],
         )
