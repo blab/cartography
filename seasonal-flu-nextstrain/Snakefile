@@ -596,11 +596,12 @@ rule seasonal_flu_training_create_mutation_table:
     input:
         reference = "seasonal-flu-nextstrain/config/reference_h3n2_ha.fasta",
         alignment = "seasonal-flu-nextstrain/results/aligned_sequences.fasta",
-        embedding = "seasonal-flu-nextstrain/results/embed_{method}_sequences.csv",
+        embedding = "seasonal-flu-nextstrain/results/cluster_embed_{method}_sequences.csv",
     output:
         table = "seasonal-flu-nextstrain/results/mutation_table_{method}.csv",
     params:
         min_allele_count=10,
+        min_allele_frequency=0.5,
     conda: "../cartography.yml"
     benchmark:
         "benchmarks/seasonal_flu_training_create_mutation_table_{method}.txt"
@@ -614,6 +615,7 @@ rule seasonal_flu_training_create_mutation_table:
             --metadata {input.embedding} \
             --metadata-column {wildcards.method}_label \
             --min-allele-count {params.min_allele_count} \
+            --min-allele-frequency {params.min_allele_frequency} \
             --output {output.table} 2>&1 | tee {log}
         """
 

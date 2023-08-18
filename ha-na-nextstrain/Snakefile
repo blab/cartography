@@ -633,6 +633,7 @@ rule seasonal_flu_reassortment_create_mutation_table:
         table = "ha-na-nextstrain/results/mutation_table_{method}.csv",
     params:
         min_allele_count=10,
+        min_allele_frequency=0.5,
     conda: "../cartography.yml"
     benchmark:
         "benchmarks/seasonal_flu_reassortment_create_mutation_table_{method}.txt"
@@ -646,6 +647,7 @@ rule seasonal_flu_reassortment_create_mutation_table:
             --metadata {input.embedding} \
             --metadata-column {wildcards.method}_label \
             --min-allele-count {params.min_allele_count} \
+            --min-allele-frequency {params.min_allele_frequency} \
             --output {output.table} 2>&1 | tee {log}
         """
 

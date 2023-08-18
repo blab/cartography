@@ -575,6 +575,7 @@ rule sarscov2_test_create_mutation_table:
         table = "sars-cov-2-nextstrain-2022-2023/results/mutation_table_{method}.csv",
     params:
         min_allele_count=10,
+        min_allele_frequency=0.5,
     conda: "../cartography.yml"
     benchmark:
         "benchmarks/sars-cov-2-2022-2023/create_mutation_table_{method}.txt"
@@ -588,6 +589,7 @@ rule sarscov2_test_create_mutation_table:
             --metadata {input.embedding} \
             --metadata-column {wildcards.method}_label \
             --min-allele-count {params.min_allele_count} \
+            --min-allele-frequency {params.min_allele_frequency} \
             --output {output.table} 2>&1 | tee {log}
         """
 
