@@ -14,7 +14,8 @@ if __name__ == "__main__":
     parser.add_argument("--metadata-column", required=True, help="metadata column to find clade information")
     parser.add_argument("--ignored-clusters", nargs="+", default=["-1", "unassigned"], help="list of cluster labels to ignore when calculating cluster-specific mutations")
     parser.add_argument("--valid-characters", nargs="+", default=["A", "C", "T", "G", "-"], help="list of valid characters to consider in pairwise comparisons with the reference")
-    parser.add_argument("--min-allele-count", type=int, default=10, help="minimum number of strains in a cluster with a given alternate allele required to include the allele in cluster-specific mutations")
+    parser.add_argument("--min-allele-count", type=int, default=0, help="minimum number of strains in a cluster with a given alternate allele required to include the allele in cluster-specific mutations")
+    parser.add_argument("--min-allele-frequency", type=float, default=0.0, help="minimum frequency of an allele in a cluster to include allele in cluster-specific mutations")
     parser.add_argument("--output", help="the name of the csv file to be outputted")
 
     args = parser.parse_args()
@@ -106,7 +107,12 @@ if __name__ == "__main__":
         )
 
         mutation_counts = mutations.groupby("mutation")["strain"].count().reset_index().rename(columns={"strain": "count"})
+        mutation_counts["frequency"] = mutation_counts["count"] / len(cluster_strains)
+
+        # Filter by minimum allele count and frequency.
         mutation_counts = mutation_counts[mutation_counts["count"] >= args.min_allele_count].copy()
+        mutation_counts = mutation_counts[mutation_counts["frequency"] >= args.min_allele_frequency].copy()
+
         mutation_counts["cluster"] = cluster
 
         all_mutation_counts.append(mutation_counts)
