@@ -28,7 +28,6 @@ rule sarscov2_test_subsample_late_samples:
         metadata="sars-cov-2-nextstrain-2022-2023/data/filtered_metadata.tsv.zst",
         reference="sars-cov-2-nextstrain-2022-2023/config/reference.txt",
         outliers="sars-cov-2-nextstrain/config/exclude.txt",
-        priorities="sars-cov-2-nextstrain-2022-2023/data/priorities.tsv",
     output:
         strains="sars-cov-2-nextstrain-2022-2023/data/strains.txt",
     conda: "../cartography.yml"
@@ -40,9 +39,9 @@ rule sarscov2_test_subsample_late_samples:
             --exclude {input.outliers} \
             --min-date 2022-01-01 \
             --max-date 2023-07-05 \
+            --exclude-ambiguous-dates-by any \
             --group-by region year month \
-            --subsample-max-sequences 2000 \
-            --priority {input.priorities} \
+            --subsample-max-sequences 1500 \
             --output-strains {output.strains}
         """
 
@@ -63,7 +62,7 @@ rule sarscov2_test_subsample_late_recombinant_samples_and_parental_lineages:
             --max-date 2023-07-05 \
             --exclude-ambiguous-dates-by any \
             --group-by Nextclade_pango \
-            --sequences-per-group 10 \
+            --sequences-per-group 20 \
             --output-strains {output.strains}
         """
 
