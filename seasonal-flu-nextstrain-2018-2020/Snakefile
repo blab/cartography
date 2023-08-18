@@ -409,6 +409,7 @@ rule seasonal_flu_test_export:
             --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} \
             --auspice-config {input.auspice_config} \
             --colors {input.colors} \
+            --validation-mode warn \
             --output {output.auspice_tree}
         """
 
