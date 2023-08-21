@@ -238,23 +238,24 @@ TBD.
 \section*{Introduction}
 
 Tracking the evolution of human pathogenic viruses in real time enables epidemiologists to respond quickly to emerging epidemics and local outbreaks.
-Real-time analyses of viral evolution typically rely on phylogenetic methods.
-These methods can reconstruct the evolutionary history of viral populations from their genome sequences and estimate states of inferred ancestral viruses including their most likely genome sequence, time of circulation, and geographic location \cite{Volz2013,Baele2017,Sagulenko2018}.
+Real-time analyses of viral evolution typically rely on phylogenetic methods that can reconstruct the evolutionary history of viral populations from their genome sequences and estimate states of inferred ancestral viruses including their most likely genome sequence, time of circulation, and geographic location \cite{Volz2013,Baele2017,Sagulenko2018}.
 Importantly, these methods assume that all sequence data share an evolutionary history represented by the clonal replication of genomes.
 In practice, the evolutionary histories of many human pathogenic viruses violate this assumption through processes of reassortment or recombination, as seen in seasonal influenza \cite{Nelson2008,Marshall2013} and seasonal coronaviruses \cite{Su2016}, respectively.
-Researchers have attempted to compensate for these evolutionary mechanisms by limiting their analyses to individual genes \cite{Lemey2007,Bhatt2011}, combining multiple genes despite their different evolutionary histories \cite{Wiens1998}, or developing more sophisticated models to represent the joint likelihoods of multiple co-evolving lineages with ancestral reassortment or recombination graphs instead of phylogenetic trees \cite{Barrat-Charlaix2022,Muller2022}.
+Researchers account for these evolutionary mechanisms by limiting their analyses to individual genes \cite{Lemey2007,Bhatt2011}, combining multiple genes despite their different evolutionary histories \cite{Wiens1998}, or developing more sophisticated models to represent the joint likelihoods of multiple co-evolving lineages with ancestral reassortment or recombination graphs instead of phylogenetic trees \cite{Barrat-Charlaix2022,Muller2022}.
 However, several key questions in genomic epidemiology do not require full phylogenetic inference of ancestral relationships and states.
 For example, genomic epidemiologists commonly need to 1) identify clusters of closely-related genomes that represent regional outbreaks or new variants of concern \cite{OToole2022,McBroome2022,Stoddard2022}, 2) place newly sequenced viral genomes in the evolutionary context of other circulating strains \cite{OToole2021,Turakhia2021,Aksamentov2021}, and 3) visualize the genetic relationships among closely related virus samples \cite{Argimon2016,Campbell2021}.
-Statistical methods based on pairwise genetic distances can address these common use cases without inferring phylogenies.
-As these methods lack a formal biological model of evolutionary relationships, they make few assumptions about the input data and therefore should be applicable to pathogen genomes that violate phylogenetic assumptions.
+Standard statistical methods can address these common use cases by transforming an alignment of genome sequences into a matrix and operating on that matrix to calculate pairwise relationships between sequences.
+As these methods lack a formal biological model of evolutionary relationships, they make weak assumptions about the input data and therefore should be applicable to pathogen genomes that violate phylogenetic assumptions.
 
-To apply these methods to a population of viral genomes, we need metrics to compare genome sequences to each other and algorithms to reduce the highly multidimensional input data ($M \times N$ values for $M$ genomes of length $N$) to one or two dimensions where clustering, classification, and outlier detection are more tractable.
-The number of mismatches between any pair of aligned genome sequences, also known as the Hamming distance, provides a natural distance metric for viral genomes.
-Indeed, most phylogenetic methods start by building a matrix of Hamming distances between all sequences in a given multiple sequence alignment.
-Many dimensionality reduction algorithms including multidimensional scaling (MDS) \cite{hout_papesh_goldinger_2012}, t-SNE \cite{maaten2008visualizing}, and UMAP \cite{lel2018umap} accept such distance matrices as an input and produce a corresponding lower-dimensional representation or “embedding” of those data.
-Alternately, principal components analysis (PCA) only requires the input data to be transformed to a matrix of integers before it can embed those data into a few orthogonal dimensions.
+Common matrix representations of genome alignments include coding each distinct nucleotide character as an integer and calculating pairwise distances between sequences.
+The first of these transformations is the first step prior to performing a principal components analysis (PCA) to find orthogonal representations of the inputs that explain the most variance \cite{mcvean_2009}.
+The second transformation calculates the number of mismatches between each pair of aligned genome sequences, also known as the Hamming distance, to create a distance matrix.
+Most phylogenetic methods begin by building a distance matrix for all sequences in a given multiple sequence alignment.
+Dimensionality reduction algorithms such as multidimensional scaling (MDS) \cite{hout_papesh_goldinger_2012}, t-SNE \cite{maaten2008visualizing}, and UMAP \cite{lel2018umap} accept such distance matrices as an input and produce a corresponding low-dimensional representation or ``embedding'' of those data.
+Both types of transformation allow us to reduce high-dimensional genome alignments ($M \times N$ values for $M$ genomes of length $N$) to low-dimensional embeddings where clustering algorithms and visualization are more tractable.
+Additionally, distance-based methods can reflect the presence or absence of insertions and deletions in an alignment that phylogenetic methods ignore.
 
-Each of these embedding methods has been applied to genomic data to visualize relationships between individuals and identify clusters of related genomes.
+Each of the embedding methods mentioned above has been applied previously to genomic data to identify clusters of related genomes and visualize relationships between individuals.
 Although PCA is a generic linear algebra algorithm that optimizes for an orthogonal embedding of the data, the principal components from single nucleotide polymorphisms (SNPs) represent mean coalescent times and therefore recapitulate broad phylogenetic relationships \cite{mcvean_2009}.
 PCA has been applied to SNPs of human genomes \cite{novembre_2008,alexander_2009,mcvean_2009,auton_2015} and to multiple sequence alignments of viral genomes \cite{metsky_2017}.
 MDS attempts to embed input data into a lower-dimensional representation such that each pair of data points are as far apart in the embedding as they are in the original data.
@@ -262,12 +263,12 @@ MDS has been applied to multiple gene segments of seasonal influenza viruses to 
 Both t-SNE and UMAP build on manifold learning methods like MDS to find low-dimensional embeddings of data that place similar points close together and dissimilar points far apart \cite{kobak_2021}.
 These methods have been applied to SNPs from human genomes \cite{diaz-papkovich_2019} and single-cell transcriptomes \cite{becht_2018,kobak_2019}.
 
-Although these embedding methods are commonly used for qualitative studies of evolutionary relationships, few studies have attempted to quantify patterns observed in these embeddings and no studies have investigated the value of applying these methods to human pathogenic viruses.
-To this end, we applied PCA, MDS, t-SNE, and UMAP to genomes from simulated influenza- and coronavirus-like populations and natural populations of seasonal influenza virus A/H3N2, MERS-CoV, and SARS-CoV-2.
-Each of these viruses have impacted human populations globally in the last decade and have been studied in real time by genomic epidemiologists.
-For each virus and embedding method, we quantified the relationship between pairwise sequence and embedding distances, identified clusters of closely-related genomes in embedding space, and evaluated the accuracy of clusters compared to expert-defined phylogenetic clades.
-Finally, we tested the practical application of these methods to identify reassortment and outliers in seasonal influenza viruses.
-These results inform our recommendations for future applications of these methods including which methods are most effective for specific problems in genomic epidemiology and which parameters researchers should use for each method.
+Although these methods are commonly used for qualitative studies of evolutionary relationships, few studies have attempted to quantify patterns observed in the resulting embeddings and no studies have investigated the value of applying these methods to human pathogenic viruses.
+To this end, we tuned and validated the performance of PCA, MDS, t-SNE, and UMAP with genomes from simulated influenza-like and coronavirus-like populations and then applied these methods to natural populations of seasonal influenza virus A/H3N2 and SARS-CoV-2.
+These natural viruses are highly relevant as major causes of global human mortality, common subjects of real-time genomic epidemiology, and representatives of reassortant and recombinant human pathogens.
+For each combination of virus and embedding method, we quantified the relationship between pairwise sequence and Euclidean embedding distances, identified clusters of closely-related genomes in embedding space, and evaluated the accuracy of clusters compared to genetic groups defined by experts and biologically-informed models.
+Finally, we tested the ability of these methods to identify reassortment of seasonal influenza virus segments and recombination in SARS-CoV-2 genomes.
+These results inform our recommendations for future applications of these methods including which are most effective for specific problems in genomic epidemiology and which parameters researchers should use for each method.
 
 \section*{Materials and methods}
 
