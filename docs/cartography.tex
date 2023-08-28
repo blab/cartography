@@ -267,7 +267,7 @@ Although these methods are commonly used for qualitative studies of evolutionary
 To this end, we tuned and validated the performance of PCA, MDS, t-SNE, and UMAP with genomes from simulated influenza-like and coronavirus-like populations and then applied these methods to natural populations of seasonal influenza virus A/H3N2 and SARS-CoV-2.
 These natural viruses are highly relevant as major causes of global human mortality, common subjects of real-time genomic epidemiology, and representatives of reassortant and recombinant human pathogens.
 For each combination of virus and embedding method, we quantified the relationship between pairwise sequence and Euclidean embedding distances, identified clusters of closely-related genomes in embedding space, and evaluated the accuracy of clusters compared to genetic groups defined by experts and biologically-informed models.
-Finally, we tested the ability of these methods to identify reassortment of seasonal influenza virus segments and recombination in SARS-CoV-2 genomes.
+Finally, we tested the ability of these methods to identify reassortment of seasonal influenza virus hemagglutinin (HA) and neuraminidase (NA) segments and recombination in SARS-CoV-2 genomes.
 These results inform our recommendations for future applications of these methods including which are most effective for specific problems in genomic epidemiology and which parameters researchers should use for each method.
 
 \section*{Materials and methods}
@@ -323,6 +323,22 @@ The optimal parameters were 2 components for PCA, 3 for MDS, perplexity of 100 a
   Each point represents a simulated genome colored by its generation with darker values representing later generations.}
 \label{fig:simulated-populations-representative-embeddings}
 \end{figure}
+
+\subsection*{Selection of natural virus population data}
+
+We selected recent publicly available genome sequences and metadata for seasonal influenza A/H3N2 HA and NA genes and SARS-CoV-2 genomes from INSDC databases \cite{Arita2021}.
+For both viruses, we divided the available data into an ``early'' and ``late'' dataset to use as training and test data, respectively, for identification of virus-specific clustering parameters.
+
+For analyses that focused only on A/H3N2 HA data, we defined the early dataset between October 2015 and April 2018 and the late dataset between April 2018 to January 2020.
+For both early and late datasets, we evenly sampled 25 sequences per country, year, and month, excluding known outliers.
+With this sampling scheme, we selected 1,918 HA sequences for the early dataset and 821 for the late dataset.
+For analyses that combined A/H3N2 HA and NA data, we defined a single dataset between January 2016 and July 2018, keeping 1,643 samples for which both HA and NA have been sequenced.
+
+For SARS-CoV-2 data, we defined the early dataset between January 1, 2020 and January 1, 2022 and the late dataset between January 1, 2022 and July 5, 2023.
+For the early dataset, we evenly sampled 1,734 SARS-CoV-2 genomes by geographic region, year, and month, excluding known outliers.
+For the late dataset, we used the same even sampling by space and time to select 1,394 representative genomes.
+In addition to these genomes, we sampled at most 20 genomes per Nextclade pango lineage for 10 known recombinant lineages and their corresponding parental lineages as defined by \href{https://libguides.mskcc.org/SARS2/recombination}{https://libguides.mskcc.org/SARS2/recombination}.
+With these additional genomes, the late SARS-CoV-2 dataset included 2,072 total genomes.
 
 \subsection*{Phylogenetic analysis}
 
