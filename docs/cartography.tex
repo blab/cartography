@@ -247,7 +247,7 @@ For example, genomic epidemiologists commonly need to 1) identify clusters of cl
 Standard statistical methods can address these common use cases by transforming an alignment of genome sequences into a matrix and operating on that matrix to calculate pairwise relationships between sequences.
 As these methods lack a formal biological model of evolutionary relationships, they make weak assumptions about the input data and therefore should be applicable to pathogen genomes that violate phylogenetic assumptions.
 
-Common matrix representations of genome alignments include coding each distinct nucleotide character as an integer and calculating pairwise distances between sequences.
+Common matrix representations of genome alignments include coding each distinct nucleotide character as an integer or calculating pairwise distances between sequences.
 The first of these transformations is the first step prior to performing a principal components analysis (PCA) to find orthogonal representations of the inputs that explain the most variance \cite{mcvean_2009}.
 The second transformation calculates the number of mismatches between each pair of aligned genome sequences, also known as the Hamming distance, to create a distance matrix.
 Most phylogenetic methods begin by building a distance matrix for all sequences in a given multiple sequence alignment.
@@ -277,20 +277,18 @@ These results inform our recommendations for future applications of these method
 Given the relative lack of prior application of dimensionality reduction methods to human pathogenic viruses, we first attempted to understand the behavior and optimal parameter values for these methods when applied to simulated viral populations with well-defined evolutionary parameters.
 To this end, we simulated populations of influenza-like and coronavirus-like viruses using SANTA-SIM \cite{Jariani2019}.
 These simulated populations allowed us to identify optimal parameters for each embedding method, without overfitting to the limited data available for natural viral populations.
-For each population type described below, we simulated five independent replicates with fixed random seeds for over 55 years, filtered out the first 10 years of each population as a burn-in period, and analyzed the remaining 45 years.
+For each population type described below, we simulated five independent replicates with fixed random seeds for over 55 years, filtered out the first 10 years of each population as a burn-in period, and analyzed the remaining years.
 
-For influenza-like populations, we simulated 1,700 bp hemagglutinin sequences, as previously described where we scaled the number of simulated generations per real year to 200 per year to match the observed mutation rate for natural H3N2 HA sequences \cite{Huddleston2020}.
-Using the same settings from this previous study, we sampled 10 genomes every 4 generations for 12,000 generations (or 60 years of real time).
+We simulated influenza-like populations as previously described with 1,700 bp hemagglutinin sequences \cite{Huddleston2020}.
+As in that previous study, we scaled the number of simulated generations per real year to 200 per year to match the observed mutation rate for natural H3N2 HA sequences, and we sampled 10 genomes every 4 generations for 12,000 generations (or 60 years of real time).
 
 We simulated coronavirus-like populations as previously described for human seasonal coronaviruses with genomes of 21,285 bp \cite{Muller2022}.
-For the current study, we assigned 30 generations per real year to obtain mutation rates similar to the $9.57 \times 10^{-4}$ substitutions per site per year calculated for MERS-CoV \cite{Dudas2018}.
-To assess the effect of recombination on optimal method parameters, we simulated separate coronavirus-like populations with low, moderate, and high recombination rates.
-We expected human seasonal coronaviruses to recombine at a rate of $10^{-5}$ events per site per year and MERS-CoV to recombine at three times that rate \cite{Muller2022}.
-We calibrated the overall recombination probability in SANTA-SIM such that the number of observed recombination events per year for the ``high'' recombination populations matched the expected number for MERS-CoV (1 per year) and recombination events for ``moderate'' recombination populations matched the expected number for human seasonal coronaviruses (0.3 per year).
-We calibrated the ``low'' recombination populations to have approximately 1\% of the total recombination events in the ``moderate'' population, to represent the first two years of SARS-CoV-2 populations for which the recombination rate was likely lower \cite{Carabelli2023}.
+For the current study, we assigned 30 generations per real year to obtain mutation rates similar to the $8 \times 10^{-4}$ substitutions per site per year estimated for SARS-CoV-2 \cite{Rambaut2020}.
+To account for the effect of recombination on optimal method parameters, we simulated populations with a recombination rate of $10^{-5}$ events per site per year based on human seasonal coronaviruses for which recombination rates are well-studied \cite{Muller2022,Carabelli2023}.
+We calibrated the overall recombination probability in SANTA-SIM such that the number of observed recombination events per year matched the expected number for human seasonal coronaviruses (0.3 per year).
 To assist with this calibration of recombination events per year, we modified the SANTA-SIM source code to emit a boolean status of ``is recombinant'' for each sampled genome.
 This change allowed us to identify recombinant genomes by their metadata in downstream analyses and calculate the number of recombination events observed per year.
-For each replicate of each recombination rate, we sampled 15 genomes every generation for 1,700 generations (or approximately 56 years of real time).
+For each replicate population, we sampled 15 genomes every generation for 1,700 generations (or approximately 56 years of real time).
 
 \subsection*{Optimization of embedding method parameters}
 
@@ -307,7 +305,15 @@ For all method parameters except those controlling the number of components used
 Since increasing the number of components used by PCA and MDS allows these methods to overfit to available data, we selected the optimal number of components for these methods as the number beyond which the median MAE did not decrease by at least 1 nucleotide.
 This approach follows the same concept from the MDS algorithm itself where optimization occurs iteratively until some predefined error threshold is reached.
 
-TKTK: specific parameter values tested per method.
+With the approach described above, we tested each method across a range of relevant parameters with all combinations of parameter values.
+For PCA, we tested the number of components between 2 and 6.
+For MDS, we tested the number of components between 2 and 10.
+For t-SNE, we tested perplexity values of 15, 30, 100, 200, and 300, and we tested learning rates of 100, 200, and 500.
+For UMAP, we tested nearest neighbor values of 25, 50, and 100, and we tested values for the minimum distance that points can be in an embedding of 0.05, 0.1, and 0.25.
+\jhc{Note that some parameter values scale with the number of samples in the input dataset.}
+For influenza-like populations, the optimal parameters were 2 components for PCA, 3 components for MDS, perplexity of 100 and learning rate of 200 for t-SNE, and nearest neighbors of 100 and minimum distance of 0.25 for UMAP.
+The optimal parameters for coronavirus-like populations were nearly the same as those for the influenza-like populations.
+The optimal parameters were 2 components for PCA, 3 for MDS, perplexity of 100 and learning rate of 500 for t-SNE, and nearest neighbors of 100 and minimum distance of 0.05 for UMAP.
 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
