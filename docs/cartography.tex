@@ -248,7 +248,7 @@ Standard statistical methods can address these common use cases by transforming 
 As these methods lack a formal biological model of evolutionary relationships, they make weak assumptions about the input data and therefore should be applicable to pathogen genomes that violate phylogenetic assumptions.
 
 Common matrix representations of genome alignments include coding each distinct nucleotide character as an integer or calculating pairwise distances between sequences.
-The first of these transformations is the first step prior to performing a principal components analysis (PCA) to find orthogonal representations of the inputs that explain the most variance \cite{mcvean_2009}.
+The first of these transformations is the first step prior to performing a principal components analysis (PCA) to find orthogonal representations of the inputs that explain the most variance \cite{jolliffe_cadima_2016}.
 The second transformation calculates the number of mismatches between each pair of aligned genome sequences, also known as the Hamming distance, to create a distance matrix.
 Most phylogenetic methods begin by building a distance matrix for all sequences in a given multiple sequence alignment.
 Dimensionality reduction algorithms such as multidimensional scaling (MDS) \cite{hout_papesh_goldinger_2012}, t-SNE \cite{maaten2008visualizing}, and UMAP \cite{lel2018umap} accept such distance matrices as an input and produce a corresponding low-dimensional representation or ``embedding'' of those data.
@@ -271,6 +271,28 @@ Finally, we tested the ability of these methods to identify reassortment of seas
 These results inform our recommendations for future applications of these methods including which are most effective for specific problems in genomic epidemiology and which parameters researchers should use for each method.
 
 \section*{Materials and methods}
+
+\subsection*{Embedding methods}
+
+We selected four standard and common dimensionality reduction (or ``embedding'') methods to apply to human pathogenic viruses: PCA, MDS, t-SNE, and UMAP.
+PCA operates on a matrix with samples in rows, ``features'' in columns, and numeric values in each cell \cite{jolliffe_cadima_2016}.
+To apply PCA to multiple sequence alignments, we transformed each nucleotide value into a corresponding integer (A to 1, G to 2, C to 3, T to 4, and all other values to 5) and applied scikit-learn's PCA implementation to the resulting numerical matrix with the ``full'' singular value decomposition solver and 10 components \cite{Pedregosa2011}.
+
+The remaining three methods operate on a distance matrix.
+We constructed a distance matrix from a multiple sequence alignment by calculating the pairwise Hamming distance between nucleotide sequences.
+By default, the Hamming distance only counted mismatches between pairs of standard nucleotide values (A, C, G, and T), ignoring other values including gaps.
+We implemented an optional mode that additionally counted each occurrence of consecutive gap characters in either input sequence as individual insertion/deletion (``indel'') events.
+
+We applied scikit-learn's MDS implementation to a given distance matrix, with an option to set the number of components in the resulting embedding \cite{Pedregosa2011}.
+Similarly, we applied scikit-learn's t-SNE implementation, with options to set the ``perplexity'' and the ``learning rate''.
+The perplexity controls the number of neighbors the algorithm uses per input sample to determine an optimal embedding \cite{maaten2008visualizing}.
+This parameter effectively determines the balance between maintaining ``local'' or ``global'' structure in the embedding \cite{kobak_2019}.
+The learning rate controls how rapidly the t-SNE algorithm converges on a specific embedding \cite{Jacobs1988,maaten2008visualizing} and should scale with the number of input samples \cite{Belkina2019}.
+Finally, we applied the \textit{umap-learn} Python package written by UMAP's authors, with options to set the number of ``nearest neighbors'' and the ``minimum distance'' \cite{lel2018umap}.
+As with t-SNE's perplexity parameter, the nearest neighbors parameter determines how many adjacent samples the UMAP algorithm considers per sample to find an optimal embedding.
+The minimum distance sets the lower limit for how close any two samples can map next to each other in a UMAP embedding.
+Lower minimum distances allow tighter groups of samples to form.
+For both t-SNE and UMAP, we used the default number of components of 2.
 
 \subsection*{Simulation of influenza-like and coronavirus-like populations}
 
@@ -310,19 +332,9 @@ For PCA, we tested the number of components between 2 and 6.
 For MDS, we tested the number of components between 2 and 10.
 For t-SNE, we tested perplexity values of 15, 30, 100, 200, and 300, and we tested learning rates of 100, 200, and 500.
 For UMAP, we tested nearest neighbor values of 25, 50, and 100, and we tested values for the minimum distance that points can be in an embedding of 0.05, 0.1, and 0.25.
-\jhc{Note that some parameter values scale with the number of samples in the input dataset.}
 For influenza-like populations, the optimal parameters were 2 components for PCA, 3 components for MDS, perplexity of 100 and learning rate of 200 for t-SNE, and nearest neighbors of 100 and minimum distance of 0.25 for UMAP.
 The optimal parameters for coronavirus-like populations were nearly the same as those for the influenza-like populations.
 The optimal parameters were 2 components for PCA, 3 for MDS, perplexity of 100 and learning rate of 500 for t-SNE, and nearest neighbors of 100 and minimum distance of 0.05 for UMAP.
-
-\begin{figure}[!h]
-% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
-\includegraphics[width=\columnwidth]{figures/simulated-populations-representative-embeddings.png}
-\caption{{\bf Representative embeddings for simulated populations using optimal parameters per pathogen (rows) and embedding method (columns).}
-  Each panel represents an embedding method for a single replicate population for the corresponding pathogen type.
-  Each point represents a simulated genome colored by its generation with darker values representing later generations.}
-\label{fig:simulated-populations-representative-embeddings}
-\end{figure}
 
 \subsection*{Selection of natural virus population data}
 
@@ -337,7 +349,7 @@ For analyses that combined A/H3N2 HA and NA data, we defined a single dataset be
 For SARS-CoV-2 data, we defined the early dataset between January 1, 2020 and January 1, 2022 and the late dataset between January 1, 2022 and July 5, 2023.
 For the early dataset, we evenly sampled 1,734 SARS-CoV-2 genomes by geographic region, year, and month, excluding known outliers.
 For the late dataset, we used the same even sampling by space and time to select 1,394 representative genomes.
-In addition to these genomes, we sampled at most 20 genomes per Nextclade pango lineage for 10 known recombinant lineages and their corresponding parental lineages as defined by \href{https://libguides.mskcc.org/SARS2/recombination}{https://libguides.mskcc.org/SARS2/recombination}.
+In addition to these genomes, we sampled at most 20 genomes per Nextclade pango lineage for 10 known recombinant lineages (XAY, XBB, XBB.1, XBC, XBF, XBL, XC, XD, XE, XF, and XG) and their corresponding parental lineages (AY.29, AY.4, AY.45, B.1.1.7, B.1.617, BA.1, BA.2, BA.2.75, BA.4, BA.5, BA.5.2.3, BJ.1, BM.1.1.1, and CJ.1) as defined by \href{https://libguides.mskcc.org/SARS2/recombination}{https://libguides.mskcc.org/SARS2/recombination}.
 With these additional genomes, the late SARS-CoV-2 dataset included 2,072 total genomes.
 
 \subsection*{Phylogenetic analysis}
@@ -357,26 +369,6 @@ For MERS, the host data was given via the Newick tree, and clade membership was 
 
 We dropped 4 strains in the H3N2 analysis, as they were direct animal to human transmissions where the genomes resembled swine flu (seen through NCBI's BLAST).
 Imputation was tested for MERS, but due to entire columns of missing data, we dropped all strains with over 3 standard deviations of missing bases in its genome from the MERS analysis.
-
-\subsection*{Data Transformations}
-
-We used two different methods of transforming the data; scaling and centering the data, and a Hamming distance similarity matrix.
-For scaling and centering the data, we performed PCA on the matrix of nucleotides from the multiple sequence alignment using scikit-learn \cite{jolliffe_cadima_2016}.
-An explained variance plot was created to determine the amount of PCs used for distance calulations and visualization.
-A separate bases missing vs PC1 was also created to help reveal the level of relation between missing bases and outliers in PCA.
-
-To create the Hamming distance similarity matrix, each genome was split into separate nucleotides and compared to nucleotides in the same site on other genomes.
-Only differences between the main nucleotide pairs (AGCT) were counted.
-Gaps (N, -, etc.) were handled differently per pathogen.
-For H3N2 HA Influenza, gaps were not counted - some sequences were significantly shorter than others, and counting gaps implied that a shorter strain corresponds to genetic dissimilarity, which is not necessarily true.
-For SARS-CoV-2 and MERS, indel events were counted - gaps that started at the beginning of the alignment were ignored as they can occur because of differing sequence lengths and not necessarily a biological event.
-
-\subsection*{Embedding methods}
-We reduced the matrix of nucleotides using Principal Component Analysis \cite{jolliffe_cadima_2016}.
-We reduced the similarity distance matrix using Multi-Dimensional Scaling \cite{hout_papesh_goldinger_2012}, t-distributed Stochastic Neighborhood Embedding \cite{maaten2008visualizing}, and Uniform Manifold Approximation and Projection \cite{lel2018umap}, plotted using Altair \cite{VanderPlas2018}, and colored by clade assignment.
-We used the scikit-learn implementation of PCA, MDS, and t-SNE, and UMAP using umap-learn.
-
-We further analyzed these embeddings ability to accurately capture the multidimensional data, specifically assessing its ability to capture reassortment, recombination, and cluster-specific mutations.
 
 \subsection*{Hamming distance vs Euclidean distance boxplot}
 
@@ -426,13 +418,21 @@ We use Variation of Information (VI) in order to assess the groupings found usin
 
 The entire workflow for our analyses was implemented with Snakemake \cite{molder_2021}.
 We have provided all source code, configuration files, and datasets at \href{https://github.com/blab/cartography}{https://github.com/blab/cartography}.
+The \textit{pathogen-embed} Python package, available on PyPI, provides command line utilities to calculate distance matrices (\textit{pathogen-distance}), calculate embeddings per method (\textit{pathogen-embed}), and apply hierarchical clustering to embeddings (\textit{pathogen-cluster}).
 
 % Results and Discussion can be combined.
 \section*{Results}
 
 \subsection*{Simulated populations enable tuning of embedding method parameters}
 
-TKTK.
+\begin{figure}[!h]
+% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
+\includegraphics[width=\columnwidth]{figures/simulated-populations-representative-embeddings.png}
+\caption{{\bf Representative embeddings for simulated populations using optimal parameters per pathogen (rows) and embedding method (columns).}
+  Each panel represents an embedding method for a single replicate population for the corresponding pathogen type.
+  Each point represents a simulated genome colored by its generation with darker values representing later generations.}
+\label{fig:simulated-populations-representative-embeddings}
+\end{figure}
 
 % Place tables after the first paragraph in which they are cited.
 \begin{table}[!ht]
