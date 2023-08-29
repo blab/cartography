@@ -436,13 +436,14 @@ The \textit{pathogen-embed} Python package, available on PyPI, provides command 
 
 % Place tables after the first paragraph in which they are cited.
 \begin{table}[!ht]
-\begin{adjustwidth}{-2.25in}{0in} % Comment out/remove adjustwidth environment if table fits in text column.
+%\begin{adjustwidth}{-2.25in}{0in} % Comment out/remove adjustwidth environment if table fits in text column.
 \centering
 \caption{
-{\bf Accuracy of embedding methods per human pathogenic virus sorted by Matthew's correlation coefficient (MCC). The corresponding contingency matrix values for true positives (TP), true negatives (TN), false positives (FP), and false negatives (FN) are also included. Threshold refers to the distance threshold used to assign clusters with HDBSCAN.}}
+  {\bf Accuracy of embedding methods per human pathogenic virus sorted by normalized variation of information (VI) distance.}
+  Threshold refers to the distance threshold used to assign clusters with HDBSCAN.}
 \input{tables/accuracy_table.tex}
 \label{table:accuracy}
-\end{adjustwidth}
+%\end{adjustwidth}
 \end{table}
 
 \subsection*{Embedding clusters recapitulate phylogenetic clades for seasonal influenza A/H3N2}

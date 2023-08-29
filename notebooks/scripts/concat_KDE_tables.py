@@ -39,10 +39,11 @@ if __name__ == "__main__":
         "t-sne": "t-SNE",
         "umap": "UMAP",
     }
-    df["embedding"] = df["embedding"].map(embedding_name_by_abbreviation)
+    df["method"] = df["method"].map(embedding_name_by_abbreviation)
     df = df.rename(columns={
-        "embedding": "Embedding",
-        "threshold": "Threshold",
+        "method": "Method",
+        "distance_threshold": "Threshold",
+        "normalized_vi": "VI",
     })
 
     if args.output_csv:
@@ -53,5 +54,5 @@ if __name__ == "__main__":
             args.output_table,
             bold_rows=True,
             index=False,
-            #columns=["Pathogen", "Embedding", "MCC", "TP", "TN", "FP", "FN", "Threshold"],
+            columns=["Pathogen", "Method", "VI", "Threshold"],
         )
