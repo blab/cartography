@@ -124,6 +124,7 @@
 
 % Inline comments for authors by initials.
 \def\jhc#1{\textcolor{red}{[#1]}}
+\def\snc#1{\textcolor{blue}{[#1]}}
 
 % Remove comment for double spacing
 \usepackage{setspace}
@@ -389,12 +390,12 @@ Larger values correspond to greater dissimilarity between the clusterings.
 
 \subsection*{Cluster-specific mutation table}
 In order to further understand the phylogenetic relevance of these HDBSCAN clusters, we found the cluster specific mutations for all HDBSCAN clusters.
-\jhc{should I discuss the reasoning behind this analysis more?}
+\snc{should I discuss the reasoning behind this analysis more?}
 We found all mutations relative to the reference (where the reference determines the alignment of the genomes).
 We then found all mutations specific to each cluster by removing all mutations found in other clusters and the reference.
 For every pathogen studied, we create a table with columns for the embedding method, the mutational (position and derived allele), the number of clusters that the mutation appears in, and the list of distinct clusters with the mutation.
 
-\jhc{should I add more?}
+\snc{should I add more?}
 
 \subsection*{Joint embeddings of hemagglutinin and neuraminidase genomes in H3N2 Influenza}
 
