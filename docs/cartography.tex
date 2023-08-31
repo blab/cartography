@@ -289,6 +289,7 @@ Similarly, we applied scikit-learn's t-SNE implementation, with options to set t
 The perplexity controls the number of neighbors the algorithm uses per input sample to determine an optimal embedding \cite{maaten2008visualizing}.
 This parameter effectively determines the balance between maintaining ``local'' or ``global'' structure in the embedding \cite{kobak_2019}.
 The learning rate controls how rapidly the t-SNE algorithm converges on a specific embedding \cite{Jacobs1988,maaten2008visualizing} and should scale with the number of input samples \cite{Belkina2019}.
+We initialized t-SNE embeddings with the first two components of the corresponding PCA embedding, as previously recommended to obtain more accurate global structure \cite{kobak_2019,kobak_2021}.
 Finally, we applied the \textit{umap-learn} Python package written by UMAP's authors, with options to set the number of ``nearest neighbors'' and the ``minimum distance'' \cite{lel2018umap}.
 As with t-SNE's perplexity parameter, the nearest neighbors parameter determines how many adjacent samples the UMAP algorithm considers per sample to find an optimal embedding.
 The minimum distance sets the lower limit for how close any two samples can map next to each other in a UMAP embedding.
@@ -356,7 +357,8 @@ With these additional genomes, the late SARS-CoV-2 dataset included 2,072 total 
 \subsection*{Phylogenetic analysis}
 
 For each natural population described above, we created an annotated, time-scaled phylogenetic tree.
-We aligned sequences with MAAFT (version 7.486) \cite{Katoh2002,Katoh2013} using the \textit{augur align} command (version 22.0.3) \cite{Huddleston2021}.
+For seasonal influenza A/H3N2 HA and NA sequences, we aligned sequences with MAAFT (version 7.486) \cite{Katoh2002,Katoh2013} using the \textit{augur align} command (version 22.0.3) \cite{Huddleston2021}.
+For SARS-CoV-2 sequences, we used existing reference-based alignments provided by the Nextstrain team (\href{https://docs.nextstrain.org/projects/ncov/en/latest/reference/remote_inputs.html#summary-of-available-genbank-open-files}{https://docs.nextstrain.org/projects/ncov/en/latest/reference/remote\_inputs.html}) and generated with Nextalign (version 2.14.0) \cite{Aksamentov2021}.
 We inferred a phylogeny with IQ-TREE (version 2.1.4-beta) \cite{Nguyen2014} using the \textit{augur tree} command and inferred a time tree with TreeTime (version 0.8.2) \cite{Sagulenko2018} using the \textit{augur refine} command.
 We visualized phylogenies with Auspice \cite{Hadfield2018}, after first converting the trees to Auspice JSON format with \textit{augur export}.
 
@@ -389,48 +391,45 @@ We used these ``collapsed Nextclade pango'' lineages for subsequent analyses.
 To evaluate the biological interpretability of distances between samples in low-dimensional embeddings, we plotted the pairwise Euclidean distance between samples in each embedding against the corresponding genetic distance between the same samples.
 We calculated Euclidean distance using all components of the given embedding (e.g., 2 components for PCA, t-SNE, and UMAP and 3 components for MDS).
 For each embedding, we fit a linear model between Euclidean and genetic distance and calculated the squared Pearson's correlation coefficient, $R^{2}$.
-The distance plots provide a qualitative assessment of each embedding's local and global structure, while the linear models and correlation coefficients quantify the global structure in the embeddings.
+The distance plots provide a qualitative assessment of each embedding's local and global structure relative to a biologically meaningful scale of genetic distance, while the linear models and correlation coefficients quantify the global structure in the embeddings.
 
 \subsection*{Clustering of samples in embeddings}
 
 To understand how well embeddings of genetic data could capture previously defined genetic groups, we applied an unsupervised clustering algorithm, HDBSCAN \cite{campello2015hierarchical}, to each embedding.
 HDBSCAN identifies initial clusters from high-density regions in the input space and merges these clusters hierarchically.
-This algorithm allowed us to avoid defining the number of clusters we expected.
+This algorithm allowed us to avoid defining an arbitrary or biased expected number of clusters \emph{a priori}.
 HDBSCAN provides parameters to tune the minimum number of samples required to seed an initial cluster (``min samples''), the minimum size for a final cluster (``min size''), and the minimum distance between initial clusters below which those clusters are hierarchically merged (``distance threshold'').
-We hardcoded the min samples to 5 and min size to 10, to reflect our general interest in genetic groups with at least 10 samples throughout our analyses.
-Since the distance between clusters depends on the Euclidean space of each embedding, we performed a coarse grid search of distance threshold values for each embedding method and virus type.
+We hardcoded the min samples to 5 to minimize the number of spurious initial clusters and min size to 10 to reflect our interest in genetic groups with at least 10 samples throughout our analyses.
+HDBSCAN calculates the distance between clusters on the Euclidean scale of each embedding.
+To account for embedding-specific distances, we performed a coarse grid search of distance threshold values for each virus type and embedding method.
 
-\jhc{Describe grid search and testing with early/late data here.}
-
-These clustering labels were then compared to the clade labels for the strains to understand the accuracy of the reduction's structure.
-We used Variation of Information (VI) in order to compare these labelings \cite{meilua2003comparing}.
-The Variation of Information is a distance metric based on information theory principles, which measures the distance between clusterings in a given space.
-The measure is unnormalized and varies between 0 and log(N) where N is the number of clustered elements.
-Larger values correspond to greater dissimilarity between the clusterings.
+We performed the grid search on the early datasets for both seasonal influenza A/H3N2 HA and SARS-CoV-2.
+For each dataset and embedding method, we applied HDBSCAN clustering with a distance threshold between 0 and 7 inclusive with steps of 0.5 between values.
+For a given threshold, we obtained sets of samples assigned to HDBSCAN clusters from the embedding.
+We evaluated the accuracy of these clusters with variation of information (VI) which calculates the distance between two sets of clusters of the same samples \cite{meilua2003comparing}.
+When two sets of clusters are identical, VI equals 0.
+When the sets are maximally different, VI is $\log{N}$ where $N$ is the total number of samples.
+To make VI values comparable across datasets, we normalized each value by dividing by $\log{N}$, following the pattern used to validate TreeKnit's MCCs \cite{Barrat-Charlaix2022}.
+For each virus dataset and embedding method, we identified the distance threshold that minimized the normalized VI between HDBSCAN clusters and genetic groups defined by experts or biologically-informed models (``Nextstrain clade'' for seasonal influenza and both ``Nextstrain clade'' and ``collapsed Nextclade pango lineage'' for SARS-CoV-2).
+Finally, we used these optimal distance thresholds to identify clusters in out-of-sample data from the late datasets for both viruses and calculate the normalized VI between those clusters and previously defined genetic groups.
 
 \subsection*{Identification of cluster-specific mutations}
 
-In order to further understand the phylogenetic relevance of these HDBSCAN clusters, we found the cluster specific mutations for all HDBSCAN clusters.
-\snc{should I discuss the reasoning behind this analysis more?}
-We found all mutations relative to the reference (where the reference determines the alignment of the genomes).
-We then found all mutations specific to each cluster by removing all mutations found in other clusters and the reference.
-For every pathogen studied, we create a table with columns for the embedding method, the mutational (position and derived allele), the number of clusters that the mutation appears in, and the list of distinct clusters with the mutation.
-
-\snc{should I add more?}
+To better understand the genetic basis of embedding clusters, we identified cluster-specific mutations for all HDBSCAN clusters.
+First, we found all mutations between each sample's sequence and the reference sequence used to produce the alignment, considering only A, C, G, T, and gap characters.
+Within each cluster, we identified mutations that occurred in at least 10 samples and in at least 50\% of samples in the cluster.
+We recorded the resulting mutations per cluster in a table with columns for the embedding method, the position of the mutation, the derived allele of the mutation, and a list of the distinct clusters the mutation appeared in.
+From this table, we could identify mutations the only occurred in specific clusters and mutations that distinguished sets of clusters from each other.
 
 \subsection*{Assessment of HA/NA reassortment in seasonal influenza populations}
 
-For H3N2, we only assess hemagglutinin (HA) for the above analyses.
-However, NA (Neuraminidase) is also an important component in understanding and studying H3N2 evolution.
-Influenza viruses are named based on the subtype of their hemagglutinin (HA) and neuraminidase (NA) proteins, which are both important surface glycoproteins that are involved in the virus life cycle.
-In order to assess how strong our genetic cartography approach at recognizing clade groupings without being biologically-informed, we conducted a H3N2 HA and NA joint analysis to see how well our approach would recapitulate clades derived from both HA/NA sequences.
-
-We concatenated together the HA and NA portions of the H3N2 strain and ran the embedding methods on these strains (PCA, MDS, t-SNE, and UMAP).
-We ran HDBSCAN \cite{campello2015hierarchical} on these reductions, generating groupings for these strains.
-
-We use Variation of Information (VI) in order to assess the groupings found using HDBSCAN from each embedding against these MCC groupings to quantify the accuracy of our approach.
+To assess the ability of embedding methods to detect reassortment in seasonal influenza populations, we applied each method to either HA alignments only or concatenated alignments of HA and NA sequences from the same samples, performed HDBSCAN clustering with the optimal distance threshold for the given method, and calculated the normalized VI between the resulting clusters and TreeKnit MCCs.
+We compared normalized VI values for the HA-only clusters of each method to the corresponding VI values for the HA/NA clusters.
+Lower VI values in the HA/NA clusters than HA-only clusters indicated better clustering of samples into known reassortment groups.
 
 \subsection*{Assessment of recombination in SARS-CoV-2 populations}
+
+\jhc{TKTK.}
 
 \subsection*{Data and software availability}
 
