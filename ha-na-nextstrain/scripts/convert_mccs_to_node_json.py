@@ -40,5 +40,5 @@ if __name__ == '__main__':
     write_json({"nodes": data}, args.output)
 
     print(f"Inspected MCCs with {total_strains} total strains.")
-    print(f"Annotated {mcc + 1} MCCs, totalling {total_strains - skipped_strains} strains ({((total_strains - skipped_strains) / total_strains) * 100:.0f}%).")
+    print(f"Annotated {mcc} MCCs, totalling {total_strains - skipped_strains} strains ({((total_strains - skipped_strains) / total_strains) * 100:.0f}%).")
     print(f"Skipped {skipped_mccs} MCCs smaller than {args.min_size}, totalling {skipped_strains} strains.")
