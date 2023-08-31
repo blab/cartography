@@ -355,40 +355,61 @@ With these additional genomes, the late SARS-CoV-2 dataset included 2,072 total 
 
 \subsection*{Phylogenetic analysis}
 
-The genome data we used for H3N2 HA influenza is from the NCBI influenza database.
-The SARS-CoV-2 is sourced from INSDC databases and curated by Nextstrain \cite{Hadfield2018}.
-Clades for both H3N2 HA and SARS-CoV-2 were defined by reasonable phylogenetic signal.
-The MERS data is from e-life \cite{dudas_carvalho_rambaut_bedford_2018}.
+For each natural population described above, we created an annotated, time-scaled phylogenetic tree.
+We aligned sequences with MAAFT (version 7.486) \cite{Katoh2002,Katoh2013} using the \textit{augur align} command (version 22.0.3) \cite{Huddleston2021}.
+We inferred a phylogeny with IQ-TREE (version 2.1.4-beta) \cite{Nguyen2014} using the \textit{augur tree} command and inferred a time tree with TreeTime (version 0.8.2) \cite{Sagulenko2018} using the \textit{augur refine} command.
+We visualized phylogenies with Auspice \cite{Hadfield2018}, after first converting the trees to Auspice JSON format with \textit{augur export}.
 
-We parsed metadata including viral sample name, database accession, collection date, and sequence authors from the sequence headers with \texttt{augur parse}.
-We analyzed influenza A/H3N2 and SARS-CoV-2 by creating a FASTA file of multiple sequence alignments with MAFFT v7.407 \cite{Katoh2002} via augur align \cite{Hadfield2018} and phylogenies with IQ-TREE v1.6.10 \cite{Nguyen2014} via augur tree version 9.0.0.
-We inferred a time tree with TreeTime 0.9.4 \cite{Sagulenko2018}.
-For improved reproducibility, we automated the execution of these tasks in a Snakemake workflow \cite{molder_2021}.
+\subsection*{Definitions of genetic groups by experts or biologically-informed models}
 
-Clade membership metadata was provided by a .json build of the influenza H3N2 tree and SARS-CoV-2 trees.
-For MERS, the host data was given via the Newick tree, and clade membership was defined using BioPython as outbreaks with a monophyletic host status (strictly camel or human).
+We annotated phylogenetic trees with genetic groups previously identified by experts or assigned by biologically-informed models.
+For seasonal influenza A/H3N2, the World Health Organization assigns ``clade'' labels to clades in HA phylogenies that appear to be genetically or phenotypically distinct from other recently circulating A/H3N2 samples.
+We used the latest clade definitions for A/H3N2 maintained by the Nextstrain team as part of their seasonal influenza surveillance efforts \cite{Neher2015}.
 
-We dropped 4 strains in the H3N2 analysis, as they were direct animal to human transmissions where the genomes resembled swine flu (seen through NCBI's BLAST).
-Imputation was tested for MERS, but due to entire columns of missing data, we dropped all strains with over 3 standard deviations of missing bases in its genome from the MERS analysis.
+As seasonal influenza clades only account for the HA gene and lack information about reassortment events, we assigned joint HA and NA genetic groups using a biologically-informed model, TreeKnit \cite{Barrat-Charlaix2022}.
+TreeKnit infers ancestral reassortment graphs from two gene trees, finding groups of samples for which both genes share the same history.
+These groups, also known as maximally compatible clades (MCCs), represent samples whose HA and NA genes have reassorted together.
+We applied TreeKnit to HA and NA trees produced by IQ-TREE, as described above, using a gamma value of 2.5.
+TreeKnit identified 259 MCCs for 1,286 samples with an average of 6 samples per MCC.
+We filtered these MCCs to keep only those with at least 10 samples, resulting in 28 MCCs that represented 1,286 samples (78\%) with an average of 46 samples per MCC.
 
-\subsection*{Hamming distance vs Euclidean distance boxplot}
+For SARS-CoV-2, we used both expert-defined ``Nextstrain clades'' \cite{Hodcroft2020,Bedford2021,Roemer2022} and computationally-defined Pangolin lineages \cite{OToole2021} provided by the Nextclade pango implementation as ``Nextclade pango'' annotations.
+Nextstrain clade definitions represent the World Health Organization's variants of concern and other phylogenetic clades that have reached a minimum global and regional frequencies and growth rates.
+Pangolin lineages represent a combination of lineages assigned by a machine learning model (\href{https://cov-lineages.org/resources/pangolin/pangolearn.html}{pangoLEARN}) and expert-curated lineages (\href{https://github.com/cov-lineages/pango-designation}{https://github.com/cov-lineages/pango-designation}) and must contain at least 5 samples with an unambiguous evolutionary event.
+As such, Nextstrain clades represent a much coarser genetic resolution than Pangolin lineages.
+Additionally, Pangolin lineages produced by recombination receive a lineage name prefixed by an ``X'', while Nextstrain clades do not explicitly reflect recombination events.
 
-Hamming distance vs Euclidean distance plots assess the local and global structure of the embedding as well as assess the overall strength of the embedding recapitulation.
-Constant correlation means the embedding tends to capture and retain global patterns, whereas and a splayed structure points to local structure preservation.
-The Hamming distance between nucleotide sequences is plotted on the x axis, and the Euclidean distance between the points in the embedding are plotted on the y axis.
-PCA and MDS's distances were calculated using 4 components, while t-SNE and UMAP were calculated with 2.
-The plots were bootstrapped to find the Pearson Coefficient with a confidence interval.
-The density and overall relationship of the data was qualitatively assesed through the line created by the Q1 to Q3 box of each individual boxplot in each plot.
+Since Pangolin lineages can represent much smaller genetic groups than are practically useful, we collapsed Pango lineages with fewer than 10 samples in our analysis into their parental lineages using the pango\_aliasor tool (\href{https://github.com/corneliusroemer/pango_aliasor}{https://github.com/corneliusroemer/pango\_aliasor}).
+Specifically, we counted the number of samples per lineage, sorted lineages in ascending order by count, and collapsed each lineage with a count less than 10 into its parental lineage in the count-sorted order.
+This approach allowed small lineages to aggregate with other small parental lineages and meet the 10-sample threshold.
+We used these ``collapsed Nextclade pango'' lineages for subsequent analyses.
 
-\subsection*{HDBSCAN clade analysis}
-We used HDBSCAN \cite{campello2015hierarchical} on our reductions from PCA, MDS, t-SNE, and UMAP to understand the clustering structure of the strains in these spaces.
+\subsection*{Evaluation of linear relationships between genetic distance and Euclidean distance in embeddings}
+
+To evaluate the biological interpretability of distances between samples in low-dimensional embeddings, we plotted the pairwise Euclidean distance between samples in each embedding against the corresponding genetic distance between the same samples.
+We calculated Euclidean distance using all components of the given embedding (e.g., 2 components for PCA, t-SNE, and UMAP and 3 components for MDS).
+For each embedding, we fit a linear model between Euclidean and genetic distance and calculated the squared Pearson's correlation coefficient, $R^{2}$.
+The distance plots provide a qualitative assessment of each embedding's local and global structure, while the linear models and correlation coefficients quantify the global structure in the embeddings.
+
+\subsection*{Clustering of samples in embeddings}
+
+To understand how well embeddings of genetic data could capture previously defined genetic groups, we applied an unsupervised clustering algorithm, HDBSCAN \cite{campello2015hierarchical}, to each embedding.
+HDBSCAN identifies initial clusters from high-density regions in the input space and merges these clusters hierarchically.
+This algorithm allowed us to avoid defining the number of clusters we expected.
+HDBSCAN provides parameters to tune the minimum number of samples required to seed an initial cluster (``min samples''), the minimum size for a final cluster (``min size''), and the minimum distance between initial clusters below which those clusters are hierarchically merged (``distance threshold'').
+We hardcoded the min samples to 5 and min size to 10, to reflect our general interest in genetic groups with at least 10 samples throughout our analyses.
+Since the distance between clusters depends on the Euclidean space of each embedding, we performed a coarse grid search of distance threshold values for each embedding method and virus type.
+
+\jhc{Describe grid search and testing with early/late data here.}
+
 These clustering labels were then compared to the clade labels for the strains to understand the accuracy of the reduction's structure.
 We used Variation of Information (VI) in order to compare these labelings \cite{meilua2003comparing}.
 The Variation of Information is a distance metric based on information theory principles, which measures the distance between clusterings in a given space.
 The measure is unnormalized and varies between 0 and log(N) where N is the number of clustered elements.
 Larger values correspond to greater dissimilarity between the clusterings.
 
-\subsection*{Cluster-specific mutation table}
+\subsection*{Identification of cluster-specific mutations}
+
 In order to further understand the phylogenetic relevance of these HDBSCAN clusters, we found the cluster specific mutations for all HDBSCAN clusters.
 \snc{should I discuss the reasoning behind this analysis more?}
 We found all mutations relative to the reference (where the reference determines the alignment of the genomes).
@@ -397,7 +418,7 @@ For every pathogen studied, we create a table with columns for the embedding met
 
 \snc{should I add more?}
 
-\subsection*{Joint embeddings of hemagglutinin and neuraminidase genomes in H3N2 Influenza}
+\subsection*{Assessment of HA/NA reassortment in seasonal influenza populations}
 
 For H3N2, we only assess hemagglutinin (HA) for the above analyses.
 However, NA (Neuraminidase) is also an important component in understanding and studying H3N2 evolution.
@@ -407,18 +428,15 @@ In order to assess how strong our genetic cartography approach at recognizing cl
 We concatenated together the HA and NA portions of the H3N2 strain and ran the embedding methods on these strains (PCA, MDS, t-SNE, and UMAP).
 We ran HDBSCAN \cite{campello2015hierarchical} on these reductions, generating groupings for these strains.
 
-We used TreeKnit \cite{barrat2022treeknit} to define the phylogenetically accurate clades for the analysis.
-TreeKnit greedily walks through the HA and NA trees looking for groups of strains that most likely share a common ancestor in both trees.
-It infers ancestral reassortment graphs (ARG) from two segment trees, finding groups of strains that descend from the same reassortment events and splitting strains into different groups when it finds a topological inconsistency between the trees.
-
-For any two segment trees, TreeKnit can output the Maximum Clade Compatibility (MCCs) for every strain, creating groupings that are phylogenetically the clades that these strains would be most compatible in.
-
 We use Variation of Information (VI) in order to assess the groupings found using HDBSCAN from each embedding against these MCC groupings to quantify the accuracy of our approach.
+
+\subsection*{Assessment of recombination in SARS-CoV-2 populations}
 
 \subsection*{Data and software availability}
 
 The entire workflow for our analyses was implemented with Snakemake \cite{molder_2021}.
 We have provided all source code, configuration files, and datasets at \href{https://github.com/blab/cartography}{https://github.com/blab/cartography}.
+Interactive phylogenetic trees and corresponding embeddings for natural populations are available at \href{https://nextstrain.org/community/blab/cartography/}{https://nextstrain.org/community/blab/cartography/}.
 The \textit{pathogen-embed} Python package, available on PyPI, provides command line utilities to calculate distance matrices (\textit{pathogen-distance}), calculate embeddings per method (\textit{pathogen-embed}), and apply hierarchical clustering to embeddings (\textit{pathogen-cluster}).
 
 % Results and Discussion can be combined.
