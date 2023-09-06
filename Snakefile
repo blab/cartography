@@ -78,6 +78,7 @@ rule pathogens:
         *rules.seasonal_flu_test.input,
         *rules.seasonal_flu_reassortment.input,
         *rules.sarscov2.input,
+        *rules.sarscov2_test.input,
 
 # Include rules for the manuscript.
 include: "docs/Snakefile"

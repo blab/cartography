@@ -1,3 +1,18 @@
+rule sarscov2_test:
+    input:
+        expand("docs/figures/sarscov2-test-embeddings-by-{clade_membership}-clade.html", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        expand("docs/figures/sarscov2-test-embeddings-by-{clade_membership}-clade.png", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        expand("docs/figures/sarscov2-test-embeddings-by-cluster-vs-{clade_membership}.html", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        expand("docs/figures/sarscov2-test-embeddings-by-cluster-vs-{clade_membership}.png", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        expand("docs/figures/sarscov2-test-pca-explained-variance-for-{clade_membership}.png", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        expand("docs/figures/sarscov2-test-pca-by-{clade_membership}-clade.html", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        expand("docs/figures/sarscov2-test-pca-by-{clade_membership}-clade.png", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        expand("docs/figures/sarscov2-test-mds-by-{clade_membership}-clade.html", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        expand("docs/figures/sarscov2-test-mds-by-{clade_membership}-clade.png", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        "docs/figures/sarscov2-test-euclidean-distance-by-genetic-distance.png",
+        "auspice/cartography_ncov_2022-2023.json",
+        "sars-cov-2-nextstrain-2022-2023/results/recombinant_distances.csv",
+        expand("sars-cov-2-nextstrain/results/mutation_table_for_{clade_membership}.csv", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
 
 rule sarscov2_test_download_filtered_metadata:
     output:
