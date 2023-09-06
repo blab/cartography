@@ -572,7 +572,7 @@ rule sarscov2_scatterplot:
     message: "Creating the scatterplot (PNG, dataframe)"
     input:
         distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
-        embedding = "sars-cov-2-nextstrain/results/cluster_embed_{method}.csv",
+        embedding = "sars-cov-2-nextstrain/results/embed_{method}.csv",
         method_parameters = "simulations/coronavirus-like/moderate-recombination-rate/{method}_parameters.csv",
     output:
         figure = "sars-cov-2-nextstrain/results/scatterplot_{method}.png",
