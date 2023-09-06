@@ -561,7 +561,7 @@ rule sarscov2_test_create_scatterplot_figure:
         scatterplot_tsne = "sars-cov-2-nextstrain-2022-2023/results/scatterplot_t-sne.csv",
         scatterplot_umap = "sars-cov-2-nextstrain-2022-2023/results/scatterplot_umap.csv",
     output:
-        scatterplot = "docs/figures/sarscov2-euclidean-distance-by-genetic-distance.png",
+        scatterplot = "docs/figures/sarscov2-test-euclidean-distance-by-genetic-distance.png",
     conda: "../cartography.yml"
     notebook:
         "../notebooks/2022-09-26-scatterplot-figure.py.ipynb"
