@@ -4,7 +4,7 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - augur=22.4.0
+  - augur=22.0.3
   - mafft=7.486
   - iqtree=2.2.3
   - treetime=0.10.1
