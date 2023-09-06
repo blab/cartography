@@ -332,6 +332,7 @@ This approach follows the same concept from the MDS algorithm itself where optim
 With the approach described above, we tested each method across a range of relevant parameters with all combinations of parameter values.
 For PCA, we tested the number of components between 2 and 6.
 For MDS, we tested the number of components between 2 and 10.
+\jhc{The difference in number of components between PCA and MDS sticks out here. We should use the same number for both or justify using different numbers.}
 For t-SNE, we tested perplexity values of 15, 30, 100, 200, and 300, and we tested learning rates of 100, 200, and 500.
 For UMAP, we tested nearest neighbor values of 25, 50, and 100, and we tested values for the minimum distance that points can be in an embedding of 0.05, 0.1, and 0.25.
 
@@ -445,17 +446,33 @@ The \textit{pathogen-embed} Python package, available on PyPI, provides command 
 
 \subsection*{Simulated populations enable tuning of embedding method parameters}
 
-To understand how well embedding methods could represent genetic relationships between human pathogen viruses, we simulated influenza-like and coronavirus-like populations, created embeddings for each population across a range of method parameters, and identified optimal parameters as those that maximized a linear relationship between genetic distance and Euclidean distance in low-dimensional space (see Methods).
+To understand how well PCA, MDS, t-SNE, and UMAP could represent genetic relationships between human pathogen viruses, we simulated influenza-like and coronavirus-like populations, created embeddings for each population across a range of method parameters, and identified optimal parameters as those that maximized a linear relationship between genetic distance and Euclidean distance in low-dimensional space (see Methods).
+Specifically, we selected parameters that minimized the median of the mean absolute error (MAE) between observed pairwise genetic distances of simulated genomes and predicted genetic distances for those genomes based on their Euclidean distances in each embedding.
+For methods like PCA and MDS where increasing the number of components available to the embedding could lead to overfitting, we selected the maximum number of components beyond which the median MAE did not decrease by more than 1 nucleotide.
+
 For influenza-like populations, the optimal parameters were 2 components for PCA, 3 components for MDS, perplexity of 100 and learning rate of 200 for t-SNE, and nearest neighbors of 100 and minimum distance of 0.25 for UMAP.
+As expected, increasing the number of components for PCA and MDS gradually decreased the median MAEs of their embeddings.
+However, beyond 2 and 3 components, respectively, the reduction in error did not exceed 1 nucleotide.
+This result suggests that there were diminishing returns for the increased complexity of additional components.
+Both t-SNE and UMAP embeddings produced a wide range of errors across all parameter values (the majority between 10 and 20 average mismatches).
+Embeddings from t-SNE appeared robust to variation in parameters, with a slight improvement in median MAE associated with perplexity of 100 and little benefit to any of the learning rate values.
+Similarly, UMAP embeddings were robust to across parameters, with the greatest benefit coming from setting the nearest neighbors greater than 25 and no benefit from changing the minimum distance between points.
+
 The optimal parameters for coronavirus-like populations were nearly the same as those for the influenza-like populations.
 The optimal parameters were 2 components for PCA, 3 for MDS, perplexity of 100 and learning rate of 500 for t-SNE, and nearest neighbors of 100 and minimum distance of 0.05 for UMAP.
+As with influenza-like populations, both PCA and MDS showed diminishing benefits of increasing the number of components.
+Similarly, we observed little improvement in MAEs from varying t-SNE and UMAP parameters.
+The most noticeable improvement came from setting t-SNE's perplexity to 100.
+These results indicate the limits of t-SNE and UMAP to represent global genetic structure, at least across the parameter regimes considered here.
+\jhc{An obvious follow-up question would be whether we can improve MAEs for these methods by increasing components available to them, too.}
 
 We inspected representative embeddings for influenza- and coronavirus-like populations that were produced with the optimal parameters above.
 Simulated genomes collected from the same time period tended to map closer in embedding space (Fig.~\ref{fig:simulated-populations-representative-embeddings}).
 Not all embeddings represented the global continuity between simulated generations, however.
 MDS maintained the greatest continuity between generations for both population types.
-In contrast, PCA, t-SNE, and UMAP placed early and late generations closer together in their embeddings.
+In contrast, PCA, t-SNE, and UMAP occasionally placed early and late generations closer together in their embeddings.
 Both t-SNE and UMAP maintained some global structure, with larger groups of the earliest and latest genomes mapping in separate regions of the embeddings such that one could draw a single line to separate them.
+These qualitative results matched our expectations from the optimization of method parameters above.
 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
