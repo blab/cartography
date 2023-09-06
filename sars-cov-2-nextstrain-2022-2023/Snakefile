@@ -570,24 +570,24 @@ rule sarscov2_test_create_mutation_table:
     input:
         reference = "sars-cov-2-nextstrain/config/reference_sars-cov-2.fasta",
         alignment = "sars-cov-2-nextstrain-2022-2023/data/aligned.fasta",
-        embedding = "sars-cov-2-nextstrain-2022-2023/results/embed_{method}.csv",
+        embedding = "sars-cov-2-nextstrain-2022-2023/results/cluster_embed_{method}_for_{clade_membership}.csv",
     output:
-        table = "sars-cov-2-nextstrain-2022-2023/results/mutation_table_{method}.csv",
+        table = "sars-cov-2-nextstrain-2022-2023/results/mutation_table_{method}_for_{clade_membership}.csv",
     params:
         min_allele_count=10,
         min_allele_frequency=0.5,
     conda: "../cartography.yml"
     benchmark:
-        "benchmarks/sars-cov-2-2022-2023/create_mutation_table_{method}.txt"
+        "benchmarks/sars-cov-2-nextstrain-2022-2023/create_mutation_table_{method}_for_{clade_membership}.txt"
     log:
-        "logs/sars-cov-2-2022-2023/create_mutation_table_{method}.txt"
+        "logs/sars-cov-2-nextstrain-2022-2023/create_mutation_table_{method}_for_{clade_membership}.txt"
     shell:
         """
         python3 notebooks/scripts/cluster_mutation.py \
             --reference-sequence {input.reference} \
             --alignment {input.alignment} \
             --metadata {input.embedding} \
-            --metadata-column {wildcards.method}_label \
+            --metadata-column {wildcards.method}_label_for_{wildcards.clade_membership} \
             --min-allele-count {params.min_allele_count} \
             --min-allele-frequency {params.min_allele_frequency} \
             --output {output.table} 2>&1 | tee {log}
@@ -595,9 +595,9 @@ rule sarscov2_test_create_mutation_table:
 
 rule sarscov2_test_concat_mutation_tables:
     input:
-        mutation_tables=expand("sars-cov-2-nextstrain-2022-2023/results/mutation_table_{method}.csv", method=EMBEDDING_METHODS),
+        mutation_tables=expand("sars-cov-2-nextstrain-2022-2023/results/mutation_table_{method}_for_{{clade_membership}}.csv", method=EMBEDDING_METHODS),
     output:
-        metadata = "sars-cov-2-nextstrain-2022-2023/results/mutation_table.csv",
+        metadata = "sars-cov-2-nextstrain-2022-2023/results/mutation_table_for_{clade_membership}.csv",
     params:
         column = "metadata_column",
     conda: "../cartography.yml"
