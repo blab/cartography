@@ -457,18 +457,6 @@ The \textit{pathogen-embed} Python package, available on PyPI, provides command 
 \label{fig:simulated-populations-representative-embeddings}
 \end{figure}
 
-% Place tables after the first paragraph in which they are cited.
-\begin{table}[!ht]
-%\begin{adjustwidth}{-2.25in}{0in} % Comment out/remove adjustwidth environment if table fits in text column.
-\centering
-\caption{
-  {\bf Accuracy of embedding methods per human pathogenic virus sorted by normalized variation of information (VI) distance.}
-  Threshold refers to the distance threshold used to assign clusters with HDBSCAN.}
-\input{tables/accuracy_table.tex}
-\label{table:accuracy}
-%\end{adjustwidth}
-\end{table}
-
 \subsection*{Embedding clusters recapitulate phylogenetic clades for seasonal influenza A/H3N2}
 
 Seasonal influenza A/H3N2's hemagglutinin (HA) sequences provide an ideal positive control to test dimensionality reduction methods and clustering.
@@ -584,6 +572,18 @@ The scatterplot for PCA (upper left), MDS (upper right), t-SNE (lower left), and
 }
 \label{fig:sars-cov-2-2022-2023-clusters-vs-Nextstrain-clade}
 \end{figure}
+
+% Place tables after the first paragraph in which they are cited.
+\begin{table}[!ht]
+%\begin{adjustwidth}{-2.25in}{0in} % Comment out/remove adjustwidth environment if table fits in text column.
+\centering
+\caption{
+  {\bf Accuracy of embedding methods per human pathogenic virus sorted by normalized variation of information (VI) distance.}
+  Threshold refers to the distance threshold used to assign clusters with HDBSCAN.}
+\input{tables/accuracy_table.tex}
+\label{table:accuracy}
+%\end{adjustwidth}
+\end{table}
 
 \section*{Discussion}
 
