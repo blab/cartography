@@ -610,6 +610,43 @@ rule sarscov2_test_concat_mutation_tables:
             --output {output.metadata}
         """
 
+rule sarscov2_test_get_distances_between_recombinant_and_parental_lineages:
+    input:
+        lineages="sars-cov-2-nextstrain-2022-2023/config/recombinant_and_parental_lineages.csv",
+        metadata="sars-cov-2-nextstrain-2022-2023/data/metadata.tsv",
+        embedding="sars-cov-2-nextstrain-2022-2023/results/embed_{method}.csv",
+    output:
+        distances="sars-cov-2-nextstrain-2022-2023/results/recombinant_distances_for_{method}.csv",
+    params:
+        method=lambda wildcards: EMBEDDING_NAME_BY_METHOD[wildcards.method],
+        lineage_column="Nextclade_pango",
+    log:
+        "logs/sars-cov-2-nextstrain-2022-2023/get_distances_between_recombinant_and_parental_lineages_{method}.txt"
+    shell:
+        """
+        python3 sars-cov-2-nextstrain-2022-2023/scripts/get_distances_between_recombinant_and_parental_lineages.py \
+            --lineages {input.lineages} \
+            --metadata {input.metadata} \
+            --embedding {input.embedding} \
+            --method {params.method} \
+            --lineage-column {params.lineage_column} \
+            --output {output.distances} 2>&1 | tee {log}
+        """
+
+rule sarscov2_test_concat_recombinant_distances:
+    input:
+        distances=expand("sars-cov-2-nextstrain-2022-2023/results/recombinant_distances_for_{method}.csv", method=EMBEDDING_METHODS),
+    output:
+        distances="sars-cov-2-nextstrain-2022-2023/results/recombinant_distances.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.distances} \
+            --separator ',' \
+            --output {output.distances}
+        """
+
 rule sarscov2_test_create_notebook_docs:
     input:
         colors="notebooks/config/color_schemes.tsv",

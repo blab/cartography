@@ -96,4 +96,8 @@ if __name__ == '__main__':
             print(f"Could not find enough samples to compare all three lineages: {parental_A}, {parental_B}, and {recombinant_X}")
 
     # Save average pairwise distances to a table.
-    pd.DataFrame(lineage_distances).to_csv(args.output, float_format="%.4f")
+    pd.DataFrame(lineage_distances).to_csv(
+        args.output,
+        index=False,
+        float_format="%.4f",
+    )

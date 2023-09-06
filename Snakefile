@@ -14,6 +14,13 @@ EMBEDDING_METHODS = [
     "umap"
 ]
 
+EMBEDDING_NAME_BY_METHOD = {
+    "pca": "PCA",
+    "mds": "MDS",
+    "t-sne": "t-SNE",
+    "umap": "UMAP",
+}
+
 DISTANCE_THRESHOLDS = [
     0.0,
     0.5,
