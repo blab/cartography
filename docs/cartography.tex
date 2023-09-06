@@ -429,7 +429,12 @@ Lower VI values in the HA/NA clusters than HA-only clusters indicated better clu
 
 \subsection*{Assessment of recombination in SARS-CoV-2 populations}
 
-\jhc{TKTK.}
+To assess the ability of embedding methods to detect recombination in late SARS-CoV-2 populations (2022-2023), we calculated the Euclidean distances in low-dimensional space between the 10 known recombinant lineages and their respective parental lineages described in ``Selection of natural virus population data'' above.
+Given that we optimized each method's parameters to maximize a linear relationship between genetic and Euclidean distance, we expected embeddings to place recombinant lineages between their parental lineages, reflecting the intermediate genetic state of the recombinants.
+For a recombinant lineage $X$ and its parental lineages $A$ and $B$, we calculated the average pairwise Euclidean distance, $D$, between samples in $A$ and $B$, $A$ and $X$, and $B$ and $X$.
+We identified lineages that mapped properly as those for which $D(A, X) < D(A, B)$ and $D(B, X) < D(A, B)$.
+We also identified lineages for which the recombinant lineage placed closer to at least one parent than the distance between the parents.
+Note that we used the original uncollapsed ``Nextclade pango'' annotations to identify samples in each lineage, as these were the lineage names used to include recombinant samples in the analysis and define known relationships between recombinant and parental lineages.
 
 \subsection*{Data and software availability}
 
