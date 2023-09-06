@@ -4,10 +4,10 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - augur=22.0.3
+  - augur=22.4.0
   - mafft=7.486
-  - iqtree=2.1.4-beta
-  - treetime=0.8.2
+  - iqtree=2.2.3
+  - treetime=0.10.1
   - pip=21.1.3
   - seaborn=0.11.1
   - altair=5.0.1
@@ -27,7 +27,7 @@ dependencies:
   - python-chromedriver-binary=92.0.4515.43.0
   - reportlab=3.5.68
   - wget=1.20.3
-  - snakemake=7.14.0
+  - snakemake=7.32.3
   - openjdk=11
   - tsv-utils=2.2.0
   - csvtk=0.25.0
