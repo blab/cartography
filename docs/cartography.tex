@@ -334,9 +334,6 @@ For PCA, we tested the number of components between 2 and 6.
 For MDS, we tested the number of components between 2 and 10.
 For t-SNE, we tested perplexity values of 15, 30, 100, 200, and 300, and we tested learning rates of 100, 200, and 500.
 For UMAP, we tested nearest neighbor values of 25, 50, and 100, and we tested values for the minimum distance that points can be in an embedding of 0.05, 0.1, and 0.25.
-For influenza-like populations, the optimal parameters were 2 components for PCA, 3 components for MDS, perplexity of 100 and learning rate of 200 for t-SNE, and nearest neighbors of 100 and minimum distance of 0.25 for UMAP.
-The optimal parameters for coronavirus-like populations were nearly the same as those for the influenza-like populations.
-The optimal parameters were 2 components for PCA, 3 for MDS, perplexity of 100 and learning rate of 500 for t-SNE, and nearest neighbors of 100 and minimum distance of 0.05 for UMAP.
 
 \subsection*{Selection of natural virus population data}
 
@@ -448,12 +445,25 @@ The \textit{pathogen-embed} Python package, available on PyPI, provides command 
 
 \subsection*{Simulated populations enable tuning of embedding method parameters}
 
+To understand how well embedding methods could represent genetic relationships between human pathogen viruses, we simulated influenza-like and coronavirus-like populations, created embeddings for each population across a range of method parameters, and identified optimal parameters as those that maximized a linear relationship between genetic distance and Euclidean distance in low-dimensional space (see Methods).
+For influenza-like populations, the optimal parameters were 2 components for PCA, 3 components for MDS, perplexity of 100 and learning rate of 200 for t-SNE, and nearest neighbors of 100 and minimum distance of 0.25 for UMAP.
+The optimal parameters for coronavirus-like populations were nearly the same as those for the influenza-like populations.
+The optimal parameters were 2 components for PCA, 3 for MDS, perplexity of 100 and learning rate of 500 for t-SNE, and nearest neighbors of 100 and minimum distance of 0.05 for UMAP.
+
+We inspected representative embeddings for influenza- and coronavirus-like populations that were produced with the optimal parameters above.
+Simulated genomes collected from the same time period tended to map closer in embedding space (Fig.~\ref{fig:simulated-populations-representative-embeddings}).
+Not all embeddings represented the global continuity between simulated generations, however.
+MDS maintained the greatest continuity between generations for both population types.
+In contrast, PCA, t-SNE, and UMAP placed early and late generations closer together in their embeddings.
+Both t-SNE and UMAP maintained some global structure, with larger groups of the earliest and latest genomes mapping in separate regions of the embeddings such that one could draw a single line to separate them.
+
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/simulated-populations-representative-embeddings.png}
 \caption{{\bf Representative embeddings for simulated populations using optimal parameters per pathogen (rows) and embedding method (columns).}
   Each panel represents an embedding method for a single replicate population for the corresponding pathogen type.
-  Each point represents a simulated genome colored by its generation with darker values representing later generations.}
+  Each point represents a simulated genome colored by its generation with darker values representing later generations.
+  The MDS embedding shows the first two of three total dimensions.}
 \label{fig:simulated-populations-representative-embeddings}
 \end{figure}
 
