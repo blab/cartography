@@ -15,7 +15,7 @@ rule sarscov2:
         "docs/figures/sarscov2-euclidean-distance-by-genetic-distance.png",
         "docs/figures/sarscov2-pc1-vs-bases-missing.png",
         "auspice/cartography_ncov_2020-2022.json",
-        expand("sars-cov-2-nextstrain/results/mutation_table_for_{clade_membership}.csv", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS)
+        expand("sars-cov-2-nextstrain/results/mutation_table_for_{clade_membership}.csv", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
 
 rule sarscov2_download_filtered_metadata:
     output:
