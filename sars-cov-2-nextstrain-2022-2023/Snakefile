@@ -12,7 +12,7 @@ rule sarscov2_test:
         "docs/figures/sarscov2-test-euclidean-distance-by-genetic-distance.png",
         "auspice/cartography_ncov_2022-2023.json",
         "sars-cov-2-nextstrain-2022-2023/results/recombinant_distances.csv",
-        expand("sars-cov-2-nextstrain/results/mutation_table_for_{clade_membership}.csv", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        expand("sars-cov-2-nextstrain-2022-2023/results/mutation_table_for_{clade_membership}.csv", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
 
 rule sarscov2_test_download_filtered_metadata:
     output:
