@@ -240,6 +240,7 @@ rule simulations_summarize_grid_search:
         score_by_mds_parameters = "simulations/{virus}-like/{recombination_rate}/score_by_mds_parameters.pdf",
         score_by_tsne_parameters = "simulations/{virus}-like/{recombination_rate}/score_by_t-sne_parameters.pdf",
         score_by_umap_parameters = "simulations/{virus}-like/{recombination_rate}/score_by_umap_parameters.pdf",
+        scores_by_parameters = "simulations/{virus}-like/{recombination_rate}/scores_by_parameters.pdf",
         summary_score_by_method = "simulations/{virus}-like/{recombination_rate}/summary_scores_by_method.csv",
     conda: "../cartography.yml"
     log:
