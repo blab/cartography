@@ -5,6 +5,13 @@ SIMULATION_METHOD_PARAMETERS = Paramspace(
         dtype=str,
     )
 )
+
+# Filter the first 10 years of simulated populations.
+# For influenza-like populations, 200 generations = 1 year.
+SIMULATION_BURNIN_GENERATIONS_INFLUENZA = 2000
+# For coronavirus-like populations, 30 generations = 1 year.
+SIMULATION_BURNIN_GENERATIONS_CORONAVIRUS = 300
+
 SIMULATION_RECOMBINATION_RATES = ["moderate-recombination-rate"]
 SIMULATION_REASSORTMENT_RATES = ["no-reassortment"]
 SIMULATION_REPLICATES = list(range(1, 6))
@@ -66,7 +73,7 @@ rule simulations_filter:
         # Filter the first 10 years of simulated populations.
         # For coronavirus-like populations, 30 generations = 1 year.
         # For influenza-like populations, 200 generations = 1 year.
-        minimum_generations=lambda wildcards: 300 if wildcards.virus == "coronavirus" else 2000
+        minimum_generations=lambda wildcards: SIMULATION_BURNIN_GENERATIONS_CORONAVIRUS if wildcards.virus == "coronavirus" else SIMULATION_BURNIN_GENERATIONS_INFLUENZA
     shell:
         """
         augur filter \
@@ -286,4 +293,125 @@ rule simulations_aggregate_all_grid_search_summaries:
         python3 notebooks/scripts/concatenate_tables.py \
             --tables {input.tables} \
             --output {output.table}
+        """
+
+rule simulations_select_representative_population:
+    input:
+        filtered="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/filtered.fasta",
+        metadata="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/metadata.tsv",
+    output:
+        filtered="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/representative/filtered.fasta",
+        metadata="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/representative/metadata.tsv",
+    conda: "../cartography.yml"
+    log:
+        "logs/simulations_{virus}_select_representative_{recombination_rate}_{replicate}.txt"
+    params:
+        # Select the first N years of simulated populations corresponding to a
+        # single train/test time period. Note that burn-in has already been
+        # removed, so the maximum generation to keep is the number of burn-in
+        # generations plus the number we want in output.
+        max_generations=lambda wildcards: SIMULATION_BURNIN_GENERATIONS_CORONAVIRUS + SIMULATION_TRAIN_TEST_SIZE_CORONAVIRUS if wildcards.virus == "coronavirus" else SIMULATION_BURNIN_GENERATIONS_INFLUENZA + SIMULATION_TRAIN_TEST_SIZE_INFLUENZA
+    shell:
+        """
+        augur filter \
+            --sequences {input.filtered} \
+            --metadata {input.metadata} \
+            --query "(generation < {params.max_generations})" \
+            --output-sequences {output.filtered} \
+            --output-metadata {output.metadata} 2>&1 | tee {log}
+        """
+
+rule simulations_representative_embed_pca:
+    input:
+        alignment="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/representative/filtered.fasta",
+        parameters="simulations/{virus}-like/{recombination_rate}/pca_parameters.csv",
+    output:
+        dataframe="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/representative/embed_pca.csv",
+    params:
+        random_seed = RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-embed \
+            --alignment {input.alignment} \
+            --embedding-parameters {input.parameters} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            pca
+        """
+
+rule simulations_representative_create_distance_matrix:
+    input:
+        alignment="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/representative/filtered.fasta",
+    output:
+        distances="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/representative/distance_matrix.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-distance \
+            --alignment {input.alignment} \
+            --output {output.distances}
+        """
+
+rule simulations_representative_embed_mds:
+    input:
+        alignment="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/representative/filtered.fasta",
+        distance_matrix="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/representative/distance_matrix.csv",
+        parameters = "simulations/{virus}-like/{recombination_rate}/mds_parameters.csv",
+    output:
+        dataframe="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/representative/embed_mds.csv",
+    params:
+        random_seed = RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-embed \
+            --alignment {input.alignment} \
+            --distance-matrix {input.distance_matrix} \
+            --embedding-parameters {input.parameters} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            mds
+        """
+
+rule simulations_representative_embed_tsne:
+    input:
+        alignment="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/representative/filtered.fasta",
+        distance_matrix="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/representative/distance_matrix.csv",
+        parameters = "simulations/{virus}-like/{recombination_rate}/t-sne_parameters.csv",
+    output:
+        dataframe="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/representative/embed_t-sne.csv",
+    params:
+        random_seed = RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-embed \
+            --alignment {input.alignment} \
+            --distance-matrix {input.distance_matrix} \
+            --embedding-parameters {input.parameters} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            t-sne
+        """
+
+rule simulations_representative_embed_umap:
+    input:
+        alignment="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/representative/filtered.fasta",
+        distance_matrix="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/representative/distance_matrix.csv",
+        parameters = "simulations/{virus}-like/{recombination_rate}/umap_parameters.csv",
+    output:
+        dataframe="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/representative/embed_umap.csv",
+    params:
+        random_seed = RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-embed \
+            --alignment {input.alignment} \
+            --distance-matrix {input.distance_matrix} \
+            --embedding-parameters {input.parameters} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            umap
         """

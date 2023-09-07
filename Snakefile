@@ -55,6 +55,7 @@ wildcard_constraints:
     ha_concatenated="(ha|na|concatenated)",
     ha_concat="(ha|concatenated)",
     clade_membership="(Nextstrain_clade|Nextclade_pango|Nextclade_pango_collapsed)",
+    replicate="\d+",
 
 # Define final outputs for the workflow.
 rule all:
