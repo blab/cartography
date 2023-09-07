@@ -451,20 +451,30 @@ Specifically, we selected parameters that minimized the median of the mean absol
 For methods like PCA and MDS where increasing the number of components available to the embedding could lead to overfitting, we selected the maximum number of components beyond which the median MAE did not decrease by more than 1 nucleotide.
 
 For influenza-like populations, the optimal parameters were 2 components for PCA, 3 components for MDS, perplexity of 100 and learning rate of 200 for t-SNE, and nearest neighbors of 100 and minimum distance of 0.25 for UMAP.
-As expected, increasing the number of components for PCA and MDS gradually decreased the median MAEs of their embeddings.
+As expected, increasing the number of components for PCA and MDS gradually decreased the median MAEs of their embeddings (\nameref{S1_Fig_simulated_flu_errors} A and B).
 However, beyond 2 and 3 components, respectively, the reduction in error did not exceed 1 nucleotide.
 This result suggests that there were diminishing returns for the increased complexity of additional components.
-Both t-SNE and UMAP embeddings produced a wide range of errors across all parameter values (the majority between 10 and 20 average mismatches).
-Embeddings from t-SNE appeared robust to variation in parameters, with a slight improvement in median MAE associated with perplexity of 100 and little benefit to any of the learning rate values.
-Similarly, UMAP embeddings were robust to across parameters, with the greatest benefit coming from setting the nearest neighbors greater than 25 and no benefit from changing the minimum distance between points.
+Both t-SNE and UMAP embeddings produced a wide range of errors (the majority between 10 and 20 average mismatches) across all parameter values (\nameref{S1_Fig_simulated_flu_errors} C and D).
+Embeddings from t-SNE appeared robust to variation in parameters, with a slight improvement in median MAE associated with perplexity of 100 and little benefit to any of the learning rate values (\nameref{S1_Fig_simulated_flu_errors} C).
+Similarly, UMAP embeddings were robust across the range of tested parameters, with the greatest benefit coming from setting the nearest neighbors greater than 25 and no benefit from changing the minimum distance between points (\nameref{S1_Fig_simulated_flu_errors} D).
+
+% TODO: remove supporting information figures in final submission; figures must be uploaded separately from the manuscript.
+\begin{figure}[!h]
+  \includegraphics[width=\columnwidth]{figures/simulated-influenza-like-with-no-reassortment-scores-by-parameters.png}
+\end{figure}
 
 The optimal parameters for coronavirus-like populations were nearly the same as those for the influenza-like populations.
 The optimal parameters were 2 components for PCA, 3 for MDS, perplexity of 100 and learning rate of 500 for t-SNE, and nearest neighbors of 100 and minimum distance of 0.05 for UMAP.
-As with influenza-like populations, both PCA and MDS showed diminishing benefits of increasing the number of components.
-Similarly, we observed little improvement in MAEs from varying t-SNE and UMAP parameters.
-The most noticeable improvement came from setting t-SNE's perplexity to 100.
+As with influenza-like populations, both PCA and MDS showed diminishing benefits of increasing the number of components (\nameref{S2_Fig_simulated_coronavirus_errors} A and B).
+Similarly, we observed little improvement in MAEs from varying t-SNE and UMAP parameters (\nameref{S2_Fig_simulated_coronavirus_errors} C and D).
+The most noticeable improvement came from setting t-SNE's perplexity to 100 (\nameref{S2_Fig_simulated_coronavirus_errors} C).
 These results indicate the limits of t-SNE and UMAP to represent global genetic structure, at least across the parameter regimes considered here.
 \jhc{An obvious follow-up question would be whether we can improve MAEs for these methods by increasing components available to them, too.}
+
+% TODO: remove supporting information figures in final submission; figures must be uploaded separately from the manuscript.
+\begin{figure}[!h]
+\includegraphics[width=\columnwidth]{figures/simulated-coronavirus-like-with-moderate-recombination-rate-scores-by-parameters.png}
+\end{figure}
 
 We inspected representative embeddings for influenza- and coronavirus-like populations that were produced with the optimal parameters above.
 Simulated genomes collected from the same time period tended to map closer in embedding space (Fig.~\ref{fig:simulated-populations-representative-embeddings}).
@@ -623,6 +633,13 @@ TBD.
 \section*{Supporting information}
 
 % Include only the SI item label in the paragraph heading. Use the \nameref{label} command to cite SI items in the text.
+\paragraph*{S1 Fig.}
+\label{S1_Fig_simulated_flu_errors}
+{\bf Distribution of mean absolute errors (MAE) between observed and predicted pairwise genetic distances per embedding method parameters for simulated influenza-like populations.} Each panel shows boxplots of MAEs for a specific embedding method (PCA, MDS, t-SNE, and UMAP) and a given combination of method parameters. Boxplots reflect median, upper and lower quartiles, and the range of values.
+
+\paragraph*{S2 Fig.}
+\label{S2_Fig_simulated_coronavirus_errors}
+{\bf Distribution of mean absolute errors (MAE) between observed and predicted pairwise genetic distances per embedding method parameters for simulated coronavirus-like populations.} Each panel shows boxplots of MAEs for a specific embedding method (PCA, MDS, t-SNE, and UMAP) and a given combination of method parameters. Boxplots reflect median, upper and lower quartiles, and the range of values.
 
 \section*{Acknowledgments}
 TBD.
