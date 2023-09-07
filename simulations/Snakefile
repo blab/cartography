@@ -236,7 +236,7 @@ rule simulations_summarize_grid_search:
         mds_parameters = "simulations/{virus}-like/{recombination_rate}/mds_parameters.csv",
         tsne_parameters = "simulations/{virus}-like/{recombination_rate}/t-sne_parameters.csv",
         umap_parameters = "simulations/{virus}-like/{recombination_rate}/umap_parameters.csv",
-        scores_by_parameters = "simulations/{virus}-like/{recombination_rate}/scores_by_parameters.pdf",
+        scores_by_parameters = "docs/figures/simulated-{virus}-like-with-{recombination_rate}-scores-by-parameters.png",
         summary_score_by_method = "simulations/{virus}-like/{recombination_rate}/summary_scores_by_method.csv",
     conda: "../cartography.yml"
     log:

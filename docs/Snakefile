@@ -28,6 +28,8 @@ rule concat_HDBSCAN_tables:
 rule manuscript_pdf:
     input:
         *rules.pathogens.input,
+        "docs/figures/simulated-influenza-like-with-no-reassortment-scores-by-parameters.png",
+        "docs/figures/simulated-coronavirus-like-with-moderate-recombination-rate-scores-by-parameters.png",
         manuscript="docs/cartography.tex",
         bibliography="docs/cartography.bib",
         accuracy_table="docs/tables/accuracy_table.tex",
