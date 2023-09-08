@@ -1,6 +1,21 @@
 {
-    "title": "Seasonal influenza A/H3N2 phylogeny from 2016-2018",
+    "title": "Seasonal influenza A/H3N2 HA phylogeny from 2016-2018",
     "colorings": [
+        {
+            "key": "gt",
+            "title": "Genotype",
+            "type": "categorical"
+        },
+        {
+            "key": "num_date",
+            "title": "Date",
+            "type": "continuous"
+        },
+        {
+            "key": "clade_membership",
+            "title": "Clade",
+            "type": "categorical"
+        },
         {
             "key": "pca_label",
             "title": "PCA cluster",
@@ -22,165 +37,66 @@
             "type": "categorical"
         },
         {
-            "key": "gt",
-            "title": "Genotype",
-            "type": "categorical"
-        },
-        {
-            "key": "num_date",
-            "title": "Date",
-            "type": "continuous"
-        },
-        {
-            "key": "clade_membership",
-            "title": "Clade",
-            "type": "categorical"
-        },
-        {
-            "key": "region",
-            "title": "Region",
-            "type": "categorical"
-        },
-        {
-            "key": "country",
-            "title": "Country",
-            "type": "categorical"
-        },
-		{
-            "key": "pca1",
-            "title": "PCA1",
-            "type": "categorical"
-        },
-		{
             "key": "pca1",
             "title": "PCA1",
             "type": "continuous"
         },
-		{
+        {
             "key": "pca2",
             "title": "PCA2",
             "type": "continuous"
         },
-		{
-            "key": "pca3",
-            "title": "PCA3",
+        {
+            "key": "mds1",
+            "title": "MDS 1",
             "type": "continuous"
         },
-		{
-            "key": "pca4",
-            "title": "PCA4",
+        {
+            "key": "mds2",
+            "title": "MDS 2",
             "type": "continuous"
         },
-		{
+        {
+            "key": "mds3",
+            "title": "MDS 3",
+            "type": "continuous"
+        },
+        {
             "key": "tsne_x",
             "title": "t-sne_x",
             "type": "continuous"
         },
-		{
+        {
             "key": "tsne_y",
             "title": "t-sne_y",
             "type": "continuous"
         },
-		{
+        {
             "key": "umap_x",
             "title": "UMAP_x",
             "type": "continuous"
         },
-		{
+        {
             "key": "umap_y",
             "title": "UMAP_y",
             "type": "continuous"
-        },
-		{
-            "key": "pca5",
-            "title": "PCA5",
-            "type": "continuous"
-        },
-		{
-            "key": "pca6",
-            "title": "PCA6",
-            "type": "continuous"
-        },
-		{
-            "key": "pca7",
-            "title": "PCA7",
-            "type": "continuous"
-        },
-		{
-            "key": "pca8",
-            "title": "PCA8",
-            "type": "continuous"
-        },
-		{
-            "key": "pca9",
-            "title": "PCA9",
-            "type": "continuous"
-        },
-		{
-            "key": "pca10",
-            "title": "PCA10",
-            "type": "continuous"
-        },
-		{
-            "key": "mds3",
-            "title": "MDS3",
-            "type": "continuous"
-        },
-		{
-            "key": "mds4",
-            "title": "MDS4",
-            "type": "continuous"
-        },
-		{
-            "key": "mds5",
-            "title": "MDS5",
-            "type": "continuous"
-        },
-		{
-            "key": "mds6",
-            "title": "MDS6",
-            "type": "continuous"
-        },
-		{
-            "key": "mds7",
-            "title": "MDS7",
-            "type": "continuous"
-        },
-		{
-            "key": "mds8",
-            "title": "MDS8",
-            "type": "continuous"
-        },
-		{
-            "key": "mds9",
-            "title": "MDS9",
-            "type": "continuous"
-        },
-		{
-            "key": "mds10",
-            "title": "MDS10",
-            "type": "continuous"
         }
-
     ],
     "display_defaults": {
         "color_by": "clade_membership",
         "distance_measure": "num_date"
     },
-    "maintainer": [
-        "author names (displayed in footer)",
-        "author URL"
+    "maintainers": [
+        {"name": "Sravani Nanduri"},
+        {"name": "John Huddleston"}
     ],
     "filters": [
       "pca_label",
       "mds_label",
       "t-sne_label",
       "umap_label",
-      "clade_membership",
-      "region",
-      "country"
+      "clade_membership"
     ],
-
     "panels": [
         "tree",
         "entropy"
