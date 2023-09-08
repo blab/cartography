@@ -267,7 +267,7 @@ These methods have been applied to SNPs from human genomes \cite{diaz-papkovich_
 Although these methods are commonly used for qualitative studies of evolutionary relationships, few studies have attempted to quantify patterns observed in the resulting embeddings and no studies have investigated the value of applying these methods to human pathogenic viruses.
 To this end, we tuned and validated the performance of PCA, MDS, t-SNE, and UMAP with genomes from simulated influenza-like and coronavirus-like populations and then applied these methods to natural populations of seasonal influenza virus A/H3N2 and SARS-CoV-2.
 These natural viruses are highly relevant as major causes of global human mortality, common subjects of real-time genomic epidemiology, and representatives of reassortant and recombinant human pathogens.
-For each combination of virus and embedding method, we quantified the relationship between pairwise sequence and Euclidean embedding distances, identified clusters of closely-related genomes in embedding space, and evaluated the accuracy of clusters compared to genetic groups defined by experts and biologically-informed models.
+For each combination of virus and embedding method, we quantified the relationship between pairwise genetic and Euclidean embedding distances, identified clusters of closely-related genomes in embedding space, and evaluated the accuracy of clusters compared to genetic groups defined by experts and biologically-informed models.
 Finally, we tested the ability of these methods to identify reassortment of seasonal influenza virus hemagglutinin (HA) and neuraminidase (NA) segments and recombination in SARS-CoV-2 genomes.
 These results inform our recommendations for future applications of these methods including which are most effective for specific problems in genomic epidemiology and which parameters researchers should use for each method.
 
@@ -478,13 +478,13 @@ These results indicate the limits of t-SNE and UMAP to represent global genetic 
 \caption*{{\bf S2 Fig. Distribution of mean absolute errors (MAE) between observed and predicted pairwise genetic distances per embedding method parameters for simulated coronavirus-like populations.}}
 \end{figure}
 
-We inspected representative embeddings for influenza- and coronavirus-like populations that were produced with the optimal parameters above.
-Simulated genomes collected from the same time period tended to map closer in embedding space (Fig.~\ref{fig:simulated-populations-representative-embeddings}).
-Not all embeddings represented the global continuity between simulated generations, however.
+We inspected representative embeddings based on the optimal parameters above for the first four years of influenza- and coronavirus-like populations.
+Simulated genomes collected from the same time period tended to map closer in embedding space, indicating the maintenance of ``local'' genetic structure in the embeddings (Fig.~\ref{fig:simulated-populations-representative-embeddings}).
+Most embeddings also represented some form of global structure, with later generations mapping closer to intermediate generations than earlier generations.
 MDS maintained the greatest continuity between generations for both population types (\nameref{S3_Fig_simulated_representative_mds_embeddings}).
-In contrast, PCA, t-SNE, and UMAP occasionally placed early and late generations closer together in their embeddings.
-Both t-SNE and UMAP maintained some global structure, with larger groups of the earliest and latest genomes mapping in separate regions of the embeddings such that one could draw a single line to separate them.
-These qualitative results matched our expectations from the optimization of method parameters above.
+In contrast, PCA, t-SNE, and UMAP all demonstrated tighter clusters of samples separated by potentially arbitrary space.
+The UMAP embedding for the coronavirus-like samples was most extreme in this respect, with a tight cluster of early samples placing far away from all other samples in the embedding including those from nearby generations.
+These qualitative results matched our expectations based on the optimization of method parameters to maximize linear relationships between genetic and Euclidean distances.
 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
