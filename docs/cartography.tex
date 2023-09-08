@@ -504,24 +504,23 @@ These qualitative results matched our expectations based on the optimization of 
 
 \subsection*{Embedding clusters recapitulate phylogenetic clades for seasonal influenza A/H3N2}
 
-Seasonal influenza A/H3N2's hemagglutinin (HA) sequences provide an ideal positive control to test dimensionality reduction methods and clustering.
-A/H3N2's HA protein evolves rapidly, accumulating amino acid mutations that enable escape from adaptive immunity in human populations \cite{flu-review}.
+Seasonal influenza A/H3N2's hemagglutinin (HA) sequences provide an ideal positive control to test embedding methods and clustering in low-dimensional space.
+A/H3N2's HA protein evolves rapidly, accumulating amino acid mutations that enable escape from adaptive immunity in human populations \cite{Petrova2018}.
 These mutations produce distinct phylogenetic clades that represent potentially different antigenic phenotypes.
-The World Health Organization (WHO) Global Influenza Surveillance and Response System (GISRS) regularly sequences genomes of circulating influenza lineages \cite{who-gisrs} and submits these sequences to public INSDC databases like NCBI's GenBank \cite{insdc}.
-These factors, coupled with HA's relatively short gene size of 1,701 nucleotides, facilitate real-time genomic epidemiology of A/H3N2 \cite{nextflu,nextstrain} and rapid analysis by the embedding methods we wanted to evaluate.
+The World Health Organization (WHO) Global Influenza Surveillance and Response System (GISRS) regularly sequences genomes of circulating influenza lineages \cite{Hay2018} and submits these sequences to public INSDC databases like NCBI's GenBank \cite{Arita2021}.
+These factors, coupled with HA's relatively short gene size of 1,701 nucleotides, facilitate real-time genomic epidemiology of A/H3N2 \cite{Neher2015} and rapid analysis by the embedding methods we wanted to evaluate.
 
-We identified \jhc{NNN} A/H3N2 HA sequences from NCBI's GenBank database (methods) spanning from January 2016 to January 2020.
-To evaluate the optimal parameters for each embedding method and avoid overfitting to specific datasets, we partitioned these data into a training dataset from 2016--2018 (N=\jhc{NNN} sequences) and a test dataset from 2018--2020 (N=\jhc{NNN} sequences).
-We first analyzed the training data with Nextstrain's seasonal influenza workflow that creates a multiple sequence alignment, infers a time-resolved phylogenetic tree, and assigns clade labels to each sequence based on our own expert-defined clade annotations \cite{nextstrain,seasonal-flu,augur}.
-We applied each embedding method to the multiple sequence alignment, identified clusters in the embeddings with HDBSCAN \cite{hdbscan}, and evaluated the accuracy of cluster classifications compared to known clade annotations.
-We applied this general approach in an exhaustive grid search to identify the optimal parameters for each combination of embedding method and HDBSCAN (see Methods).
-
+We first applied each embedding method to the ``early'' H3N2 data collected from 2016 through 2018, colored samples by previously defined phylogenetic clades, and inspected the placement of these samples in the embeddings and corresponding phylogeny.
 All four embedding methods qualitatively recapitulated clade-level groupings observed in the phylogeny (Fig~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}).
-Strains from the same clade generally grouped tightly together in PCA, t-SNE, and UMAP embeddings.
-While MDS followed this general pattern, it also produced separate pairs of A3 and A4 clusters that did not correspond to meaningful subclades.
-All of the embedding methods clearly delineated larger phylogenetic clades into separate spaces (e.g., A1 and A2) and, with the exception of t-SNE, placed related subclades closer together (e.g., A2 and A2/re or the A1b subclades).
-The t-SNE embedding placed distantly related pairs of clades like 3c3.A and A2 as close together as closely-related clades like A2 and its subclade A2/re.
-These results suggest that t-SNE maintains both local and global structure, but that our interpretation of the absolute distance between points in these embeddings cannot be linear.
+Samples from the same clade generally grouped tightly together.
+Most embedding methods also clearly delineated larger phylogenetic clades, placing clades A1, A2, A3, A4, and 3c3.A into separate locations in the embeddings.
+One exception to this pattern was the PCA embedding which grouped samples from clades A3 and A4 into the same space.
+Despite maintaining local and broader global structure, not all embeddings captured intermediate genetic structure.
+For example, clade A1b descended from clade A1 and diversified into the smaller subclades A1b/131K, A1b/135K, and A1b/135N.
+All methods placed A1b far from its ancestor A1, but PCA, t-SNE, and UMAP all placed descendants of A1b into tight clusters together.
+MDS was the only method that clearly separated the descendants of A1b into their own clusters.
+The t-SNE embedding also created separate clusters of the three descendants, but these clusters all placed so close together in the embedding space that, without previously defined clade labels, we would have visually grouped these samples into a single cluster.
+These results qualitatively replicate the patterns we observed in embeddings for simulated influenza-like populations (Fig~\ref{fig:simulated-populations-representative-embeddings}).
 
 % For figure citations, please use "Fig" instead of "Figure".
 
@@ -534,16 +533,17 @@ Reduced dimensionality embeddings of genetic sequences into two dimensions by PC
 \label{fig:seasonal-influenza-h3n2-ha-embeddings}
 \end{figure}
 
-To quantify the apparent maintenance of local and global structure in these embeddings, we calculated the relationship between pairwise genetic distance of genomes and pairwise Euclidean distance of those genomes in each embedding.
-All four methods maintained a linear relationship between genetic and Euclidean distances for genomes that differed by no more than $\approx$20 nucleotides (Fig~\ref{fig:seasonal-influenza-h3n2-ha-pairwise-distances}).
-However, PCA and MDS were the only methods that consistently maintained that linearity as genetic distance increased (Pearson's $R^{2} = 0.767 \pm 0.000$  and $0.849 \pm 0.000$, respectively).
-In contrast, the relationship between genetic and Euclidean distance was nonlinear in t-SNE (Pearson's $R^{2} = 0.393 \pm 0.001$) and UMAP (Pearson's $R^{2} = 0.397 \pm 0.000$) embeddings.
-Genomes that differed by more than $\approx$20 nucleotides were equally as likely to map close together as far apart in these embeddings.
+To quantify the apparent maintenance of local and global structure by all four embedding methods, we calculated the relationship between pairwise genetic and Euclidean distance of samples in each embedding.
+All four methods maintained a linear relationship between genetic and Euclidean distances for samples that differed by no more than $\approx$10 nucleotides (Fig~\ref{fig:seasonal-influenza-h3n2-ha-pairwise-distances}).
+However, only MDS consistently maintained that linearity as genetic distance increased (Pearson's $R^{2} = 0.942$).
+In contrast, we observed a nonlinear relationship for samples with more genetic differences in PCA (Pearson's $R^{2} = 0.689$), t-SNE (Pearson's $R^{2} = 0.502$), and UMAP (Pearson's $R^{2} = 0.447$) embeddings.
+Although the most genetically distant samples mapped far from each other in all of these embeddings, samples with intermediate distances could map much closer or farther than expected by a linear model.
+In t-SNE and UMAP embeddings, some pairs of samples with intermediate distances of 30-40 nucleotides mapped farther apart than pairs of samples with much greater distances.
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png}
-\caption{{\bf The mapping between Euclidean and Genetic distance assess the strength of both the local and global structure of the embedding recapitulation.}
-The scatterplot for PCA (upper left), MDS (upper right), t-SNE (lower left), and UMAP (lower right) consistently exhibit linear relationships for pairs of strains that differ by around 20 nucleotides.}
+\caption{{\bf Relationship between pairwise genetic distance and Euclidean distance in embedding space, representing the ability of embedding methods to capture local and global genetic structure.}
+Embeddings with PCA (upper left), MDS (upper right), t-SNE (lower left), and UMAP (lower right) consistently exhibit linear relationships for pairs of strains that differ by no more than 10 nucleotides.}
 \label{fig:seasonal-influenza-h3n2-ha-pairwise-distances}
 \end{figure}
 
