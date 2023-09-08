@@ -429,7 +429,8 @@ rule simulations_representative_plot:
         coronavirus_tsne="simulations/coronavirus-like/moderate-recombination-rate/replicate-4/representative/embed_t-sne.csv",
         coronavirus_umap="simulations/coronavirus-like/moderate-recombination-rate/replicate-4/representative/embed_umap.csv",
     output:
-        figure="docs/figures/simulated-populations-representative-embeddings.png",
+        all_embeddings="docs/figures/simulated-populations-representative-embeddings.png",
+        mds_embeddings="docs/figures/simulated-populations-representative-mds-embeddings.png",
     conda: "../cartography.yml"
     log:
         "logs/simulations_representative_plot.py.ipynb"

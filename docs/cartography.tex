@@ -479,7 +479,7 @@ These results indicate the limits of t-SNE and UMAP to represent global genetic 
 We inspected representative embeddings for influenza- and coronavirus-like populations that were produced with the optimal parameters above.
 Simulated genomes collected from the same time period tended to map closer in embedding space (Fig.~\ref{fig:simulated-populations-representative-embeddings}).
 Not all embeddings represented the global continuity between simulated generations, however.
-MDS maintained the greatest continuity between generations for both population types.
+MDS maintained the greatest continuity between generations for both population types (\nameref{S3_Fig_simulated_representative_mds_embeddings}).
 In contrast, PCA, t-SNE, and UMAP occasionally placed early and late generations closer together in their embeddings.
 Both t-SNE and UMAP maintained some global structure, with larger groups of the earliest and latest genomes mapping in separate regions of the embeddings such that one could draw a single line to separate them.
 These qualitative results matched our expectations from the optimization of method parameters above.
@@ -492,6 +492,12 @@ These qualitative results matched our expectations from the optimization of meth
   Each point represents a simulated genome colored by its generation with darker values representing later generations.
   The MDS embedding shows the first two of three total dimensions.}
 \label{fig:simulated-populations-representative-embeddings}
+\end{figure}
+
+\begin{figure}[!h]
+% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
+\includegraphics[width=\columnwidth]{figures/simulated-populations-representative-mds-embeddings.png}
+\caption*{{\bf S3 Fig. Representative MDS embeddings for simulated populations using optimal parameters per pathogen (rows) and showing all three components.}}
 \end{figure}
 
 \subsection*{Embedding clusters recapitulate phylogenetic clades for seasonal influenza A/H3N2}
@@ -640,6 +646,10 @@ TBD.
 \paragraph*{S2 Fig.}
 \label{S2_Fig_simulated_coronavirus_errors}
 {\bf Distribution of mean absolute errors (MAE) between observed and predicted pairwise genetic distances per embedding method parameters for simulated coronavirus-like populations.} Each panel shows boxplots of MAEs for a specific embedding method (PCA, MDS, t-SNE, and UMAP) and a given combination of method parameters. Boxplots reflect median, upper and lower quartiles, and the range of values.
+
+\paragraph*{S3 Fig.}
+\label{S3_Fig_simulated_representative_mds_embeddings}
+{\bf Representative MDS embeddings for simulated populations using optimal parameters per pathogen (rows) and showing all three components.}
 
 \section*{Acknowledgments}
 TBD.
