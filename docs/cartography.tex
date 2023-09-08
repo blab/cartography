@@ -309,7 +309,7 @@ As in that previous study, we scaled the number of simulated generations per rea
 We simulated coronavirus-like populations as previously described for human seasonal coronaviruses with genomes of 21,285 bp \cite{Muller2022}.
 For the current study, we assigned 30 generations per real year to obtain mutation rates similar to the $8 \times 10^{-4}$ substitutions per site per year estimated for SARS-CoV-2 \cite{Rambaut2020}.
 To account for the effect of recombination on optimal method parameters, we simulated populations with a recombination rate of $10^{-5}$ events per site per year based on human seasonal coronaviruses for which recombination rates are well-studied \cite{Muller2022,Carabelli2023}.
-We calibrated the overall recombination probability in SANTA-SIM such that the number of observed recombination events per year matched the expected number for human seasonal coronaviruses (0.3 per year).
+We calibrated the overall recombination probability in SANTA-SIM such that the number of observed recombination events per year matched the expected number for human seasonal coronaviruses (0.3 per year) \cite{Muller2022}.
 To assist with this calibration of recombination events per year, we modified the SANTA-SIM source code to emit a boolean status of ``is recombinant'' for each sampled genome.
 This change allowed us to identify recombinant genomes by their metadata in downstream analyses and calculate the number of recombination events observed per year.
 For each replicate population, we sampled 15 genomes every generation for 1,700 generations (or approximately 56 years of real time).
@@ -352,6 +352,13 @@ For the late dataset, we used the same even sampling by space and time to select
 In addition to these genomes, we sampled at most 20 genomes per Nextclade pango lineage for 10 known recombinant lineages (XAY, XBB, XBB.1, XBC, XBF, XBL, XC, XD, XE, XF, and XG) and their corresponding parental lineages (AY.29, AY.4, AY.45, B.1.1.7, B.1.617, BA.1, BA.2, BA.2.75, BA.4, BA.5, BA.5.2.3, BJ.1, BM.1.1.1, and CJ.1) as defined by \href{https://libguides.mskcc.org/SARS2/recombination}{https://libguides.mskcc.org/SARS2/recombination}.
 With these additional genomes, the late SARS-CoV-2 dataset included 2,072 total genomes.
 
+\subsection*{Evaluation of linear relationships between genetic distance and Euclidean distance in embeddings}
+
+To evaluate the biological interpretability of distances between samples in low-dimensional embeddings, we plotted the pairwise Euclidean distance between samples in each embedding against the corresponding genetic distance between the same samples.
+We calculated Euclidean distance using all components of the given embedding (e.g., 2 components for PCA, t-SNE, and UMAP and 3 components for MDS).
+For each embedding, we fit a linear model between Euclidean and genetic distance and calculated the squared Pearson's correlation coefficient, $R^{2}$.
+The distance plots provide a qualitative assessment of each embedding's local and global structure relative to a biologically meaningful scale of genetic distance, while the linear models and correlation coefficients quantify the global structure in the embeddings.
+
 \subsection*{Phylogenetic analysis}
 
 For each natural population described above, we created an annotated, time-scaled phylogenetic tree.
@@ -374,7 +381,7 @@ TreeKnit identified 259 MCCs for 1,286 samples with an average of 6 samples per 
 We filtered these MCCs to keep only those with at least 10 samples, resulting in 28 MCCs that represented 1,286 samples (78\%) with an average of 46 samples per MCC.
 
 For SARS-CoV-2, we used both expert-defined ``Nextstrain clades'' \cite{Hodcroft2020,Bedford2021,Roemer2022} and computationally-defined Pangolin lineages \cite{OToole2021} provided by the Nextclade pango implementation as ``Nextclade pango'' annotations.
-Nextstrain clade definitions represent the World Health Organization's variants of concern and other phylogenetic clades that have reached a minimum global and regional frequencies and growth rates.
+Nextstrain clade definitions represent the World Health Organization's variants of concern and other phylogenetic clades that have reached minimum global and regional frequencies and growth rates.
 Pangolin lineages represent a combination of lineages assigned by a machine learning model (\href{https://cov-lineages.org/resources/pangolin/pangolearn.html}{pangoLEARN}) and expert-curated lineages (\href{https://github.com/cov-lineages/pango-designation}{https://github.com/cov-lineages/pango-designation}) and must contain at least 5 samples with an unambiguous evolutionary event.
 As such, Nextstrain clades represent a much coarser genetic resolution than Pangolin lineages.
 Additionally, Pangolin lineages produced by recombination receive a lineage name prefixed by an ``X'', while Nextstrain clades do not explicitly reflect recombination events.
@@ -382,14 +389,7 @@ Additionally, Pangolin lineages produced by recombination receive a lineage name
 Since Pangolin lineages can represent much smaller genetic groups than are practically useful, we collapsed Pango lineages with fewer than 10 samples in our analysis into their parental lineages using the pango\_aliasor tool (\href{https://github.com/corneliusroemer/pango_aliasor}{https://github.com/corneliusroemer/pango\_aliasor}).
 Specifically, we counted the number of samples per lineage, sorted lineages in ascending order by count, and collapsed each lineage with a count less than 10 into its parental lineage in the count-sorted order.
 This approach allowed small lineages to aggregate with other small parental lineages and meet the 10-sample threshold.
-We used these ``collapsed Nextclade pango'' lineages for subsequent analyses.
-
-\subsection*{Evaluation of linear relationships between genetic distance and Euclidean distance in embeddings}
-
-To evaluate the biological interpretability of distances between samples in low-dimensional embeddings, we plotted the pairwise Euclidean distance between samples in each embedding against the corresponding genetic distance between the same samples.
-We calculated Euclidean distance using all components of the given embedding (e.g., 2 components for PCA, t-SNE, and UMAP and 3 components for MDS).
-For each embedding, we fit a linear model between Euclidean and genetic distance and calculated the squared Pearson's correlation coefficient, $R^{2}$.
-The distance plots provide a qualitative assessment of each embedding's local and global structure relative to a biologically meaningful scale of genetic distance, while the linear models and correlation coefficients quantify the global structure in the embeddings.
+We used these ``Nextclade pango collapsed'' lineages for subsequent analyses.
 
 \subsection*{Clustering of samples in embeddings}
 
