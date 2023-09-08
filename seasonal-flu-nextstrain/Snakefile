@@ -5,9 +5,8 @@ rule seasonal_flu_training:
         "docs/figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png",
         "docs/figures/flu-2016-2018-ha-embeddings-by-cluster.png",
         "docs/figures/flu-2016-2018-ha-embeddings-by-cluster.html",
-        "docs/figures/flu-2016-2018-pca-by-clade.html",
-        "docs/figures/flu-2016-2018-pca-by-clade.png",
-        "docs/figures/flu-2016-2018-pca-explained-variance.png",
+        "docs/figures/flu-2016-2018-mds-by-clade.html",
+        "docs/figures/flu-2016-2018-mds-by-clade.png",
         "auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json",
         "seasonal-flu-nextstrain/results/mutation_table.csv",
 
@@ -657,9 +656,8 @@ rule seasonal_flu_training_create_notebook_docs:
         fullChart = "docs/figures/flu-2016-2018-ha-embeddings-by-clade.html",
         fullChartHDBSCANPNG = "docs/figures/flu-2016-2018-ha-embeddings-by-cluster.png",
         fullChartHDBSCAN = "docs/figures/flu-2016-2018-ha-embeddings-by-cluster.html",
-        PCA_Supplement = "docs/figures/flu-2016-2018-pca-by-clade.html",
-        PCA_Supplement_PNG = "docs/figures/flu-2016-2018-pca-by-clade.png",
-        Explained_variance_PCA = "docs/figures/flu-2016-2018-pca-explained-variance.png",
+        MDS_Supplement = "docs/figures/flu-2016-2018-mds-by-clade.html",
+        MDS_Supplement_PNG = "docs/figures/flu-2016-2018-mds-by-clade.png",
     conda: "../cartography.yml"
     notebook:
         "2022-03-29-final-figures.py.ipynb"
