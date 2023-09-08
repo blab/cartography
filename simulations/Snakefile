@@ -415,3 +415,23 @@ rule simulations_representative_embed_umap:
             --output-dataframe {output.dataframe} \
             umap
         """
+
+rule simulations_representative_plot:
+    input:
+        influenza_metadata="simulations/influenza-like/no-reassortment/replicate-4/representative/metadata.tsv",
+        influenza_pca="simulations/influenza-like/no-reassortment/replicate-4/representative/embed_pca.csv",
+        influenza_mds="simulations/influenza-like/no-reassortment/replicate-4/representative/embed_mds.csv",
+        influenza_tsne="simulations/influenza-like/no-reassortment/replicate-4/representative/embed_t-sne.csv",
+        influenza_umap="simulations/influenza-like/no-reassortment/replicate-4/representative/embed_umap.csv",
+        coronavirus_metadata="simulations/coronavirus-like/moderate-recombination-rate/replicate-4/representative/metadata.tsv",
+        coronavirus_pca="simulations/coronavirus-like/moderate-recombination-rate/replicate-4/representative/embed_pca.csv",
+        coronavirus_mds="simulations/coronavirus-like/moderate-recombination-rate/replicate-4/representative/embed_mds.csv",
+        coronavirus_tsne="simulations/coronavirus-like/moderate-recombination-rate/replicate-4/representative/embed_t-sne.csv",
+        coronavirus_umap="simulations/coronavirus-like/moderate-recombination-rate/replicate-4/representative/embed_umap.csv",
+    output:
+        figure="docs/figures/simulated-populations-representative-embeddings.png",
+    conda: "../cartography.yml"
+    log:
+        "logs/simulations_representative_plot.py.ipynb"
+    notebook:
+        "2023-09-07-plot-representative-simulation-embeddings.py.ipynb"
