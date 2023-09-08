@@ -576,15 +576,14 @@ As expected, the clusters for each method generally corresponded to larger phylo
 Clusters from UMAP most accurately captured expert clade assignments (normalized VI=0.07) with 6 clusters.
 These clusters captured broader phylogenetic clades (A1, A1b, A2, A3, 3c2.A, and 3c3.A) but failed to distinguish between smaller or less divergent clades (A4 and A1b's descendants).
 Clusters from t-SNE performed nearly as well (normalized VI=0.08) with 11 clusters.
-Like UMAP, the t-SNE clusters captured broader clades including the A4 clade that UMAP clustered with 3c2.A while also failing to distinguish among A1b and its subclades.
-Interestingly, t-SNE clusters also included 3 clusters not found in any other embeddings.
-The largest of these (cluster 3) corresponded to a subclade of A2 that was previously associated with a reassortment to a different neuraminidase background \cite{Potter2019}.
+These clusters also captured broader clades (including the A4 clade that UMAP clustered with 3c2.A) and failed to distinguish among A1b and its subclades.
+Interestingly, t-SNE clusters included 3 biologically-relevant clusters that were not found in any other embeddings.
+The largest of these (cluster 3 with 289 samples) corresponded to a subclade of A2 that was previously associated with a reassortment to a different neuraminidase background \cite{Potter2019}.
 Although cluster 7 contained only 22 samples, it descended from a subclade of A1a and its samples carried substitutions at known epitope sites (HA1:140M and HA1:193S).
 Cluster 8 descended from clade A1 with 29 samples and contained 14 samples with a substitution at another known epitope site (HA1:135K).
-Although these clades never reached high global frequencies, they represented biologically relevant samples that would have been of interest to contemporary researchers.
 The 7 MDS clusters were nearly twice as far from expert clades as UMAP clusters (normalized VI=0.13), suggesting that MDS's ability to accurately represent genetic distance did not correspond to high-resolution clusters.
-MDS clusters capture more of the known clades, but they also collect all clades descended from A1 into the same cluster and suffer from more unassigned samples than the other embeddings.
-The PCA embedding only produced 3 clusters with the lowest accuracy (normalized VI=0.18).
+MDS clusters captured more of the known clades, but they also collected all clades descended from A1 into the same cluster and suffered from more unassigned samples than the other embeddings.
+The PCA embedding produced the lowest accuracy (normalized VI=0.18) and fewest clusters (N=3).
 Despite the appearance of distinct clusters associated with clades in the PCA embedding (Fig~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}), each component of the PCA embedding appeared to form only two clusters corresponding to some of the most distantly related and ancestral clades (3c2.A, 3c3.A, and A2).
 These results indicate that nonlinear embeddings of t-SNE and UMAP could be better-suited for clustering and classification than linear embeddings from PCA and MDS.
 
