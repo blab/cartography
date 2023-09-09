@@ -55,7 +55,7 @@ rule seasonal_flu_test_filter:
         sequences = "seasonal-flu-nextstrain-2018-2020/results/filtered.fasta"
     params:
         group_by = "country year month",
-        subsample_max_sequences = 2000,
+        sequences_per_group = 25,
         random_seed = RANDOM_SEED,
         min_date = 2018.25,
         max_date = 2020.75
@@ -68,7 +68,7 @@ rule seasonal_flu_test_filter:
             --exclude {input.exclude} \
             --output {output.sequences} \
             --group-by {params.group_by} \
-            --subsample-max-sequences {params.subsample_max_sequences} \
+            --sequences-per-group {params.sequences_per_group} \
             --subsample-seed {params.random_seed} \
             --min-date {params.min_date} \
             --max-date {params.max_date}
