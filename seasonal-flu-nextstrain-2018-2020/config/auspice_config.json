@@ -63,22 +63,22 @@
         },
         {
             "key": "tsne_x",
-            "title": "t-sne_x",
+            "title": "t-SNE 1",
             "type": "continuous"
         },
         {
             "key": "tsne_y",
-            "title": "t-sne_y",
+            "title": "t-SNE 2",
             "type": "continuous"
         },
         {
             "key": "umap_x",
-            "title": "UMAP_x",
+            "title": "UMAP 1",
             "type": "continuous"
         },
         {
             "key": "umap_y",
-            "title": "UMAP_y",
+            "title": "UMAP 2",
             "type": "continuous"
         }
     ],
