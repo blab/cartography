@@ -40,10 +40,6 @@ rule seasonal_flu_reassortment_files:
 seasonal_flu_reassortment_files = rules.seasonal_flu_reassortment_files.params
 
 rule seasonal_flu_reassortment_split:
-    message:
-        """
-        Split the ha and na file into separate files
-        """
     input:
         sequences =  "ha-na-nextstrain/data/ncbi-h3n2-ha-na.fa",
     output:
@@ -58,7 +54,6 @@ rule seasonal_flu_reassortment_split:
         """
 
 rule seasonal_flu_reassortment_parse:
-    message: "Parsing fasta into sequences and metadata"
     input:
         sequences = "ha-na-nextstrain/results/ncbi-h3n2-{segment}.fasta"
     output:
@@ -77,10 +72,6 @@ rule seasonal_flu_reassortment_parse:
         """
 
 rule seasonal_flu_reassortment_deduplicate_sequences:
-    message:
-        """
-        Deduplicating sequences
-        """
     input:
         sequences = "ha-na-nextstrain/results/sequences_{segment}.fasta"
     output:
@@ -94,11 +85,6 @@ rule seasonal_flu_reassortment_deduplicate_sequences:
         """
 
 rule seasonal_flu_reassortment_filter:
-    message:
-        """
-        Filtering to
-          - excluding strains in {input.exclude}
-        """
     input:
         sequences = "ha-na-nextstrain/results/deduplicated_sequences_{segment}.fasta",
         metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
@@ -116,7 +102,6 @@ rule seasonal_flu_reassortment_filter:
         """
 
 rule seasonal_flu_reassortment_pair_ha_strains:
-    message: "making ha strains same as na strains"
     input:
         sequences_ha = "ha-na-nextstrain/results/filtered_ha.fasta",
         sequences_na = "ha-na-nextstrain/results/filtered_na.fasta",
@@ -132,11 +117,6 @@ rule seasonal_flu_reassortment_pair_ha_strains:
         """
 
 rule seasonal_flu_reassortment_align:
-    message:
-        """
-        Aligning sequences
-          - filling gaps with N
-        """
     input:
         sequences = "ha-na-nextstrain/results/paired_{segment}.fasta",
         reference = "ha-na-nextstrain/config/reference_h3n2_{segment}.gb"
@@ -151,13 +131,10 @@ rule seasonal_flu_reassortment_align:
             --reference-sequence {input.reference} \
             --output {output.alignment} \
             --fill-gaps \
-            --remove-reference \
             --nthreads {threads}
         """
 
 rule seasonal_flu_reassortment_concat:
-    message:
-        """putting the na strains with the ha strains"""
     input:
         sequence_ha = "ha-na-nextstrain/results/aligned_ha.fasta",
         sequence_na = "ha-na-nextstrain/results/aligned_na.fasta",
@@ -172,33 +149,26 @@ rule seasonal_flu_reassortment_concat:
         """
 
 rule seasonal_flu_reassortment_tree:
-    message: "Building tree"
     input:
         alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta"
     output:
         tree = "ha-na-nextstrain/results/tree_raw_{segment}.nwk"
     conda: "../cartography.yml"
-    threads: 4
     params:
-        tree_builder_args="-czb"
+        tree_builder_args="-czb -bb 1000 -bnni -nt AUTO",
+    threads: 4
     shell:
         """
         augur tree \
             --alignment {input.alignment} \
             --method iqtree \
             --nthreads {threads} \
+            --override-default-args \
             --tree-builder-args="{params.tree_builder_args}" \
             --output {output.tree}
         """
 
 rule seasonal_flu_reassortment_refine:
-    message:
-        """
-        Refining tree
-          - estimate timetree
-          - use {params.coalescent} coalescent timescale
-          - estimate {params.date_inference} node dates
-        """
     input:
         tree = rules.seasonal_flu_reassortment_tree.output.tree,
         alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta",
@@ -229,7 +199,6 @@ rule seasonal_flu_reassortment_refine:
         """
 
 rule seasonal_flu_reassortment_ancestral:
-    message: "Reconstructing ancestral sequences and mutations"
     input:
         tree = rules.seasonal_flu_reassortment_refine.output.tree,
         alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta"
@@ -248,7 +217,6 @@ rule seasonal_flu_reassortment_ancestral:
         """
 
 rule seasonal_flu_reassortment_translate:
-    message: "Translating amino acid sequences"
     input:
         tree = rules.seasonal_flu_reassortment_refine.output.tree,
         node_data = rules.seasonal_flu_reassortment_ancestral.output.node_data,
@@ -266,7 +234,6 @@ rule seasonal_flu_reassortment_translate:
         """
 
 rule seasonal_flu_reassortment_clades:
-    message: " Labeling clades as specified in ha-na-nextstrain/config/clades.tsv"
     input:
         tree = rules.seasonal_flu_reassortment_refine.output.tree,
         aa_muts = rules.seasonal_flu_reassortment_translate.output.node_data,
@@ -281,26 +248,6 @@ rule seasonal_flu_reassortment_clades:
             --mutations {input.nuc_muts} {input.aa_muts} \
             --clades {input.clades} \
             --output {output.clade_data}
-        """
-
-rule seasonal_flu_reassortment_traits:
-    message: "Inferring ancestral traits for {params.columns!s}"
-    input:
-        tree = rules.seasonal_flu_reassortment_refine.output.tree,
-        metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
-    output:
-        node_data = "ha-na-nextstrain/results/traits_{segment}.json",
-    params:
-        columns = "region country"
-    conda: "../cartography.yml"
-    shell:
-        """
-        augur traits \
-            --tree {input.tree} \
-            --metadata {input.metadata} \
-            --output {output.node_data} \
-            --columns {params.columns} \
-            --confidence
         """
 
 rule seasonal_flu_reassortment_find_mccs:
@@ -466,7 +413,6 @@ rule seasonal_flu_reassortment_cluster_with_optimal_parameters:
         """
 
 rule seasonal_flu_reassortment_create_node_output:
-    message: "creates node output that is used by augur to create the phylogenies"
     input:
         dataframe = "ha-na-nextstrain/results/cluster_embed_{method}_{ha_concatenated}.csv"
     output:
@@ -480,7 +426,6 @@ rule seasonal_flu_reassortment_create_node_output:
         """
 
 rule seasonal_flu_reassortment_rename_columns:
-    message: "renaming columns for the concat so it can be exported to aupice (concat and ha colorbys)"
     input:
         clades = "ha-na-nextstrain/results/cluster_embed_{method}_concatenated.json",
         embedding = "ha-na-nextstrain/results/cluster_embed_{method}_concatenated.csv"
@@ -501,12 +446,10 @@ rule seasonal_flu_reassortment_rename_columns:
         """
 
 rule seasonal_flu_reassortment_export:
-    message: "Exporting data files for for auspice"
     input:
         tree = rules.seasonal_flu_reassortment_refine.output.tree,
         metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
         branch_lengths = rules.seasonal_flu_reassortment_refine.output.node_data,
-        traits = rules.seasonal_flu_reassortment_traits.output.node_data,
         nt_muts = rules.seasonal_flu_reassortment_ancestral.output.node_data,
         aa_muts = rules.seasonal_flu_reassortment_translate.output.node_data,
         mccs = "ha-na-nextstrain/results/mccs.json",
@@ -522,13 +465,12 @@ rule seasonal_flu_reassortment_export:
         augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.traits} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} {input.embeddings_concat} {input.mccs} \
+            --node-data {input.branch_lengths} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} {input.embeddings_concat} {input.mccs} \
             --auspice-config {input.auspice_config} \
             --output {output.auspice_tree}
         """
 
 rule seasonal_flu_reassortment_tree_to_table:
-    message: "creating a table of node data values from the tree attributes"
     input:
         tree = rules.seasonal_flu_reassortment_export.output.auspice_tree
     output:
@@ -545,7 +487,6 @@ rule seasonal_flu_reassortment_tree_to_table:
         """
 
 rule seasonal_flu_reassortment_create_distance_dataframe:
-    message: "creating distance dataframe for the ha and ha+na for animation"
     input:
         dataframe_pca = "ha-na-nextstrain/results/cluster_embed_pca_ha.csv",
         dataframe_mds = "ha-na-nextstrain/results/cluster_embed_mds_ha.csv",

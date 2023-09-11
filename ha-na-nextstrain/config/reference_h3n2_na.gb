@@ -2,7 +2,7 @@ LOCUS       CY113679                1436 bp    DNA              VRL 04-APR-2012
 DEFINITION  Influenza A virus (A/Beijing/32/1992(H3N2)) neuraminidase (NA) gene,
             complete cds.
 ACCESSION   CY113679
-VERSION     CY113679.1
+VERSION     A/Beijing/32/1992
 KEYWORDS    .
 SOURCE      Influenza A virus (A/Beijing/32/1992(H3N2))
   ORGANISM  Influenza A virus (A/Beijing/32/1992(H3N2))
