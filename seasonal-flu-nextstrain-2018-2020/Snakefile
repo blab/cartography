@@ -518,8 +518,12 @@ rule seasonal_flu_test_create_notebook_docs:
         accuracy_table="seasonal-flu-nextstrain-2018-2020/results/full_HDBSCAN_metadata.csv",
         explained_variance_pca = "seasonal-flu-nextstrain-2018-2020/results/explained_variance_pca_sequences.csv",
     output:
+        fullChartPNG = "docs/figures/flu-2018-2020-ha-embeddings-by-clade.png",
+        fullChart = "docs/figures/flu-2018-2020-ha-embeddings-by-clade.html",
         fullChartHDBSCAN20182020="docs/figures/flu-2018-2020-ha-embeddings-by-cluster.html",
         fullChartHDBSCANPNG20182020="docs/figures/flu-2018-2020-ha-embeddings-by-cluster.png",
+        MDS_Supplement = "docs/figures/flu-2018-2020-mds-by-clade.html",
+        MDS_Supplement_PNG = "docs/figures/flu-2018-2020-mds-by-clade.png",
     conda: "../cartography.yml"
     notebook:
         "2021-03-09Notebook.ipynb"
