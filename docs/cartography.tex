@@ -448,7 +448,7 @@ The \textit{pathogen-embed} Python package, available on PyPI, provides command 
 
 \subsection*{Simulated populations enable tuning of embedding method parameters}
 
-To understand how well PCA, MDS, t-SNE, and UMAP could represent genetic relationships between human pathogen viruses, we simulated influenza-like and coronavirus-like populations, created embeddings for each population across a range of method parameters, and identified optimal parameters as those that maximized a linear relationship between genetic distance and Euclidean distance in low-dimensional space (see Methods).
+To understand how well PCA, MDS, t-SNE, and UMAP could represent genetic relationships between human pathogen viruses under well-defined evolutionary conditions, we simulated influenza-like and coronavirus-like populations, created embeddings for each population across a range of method parameters, and identified optimal parameters as those that maximized a linear relationship between genetic distance and Euclidean distance in low-dimensional space (see Methods).
 Specifically, we selected parameters that minimized the median of the mean absolute error (MAE) between observed pairwise genetic distances of simulated genomes and predicted genetic distances for those genomes based on their Euclidean distances in each embedding.
 For methods like PCA and MDS where increasing the number of components available to the embedding could lead to overfitting, we selected the maximum number of components beyond which the median MAE did not decrease by more than 1 nucleotide.
 
@@ -458,6 +458,7 @@ However, beyond 2 and 3 components, respectively, the reduction in error did not
 This result suggests that there were diminishing returns for the increased complexity of additional components.
 Both t-SNE and UMAP embeddings produced a wide range of errors (the majority between 10 and 20 average mismatches) across all parameter values (\nameref{S1_Fig_simulated_flu_errors} C and D).
 Embeddings from t-SNE appeared robust to variation in parameters, with a slight improvement in median MAE associated with perplexity of 100 and little benefit to any of the learning rate values (\nameref{S1_Fig_simulated_flu_errors} C).
+\jhc{Based on these results, we should consider setting the learning rate to the default for scikit-learn which scales the rate with the input sample size.}
 Similarly, UMAP embeddings were robust across the range of tested parameters, with the greatest benefit coming from setting the nearest neighbors greater than 25 and no benefit from changing the minimum distance between points (\nameref{S1_Fig_simulated_flu_errors} D).
 
 % TODO: remove supporting information figures in final submission; figures must be uploaded separately from the manuscript.
@@ -481,20 +482,21 @@ These results indicate the limits of t-SNE and UMAP to represent global genetic 
 \end{figure}
 
 We inspected representative embeddings based on the optimal parameters above for the first four years of influenza- and coronavirus-like populations.
-Simulated genomes collected from the same time period tended to map closer in embedding space, indicating the maintenance of ``local'' genetic structure in the embeddings (Fig.~\ref{fig:simulated-populations-representative-embeddings}).
+Simulated sequences collected from the same time period tended to map closer in embedding space, indicating the maintenance of ``local'' genetic structure in the embeddings (Fig.~\ref{fig:simulated-populations-representative-embeddings}).
 Most embeddings also represented some form of global structure, with later generations mapping closer to intermediate generations than earlier generations.
 MDS maintained the greatest continuity between generations for both population types (\nameref{S3_Fig_simulated_representative_mds_embeddings}).
 In contrast, PCA, t-SNE, and UMAP all demonstrated tighter clusters of samples separated by potentially arbitrary space.
 The UMAP embedding for the coronavirus-like samples was most extreme in this respect, with a tight cluster of early samples placing far away from all other samples in the embedding including those from nearby generations.
-These qualitative results matched our expectations based on the optimization of method parameters to maximize linear relationships between genetic and Euclidean distances.
+These qualitative results matched our expectations based on how well each method maximized a linear relationship between genetic and Euclidean distances during parameter optimization (\nameref{S1_Fig_simulated_flu_errors} and \nameref{S2_Fig_simulated_coronavirus_errors}).
 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/simulated-populations-representative-embeddings.png}
 \caption{{\bf Representative embeddings for simulated populations using optimal parameters per pathogen (rows) and embedding method (columns).}
   Each panel represents an embedding method for a single replicate population for the corresponding pathogen type.
-  Each point represents a simulated genome colored by its generation with darker values representing later generations.
-  The MDS embedding shows the first two of three total dimensions.}
+  Each point represents a simulated viral sequence colored by its generation with darker values representing later generations.
+  The MDS embedding shows the first two of three total dimensions.
+  \nameref{S3_Fig_simulated_representative_mds_embeddings} shows the full MDS embedding for all components.}
 \label{fig:simulated-populations-representative-embeddings}
 \end{figure}
 
@@ -555,7 +557,7 @@ For each embedding, we assigned cluster labels to each sample with the hierarchi
 HDBSCAN does require definition of a minimum distance that its initial clusters must be from each other to avoid being merged into the same cluster.
 This distance corresponds to the Euclidean distance between clusters in embedding space which varies by method (Fig~\ref{fig:seasonal-influenza-h3n2-ha-pairwise-distances}).
 To find the optimal minimum distance for HDBSCAN clusters of H3N2 HA data, we assigned clusters to each embedding for a range of distance values (0-7) with a step size of 0.5 and calculated the accuracy of clusters at each distance value compared to the Nextstrain clade assignments shown in Fig~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}.
-We selected the distance value per method that minimized the distance between HDBSCAN clusters and clade assignments as measured by the normalized variation of information (VI) metric \cite{meilua2003comparing} (see Methods).
+We selected the minimum distance value per method that minimized the difference between HDBSCAN clusters and clade assignments as measured by the normalized variation of information (VI) metric \cite{meilua2003comparing} (see Methods).
 The optimal minimum distances were 0.5 for PCA, 3.5 for MDS, 2.5 for t-SNE, and 1.5 for UMAP (Table~\ref{table:accuracy}).
 Since Euclidean distances for MDS correspond directly to genetic distances, these results show that clusters must be at least 3.5 nucleotides apart to be considered distinct.
 
@@ -579,10 +581,10 @@ Clusters from t-SNE performed nearly as well (normalized VI=0.08) with 11 cluste
 These clusters also captured broader clades (including the A4 clade that UMAP clustered with 3c2.A) and failed to distinguish among A1b and its subclades.
 Interestingly, t-SNE clusters included 3 biologically-relevant clusters that were not found in any other embeddings.
 The largest of these (cluster 3 with 289 samples) corresponded to a subclade of A2 that was previously associated with a reassortment to a different neuraminidase background \cite{Potter2019}.
-Although cluster 7 contained only 22 samples, it descended from a subclade of A1a and its samples carried substitutions at known epitope sites (HA1:140M and HA1:193S).
-Cluster 8 descended from clade A1 with 29 samples and contained 14 samples with a substitution at another known epitope site (HA1:135K).
+Cluster 7 (N=22 samples) descended from a subclade of A1a and its samples carried substitutions at known epitope sites (HA1:140M and HA1:193S).
+Cluster 8 (N=29 samples) descended from clade A1 and contained 14 samples with a substitution at another known epitope site (HA1:135K).
 The 7 MDS clusters were nearly twice as far from expert clades as UMAP clusters (normalized VI=0.13), suggesting that MDS's ability to accurately represent genetic distance did not correspond to high-resolution clusters.
-MDS clusters captured more of the known clades, but they also collected all clades descended from A1 into the same cluster and suffered from more unassigned samples than the other embeddings.
+MDS clusters captured most of the larger clades (A1, A2, A3, A4, 3c2.A, and 3c3.A), but they also collected A1 and its descendants into the same cluster and suffered from more unassigned samples than the other embeddings.
 The PCA embedding produced the lowest accuracy (normalized VI=0.18) and fewest clusters (N=3).
 Despite the appearance of distinct clusters associated with clades in the PCA embedding (Fig~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}), each component of the PCA embedding appeared to form only two clusters corresponding to some of the most distantly related and ancestral clades (3c2.A, 3c3.A, and A2).
 These results indicate that nonlinear embeddings of t-SNE and UMAP could be better-suited for clustering and classification than linear embeddings from PCA and MDS.
@@ -595,7 +597,8 @@ These results indicate that nonlinear embeddings of t-SNE and UMAP could be bett
 \label{fig:seasonal-influenza-h3n2-ha-2016-2018-clusters}
 \end{figure}
 
-To understand whether these embedding methods could be used to cluster previously unseen genomes for the same virus, we applied each method to the test dataset spanning 2018--2020, clustered genomes in the embedding space with HDBSCAN, and calculated the accuracy of the cluster assignments based on previously defined clades.
+To understand whether these embedding methods and optimal cluster parameters could effectively cluster previously unseen sequences, we applied each method to the ``late'' H3N2 HA dataset (2018--2020), clustered sequences in the embedding space with HDBSCAN using the optimal minimum distance threshold from the ``early'' dataset, and calculated the accuracy of the cluster assignments based on previously defined clades.
+The MDS clusters most accurately captured expert clades (normalized VI=0.06) with 8 clusters.
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/flu-2018-2020-ha-embeddings-by-cluster.png}
