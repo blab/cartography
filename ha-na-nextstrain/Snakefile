@@ -270,7 +270,7 @@ rule seasonal_flu_reassortment_find_mccs:
 
 rule seasonal_flu_reassortment_convert_mccs_to_json:
     input:
-        mccs="ha-na-nextstrain/results/treeknit_results/MCCs.dat",
+        mccs="ha-na-nextstrain/results/treeknit_results/MCCs.json",
     output:
         node_data="ha-na-nextstrain/results/mccs.json",
     conda: "../cartography.yml"
