@@ -168,9 +168,29 @@ rule seasonal_flu_reassortment_tree:
             --output {output.tree}
         """
 
+rule seasonal_flu_reassortment_root_and_prune_tree:
+    input:
+        tree = "ha-na-nextstrain/results/tree_raw_{segment}.nwk",
+    output:
+        tree = "ha-na-nextstrain/results/rooted_tree_raw_{segment}.nwk",
+    conda: "../cartography.yml"
+    params:
+        root="A/Beijing/32/1992",
+        minimum_node_support=1,
+    log:
+        "logs/seasonal_flu_reassortment_root_and_prune_tree_{segment}.txt"
+    shell:
+        """
+        python3 ha-na-nextstrain/scripts/root_and_prune_tree.py \
+            --tree {input.tree} \
+            --root {params.root} \
+            --minimum-node-support {params.minimum_node_support} \
+            --output {output.tree} 2>&1 | tee {log}
+        """
+
 rule seasonal_flu_reassortment_refine:
     input:
-        tree = rules.seasonal_flu_reassortment_tree.output.tree,
+        tree = "ha-na-nextstrain/results/rooted_tree_raw_{segment}.nwk",
         alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta",
         metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
     output:
@@ -182,20 +202,25 @@ rule seasonal_flu_reassortment_refine:
         clock_rate = lambda wildcards: 0.00382 if wildcards.segment == "ha" else 0.00267,
         clock_std_dev = lambda wildcards: 0.000764 if wildcards.segment == "ha" else 0.000534,
     conda: "../cartography.yml"
+    log:
+         "logs/seasonal_flu_reassortment_refine_{segment}.txt"
     shell:
         """
         augur refine \
             --tree {input.tree} \
             --alignment {input.alignment} \
             --metadata {input.metadata} \
-            --output-tree {output.tree} \
-            --output-node-data {output.node_data} \
+            --keep-root \
             --timetree \
+            --use-fft \
+            --stochastic-resolve \
             --coalescent {params.coalescent} \
             --date-confidence \
             --date-inference {params.date_inference} \
             --clock-rate {params.clock_rate} \
-            --clock-std-dev {params.clock_std_dev}
+            --clock-std-dev {params.clock_std_dev} \
+            --output-tree {output.tree} \
+            --output-node-data {output.node_data} 2>&1 | tee {log}
         """
 
 rule seasonal_flu_reassortment_ancestral:
@@ -252,18 +277,19 @@ rule seasonal_flu_reassortment_clades:
 
 rule seasonal_flu_reassortment_find_mccs:
     input:
-        ha_tree="ha-na-nextstrain/results/tree_raw_ha.nwk",
-        na_tree="ha-na-nextstrain/results/tree_raw_na.nwk",
+        ha_tree="ha-na-nextstrain/results/rooted_tree_raw_ha.nwk",
+        na_tree="ha-na-nextstrain/results/rooted_tree_raw_na.nwk",
     output:
-        mccs="ha-na-nextstrain/results/treeknit_results/MCCs.dat",
+        mccs="ha-na-nextstrain/results/treeknit_results/MCCs.json",
     params:
-        gamma=2.5,
+        gamma=2,
     conda: "../cartography.yml"
     shell:
         """
         ~/.julia/bin/treeknit \
             {input.ha_tree} \
             {input.na_tree} \
+            --better-MCCs \
             -o=ha-na-nextstrain/results/treeknit_results \
             -g={params.gamma}
         """
@@ -276,12 +302,14 @@ rule seasonal_flu_reassortment_convert_mccs_to_json:
     conda: "../cartography.yml"
     params:
         min_mcc_size=10,
+    log:
+        "logs/seasonal_flu_reassortment_convert_mccs_to_json.txt"
     shell:
         """
         python3 ha-na-nextstrain/scripts/convert_mccs_to_node_json.py \
             --min-size {params.min_mcc_size} \
             --mccs {input.mccs} \
-            --output {output.node_data}
+            --output {output.node_data} 2>&1 | tee {log}
         """
 
 rule seasonal_flu_reassortment_create_distance_matrix:
@@ -404,7 +432,7 @@ rule seasonal_flu_reassortment_cluster_with_optimal_parameters:
         """
         pathogen-cluster \
             --embedding {input.embedding} \
-            --label-attribute "{wildcards.method}_label" \
+            --label-attribute "{wildcards.method}_{wildcards.ha_concatenated}_label" \
             --min-size {params.min_size} \
             --min-samples {params.min_samples} \
             --distance-threshold "$(csvtk filter2 -f '$method=="{wildcards.method}"' {input.parameters} | csvtk cut -f distance_threshold | csvtk del-header)" \
@@ -425,26 +453,6 @@ rule seasonal_flu_reassortment_create_node_output:
             --output {output.node_data}
         """
 
-rule seasonal_flu_reassortment_rename_columns:
-    input:
-        clades = "ha-na-nextstrain/results/cluster_embed_{method}_concatenated.json",
-        embedding = "ha-na-nextstrain/results/cluster_embed_{method}_concatenated.csv"
-    output:
-        node_data = "ha-na-nextstrain/results/cluster_embed_{method}_concatenated_renamed.json"
-    conda: "../cartography.yml"
-    params:
-        rename_column = "{method}_label_ha_na",
-        differentiator_column = "{method}_label"
-    shell:
-        """
-        python3 ha-na-nextstrain/scripts/rename_columns.py \
-            --clades {input.clades} \
-            --embedding {input.embedding} \
-            --differentiator-column {params.differentiator_column} \
-            --rename-column {params.rename_column} \
-            --output {output.node_data}
-        """
-
 rule seasonal_flu_reassortment_export:
     input:
         tree = rules.seasonal_flu_reassortment_refine.output.tree,
@@ -453,8 +461,8 @@ rule seasonal_flu_reassortment_export:
         nt_muts = rules.seasonal_flu_reassortment_ancestral.output.node_data,
         aa_muts = rules.seasonal_flu_reassortment_translate.output.node_data,
         mccs = "ha-na-nextstrain/results/mccs.json",
-        embeddings = expand("ha-na-nextstrain/results/embed_{embedding}_ha.json", embedding=EMBEDDING_METHODS),
-        embeddings_concat = expand("ha-na-nextstrain/results/embed_{embedding}_concatenated_renamed.json", embedding=EMBEDDING_METHODS),
+        embeddings = expand("ha-na-nextstrain/results/cluster_embed_{embedding}_ha.json", embedding=EMBEDDING_METHODS),
+        embeddings_concat = expand("ha-na-nextstrain/results/cluster_embed_{embedding}_concatenated.json", embedding=EMBEDDING_METHODS),
         auspice_config = seasonal_flu_reassortment_files.auspice_config,
         clades = "ha-na-nextstrain/results/clades_ha.json"
     output:
