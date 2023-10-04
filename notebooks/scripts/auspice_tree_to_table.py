@@ -61,4 +61,4 @@ if __name__ == "__main__":
 
    # Convert records to a data frame and save as a tab-delimited file.
     df = pd.DataFrame(records)
-    df.to_csv(args.output, sep="\t", header=True, index=False, float_format="%.2f")
+    df.to_csv(args.output, sep="\t", header=True, index=False)
