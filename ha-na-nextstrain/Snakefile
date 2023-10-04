@@ -188,19 +188,53 @@ rule seasonal_flu_reassortment_root_and_prune_tree:
             --output {output.tree} 2>&1 | tee {log}
         """
 
+rule seasonal_flu_reassortment_find_mccs:
+    input:
+        ha_tree="ha-na-nextstrain/results/rooted_tree_raw_ha.nwk",
+        na_tree="ha-na-nextstrain/results/rooted_tree_raw_na.nwk",
+    output:
+        mccs="ha-na-nextstrain/results/treeknit_results/MCCs.json",
+        ha_tree="ha-na-nextstrain/results/treeknit_results/rooted_tree_raw_ha_resolved.nwk",
+        na_tree="ha-na-nextstrain/results/treeknit_results/rooted_tree_raw_na_resolved.nwk",
+    params:
+        gamma=2,
+    conda: "../cartography.yml"
+    shell:
+        """
+        ~/.julia/bin/treeknit \
+            {input.ha_tree} \
+            {input.na_tree} \
+            --better-MCCs \
+            -o=ha-na-nextstrain/results/treeknit_results \
+            -g={params.gamma}
+        """
+
+rule seasonal_flu_reassortment_convert_mccs_to_json:
+    input:
+        mccs="ha-na-nextstrain/results/treeknit_results/MCCs.json",
+    output:
+        node_data="ha-na-nextstrain/results/mccs.json",
+    conda: "../cartography.yml"
+    params:
+        min_mcc_size=10,
+    log:
+        "logs/seasonal_flu_reassortment_convert_mccs_to_json.txt"
+    shell:
+        """
+        python3 ha-na-nextstrain/scripts/convert_mccs_to_node_json.py \
+            --min-size {params.min_mcc_size} \
+            --mccs {input.mccs} \
+            --output {output.node_data} 2>&1 | tee {log}
+        """
+
 rule seasonal_flu_reassortment_refine:
     input:
-        tree = "ha-na-nextstrain/results/rooted_tree_raw_{segment}.nwk",
+        tree = "ha-na-nextstrain/results/treeknit_results/rooted_tree_raw_{segment}_resolved.nwk",
         alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta",
         metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
     output:
         tree = "ha-na-nextstrain/results/tree_{segment}.nwk",
         node_data = "ha-na-nextstrain/results/branch_lengths_{segment}.json"
-    params:
-        coalescent = "opt",
-        date_inference = "marginal",
-        clock_rate = lambda wildcards: 0.00382 if wildcards.segment == "ha" else 0.00267,
-        clock_std_dev = lambda wildcards: 0.000764 if wildcards.segment == "ha" else 0.000534,
     conda: "../cartography.yml"
     log:
          "logs/seasonal_flu_reassortment_refine_{segment}.txt"
@@ -211,14 +245,7 @@ rule seasonal_flu_reassortment_refine:
             --alignment {input.alignment} \
             --metadata {input.metadata} \
             --keep-root \
-            --timetree \
-            --use-fft \
-            --stochastic-resolve \
-            --coalescent {params.coalescent} \
-            --date-confidence \
-            --date-inference {params.date_inference} \
-            --clock-rate {params.clock_rate} \
-            --clock-std-dev {params.clock_std_dev} \
+            --keep-polytomies \
             --output-tree {output.tree} \
             --output-node-data {output.node_data} 2>&1 | tee {log}
         """
@@ -273,43 +300,6 @@ rule seasonal_flu_reassortment_clades:
             --mutations {input.nuc_muts} {input.aa_muts} \
             --clades {input.clades} \
             --output {output.clade_data}
-        """
-
-rule seasonal_flu_reassortment_find_mccs:
-    input:
-        ha_tree="ha-na-nextstrain/results/rooted_tree_raw_ha.nwk",
-        na_tree="ha-na-nextstrain/results/rooted_tree_raw_na.nwk",
-    output:
-        mccs="ha-na-nextstrain/results/treeknit_results/MCCs.json",
-    params:
-        gamma=2,
-    conda: "../cartography.yml"
-    shell:
-        """
-        ~/.julia/bin/treeknit \
-            {input.ha_tree} \
-            {input.na_tree} \
-            --better-MCCs \
-            -o=ha-na-nextstrain/results/treeknit_results \
-            -g={params.gamma}
-        """
-
-rule seasonal_flu_reassortment_convert_mccs_to_json:
-    input:
-        mccs="ha-na-nextstrain/results/treeknit_results/MCCs.json",
-    output:
-        node_data="ha-na-nextstrain/results/mccs.json",
-    conda: "../cartography.yml"
-    params:
-        min_mcc_size=10,
-    log:
-        "logs/seasonal_flu_reassortment_convert_mccs_to_json.txt"
-    shell:
-        """
-        python3 ha-na-nextstrain/scripts/convert_mccs_to_node_json.py \
-            --min-size {params.min_mcc_size} \
-            --mccs {input.mccs} \
-            --output {output.node_data} 2>&1 | tee {log}
         """
 
 rule seasonal_flu_reassortment_create_distance_matrix:
@@ -484,7 +474,7 @@ rule seasonal_flu_reassortment_tree_to_table:
     output:
         table = "ha-na-nextstrain/results/table_{segment}.tsv"
     params:
-        attributes = "num_date MCC clade_membership"
+        attributes = "div MCC clade_membership"
     conda: "../cartography.yml"
     shell:
         """
