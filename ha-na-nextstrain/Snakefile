@@ -552,7 +552,7 @@ rule seasonal_flu_reassortment_cluster_accuracy:
             --true-clusters {input.metadata} \
             --true-clusters-column {params.clade_column:q} \
             --predicted-clusters {input.embedding} \
-            --predicted-clusters-column "{wildcards.method}_label" \
+            --predicted-clusters-column "{wildcards.method}_{wildcards.ha_concatenated}_label" \
             --output {output.dataframe}
         """
 
@@ -594,7 +594,7 @@ rule seasonal_flu_reassortment_create_mutation_table:
             --reference-sequence {input.reference} \
             --alignment {input.alignment} \
             --metadata {input.embedding} \
-            --metadata-column {wildcards.method}_label \
+            --metadata-column {wildcards.method}_concatenated_label \
             --min-allele-count {params.min_allele_count} \
             --min-allele-frequency {params.min_allele_frequency} \
             --output {output.table} 2>&1 | tee {log}
