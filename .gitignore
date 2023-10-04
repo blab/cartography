@@ -141,13 +141,14 @@ docs/cartography.blg
 docs/cartography.suppinfo
 
 # Adding gridsearch but not results
-**/zika-nextstrain/results/*
 **/seasonal-flu-nextstrain/results/*
-**/mers-nextstrain/results/*
-**/outlier_analysis/results/*
+**/seasonal-flu-nextstrain-2018-2020/results/*
 **/ha-na-nextstrain/results/*
-**/ha-na-ma-nextstrain/results/*
 **/sars-cov-2-nextstrain/results/*
+**/sars-cov-2-nextstrain-2022-2023/results/*
+
+**/sars-cov-2-nextstrain/data/*
+**/sars-cov-2-nextstrain-2022-2023/data/*
 
 !**/sars-cov-2-nextstrain/results/gridsearch/gridsearch.tsv
 !**/zika-nextstrain/results/gridsearch/gridsearch.tsv
@@ -204,3 +205,6 @@ slurm_logs/
 
 replicate-*/
 benchmarks/
+
+.auctex-auto
+auspice
