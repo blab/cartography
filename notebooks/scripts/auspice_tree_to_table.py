@@ -45,7 +45,13 @@ if __name__ == "__main__":
 
             for attribute in attributes:
                 if attribute in node.node_attrs:
-                    record[attribute] = node.node_attrs[attribute]["value"]
+                    # Most node attributes have a dictionary with their value
+                    # stored by a "value" key, but some core attributes like
+                    # "div" or "accession" are scalar values.
+                    if type(node.node_attrs[attribute]) is dict and "value" in node.node_attrs[attribute]:
+                        record[attribute] = node.node_attrs[attribute]["value"]
+                    else:
+                        record[attribute] = node.node_attrs[attribute]
                 elif attribute in node.branch_attrs:
                     record[attribute] = node.branch_attrs[attribute]["value"]
                 else:
