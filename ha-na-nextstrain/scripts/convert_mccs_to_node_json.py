@@ -31,11 +31,14 @@ if __name__ == '__main__':
 
     mccs = mccs_json["MCC_dict"][selected_mcc_key]["mccs"]
 
+    total_original_mccs = len(mccs)
+    original_mcc_count = 0
     for mcc in mccs:
+        original_mcc_count += 1
         strains = mcc
         total_strains += len(strains)
 
-        if len(strains) >= args.min_size:
+        if original_mcc_count < total_original_mccs and len(strains) >= args.min_size:
             print(f"MCC {total_mccs} has {len(strains)} strains")
             for strain in strains:
                 data[strain] = {
@@ -56,4 +59,4 @@ if __name__ == '__main__':
 
     print(f"Inspected MCCs with {total_strains} total strains.")
     print(f"Annotated {total_mccs} MCCs, totalling {total_strains - skipped_strains} strains ({((total_strains - skipped_strains) / total_strains) * 100:.0f}%).")
-    print(f"Skipped {skipped_mccs} MCCs smaller than {args.min_size}, totalling {skipped_strains} strains.")
+    print(f"Skipped {skipped_mccs} MCCs smaller than {args.min_size} and the root MCC, totalling {skipped_strains} strains.")
