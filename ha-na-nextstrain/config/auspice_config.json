@@ -2,68 +2,53 @@
     "title": "Seasonal influenza A/H3N2 phylogeny from 2016-2018",
     "colorings": [
         {
+            "key": "confidence",
+            "title": "Bootstrap support",
+            "type": "continuous"
+        },
+        {
             "key": "MCC",
             "title": "MCC",
             "type": "categorical"
         },
 		{
-            "key": "pca_label_ha_na",
-            "title": "HA NA cluster pca",
+            "key": "pca_concatenated_label",
+            "title": "HA/NA PCA cluster",
             "type": "categorical"
         },
 		{
-            "key": "mds_label_ha_na",
-            "title": "HA NA cluster mds",
+            "key": "mds_concatenated_label",
+            "title": "HA/NA MDS cluster",
             "type": "categorical"
         },
 		{
-            "key": "t-sne_label_ha_na",
-            "title": "HA NA cluster t-sne",
+            "key": "t-sne_concatenated_label",
+            "title": "HA/NA t-SNE cluster",
             "type": "categorical"
         },
 		{
-            "key": "umap_label_ha_na",
-            "title": "HA NA cluster umap",
+            "key": "umap_concatenated_label",
+            "title": "HA/NA UMAP cluster",
             "type": "categorical"
         },
         {
-            "key": "pca_label",
-            "title": "PCA cluster",
+            "key": "pca_ha_label",
+            "title": "HA PCA cluster",
             "type": "categorical"
         },
         {
-            "key": "mds_label",
-            "title": "MDS cluster",
+            "key": "mds_ha_label",
+            "title": "HA MDS cluster",
             "type": "categorical"
         },
         {
-            "key": "t-sne_label",
-            "title": "t-SNE cluster",
+            "key": "t-sne_ha_label",
+            "title": "HA t-SNE cluster",
             "type": "categorical"
         },
         {
-            "key": "umap_label",
-            "title": "UMAP cluster",
-            "type": "categorical"
-        },
-        {
-            "key": "pca_label_default",
-            "title": "PCA cluster (default)",
-            "type": "categorical"
-        },
-        {
-            "key": "mds_label_default",
-            "title": "MDS cluster (default)",
-            "type": "categorical"
-        },
-        {
-            "key": "t-sne_label_default",
-            "title": "t-SNE cluster (default)",
-            "type": "categorical"
-        },
-        {
-            "key": "umap_label_default",
-            "title": "UMAP cluster (default)",
+            "key": "umap_ha_label",
+            "title": "HA UMAP cluster",
             "type": "categorical"
         },
         {
@@ -82,16 +67,6 @@
             "type": "categorical"
         },
         {
-            "key": "region",
-            "title": "Region",
-            "type": "categorical"
-        },
-        {
-            "key": "country",
-            "title": "Country",
-            "type": "categorical"
-        },
-        {
             "key": "pca1",
             "title": "PCA1",
             "type": "continuous"
@@ -99,46 +74,6 @@
 		{
             "key": "pca2",
             "title": "PCA2",
-            "type": "continuous"
-        },
-		{
-            "key": "pca3",
-            "title": "PCA3",
-            "type": "continuous"
-        },
-		{
-            "key": "pca4",
-            "title": "PCA4",
-            "type": "continuous"
-        },
-		{
-            "key": "pca5",
-            "title": "PCA5",
-            "type": "continuous"
-        },
-		{
-            "key": "pca6",
-            "title": "PCA6",
-            "type": "continuous"
-        },
-		{
-            "key": "pca7",
-            "title": "PCA7",
-            "type": "continuous"
-        },
-		{
-            "key": "pca8",
-            "title": "PCA8",
-            "type": "continuous"
-        },
-		{
-            "key": "pca9",
-            "title": "PCA9",
-            "type": "continuous"
-        },
-		{
-            "key": "pca10",
-            "title": "PCA10",
             "type": "continuous"
         },
 		{
@@ -157,48 +92,45 @@
             "type": "continuous"
         },
 		{
-            "key": "mds4",
-            "title": "MDS4",
-            "type": "continuous"
-        },
-		{
             "key": "tsne_x",
-            "title": "t-sne_x",
+            "title": "t-SNE 1",
             "type": "continuous"
         },
 		{
             "key": "tsne_y",
-            "title": "t-sne_y",
+            "title": "t-SNE 2",
             "type": "continuous"
         },
 		{
             "key": "umap_x",
-            "title": "UMAP_x",
+            "title": "UMAP 1",
             "type": "continuous"
         },
 		{
             "key": "umap_y",
-            "title": "UMAP_y",
+            "title": "UMAP 2",
             "type": "continuous"
         }
    ],
     "display_defaults": {
-        "color_by": "clade_membership",
-        "distance_measure": "num_date"
+        "color_by": "MCC",
+        "distance_measure": "div"
     },
-    "maintainer": [
-        "author names (displayed in footer)",
-        "author URL"
+    "maintainers": [
+        {"name": "Sravani Nanduri"},
+        {"name": "John Huddleston"}
     ],
     "filters": [
       "MCC",
-      "pca_label",
-      "mds_label",
-      "t-sne_label",
-      "umap_label",
-      "clade_membership",
-      "region",
-      "country"
+      "pca_ha_label",
+      "mds_ha_label",
+      "t-sne_ha_label",
+      "umap_ha_label",
+      "pca_concatenated_label",
+      "mds_concatenated_label",
+      "t-sne_concatenated_label",
+      "umap_concatenated_label",
+      "clade_membership"
     ],
 
     "panels": [
