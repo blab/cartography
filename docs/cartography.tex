@@ -629,6 +629,11 @@ The chart for PCA (top left), MDS (middle left), t-SNE (middle left), and UMAP (
 
 \subsection*{Joint embeddings of hemagglutinin and neuraminidase genomes identify seasonal influenza virus A/H3N2 reassortment events}
 
+Given that clusters from embedding methods could recapitulate expert-defined clades, we measured how well the same methods could capture reassortment events between multiple gene segments as detected by biologically-informed computational models.
+Evolution of HA and NA surface proteins contributes to the ability of influenza viruses to escape existing immunity \cite{Petrova2018} and HA and NA genes frequently reassort \cite{Nelson2008,Marshall2013,Potter2019}.
+Therefore, we focused our reassortment analysis on HA and NA sequences, sampling 1,643 viruses collected between January 2016 and October 2018 with both HA and NA sequences.
+We identified 13 reassortment events with at least 10 samples using TreeKnit \cite{Barrat-Charlaix2022}, representing X (X\%) of all samples.
+
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-embeddings-by-mcc.png}
 \caption{{\bf Embeddings of seasonal influenza HA-only (first column) and concatenated HA/NA sequences (second column) colored by TreeKnit Maximally Compatible Clades (MCC) label.}
