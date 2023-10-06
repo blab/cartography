@@ -468,13 +468,14 @@ rule seasonal_flu_training_create_table_from_tree_and_node_data:
     output:
         table="seasonal-flu-nextstrain/results/table.tsv",
     params:
-        attributes="numdate clade_membership"
+        attributes="numdate clade_membership mutation_length"
     conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/node_data_to_table.py \
             --tree {input.tree} \
             --node-data {input.clades} {input.branch_lengths} \
+            --include-internal-nodes \
             --attributes {params.attributes} \
             --output {output.table}
         """
@@ -523,7 +524,7 @@ rule seasonal_flu_training_create_distance_dataframe:
             --separator ',' \
             --output {output.metadata}
         """
-
+# TODO: add filters for table where necessary
 rule seasonal_flu_training_annotate_embeddings:
     input:
         left="seasonal-flu-nextstrain/results/table.tsv",
@@ -539,6 +540,7 @@ rule seasonal_flu_training_annotate_embeddings:
             --left {input.left} \
             --right {input.right} \
             --on {params.join_on} \
+            --join-type left \
             --output {output.table}
         """
 

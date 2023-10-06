@@ -61,15 +61,15 @@ if __name__ == "__main__":
         for sequence in node_data.index
     ])
 
-
+    # ignoring -1 cluster grouping
+    group_annotations = group_annotations[group_annotations[args.group_column] != -1]
+    
     # difference between clades
     distance_matrix.columns = distance_matrix.index
     indices_to_drop = distance_matrix[~distance_matrix.index.isin(group_annotations["strain"])].dropna(how = 'all')
     distance_matrix = distance_matrix[distance_matrix.index.isin(group_annotations["strain"])].dropna(how = 'all')
     distance_matrix = distance_matrix.drop(indices_to_drop.index, axis=1)
     distance_matrix["strain"] = distance_matrix.index
-
-    # TODO: group column stored within the smaller dict to add as row
 
     # difference between clusters
     merged_group_df = distance_matrix.merge(group_annotations, on="strain")

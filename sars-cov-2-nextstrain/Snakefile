@@ -671,6 +671,80 @@ rule sarscov2_concat_mutation_tables:
             --output {output.metadata}
         """
 
+rule sarscov2_train_within_between_stats_clades:
+    input:
+        distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
+        annotated_embeddings = "sars-cov-2-nextstrain/results/annotated_embeddings_for_{clade_membership}.tsv",
+    output:
+        dataframe = "sars-cov-2-nextstrain/results/within_between_stats/{clade_membership}/{clade_membership}.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+            python3 notebooks/scripts/within_v_between_stats.py \
+            --distance-matrix {input.distance_matrix} \
+            --metadata {input.annotated_embeddings} \
+            --group-column {wildcards.clade_membership} \
+            --output {output.dataframe}
+        """
+
+rule sarscov2_train_within_between_stats_methods:
+    input:
+        distance_matrix = "sars-cov-2-nextstrain/results/distance_matrix.csv",
+        annotated_embeddings = "sars-cov-2-nextstrain/results/annotated_embeddings_for_{clade_membership}.tsv",
+    output:
+        dataframe = "sars-cov-2-nextstrain/results/within_between_stats/{clade_membership}/{method}.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+            python3 notebooks/scripts/within_v_between_stats.py \
+            --distance-matrix {input.distance_matrix} \
+            --metadata {input.annotated_embeddings} \
+            --group-column {wildcards.method}_label_for_{wildcards.clade_membership} \
+            --output {output.dataframe}
+        """
+
+rule sarscov2_train_concat_within_between_stats_method:
+    input:
+        tables=expand("sars-cov-2-nextstrain/results/within_between_stats/{clade_membership}/{method}.csv", method=EMBEDDING_METHODS, clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS)
+    output:
+        metadata = "sars-cov-2-nextstrain/results/full_within_between_stats_method.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.tables} \
+            --separator ',' \
+            --output {output.metadata}
+        """
+
+rule sarscov2_train_concat_within_between_stats_clade_membership:
+    input:
+        tables=expand("sars-cov-2-nextstrain/results/within_between_stats/{clade_membership}/{clade_membership}.csv", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS)
+    output:
+        metadata = "sars-cov-2-nextstrain/results/full_within_between_stats_clade_membership.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.tables} \
+            --separator ',' \
+            --output {output.metadata}
+        """
+
+rule sarscov2_train_concat_within_between_stats:
+    input:
+        tables=expand("sars-cov-2-nextstrain/results/full_within_between_stats_{methodOrClade}.csv", methodOrClade=["clade_membership", "method"])
+    output:
+        metadata = "sars-cov-2-nextstrain/results/full_within_between_stats.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.tables} \
+            --separator ',' \
+            --output {output.metadata}
+        """
+
 rule sarscov2_create_notebook_docs:
     input:
         colors="notebooks/config/color_schemes.tsv",

@@ -274,13 +274,13 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
     else:
         base = alt.Chart(dataFrame)
         brush = alt.selection(type='interval', resolve='global')
-        tree_name = base.mark_circle().encode(
+        tips = base.mark_circle().encode(
             x=alt.X(
                 "date:Q",
                 scale=alt.Scale(
                     domain=(dataFrame["date"].min() - 0.2, dataFrame["date"].max() + 0.2)),
                 title="Date",
-                axis=alt.Axis(labels=False, ticks=False)
+                axis=alt.Axis(labels=True, ticks=True)
             ),
             y=alt.Y(
                 "y:Q",
@@ -289,7 +289,17 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
             ),
             color=alt.condition(brush, if_false=alt.ColorValue('gray'), if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_))),
             tooltip=ToolTip
-        ).add_selection(brush).properties(width=560, height=250)
+        ).add_selection(brush)
+
+        lines = base.mark_line().encode(
+            x=alt.X("parent_date:Q", scale=alt.Scale(domain=(dataFrame["date"].min() - 0.2, dataFrame["date"].max() + 0.2))),
+            x2="date:Q",
+            y="parent_y:Q",
+            y2="y:Q",
+            color=alt.ColorValue("#cccccc")
+        )
+
+        tree_name = (lines + tips).properties(width=560, height=250)
         list_of_chart.append(tree_name)
 
         for i in range(0, len(list_of_data) - 1, 2):
@@ -314,6 +324,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
                 width=250,
                 height=250
             )
+
             list_of_chart.append(chart)
         return list_of_chart
 

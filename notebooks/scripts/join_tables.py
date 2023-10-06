@@ -9,6 +9,7 @@ if __name__ == "__main__":
     parser.add_argument("--left", help="left table in join")
     parser.add_argument("--right", help="right table in join")
     parser.add_argument("--on", help="column to join on")
+    parser.add_argument("--join-type", default="inner", help="type of join")
     parser.add_argument("--output", help="joined table")
 
     args = parser.parse_args()
@@ -20,6 +21,7 @@ if __name__ == "__main__":
     joined = left.merge(
         right,
         on=args.on,
+        how=args.join_type
     )
 
     joined.to_csv(

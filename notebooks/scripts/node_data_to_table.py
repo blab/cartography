@@ -28,11 +28,12 @@ if __name__ == "__main__":
     records = []
 
     heights = get_y_positions(tree)
-    for node in tree.find_clades(terminal=True):
+    for node in tree.find_clades():
         if node.is_terminal() or args.include_internal_nodes:
             record = {
                 "strain": node.name,
                 "y_value": heights[node],
+                "is_internal_node" : node.is_terminal()
             }
 
             for attribute in args.attributes:
@@ -45,4 +46,4 @@ if __name__ == "__main__":
 
    # Convert records to a data frame and save as a tab-delimited file.
     df = pd.DataFrame(records)
-    df.to_csv(args.output, sep="\t", header=True, index=False, float_format="%.2f")
+    df.to_csv(args.output, sep="\t", header=True, index=False)
