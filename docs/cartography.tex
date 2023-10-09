@@ -376,9 +376,12 @@ We used the latest clade definitions for A/H3N2 maintained by the Nextstrain tea
 As seasonal influenza clades only account for the HA gene and lack information about reassortment events, we assigned joint HA and NA genetic groups using a biologically-informed model, TreeKnit \cite{Barrat-Charlaix2022}.
 TreeKnit infers ancestral reassortment graphs from two gene trees, finding groups of samples for which both genes share the same history.
 These groups, also known as maximally compatible clades (MCCs), represent samples whose HA and NA genes have reassorted together.
-We applied TreeKnit to HA and NA trees produced by IQ-TREE, as described above, using a gamma value of 2.5.
-TreeKnit identified 259 MCCs for 1,286 samples with an average of 6 samples per MCC.
-We filtered these MCCs to keep only those with at least 10 samples, resulting in 28 MCCs that represented 1,286 samples (78\%) with an average of 46 samples per MCC.
+TreeKnit attempts to resolve polytomies in one tree using information present in the other tree(s).
+Input trees for TreeKnit must contain the same samples and root on the same sample.
+Because of these TreeKnit expectations, we inferred HA and NA trees with IQ-TREE with a custom argument to collapse near-zero-length branches (`-czb`).
+We rooted the resulting trees on the same sample that we used as an alignment reference, A/Beijing/32/1992, and pruned this sample prior to downstream analyses.
+We applied TreeKnit to the rooted HA and NA trees with a gamma value of 2.0 and the `--better-MCCs` flag.
+Finally, we filtered the MCCs identified by TreeKnit to retain only those with at least 10 samples and to omit the root MCC that represented the most recent common ancestor in both HA and NA trees.
 
 For SARS-CoV-2, we used both expert-defined ``Nextstrain clades'' \cite{Hodcroft2020,Bedford2021,Roemer2022} and computationally-defined Pangolin lineages \cite{OToole2021} provided by the Nextclade pango implementation as ``Nextclade pango'' annotations.
 Nextstrain clade definitions represent the World Health Organization's variants of concern and other phylogenetic clades that have reached minimum global and regional frequencies and growth rates.
@@ -632,7 +635,22 @@ The chart for PCA (top left), MDS (middle left), t-SNE (middle left), and UMAP (
 Given that clusters from embedding methods could recapitulate expert-defined clades, we measured how well the same methods could capture reassortment events between multiple gene segments as detected by biologically-informed computational models.
 Evolution of HA and NA surface proteins contributes to the ability of influenza viruses to escape existing immunity \cite{Petrova2018} and HA and NA genes frequently reassort \cite{Nelson2008,Marshall2013,Potter2019}.
 Therefore, we focused our reassortment analysis on HA and NA sequences, sampling 1,643 viruses collected between January 2016 and October 2018 with both HA and NA sequences.
-We identified 13 reassortment events with at least 10 samples using TreeKnit \cite{Barrat-Charlaix2022}, representing X (X\%) of all samples.
+We aligned these sequences to a common reference (A/Beijing/32/1992), inferred HA and NA phylogenies, and applied TreeKnit to both trees to identify maximally compatible clades (MCCs) that represent reassortment events \cite{Barrat-Charlaix2022}.
+Of the 206 reassortment events identified by TreeKnit, 13 (6\%) contained at least 10 samples representing 778 samples (47\%).
+
+We created PCA, MDS, t-SNE, and UMAP embeddings from the HA alignments and from merged HA and NA alignments.
+We identified clusters in both HA-only and HA/NA embeddings and calculated the VI distance between these clusters and the MCCs identified by TreeKnit.
+We expected that clusters from HA-only embeddings would reflect little information about reassortment, as the embeddings lack any information about the NA gene.
+Accordingly, we expected that the VI distances for clusters from HA/NA embeddings would improve on the baseline distances calculated with the HA-only clusters.
+
+With the exception of PCA, all embedding methods produced more accurate clusters from the HA/NA alignments than the HA-only alignments (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-na-2016-2018-embeddings}).
+HA/NA clusters from MDS reduced the distance to known reassortment events by 66\% from a normalized VI value of 0.12 with HA only to 0.04.
+Similarly, HA/NA clusters from t-SNE reduced the distance 60\% from 0.1 to 0.04.
+UMAP improved more modestly from a normalized VI of 0.11 with HA only to 0.07 with HA and NA.
+In contrast, the PCA clusters from HA/NA alignments were approximately 1.8 times farther from the known reassortment events than the HA-only clusters.
+Although the first principal component in the HA/NA embedding explained 44\% of variation compared to 27\% in the HA-only embedding, the explained variation had no apparent relationship to the genetic diversity of the samples.
+Inspection of the combined HA/NA alignments revealed gap characters at the start and end of many NA sequences.
+Since PCA is the only method that counts the ``N'' character as a separate state, the PCA embedding most likely reflects these gap characters in the first component.
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-embeddings-by-mcc.png}
