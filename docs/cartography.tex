@@ -427,6 +427,8 @@ From this table, we could identify mutations the only occurred in specific clust
 \subsection*{Assessment of HA/NA reassortment in seasonal influenza populations}
 
 To assess the ability of embedding methods to detect reassortment in seasonal influenza populations, we applied each method to either HA alignments only or concatenated alignments of HA and NA sequences from the same samples, performed HDBSCAN clustering with the optimal distance threshold for the given method, and calculated the normalized VI between the resulting clusters and TreeKnit MCCs.
+To minimize the effects of missing data on the PCA embeddings, we dropped all columns with N characters from the HA and HA/NA alignments prior to producing PCA embeddings.
+We used the original alignments to calculate distance matrices for all other methods, since distance-based methods can ignore N characters in pairwise comparisons.
 We compared normalized VI values for the HA-only clusters of each method to the corresponding VI values for the HA/NA clusters.
 Lower VI values in the HA/NA clusters than HA-only clusters indicated better clustering of samples into known reassortment groups.
 
@@ -634,29 +636,62 @@ The chart for PCA (top left), MDS (middle left), t-SNE (middle left), and UMAP (
 
 Given that clusters from embedding methods could recapitulate expert-defined clades, we measured how well the same methods could capture reassortment events between multiple gene segments as detected by biologically-informed computational models.
 Evolution of HA and NA surface proteins contributes to the ability of influenza viruses to escape existing immunity \cite{Petrova2018} and HA and NA genes frequently reassort \cite{Nelson2008,Marshall2013,Potter2019}.
-Therefore, we focused our reassortment analysis on HA and NA sequences, sampling 1,643 viruses collected between January 2016 and October 2018 with both HA and NA sequences.
+Therefore, we focused our reassortment analysis on HA and NA sequences, sampling 1,643 viruses collected between January 2016 and October 2018 with sequences for both genes.
 We aligned these sequences to a common reference (A/Beijing/32/1992), inferred HA and NA phylogenies, and applied TreeKnit to both trees to identify maximally compatible clades (MCCs) that represent reassortment events \cite{Barrat-Charlaix2022}.
 Of the 206 reassortment events identified by TreeKnit, 13 (6\%) contained at least 10 samples representing 778 samples (47\%).
 
 We created PCA, MDS, t-SNE, and UMAP embeddings from the HA alignments and from merged HA and NA alignments.
 We identified clusters in both HA-only and HA/NA embeddings and calculated the VI distance between these clusters and the MCCs identified by TreeKnit.
-We expected that clusters from HA-only embeddings would reflect little information about reassortment, as the embeddings lack any information about the NA gene.
-Accordingly, we expected that the VI distances for clusters from HA/NA embeddings would improve on the baseline distances calculated with the HA-only clusters.
+We expected that clusters from HA-only embeddings could only reflect reassortment events when the HA clade involved in reassortment happened to carry characteristic nucleotide mutations.
+For example, we observed that the t-SNE embedding from early H3N2 HA sequences produced separate clusters for the clade A2 and its previously identified reassorted subclade, A2/re \cite{Potter2019}, which carried a distinct nucleotide mutation at HA position 1689 (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2016-2018-clusters}).
+We expected that the VI distances for clusters from HA/NA embeddings would improve on the baseline distances calculated with the HA-only clusters.
 
-With the exception of PCA, all embedding methods produced more accurate clusters from the HA/NA alignments than the HA-only alignments (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-na-2016-2018-embeddings}).
+All embedding methods produced more accurate clusters from the HA/NA alignments than the HA-only alignments (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-na-2016-2018-embeddings}).
 HA/NA clusters from MDS reduced the distance to known reassortment events by 66\% from a normalized VI value of 0.12 with HA only to 0.04.
 Similarly, HA/NA clusters from t-SNE reduced the distance 60\% from 0.1 to 0.04.
 UMAP improved more modestly from a normalized VI of 0.11 with HA only to 0.07 with HA and NA.
-In contrast, the PCA clusters from HA/NA alignments were approximately 1.8 times farther from the known reassortment events than the HA-only clusters.
-Although the first principal component in the HA/NA embedding explained 44\% of variation compared to 27\% in the HA-only embedding, the explained variation had no apparent relationship to the genetic diversity of the samples.
-Inspection of the combined HA/NA alignments revealed gap characters at the start and end of many NA sequences.
-Since PCA is the only method that counts the ``N'' character as a separate state, the PCA embedding most likely reflects these gap characters in the first component.
+PCA clusters from HA/NA alignments only improved by 22\% from a VI of 0.18 to 0.14.
+With the exception of PCA, all embeddings of HA/NA alignments produced distinct clusters for the known reassortment event within clade A2 as represented by MCCs 12 and 10 (\nameref{S6_Fig_full_ha_na_embeddings}).
+Smaller reassortment events like MCC 2 (N=12 samples) mapped farther away from their most closely related MCCs (MCC 9) in the HA/NA embeddings for MDS and t-SNE than in the corresponding HA-only embeddings.
+Embeddings with both genes also produced more clusters than the HA-only embeddings with two more in PCA (\nameref{S7_Fig_flu_ha_na_pca_embeddings}), nine more in MDS (\nameref{S8_Fig_flu_ha_na_mds_embeddings}), four more in t-SNE (\nameref{S9_Fig_flu_ha_na_tsne_embeddings}), and two more in UMAP (\nameref{S10_Fig_flu_ha_na_umap_embeddings}).
+Some of these additional clusters likely also reflect genetic diversity in NA that is independent of reassortment between HA and NA.
+These results suggest that a single embedding of multiple gene segments could identify biologically meaningful clusters within and between genes.
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-embeddings-by-mcc.png}
 \caption{{\bf Embeddings of seasonal influenza HA-only (first column) and concatenated HA/NA sequences (second column) colored by TreeKnit Maximally Compatible Clades (MCC) label.}
 }
 \label{fig:seasonal-influenza-h3n2-ha-na-2016-2018-embeddings}
+\end{figure}
+
+\begin{figure}[!h]
+% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
+\includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-all-embeddings-by-mcc.png}
+\caption*{{\bf S6 Fig. Embeddings influenza A/H3N2 HA-only (left) and combined HA/NA (right) showing the effects of additional NA genetic information on the placement of reassortment events detected by TreeKnit (MCCs).}}
+\end{figure}
+
+\begin{figure}[!h]
+% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
+\includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-pca-by-cluster.png}
+\caption*{{\bf S7 Fig. PCA embeddings for influenza A/H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}
+\end{figure}
+
+\begin{figure}[!h]
+% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
+\includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-mds-by-cluster.png}
+\caption*{{\bf S8 Fig. MDS embeddings for influenza A/H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}
+\end{figure}
+
+\begin{figure}[!h]
+% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
+\includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-tsne-by-cluster.png}
+\caption*{{\bf S9 Fig. t-SNE embeddings for influenza A/H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}
+\end{figure}
+
+\begin{figure}[!h]
+% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
+\includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-umap-by-cluster.png}
+\caption*{{\bf S10 Fig. UMAP embeddings for influenza A/H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}
 \end{figure}
 
 \subsection*{SARS-CoV-2 clusters recapitulate emerging lineage designations}
@@ -719,6 +754,26 @@ TBD.
 \paragraph*{S5 Fig.}
 \label{S5_Fig_late_flu_mds_embeddings}
 {\bf MDS embeddings for late (2018--2020) influenza A/H3N2 HA sequences showing all three components.}
+
+\paragraph*{S6 Fig.}
+\label{S6_Fig_full_ha_na_embeddings}
+{\bf Embeddings influenza A/H3N2 HA-only (left) and combined HA/NA (right) showing the effects of additional NA genetic information on the placement of reassortment events detected by TreeKnit (MCCs).}
+
+\paragraph*{S7 Fig.}
+\label{S7_Fig_flu_ha_na_pca_embeddings}
+{\bf PCA embeddings for influenza A/H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}
+
+\paragraph*{S8 Fig.}
+\label{S8_Fig_flu_ha_na_mds_embeddings}
+{\bf MDS embeddings for influenza A/H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}
+
+\paragraph*{S9 Fig.}
+\label{S9_Fig_flu_ha_na_tsne_embeddings}
+{\bf t-SNE embeddings for influenza A/H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}
+
+\paragraph*{S10 Fig.}
+\label{S10_Fig_flu_ha_na_umap_embeddings}
+{\bf UMAP embeddings for influenza A/H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}
 
 \section*{Acknowledgments}
 TBD.
