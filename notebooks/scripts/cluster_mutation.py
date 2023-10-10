@@ -3,6 +3,7 @@ from augur.io import read_sequences
 from augur.utils import read_node_data
 from collections import OrderedDict
 import pandas as pd
+import sys
 
 
 if __name__ == "__main__":
@@ -38,8 +39,8 @@ if __name__ == "__main__":
         ignored_sites.append(site)
         site -= 1
 
-    print(f"Ignoring leading and trailing gaps in the reference at sites: {ignored_sites}")
-    print(f"Valid characters: {args.valid_characters}")
+    print(f"Ignoring leading and trailing gaps in the reference at sites: {ignored_sites}", file=sys.stderr)
+    print(f"Valid characters: {args.valid_characters}", file=sys.stderr)
     sequences_by_name = OrderedDict()
 
     for sequence in read_sequences(args.alignment):

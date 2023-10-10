@@ -581,19 +581,19 @@ rule seasonal_flu_reassortment_concat_HDBSCAN_table:
 
 rule seasonal_flu_reassortment_create_mutation_table:
     input:
-        reference = "ha-na-nextstrain/config/reference_h3n2_ha_na.fasta",
-        alignment = "ha-na-nextstrain/results/cleaned_aligned_concatenated.fasta",
+        reference = "ha-na-nextstrain/config/reference_h3n2_{segment}.fasta",
+        alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta",
         embedding = "ha-na-nextstrain/results/cluster_embed_{method}_concatenated.csv",
     output:
-        table = "ha-na-nextstrain/results/mutation_table_{method}.csv",
+        table = "ha-na-nextstrain/results/mutation_table_{method}_{segment}.csv",
     params:
         min_allele_count=10,
         min_allele_frequency=0.5,
     conda: "../cartography.yml"
     benchmark:
-        "benchmarks/seasonal_flu_reassortment_create_mutation_table_{method}.txt"
+        "benchmarks/seasonal_flu_reassortment_create_mutation_table_{method}_{segment}.txt"
     log:
-        "logs/seasonal_flu_reassortment_create_mutation_table_{method}.txt"
+        "logs/seasonal_flu_reassortment_create_mutation_table_{method}_{segment}.txt"
     shell:
         """
         python3 notebooks/scripts/cluster_mutation.py \
@@ -603,12 +603,14 @@ rule seasonal_flu_reassortment_create_mutation_table:
             --metadata-column {wildcards.method}_concatenated_label \
             --min-allele-count {params.min_allele_count} \
             --min-allele-frequency {params.min_allele_frequency} \
-            --output {output.table} 2>&1 | tee {log}
+            --output /dev/stdout \
+            | csvtk mutate2 -n method -e '"{wildcards.method}"' \
+            | csvtk mutate2 -n segment -e '"{wildcards.segment}"' > {output.table}
         """
 
 rule seasonal_flu_reassortment_concat_mutation_tables:
     input:
-        mutation_tables=expand("ha-na-nextstrain/results/mutation_table_{method}.csv", method=EMBEDDING_METHODS),
+        mutation_tables=expand("ha-na-nextstrain/results/mutation_table_{method}_{segment}.csv", method=EMBEDDING_METHODS, segment=SEGMENTS),
     output:
         metadata = "ha-na-nextstrain/results/mutation_table.csv",
     params:
