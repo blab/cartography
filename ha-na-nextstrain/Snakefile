@@ -315,9 +315,24 @@ rule seasonal_flu_reassortment_create_distance_matrix:
             --output {output.output}
         """
 
+rule seasonal_flu_reassortment_clean_alignment_for_pca:
+    input:
+        alignment="ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta",
+    output:
+        alignment="ha-na-nextstrain/results/cleaned_aligned_{ha_concatenated}.fasta",
+    conda: "../cartography.yml"
+    log:
+        "logs/seasonal_flu_reassortment_clean_alignment_for_pca_{ha_concatenated}.txt"
+    shell:
+        """
+        python3 notebooks/scripts/clean_alignment.py \
+            --alignment {input.alignment} \
+            --output {output.alignment} 2>&1 | tee {log}
+        """
+
 rule seasonal_flu_reassortment_embed_pca:
     input:
-        alignment = "ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta",
+        alignment = "ha-na-nextstrain/results/cleaned_aligned_{ha_concatenated}.fasta",
         parameters="simulations/influenza-like/no-reassortment/pca_parameters.csv",
     output:
         dataframe = "ha-na-nextstrain/results/embed_pca_{ha_concatenated}.csv",
@@ -340,7 +355,7 @@ rule seasonal_flu_reassortment_embed_pca:
 
 rule seasonal_flu_reassortment_embed_mds:
     input:
-        alignment = "ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta",
+        alignment = "ha-na-nextstrain/results/cleaned_aligned_{ha_concatenated}.fasta",
         distance_matrix = rules.seasonal_flu_reassortment_create_distance_matrix.output.output,
         parameters="simulations/influenza-like/no-reassortment/mds_parameters.csv",
     output:
@@ -363,7 +378,7 @@ rule seasonal_flu_reassortment_embed_mds:
 
 rule seasonal_flu_reassortment_embed_tsne:
     input:
-        alignment = "ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta",
+        alignment = "ha-na-nextstrain/results/cleaned_aligned_{ha_concatenated}.fasta",
         distance_matrix = rules.seasonal_flu_reassortment_create_distance_matrix.output.output,
         parameters="simulations/influenza-like/no-reassortment/t-sne_parameters.csv",
     output:
@@ -386,7 +401,7 @@ rule seasonal_flu_reassortment_embed_tsne:
 
 rule seasonal_flu_reassortment_embed_umap:
     input:
-        alignment = "ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta",
+        alignment = "ha-na-nextstrain/results/cleaned_aligned_{ha_concatenated}.fasta",
         distance_matrix = rules.seasonal_flu_reassortment_create_distance_matrix.output.output,
         parameters="simulations/influenza-like/no-reassortment/umap_parameters.csv",
     output:
@@ -566,7 +581,7 @@ rule seasonal_flu_reassortment_concat_HDBSCAN_table:
 rule seasonal_flu_reassortment_create_mutation_table:
     input:
         reference = "ha-na-nextstrain/config/reference_h3n2_ha_na.fasta",
-        alignment = "ha-na-nextstrain/results/aligned_concatenated.fasta",
+        alignment = "ha-na-nextstrain/results/cleaned_aligned_concatenated.fasta",
         embedding = "ha-na-nextstrain/results/cluster_embed_{method}_concatenated.csv",
     output:
         table = "ha-na-nextstrain/results/mutation_table_{method}.csv",
