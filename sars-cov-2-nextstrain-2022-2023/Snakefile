@@ -178,9 +178,27 @@ rule sarscov2_test_tree:
             --nthreads {threads}
         """
 
-rule sarscov2_test_refine:
+rule sarscov2_test_root_and_prune_tree:
     input:
         tree = "sars-cov-2-nextstrain-2022-2023/results/tree_raw.nwk",
+    output:
+        tree = "sars-cov-2-nextstrain-2022-2023/results/rooted_tree_raw.nwk",
+    conda: "../cartography.yml"
+    params:
+        root="Wuhan-Hu-1/2019",
+    log:
+        "logs/sars-cov-2-nextstrain-2022-2023/root_and_prune_tree.txt"
+    shell:
+        """
+        python3 notebooks/scripts/root_and_prune_tree.py \
+            --tree {input.tree} \
+            --root {params.root} \
+            --output {output.tree} 2>&1 | tee {log}
+        """
+
+rule sarscov2_test_refine:
+    input:
+        tree = "sars-cov-2-nextstrain-2022-2023/results/rooted_tree_raw.nwk",
         alignment = "sars-cov-2-nextstrain-2022-2023/data/aligned.fasta",
         metadata = "sars-cov-2-nextstrain-2022-2023/data/metadata.tsv",
     output:
@@ -189,7 +207,6 @@ rule sarscov2_test_refine:
     log:
         "logs/sars-cov-2-nextstrain-2022-2023/refine.txt",
     params:
-        root = "Wuhan-Hu-1/2019",
         coalescent = "opt",
         date_inference = "marginal",
         clock_rate = 0.0008,
@@ -209,7 +226,7 @@ rule sarscov2_test_refine:
             --metadata {input.metadata} \
             --output-tree {output.tree} \
             --output-node-data {output.node_data} \
-            --root {params.root} \
+            --keep-root \
             --stochastic-resolve \
             --timetree \
             --coalescent {params.coalescent} \
