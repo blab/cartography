@@ -632,8 +632,10 @@ rule seasonal_flu_reassortment_create_notebook_docs:
         explained_variance_pca_ha = "ha-na-nextstrain/results/explained_variance_pca_ha.csv",
         explained_variance_pca_concatenated = "ha-na-nextstrain/results/explained_variance_pca_concatenated.csv",
     output:
-        fullChartHTML = "docs/figures/flu-2016-2018-ha-na-embeddings-by-mcc.html",
-        fullChartPNG = "docs/figures/flu-2016-2018-ha-na-embeddings-by-mcc.png",
+        fullChartHTML = "docs/figures/flu-2016-2018-ha-na-all-embeddings-by-mcc.html",
+        fullChartPNG = "docs/figures/flu-2016-2018-ha-na-all-embeddings-by-mcc.png",
+        HANAChartHTML = "docs/figures/flu-2016-2018-ha-na-embeddings-by-mcc.html",
+        HANAChartPNG = "docs/figures/flu-2016-2018-ha-na-embeddings-by-mcc.png",
         HANAFullChartBrushablePCAHTML = "docs/figures/flu-2016-2018-ha-na-pca-by-cluster.html",
         HANAFullChartBrushablePCAPNG = "docs/figures/flu-2016-2018-ha-na-pca-by-cluster.png",
         HANAFullChartBrushableMDSHTML = "docs/figures/flu-2016-2018-ha-na-mds-by-cluster.html",
