@@ -738,10 +738,18 @@ These results suggest that distance-based embedding methods can recapitulate bro
 \caption*{{\bf S13 Fig. Embeddings of SARS-CoV-2 sequences collected between January 1, 2020 and January 1, 2022 colored by collapsed Nextclade pango lineage label.}}
 \end{figure}
 
+We quantified the maintenance of local and global structure in early SARS-CoV-2 embeddings by fitting a linear model between pairwise genetic and Euclidean distances of samples.
+As we expected from the qualitative evaluation of the PCA embedding above, we found no relationship between Euclidean distance in PCA and genetic distance in alignments (Fig.~\ref{fig:sars-cov-2-pairwise-distances}).
+In contrast, the MDS embedding produced a strong linear mapping across the range of observed genetic distances (Pearson's $R^{2}=0.917$).
+Both t-SNE and UMAP maintained intermediate degrees of linearity (Pearson's $R^{2}=0.617$ and $R^{2}=0.586$, respectively).
+These embeddings placed the most genetically similar samples close together and the most genetically distinct farther apart.
+However, these embeddings did not consistently place pairs of samples with intermediate genetic distances at an intermediate distance in Euclidean space.
+The linear relationship for genetically similar samples in t-SNE remained consistent up to a genetic distance of approximately 30 nucleotides.
+The corresponding relationship for UMAP only remained consistent up to a genetic distance of approximately 15 nucleotides.
+
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/sarscov2-euclidean-distance-by-genetic-distance.png}
-\caption{{\bf The mapping between Euclidean and genetic distance assess the strength of both the local and global structure of the embedding recapitulation.}
-The scatterplot for PCA (upper left), MDS (upper right), t-SNE (lower left), and UMAP (lower right) consistently exhibit linear relationships for pairs of strains that differ by around 20 nucleotides.}
+\caption{{\bf The mapping between pairwise genetic and Euclidean distances in embeddings for early SARS-CoV-2 samples with PCA (upper left), MDS (upper right), t-SNE (lower left), and UMAP (lower right).}}
 \label{fig:sars-cov-2-pairwise-distances}
 \end{figure}
 
