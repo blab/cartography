@@ -696,11 +696,46 @@ These results suggest that a single embedding of multiple gene segments could id
 
 \subsection*{SARS-CoV-2 clusters recapitulate emerging lineage designations}
 
+SARS-CoV-2 poses a greater challenge to embedding methods than seasonal influenza, with an unsegmented genome an order of magnitude longer than influenza's HA or NA \cite{Zhu2020}, a mutation rate in the spike surface protein subunit S1 that is four times higher than influenza H3N2's HA rate \cite{Kistler2022}, and increasingly common recombination \cite{Focosi2022,Turakhia2022}.
+However, multiple expert- and model-based clade definitions exist for SARS-CoV-2, enabling comparison between clusters from embeddings and known genetic groups.
+These definitions span from broad genetic groups named by the WHO as ``variants of concern'' (e.g., ``Alpha'', ``Beta'', etc.) \cite{Konings2021} or systematically defined by the Nextstrain team \cite{Hodcroft2020,Bedford2021,Roemer2022} to smaller, emerging genetic clusters defined by Pangolin \cite{OToole2021}.
+As with seasonal influenza, we defined an ``early'' SARS-CoV-2 dataset spanning from January 2020 to January 2022, embedded genomes with the same four methods, and identified HDBSCAN clustering parameters that minimized the VI distance between embedding clusters and previously defined genetic groups as defined by Nextstrain clades and collapsed ``Nextclade pango'' lineages (see Methods).
+Using these optimal cluster parameters, we produced clusters from embeddings of a ``late'' SARS-CoV-2 dataset spanning from January 2022 to July 2023 and calculated the VI distance between those clusters and known genetic groups.
+
+The early SARS-CoV-2 dataset represented 23 Nextstrain clades and 35 collapsed Nextclade pango lineages.
+With the exception of PCA, all other embedding methods placed samples from the same Nextstrain clades closer together and closely related Nextstrain clades near each other (Fig.~\ref{fig:sars-cov-2-early-embeddings-by-Nextstrain-clade}).
+For example, the most genetically distinct clades like 21J (Delta) and 21K (Omicron) placed farthest from other clades, while all Delta clades (21A, 21I, and 21J) placed close together (Fig.~\ref{fig:sars-cov-2-early-embeddings-by-Nextstrain-clade}, \nameref{S11_Fig_sarscov2_early_mds}).
+As we saw with embeddings of H3N2 HA sequences, MDS placed related clades closer together on a continuous scale, while t-SNE and UMAP produced more clearly separate groups of samples.
+Unlike the H3N2 HA analysis, the PCA embedding of SARS-CoV-2 sequences failed to create any genetically meaningful clusters.
+We suspected that PCA components reflected variation in missing (``N'') or gap (``-'') characters that we represented with a separate character state than the standard nucleotide characters of A, C, G, and T.
+We plotted the PC1 value of each sample against the number of missing bases in its alignment and confirmed that missing data explained a substantial proportion of variation in PC1 (\nameref{S12_Fig_sarscov2_early_pc1_vs_bases_missing}, Pearson's $R^{2}=0.354$).
+We did not observe the same clear grouping of Nextclade pango lineages.
+For example, the Nextstrain clade 21J (Delta) contained 11 pango lineages that all appeared to map into the same overlapping space in MDS, t-SNE, and UMAP embeddings (\nameref{S13_Fig_sarscov2_early_embeddings_by_Nextclade_pango}).
+These results suggest that distance-based embedding methods can recapitulate broader genetic groups of SARS-CoV-2, but that these methods lack the resolution of finer groups defined by Pangolin.
+
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/sarscov2-embeddings-by-Nextstrain_clade-clade.png}
-\caption{{\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2020 and January 1, 2021 colored by Nextstrain clade label.}
+\caption{{\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2020 and January 1, 2022 colored by Nextstrain clade label.}
 }
-\label{fig:sars-cov-2-2020-2021-embeddings}
+\label{fig:sars-cov-2-early-embeddings-by-Nextstrain-clade}
+\end{figure}
+
+\begin{figure}[!h]
+% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
+\includegraphics[width=\columnwidth]{figures/sarscov2-mds-by-Nextstrain_clade-clade.png}
+\caption*{{\bf S11 Fig. MDS embeddings for early SARS-CoV-2 sequences showing all three components.}}
+\end{figure}
+
+\begin{figure}[!h]
+% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
+\includegraphics[width=\columnwidth]{figures/sarscov2-pc1-vs-bases-missing.png}
+\caption*{{\bf S12 Fig. Principal component 1 (PC1) of the PCA embedding for early SARS-CoV-2 data plotted by the number of missing (``N'') or gap (``-'') characters in the corresponding sample's aligned sequence. Pearson's $R^{2}$ estimates the variation in PC1 explained by missing data.}}
+\end{figure}
+
+\begin{figure}[!h]
+% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
+\includegraphics[width=\columnwidth]{figures/sarscov2-embeddings-by-Nextclade_pango_collapsed-clade.png}
+\caption*{{\bf S13 Fig. Embeddings of SARS-CoV-2 sequences collected between January 1, 2020 and January 1, 2022 colored by collapsed Nextclade pango lineage label.}}
 \end{figure}
 
 \begin{figure}[!h]
@@ -712,7 +747,7 @@ The scatterplot for PCA (upper left), MDS (upper right), t-SNE (lower left), and
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/sarscov2-embeddings-by-cluster-vs-Nextstrain_clade.png}
-\caption{{\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2020 and January 1, 2021 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (Nextstrain clade).}
+\caption{{\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2020 and January 1, 2022 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (Nextstrain clade).}
 }
 \label{fig:sars-cov-2-2020-2021-clusters-vs-Nextstrain-clade}
 \end{figure}
@@ -774,6 +809,18 @@ TBD.
 \paragraph*{S10 Fig.}
 \label{S10_Fig_flu_ha_na_umap_embeddings}
 {\bf UMAP embeddings for influenza A/H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}
+
+\paragraph*{S11 Fig.}
+\label{S11_Fig_sarscov2_early_mds}
+{\bf MDS embeddings for early SARS-CoV-2 sequences showing all three components.}
+
+\paragraph*{S12 Fig.}
+\label{S12_Fig_sarscov2_early_pc1_vs_bases_missing}
+{\bf Principal component 1 (PC1) of the PCA embedding for early SARS-CoV-2 data plotted by the number of missing (``N'') or gap (``-'') characters in the corresponding sample's aligned sequence. Pearson's $R^{2}$ estimates the variation in PC1 explained by missing data.}
+
+\paragraph*{S13 Fig.}
+\label{S13_Fig_sarscov2_early_embeddings_by_Nextclade_pango}
+{\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2020 and January 1, 2022 colored by collapsed Nextclade pango lineage label.}
 
 \section*{Acknowledgments}
 TBD.
