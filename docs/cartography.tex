@@ -694,7 +694,7 @@ These results suggest that a single embedding of multiple gene segments could id
 \caption*{{\bf S10 Fig. UMAP embeddings for influenza A/H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}
 \end{figure}
 
-\subsection*{SARS-CoV-2 clusters recapitulate emerging lineage designations}
+\subsection*{SARS-CoV-2 clusters recapitulate broad genetic groups corresponding to Nextstrain clades}
 
 SARS-CoV-2 poses a greater challenge to embedding methods than seasonal influenza, with an unsegmented genome an order of magnitude longer than influenza's HA or NA \cite{Zhu2020}, a mutation rate in the spike surface protein subunit S1 that is four times higher than influenza H3N2's HA rate \cite{Kistler2022}, and increasingly common recombination \cite{Focosi2022,Turakhia2022}.
 However, multiple expert- and model-based clade definitions exist for SARS-CoV-2, enabling comparison between clusters from embeddings and known genetic groups.
@@ -758,7 +758,7 @@ Since Nextstrain clades and Nextclade pango lineages represented different resol
 When comparing clusters to Nextstrain clades, the t-SNE embedding produced the most accurate clusters with a normalized VI of 0.09 (minimum distance of 1.5) (Fig.~\ref{fig:sars-cov-2-2020-2022-clusters-vs-Nextstrain-clade}, Table~\ref{table:accuracy}).
 MDS and UMAP produced similarly accurate clusters with normalized VIs of 0.14 and 0.15 at minimum distances of 0 and 0.5, respectively.
 As expected, PCA produced the least accurate clusters with a normalized VI of 0.37 and a minimum distance of 4.0.
-When comparing clusters to Nextclade pango lineages, all four methods produced less accurate clusters.
+When comparing clusters to Nextclade pango lineages, all four methods produced less accurate clusters (\nameref{S14_Fig_sarscov2_early_embeddings_by_cluster_vs_Nextclade_pango}).
 Clusters from t-SNE were the most accurate with a VI of 0.17.
 MDS and UMAP clusters performed similarly with VIs of 0.24 and 0.26.
 PCA clusters remained the least accurate with a VI of 0.46.
@@ -772,15 +772,34 @@ These results confirm quantitatively that these embeddings methods can accuratel
 \label{fig:sars-cov-2-2020-2022-clusters-vs-Nextstrain-clade}
 \end{figure}
 
+\begin{figure}[!h]
+% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
+\includegraphics[width=\columnwidth]{figures/sarscov2-embeddings-by-cluster-vs-Nextclade_pango_collapsed.png}
+\caption*{{\bf S14 Fig. Embeddings of SARS-CoV-2 sequences collected between January 1, 2020 and January 1, 2022 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (collapsed Nextclade pango lineage).}}
+\end{figure}
+
 We tested the optimal cluster parameters identified above by applying embedding methods to late SARS-CoV-2 data and finding comparing clusters from these embeddings to known genetic groups.
 Of the 15 Nextstrain clades defined during this time period, 10 (67\%) descended from Omicron and represented 1,363 (93\%) of all samples in the dataset.
 Of the 46 Nextclade pango lineages, 15 originated from a recombination event and corresponded to 380 (26\%) of all samples.
+The clusters from embeddings of these more recent SARS-CoV-2 sequences performed as well or better than the clusters from earlier SARS-CoV-2 sequences (Fig.~\ref{fig:sars-cov-2-2022-2023-clusters-vs-Nextstrain-clade}).
+UMAP clusters most accurately matched Nextstrain clades (normalized VI=0.07) with 10 clusters.
+Clusters from t-SNE followed closely (normalized VI=0.08) with 17 clusters and MDS produced 11 clusters (normalized VI=0.13).
+These three methods produced less accurate representations of Nextclade pango lineages (\nameref{S15_Fig_sarscov2_late_embeddings_by_cluster_vs_Nextclade_pango}).
+UMAP's 10 clusters were three times farther from pango lineages than Nextstrain clades (normalized VI=0.21).
+Clusters from MDS (N=11) and t-SNE (N=27) were twice as far from pango lineages as Nextstrain clades (normalized VI=0.28 and 0.14, respectively).
+These results replicate the patterns we observed with early SARS-CoV-2 data where clusters from embeddings more effectively represented broader genetic diversity than the finer resolution diversity labeled by Pangolin.
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/sarscov2-test-embeddings-by-cluster-vs-Nextstrain_clade.png}
 \caption{{\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2022 and July 5, 2023 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (Nextstrain clade).}
 }
 \label{fig:sars-cov-2-2022-2023-clusters-vs-Nextstrain-clade}
+\end{figure}
+
+\begin{figure}[!h]
+% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
+\includegraphics[width=\columnwidth]{figures/sarscov2-test-embeddings-by-cluster-vs-Nextclade_pango_collapsed.png}
+\caption*{{\bf S15 Fig. Embeddings of SARS-CoV-2 sequences collected between January 1, 2022 and July 5, 2023 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (collapsed Nextclade pango lineage).}}
 \end{figure}
 
 \subsection*{Distance-based embeddings reflect SARS-CoV-2 recombination events}
@@ -847,6 +866,14 @@ TBD.
 \paragraph*{S13 Fig.}
 \label{S13_Fig_sarscov2_early_embeddings_by_Nextclade_pango}
 {\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2020 and January 1, 2022 colored by collapsed Nextclade pango lineage label.}
+
+\paragraph*{S14 Fig.}
+\label{S14_Fig_sarscov2_early_embeddings_by_cluster_vs_Nextclade_pango}
+{\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2020 and January 1, 2022 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (collapsed Nextclade pango lineage).}
+
+\paragraph*{S15 Fig.}
+\label{S15_Fig_sarscov2_late_embeddings_by_cluster_vs_Nextclade_pango}
+{\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2022 and July 5, 2023 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (collapsed Nextclade pango lineage).}
 
 \section*{Acknowledgments}
 TBD.
