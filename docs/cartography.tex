@@ -753,12 +753,26 @@ The corresponding relationship for UMAP only remained consistent up to a genetic
 \label{fig:sars-cov-2-pairwise-distances}
 \end{figure}
 
+Using the same approach described above for influenza, we identified clusters in embeddings from early SARS-CoV-2 data across a range of minimum distances allowed between clusters and identified the thresholds per embedding method that minimized the normalized VI distance between clusters and known genetic groups.
+Since Nextstrain clades and Nextclade pango lineages represented different resolutions of genetic diversity, we identified separate optimal thresholds for clusters when compared to each of these known genetic groups.
+When comparing clusters to Nextstrain clades, the t-SNE embedding produced the most accurate clusters with a normalized VI of 0.09 (minimum distance of 1.5) (Fig.~\ref{fig:sars-cov-2-2020-2022-clusters-vs-Nextstrain-clade}, Table~\ref{table:accuracy}).
+MDS and UMAP produced similarly accurate clusters with normalized VIs of 0.14 and 0.15 at minimum distances of 0 and 0.5, respectively.
+As expected, PCA produced the least accurate clusters with a normalized VI of 0.37 and a minimum distance of 4.0.
+When comparing clusters to Nextclade pango lineages, all four methods produced less accurate clusters.
+Clusters from t-SNE were the most accurate with a VI of 0.17.
+MDS and UMAP clusters performed similarly with VIs of 0.24 and 0.26.
+PCA clusters remained the least accurate with a VI of 0.46.
+The optimal minimum distances for three of the four methods remained the same, with only t-SNE's value changing from 1.5 to 1.0.
+These results quantitatively confirm that these embeddings methods can accurately capture broader genetic diversity of SARS-CoV-2, but they cannot distinguish between fine resolution genetic groups identified by Pangolin.
+
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/sarscov2-embeddings-by-cluster-vs-Nextstrain_clade.png}
 \caption{{\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2020 and January 1, 2022 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (Nextstrain clade).}
 }
-\label{fig:sars-cov-2-2020-2021-clusters-vs-Nextstrain-clade}
+\label{fig:sars-cov-2-2020-2022-clusters-vs-Nextstrain-clade}
 \end{figure}
+
+Test optimal parameters for clusters with late SC2 data
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/sarscov2-test-embeddings-by-cluster-vs-Nextstrain_clade.png}
@@ -766,6 +780,8 @@ The corresponding relationship for UMAP only remained consistent up to a genetic
 }
 \label{fig:sars-cov-2-2022-2023-clusters-vs-Nextstrain-clade}
 \end{figure}
+
+\subsection*{Distance-based embeddings reflect SARS-CoV-2 recombination events}
 
 \section*{Discussion}
 
