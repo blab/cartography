@@ -2,7 +2,7 @@ import sys
 sys.path.append("../")
 
 import argparse
-from augur.utils import read_node_data, read_tree
+from augur.utils import read_node_data, read_tree, annotate_parents_for_tree
 import pandas as pd
 
 from Helpers import get_y_positions
@@ -20,9 +20,20 @@ if __name__ == "__main__":
 
     # Load tree.
     tree = read_tree(args.tree)
+    tree = annotate_parents_for_tree(tree)
 
     # Load node data.
     node_data = read_node_data(args.node_data)["nodes"]
+
+    if "divergence" in args.attributes:
+        # loop through mutation lengths, making them cumulative and store in "divergence"
+        # look through branh_lengths for "mutation_length"
+        # start with root of tree
+        for node in tree.find_clades():
+            if getattr(node, "parent") is None:
+                node_data[node.name]["divergence"] = node_data[node.name]["mutation_length"]
+            else:
+                node_data[node.name]["divergence"] = node_data[node.parent.name]["divergence"] + node_data[node.name]["mutation_length"]
 
     # Collect attributes per node from the tree to export.
     records = []
@@ -33,6 +44,7 @@ if __name__ == "__main__":
             record = {
                 "strain": node.name,
                 "y_value": heights[node],
+                "parent_name" :  getattr(node, "parent", ""),
                 "is_internal_node" : node.is_terminal()
             }
 
