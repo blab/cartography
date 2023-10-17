@@ -53,7 +53,7 @@ if __name__ == "__main__":
 
     # ignoring -1 cluster grouping
     group_annotations = group_annotations[group_annotations[args.group_column] != -1]
-    
+
     # difference between clades
     distance_matrix.columns = distance_matrix.index
     indices_to_drop = distance_matrix[~distance_matrix.index.isin(group_annotations["strain"])].dropna(how = 'all')
