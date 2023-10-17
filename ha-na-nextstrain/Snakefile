@@ -155,7 +155,7 @@ rule seasonal_flu_reassortment_tree:
         tree = "ha-na-nextstrain/results/tree_raw_{segment}.nwk"
     conda: "../cartography.yml"
     params:
-        tree_builder_args="-czb -bb 1000 -bnni -nt AUTO",
+        tree_builder_args="-czb",
     threads: 4
     shell:
         """
@@ -163,7 +163,6 @@ rule seasonal_flu_reassortment_tree:
             --alignment {input.alignment} \
             --method iqtree \
             --nthreads {threads} \
-            --override-default-args \
             --tree-builder-args="{params.tree_builder_args}" \
             --output {output.tree}
         """
