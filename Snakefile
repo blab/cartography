@@ -61,12 +61,12 @@ wildcard_constraints:
 rule all:
     input:
         # Static version of the paper.
-        # "docs/cartography.pdf",
+        "docs/cartography.pdf",
         # Interactive version of the paper.
         "docs/cartography.html",
 
 # Include rules for each pathogen.
-# include: "simulations/Snakefile"
+include: "simulations/Snakefile"
 include: "seasonal-flu-nextstrain/Snakefile"
 include: "seasonal-flu-nextstrain-2018-2020/Snakefile"
 include: "ha-na-nextstrain/Snakefile"
