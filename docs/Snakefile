@@ -25,20 +25,35 @@ rule concat_HDBSCAN_tables:
             --output-table {output.table} \
             --disease-names {params.disease_names:q}
         """
+
 rule concat_within_between_figure_table:
     input:
         tables=[
             "seasonal-flu-nextstrain/results/full_within_between_stats.csv",
             "seasonal-flu-nextstrain-2018-2020/results/full_within_between_stats.csv",
+            "ha-na-nextstrain/results/full_within_between_stats.csv",
             "sars-cov-2-nextstrain/results/full_within_between_stats.csv",
             "sars-cov-2-nextstrain-2022-2023/results/full_within_between_stats.csv",
-            "ha-na-nextstrain/results/full_within_between_stats.csv"
         ]
     output:
-        fullKDE = "docs/tables/total_within_between_stats.csv",
-        table = "docs/tables/within_between_table.tex"
+        csv_table = "docs/tables/total_within_between_stats.csv",
+        tex_table = "docs/tables/within_between_table.tex"
     params:
-        disease_names = ["Influenza H3N2 HA Old", "Influenza H3N2 HA New", "SARS-CoV-2 Old", "SARS-CoV-2 New", "Influenza H3N2 HA/NA Reassorted"],
+        disease_names = [
+            "Influenza H3N2 HA (2016-2018)",
+            "Influenza H3N2 HA (2018-2020)",
+            "Influenza H3N2 HA/NA Reassorted",
+            "SARS-CoV-2 (2020-2022)",
+            "SARS-CoV-2 (2022-2023)",
+        ],
+    shell:
+        """
+        python3 notebooks/scripts/concat_KDE_tables.py \
+            --tables {input.tables} \
+            --output-csv {output.csv_table} \
+            --output-table {output.tex_table} \
+            --disease-names {params.disease_names:q}
+        """
 
 rule create_within_between_figure:
     input:
