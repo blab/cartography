@@ -53,9 +53,22 @@ rule seasonal_flu_reassortment_split:
             --output_fastas {output.sequences_ha} {output.sequences_na}\
         """
 
-rule seasonal_flu_reassortment_parse:
+rule seasonal_flu_reassortment_deduplicate_sequences:
     input:
         sequences = "ha-na-nextstrain/results/ncbi-h3n2-{segment}.fasta"
+    output:
+        sequences = "ha-na-nextstrain/results/deduplicated_sequences_{segment}.fasta"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ha-na-nextstrain/scripts/deduplicate_sequences.py \
+            --sequences {input.sequences} \
+            --output {output.sequences}
+        """
+
+rule seasonal_flu_reassortment_parse:
+    input:
+        sequences = "ha-na-nextstrain/results/deduplicated_sequences_{segment}.fasta"
     output:
         sequences = "ha-na-nextstrain/results/sequences_{segment}.fasta",
         metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv"
@@ -71,22 +84,9 @@ rule seasonal_flu_reassortment_parse:
             --fields {params.fasta_fields}
         """
 
-rule seasonal_flu_reassortment_deduplicate_sequences:
-    input:
-        sequences = "ha-na-nextstrain/results/sequences_{segment}.fasta"
-    output:
-        sequences = "ha-na-nextstrain/results/deduplicated_sequences_{segment}.fasta"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ha-na-nextstrain/scripts/deduplicate_sequences.py \
-            --sequences {input.sequences} \
-            --output {output.sequences}
-        """
-
 rule seasonal_flu_reassortment_filter:
     input:
-        sequences = "ha-na-nextstrain/results/deduplicated_sequences_{segment}.fasta",
+        sequences = "ha-na-nextstrain/results/sequences_{segment}.fasta",
         metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
         exclude = seasonal_flu_reassortment_files.dropped_strains
     output:
