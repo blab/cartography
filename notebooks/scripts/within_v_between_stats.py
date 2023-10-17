@@ -15,16 +15,6 @@ import sys
 
 from Helpers import get_euclidean_data_frame
 
-def is_json_file(filename):
-    try:
-        with open(filename, 'r') as file:
-            file_contents = file.read()
-            json.loads(file_contents)
-            return True
-    except (FileNotFoundError, json.JSONDecodeError):
-        return False
-
-# mean, median, std_dev
 
 def describe_dict(result):
 
