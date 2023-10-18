@@ -236,8 +236,8 @@ For each low-dimensional embedding of sequences, we calculated the correlation b
 We measured the accuracy of these clusters compared to previously defined phylogenetic clades, reassortment clusters, or recombinant lineages.
 First, we applied all methods to A/H3N2 hemagglutinin sequences for which high-quality expert clade annotations from the World Health Organization exist.
 Next, we applied the same methods to concatenated A/H3N2 hemagglutinin and neuraminidase sequences and compared the resulting clusters to reassortment groups identified by an ancestral reassortment graph method, TreeKnit.
-Finally, we applied each method to SARS-CoV-2 sequences and compared the resulting clusters to Pangolin lineages with and without recombination.
-We found that MDS maintained the strongest correlation between pairwise genetic and Euclidean distances between sequences.
+Finally, we applied each method to SARS-CoV-2 sequences and compared the resulting clusters to previously defined lineages with and without recombination.
+We found that MDS maintained the strongest correlation between pairwise genetic and Euclidean distances between sequences and best captured the intermediate placement of recombinant lineages between parental lineages.
 However, clusters from t-SNE and UMAP most accurately recapitulated known phylogenetic clades and reassortment groups.
 We show that simple statistical methods without an underlying biological model can accurately represent known genetic relationships for relevant human pathogenic viruses.
 Our open source implementation of these methods for analysis of viral genome sequences ("pathogen-embed") can be easily integrated into other research projects and used for analyses where phylogenetic methods are either unnecessary or inappropriate.
@@ -257,9 +257,9 @@ Tracking the evolution of human pathogenic viruses in real time enables epidemio
 Real-time analyses of viral evolution typically rely on phylogenetic methods that can reconstruct the evolutionary history of viral populations from their genome sequences and estimate states of inferred ancestral viruses including their most likely genome sequence, time of circulation, and geographic location \cite{Volz2013,Baele2017,Sagulenko2018}.
 Importantly, these methods assume that all sequence data share an evolutionary history represented by the clonal replication of genomes.
 In practice, the evolutionary histories of many human pathogenic viruses violate this assumption through processes of reassortment or recombination, as seen in seasonal influenza \cite{Nelson2008,Marshall2013} and seasonal coronaviruses \cite{Su2016}, respectively.
-Researchers account for these evolutionary mechanisms by limiting their analyses to individual genes \cite{Lemey2007,Bhatt2011}, combining multiple genes despite their different evolutionary histories \cite{Wiens1998}, or developing more sophisticated models to represent the joint likelihoods of multiple co-evolving lineages with ancestral reassortment or recombination graphs instead of phylogenetic trees \cite{Barrat-Charlaix2022,Muller2022}.
+Researchers account for these evolutionary mechanisms by limiting their analyses to individual genes \cite{Lemey2007,Bhatt2011}, combining multiple genes despite their different evolutionary histories \cite{Wiens1998}, or developing more sophisticated models to represent the joint likelihoods of multiple co-evolving lineages with ancestral reassortment or recombination graphs \cite{Barrat-Charlaix2022,Muller2022}.
 However, several key questions in genomic epidemiology do not require full phylogenetic inference of ancestral relationships and states.
-For example, genomic epidemiologists commonly need to 1) identify clusters of closely-related genomes that represent regional outbreaks or new variants of concern \cite{OToole2022,McBroome2022,Stoddard2022}, 2) place newly sequenced viral genomes in the evolutionary context of other circulating strains \cite{OToole2021,Turakhia2021,Aksamentov2021}, and 3) visualize the genetic relationships among closely related virus samples \cite{Argimon2016,Campbell2021}.
+For example, genomic epidemiologists commonly need to 1) identify clusters of closely-related genomes that represent regional outbreaks or new variants of concern \cite{OToole2022,McBroome2022,Stoddard2022,Tran-Kiem2023}, 2) place newly sequenced viral genomes in the evolutionary context of other circulating samples \cite{OToole2021,Turakhia2021,Aksamentov2021}, and 3) visualize the genetic relationships among closely related virus samples \cite{Argimon2016,Campbell2021}.
 Standard statistical methods can address these common use cases by transforming an alignment of genome sequences into a matrix and operating on that matrix to calculate pairwise relationships between sequences.
 As these methods lack a formal biological model of evolutionary relationships, they make weak assumptions about the input data and therefore should be applicable to pathogen genomes that violate phylogenetic assumptions.
 
@@ -568,7 +568,7 @@ In t-SNE and UMAP embeddings, some pairs of samples with intermediate distances 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png}
 \caption{{\bf Relationship between pairwise genetic distance and Euclidean distance in embedding space, representing the ability of embedding methods to capture local and global genetic structure.}
-Embeddings with PCA (upper left), MDS (upper right), t-SNE (lower left), and UMAP (lower right) consistently exhibit linear relationships for pairs of strains that differ by no more than 10 nucleotides.}
+Embeddings with PCA (upper left), MDS (upper right), t-SNE (lower left), and UMAP (lower right) consistently exhibit linear relationships for pairs of samples that differ by no more than 10 nucleotides.}
 \label{fig:seasonal-influenza-h3n2-ha-pairwise-distances}
 \end{figure}
 
