@@ -272,32 +272,50 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
         raise Exception(
             'The length of list_of_data and the length of list_of_titles should not be odd.')
     else:
-        base = alt.Chart(dataFrame)
+        base = alt.Chart(dataFrame[dataFrame["is_internal_node"] == True])
         brush = alt.selection(type='interval', resolve='global')
         tips = base.mark_circle().encode(
             x=alt.X(
-                "date:Q",
+                "divergence:Q",
                 scale=alt.Scale(
-                    domain=(dataFrame["date"].min() - 0.2, dataFrame["date"].max() + 0.2)),
-                title="Date",
+                    domain=(dataFrame["divergence"].min() - 0.0002, dataFrame["divergence"].max() + 0.0002)),
+                title="Divergence",
                 axis=alt.Axis(labels=True, ticks=True)
             ),
             y=alt.Y(
-                "y:Q",
+                "y_value:Q",
                 title="",
                 axis=alt.Axis(labels=False, ticks=False)
             ),
-            color=alt.condition(brush, if_false=alt.ColorValue('gray'), if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_))),
+            color=alt.condition(brush, if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_)), if_false=alt.ColorValue('gray')),
             tooltip=ToolTip
         ).add_selection(brush)
 
-        lines = base.mark_line().encode(
-            x=alt.X("parent_date:Q", scale=alt.Scale(domain=(dataFrame["date"].min() - 0.2, dataFrame["date"].max() + 0.2))),
-            x2="date:Q",
-            y="parent_y:Q",
-            y2="y:Q",
-            color=alt.ColorValue("#cccccc")
-        )
+        lines = alt.Chart(dataFrame).mark_line().encode(
+                    x=alt.X("parent_mutation:Q", scale=alt.Scale(domain=(dataFrame["divergence"].min() - 0.002, dataFrame["divergence"].max() + 0.002))),
+                    x2="divergence:Q",
+                    y=alt.Y("parent_y:Q", scale=alt.Scale(domain=(dataFrame["y_value"].min() - 1.0, dataFrame["y_value"].max() + 0.2))),
+                    y2="y_value:Q",
+                    color=alt.ColorValue("#cccccc")
+                )
+        
+        # other lines:
+        # horizontal_lines = alt.Chart(dataFrame).mark_line().encode(
+        #     x="divergence:Q",
+        #     x2="parent_mutation:Q",
+        #     y=alt.Y("parent_y:Q", scale=alt.Scale(domain=(dataFrame["y_value"].min() - 1.0, dataFrame["y_value"].max() + 0.2))),
+        #     color=alt.ColorValue("#cccccc")
+        # )
+
+        # # Creating vertical lines
+        # vertical_lines = alt.Chart(dataFrame).mark_rule().encode(
+        #     x="divergence:Q",
+        #     y=alt.Y("parent_y:Q", scale=alt.Scale(domain=(dataFrame["y_value"].min() - 1.0, dataFrame["y_value"].max() + 0.2))),
+        #     y2="y_value:Q",
+        #     color=alt.ColorValue("#cccccc")
+        # )
+
+        # lines = (horizontal_lines + vertical_lines)
 
         tree_name = (lines + tips).properties(width=560, height=250)
         list_of_chart.append(tree_name)

@@ -468,7 +468,7 @@ rule seasonal_flu_training_create_table_from_tree_and_node_data:
     output:
         table="seasonal-flu-nextstrain/results/table.tsv",
     params:
-        attributes="numdate clade_membership mutation_length"
+        attributes="numdate clade_membership mutation_length divergence"
     conda: "../cartography.yml"
     shell:
         """

@@ -35,15 +35,14 @@ if __name__ == "__main__":
     parser.add_argument("--distance-matrix", required=True, help="the path to a CSV genetic distance matrix")
     parser.add_argument("--metadata", required=True, help="a CSV/TSV path to a metadata table with the group status of the different strains in the build")
     parser.add_argument("--group-column", required=True, help="the column corresponding to grouping status")
+    parser.add_argument("--ignored-group-labels", nargs="+", default=["-1", "unassigned"], help="group labels from group-column to ignore")
     parser.add_argument("--output", required=True,  help="path for outputting as a dataframe")
 
     args = parser.parse_args()
 
     distance_matrix = pd.read_csv(args.distance_matrix, index_col=0)
 
-    node_data = pd.read_csv(args.metadata, sep="\t" if args.metadata.endswith(".tsv") else ",")
-    node_data.index = node_data["strain"]
-    node_data.drop("strain", axis=1, inplace=True)
+    node_data = pd.read_csv(args.metadata, sep="\t" if args.metadata.endswith(".tsv") else ",", index_col="strain")
     node_dict = node_data.transpose().to_dict()
 
     group_annotations = pd.DataFrame([
@@ -52,7 +51,7 @@ if __name__ == "__main__":
     ])
 
     # ignoring -1 cluster grouping
-    group_annotations = group_annotations[group_annotations[args.group_column] != -1]
+    group_annotations = group_annotations[group_annotations[args.group_column] not in args.ignored_group_labels]
 
     # difference between clades
     distance_matrix.columns = distance_matrix.index

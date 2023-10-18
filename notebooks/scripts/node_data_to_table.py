@@ -58,4 +58,34 @@ if __name__ == "__main__":
 
    # Convert records to a data frame and save as a tab-delimited file.
     df = pd.DataFrame(records)
+
+    def get_parent_y(row):
+        parent_name = row['parent_name']
+        if parent_name is not None:
+            parent_y = df.loc[df['strain'] == parent_name, 'y_value'].values
+            if len(parent_y) > 0:
+                return parent_y[0]
+            else:
+                return row['y_value']
+        
+        return np.nan
+
+    def get_parent_mutation_length(row):
+        parent_name = row['parent_name']
+        if parent_name is not None:
+            parent_y = df.loc[df['strain'] == parent_name, 'divergence'].values
+            if len(parent_y) > 0:
+                return parent_y[0]
+            else:
+                return row['divergence']
+        
+        return np.nan
+    
+    if "divergence" in args.attributes:
+        df['parent_y'] = df.apply(get_parent_y, axis=1)
+        df['parent_mutation'] = df.apply(get_parent_mutation_length, axis=1)
+
+        df["y_value"] = df["y_value"].max() - df["y_value"]
+        df["parent_y"] = df["parent_y"].max() - df["parent_y"]
+
     df.to_csv(args.output, sep="\t", header=True, index=False)

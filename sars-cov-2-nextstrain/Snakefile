@@ -522,18 +522,22 @@ rule sarscov2_create_node_output:
 rule sarscov2_tree_to_table:
     message: "creating a table of node data values from the tree attributes"
     input:
-        tree = "auspice/cartography_ncov_2020-2022.json",
+        tree = "sars-cov-2-nextstrain/results/tree.nwk", #"auspice/cartography_ncov_2020-2022.json",
+        clades = "sars-cov-2-nextstrain/results/clades.json",
+        branch_lengths="sars-cov-2-nextstrain/results/branch_lengths.json"
     output:
         table = "sars-cov-2-nextstrain/results/table.tsv",
     params:
-        attributes = "num_date Nextstrain_clade Nextclade_pango Nextclade_pango_collapsed"
+        attributes = "num_date Nextstrain_clade Nextclade_pango Nextclade_pango_collapsed mutation_length divergence"
     conda: "../cartography.yml"
     shell:
         """
-        python3 notebooks/scripts/auspice_tree_to_table.py \
-            {input.tree} \
-            {output.table} \
-            --attributes {params.attributes}
+        python3 notebooks/scripts/node_data_to_table.py \
+            --tree {input.tree} \
+            --node-data {input.clades} {input.branch_lengths} \
+            --include-internal-nodes \
+            --attributes {params.attributes} \
+            --output {output.table}
         """
 
 rule sarscov2_create_distance_dataframe:
