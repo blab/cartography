@@ -251,7 +251,7 @@ rule seasonal_flu_reassortment_refine:
 
 rule seasonal_flu_reassortment_ancestral:
     input:
-        tree = rules.seasonal_flu_reassortment_refine.output.tree,
+        tree = "ha-na-nextstrain/results/tree_{segment}.nwk",
         alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta"
     output:
         node_data = "ha-na-nextstrain/results/nt_muts_{segment}.json"
@@ -269,7 +269,7 @@ rule seasonal_flu_reassortment_ancestral:
 
 rule seasonal_flu_reassortment_translate:
     input:
-        tree = rules.seasonal_flu_reassortment_refine.output.tree,
+        tree = "ha-na-nextstrain/results/tree_{segment}.nwk",
         node_data = rules.seasonal_flu_reassortment_ancestral.output.node_data,
         reference = seasonal_flu_reassortment_files.reference
     output:
@@ -286,7 +286,7 @@ rule seasonal_flu_reassortment_translate:
 
 rule seasonal_flu_reassortment_clades:
     input:
-        tree = rules.seasonal_flu_reassortment_refine.output.tree,
+        tree = "ha-na-nextstrain/results/tree_{segment}.nwk",
         aa_muts = rules.seasonal_flu_reassortment_translate.output.node_data,
         nuc_muts = rules.seasonal_flu_reassortment_ancestral.output.node_data,
         clades = seasonal_flu_reassortment_files.clades
@@ -459,7 +459,7 @@ rule seasonal_flu_reassortment_create_node_output:
 
 rule seasonal_flu_reassortment_export:
     input:
-        tree = rules.seasonal_flu_reassortment_refine.output.tree,
+        tree = "ha-na-nextstrain/results/tree_{segment}.nwk",
         metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
         branch_lengths = rules.seasonal_flu_reassortment_refine.output.node_data,
         nt_muts = rules.seasonal_flu_reassortment_ancestral.output.node_data,
@@ -470,7 +470,7 @@ rule seasonal_flu_reassortment_export:
         auspice_config = seasonal_flu_reassortment_files.auspice_config,
         clades = "ha-na-nextstrain/results/clades_ha.json"
     output:
-        auspice_tree = "auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json"
+        auspice_tree = "auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json",
     conda: "../cartography.yml"
     shell:
         """
@@ -485,7 +485,7 @@ rule seasonal_flu_reassortment_export:
 
 rule seasonal_flu_reassortment_tree_to_table:
     input:
-        tree = rules.seasonal_flu_reassortment_export.output.auspice_tree
+        tree = "auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json",
     output:
         table = "ha-na-nextstrain/results/table_{segment}.tsv"
     params:
