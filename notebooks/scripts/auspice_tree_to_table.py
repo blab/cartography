@@ -41,6 +41,8 @@ if __name__ == "__main__":
             record = {
                 "strain": node.name,
                 "y_value": heights[node],
+                "parent_name": getattr(node, "parent", ""),
+                "is_internal_node": not node.is_terminal(),
             }
 
             for attribute in attributes:

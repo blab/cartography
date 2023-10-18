@@ -496,6 +496,7 @@ rule seasonal_flu_reassortment_tree_to_table:
         python3 notebooks/scripts/auspice_tree_to_table.py \
             {input.tree} \
             {output.table} \
+            --include-internal-nodes \
             --attributes {params.attributes}
         """
 
