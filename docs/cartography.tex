@@ -234,8 +234,8 @@ Specifically, we sought to understand how well the resulting embeddings captured
 We applied principal component analysis (PCA), multidimensional scaling (MDS), t-distributed stochastic neighbor embedding (t-SNE), and uniform manifold approximation and projection (UMAP) to genome sequences for two viruses with well-defined phylogenetic clades and either reassortment (seasonal influenza A/H3N2) or recombination (SARS-CoV-2).
 For each low-dimensional embedding of sequences, we calculated the correlation between pairwise genetic and Euclidean distances in the embedding and applied a hierarchical clustering method to identify clusters in the embedding.
 We measured the accuracy of these clusters compared to previously defined phylogenetic clades, reassortment clusters, or recombinant lineages.
-First, we applied all methods to A/H3N2 hemagglutinin sequences for which high-quality expert clade annotations from the World Health Organization exist.
-Next, we applied the same methods to concatenated A/H3N2 hemagglutinin and neuraminidase sequences and compared the resulting clusters to reassortment groups identified by an ancestral reassortment graph method, TreeKnit.
+First, we applied all methods to H3N2 hemagglutinin sequences for which high-quality expert clade annotations from the World Health Organization exist.
+Next, we applied the same methods to concatenated H3N2 hemagglutinin and neuraminidase sequences and compared the resulting clusters to reassortment groups identified by an ancestral reassortment graph method, TreeKnit.
 Finally, we applied each method to SARS-CoV-2 sequences and compared the resulting clusters to previously defined lineages with and without recombination.
 We found that MDS maintained the strongest correlation between pairwise genetic and Euclidean distances between sequences and best captured the intermediate placement of recombinant lineages between parental lineages.
 However, clusters from t-SNE and UMAP most accurately recapitulated known phylogenetic clades and reassortment groups.
@@ -354,14 +354,14 @@ For UMAP, we tested nearest neighbor values of 25, 50, and 100, and we tested va
 
 \subsection*{Selection of natural virus population data}
 
-We selected recent publicly available genome sequences and metadata for seasonal influenza A/H3N2 HA and NA genes and SARS-CoV-2 genomes from INSDC databases \cite{Arita2021}.
+We selected recent publicly available genome sequences and metadata for seasonal influenza H3N2 HA and NA genes and SARS-CoV-2 genomes from INSDC databases \cite{Arita2021}.
 For both viruses, we divided the available data into ``early'' and ``late'' datasets to use as training and test data, respectively, for identification of virus-specific clustering parameters.
 \jhc{First mention of clustering happens here before we define what clustering is later on. Maybe ok as long as we reference the ``later on'' bit here parenthetically?}
 
-For analyses that focused only on A/H3N2 HA data, we defined the early dataset between October 2015 and April 2018 and the late dataset between April 2018 to January 2020.
+For analyses that focused only on H3N2 HA data, we defined the early dataset between October 2015 and April 2018 and the late dataset between April 2018 to January 2020.
 For both early and late datasets, we evenly sampled 25 sequences per country, year, and month, excluding known outliers.
 With this sampling scheme, we selected 1,918 HA sequences for the early dataset and 821 for the late dataset.
-For analyses that combined A/H3N2 HA and NA data, we defined a single dataset between January 2016 and July 2018, keeping 1,643 samples for which both HA and NA have been sequenced.
+For analyses that combined H3N2 HA and NA data, we defined a single dataset between January 2016 and July 2018, keeping 1,643 samples for which both HA and NA have been sequenced.
 \jhc{The date ranges for H3N2 datasets feel a little arbitrary now, in a way that the SC2 data do not. SC2 evolution has distinct periods of change (e.g., introduction of Delta or Omicron). We should revisit the date ranges for H3N2 more systematically.}
 
 For SARS-CoV-2 data, we defined the early dataset between January 1, 2020 and January 1, 2022 and the late dataset between January 1, 2022 and July 5, 2023.
@@ -381,7 +381,7 @@ The distance plots provide a qualitative assessment of each embedding's local an
 \subsection*{Phylogenetic analysis}
 
 For each natural population described above, we created an annotated, time-scaled phylogenetic tree.
-For seasonal influenza A/H3N2 HA and NA sequences, we aligned sequences with MAAFT (version 7.486) \cite{Katoh2002,Katoh2013} using the \textit{augur align} command (version 22.0.3) \cite{Huddleston2021}.
+For seasonal influenza H3N2 HA and NA sequences, we aligned sequences with MAAFT (version 7.486) \cite{Katoh2002,Katoh2013} using the \textit{augur align} command (version 22.0.3) \cite{Huddleston2021}.
 For SARS-CoV-2 sequences, we used existing reference-based alignments provided by the Nextstrain team (\href{https://docs.nextstrain.org/projects/ncov/en/latest/reference/remote_inputs.html#summary-of-available-genbank-open-files}{https://docs.nextstrain.org/projects/ncov/en/latest/reference/remote\_inputs.html}) and generated with Nextalign (version 2.14.0) \cite{Aksamentov2021}.
 We inferred a phylogeny with IQ-TREE (version 2.1.4-beta) \cite{Nguyen2014} using the \textit{augur tree} command and inferred a time tree with TreeTime (version 0.10.1) \cite{Sagulenko2018} using the \textit{augur refine} command.
 We visualized phylogenies with Auspice \cite{Hadfield2018}, after first converting the trees to Auspice JSON format with \textit{augur export}.
@@ -389,8 +389,8 @@ We visualized phylogenies with Auspice \cite{Hadfield2018}, after first converti
 \subsection*{Definitions of genetic groups by experts or biologically-informed models}
 
 We annotated phylogenetic trees with genetic groups previously identified by experts or assigned by biologically-informed models.
-For seasonal influenza A/H3N2, the World Health Organization assigns ``clade'' labels to clades in HA phylogenies that appear to be genetically or phenotypically distinct from other recently circulating A/H3N2 samples.
-We used the latest clade definitions for A/H3N2 maintained by the Nextstrain team as part of their seasonal influenza surveillance efforts \cite{Neher2015}.
+For seasonal influenza H3N2, the World Health Organization assigns ``clade'' labels to clades in HA phylogenies that appear to be genetically or phenotypically distinct from other recently circulating H3N2 samples.
+We used the latest clade definitions for H3N2 maintained by the Nextstrain team as part of their seasonal influenza surveillance efforts \cite{Neher2015}.
 
 As seasonal influenza clades only account for the HA gene and lack information about reassortment events, we assigned joint HA and NA genetic groups using a biologically-informed model, TreeKnit \cite{Barrat-Charlaix2022}.
 TreeKnit infers ancestral reassortment graphs from two gene trees, finding groups of samples for which both genes share the same history.
@@ -423,7 +423,7 @@ We hardcoded the min samples to 5 to minimize the number of spurious initial clu
 HDBSCAN calculates the distance between clusters on the Euclidean scale of each embedding.
 To account for embedding-specific distances, we performed a coarse grid search of distance threshold values for each virus type and embedding method.
 
-We performed the grid search on the early datasets for both seasonal influenza A/H3N2 HA and SARS-CoV-2.
+We performed the grid search on the early datasets for both seasonal influenza H3N2 HA and SARS-CoV-2.
 For each dataset and embedding method, we applied HDBSCAN clustering with a distance threshold between 0 and 7 inclusive with steps of 0.5 between values.
 For a given threshold, we obtained sets of samples assigned to HDBSCAN clusters from the embedding.
 We evaluated the accuracy of these clusters with variation of information (VI) which calculates the distance between two sets of clusters of the same samples \cite{meilua2003comparing}.
@@ -531,13 +531,13 @@ These qualitative results matched our expectations based on how well each method
 \caption*{{\bf S3 Fig. Representative MDS embeddings for simulated populations using optimal parameters per pathogen (rows) and showing all three components.}}
 \end{figure}
 
-\subsection*{Embedding clusters recapitulate phylogenetic clades for seasonal influenza A/H3N2}
+\subsection*{Embedding clusters recapitulate phylogenetic clades for seasonal influenza H3N2}
 
-Seasonal influenza A/H3N2's hemagglutinin (HA) sequences provide an ideal positive control to test embedding methods and clustering in low-dimensional space.
-A/H3N2's HA protein evolves rapidly, accumulating amino acid mutations that enable escape from adaptive immunity in human populations \cite{Petrova2018}.
+Seasonal influenza H3N2's hemagglutinin (HA) sequences provide an ideal positive control to test embedding methods and clustering in low-dimensional space.
+H3N2's HA protein evolves rapidly, accumulating amino acid mutations that enable escape from adaptive immunity in human populations \cite{Petrova2018}.
 These mutations produce distinct phylogenetic clades that represent potentially different antigenic phenotypes.
 The World Health Organization (WHO) Global Influenza Surveillance and Response System (GISRS) regularly sequences genomes of circulating influenza lineages \cite{Hay2018} and submits these sequences to public INSDC databases like NCBI's GenBank \cite{Arita2021}.
-These factors, coupled with HA's relatively short gene size of 1,701 nucleotides, facilitate real-time genomic epidemiology of A/H3N2 \cite{Neher2015} and rapid analysis by the embedding methods we wanted to evaluate.
+These factors, coupled with HA's relatively short gene size of 1,701 nucleotides, facilitate real-time genomic epidemiology of H3N2 \cite{Neher2015} and rapid analysis by the embedding methods we wanted to evaluate.
 
 We first applied each embedding method to the ``early'' H3N2 HA sequences collected from 2015 through 2018, colored samples by previously defined phylogenetic clades, and inspected the placement of these samples in the embeddings and corresponding phylogeny.
 All four embedding methods qualitatively recapitulated clade-level groupings observed in the phylogeny (Fig~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}).
@@ -557,7 +557,7 @@ These results qualitatively replicate the patterns we observed in embeddings for
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-embeddings-by-clade.png}
-\caption{{\bf The phylogeny of influenza A/H3N2 viruses (top) shows the evolutionary relationships among viruses including clades, or viruses that share the same mutations and descend from the same common ancestor.}
+\caption{{\bf The phylogeny of influenza H3N2 viruses (top) shows the evolutionary relationships among viruses including clades, or viruses that share the same mutations and descend from the same common ancestor.}
 Reduced dimensionality embeddings of genetic sequences into two dimensions by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right) generally recapitulate groups of viruses into clades without inferring ancestral relationships.}
 \label{fig:seasonal-influenza-h3n2-ha-embeddings}
 \end{figure}
@@ -636,13 +636,13 @@ PCA clusters split clade 3c3.A into two groups and merged A1b/94N with a larger 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/flu-2018-2020-ha-embeddings-by-clade.png}
-\caption*{{\bf S4 Fig. Phylogeny of late (2018--2020) influenza A/H3N2 HA sequences (top) and reduced dimensionality embeddings of genetic sequences into two dimensions by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}}
+\caption*{{\bf S4 Fig. Phylogeny of late (2018--2020) influenza H3N2 HA sequences (top) and reduced dimensionality embeddings of genetic sequences into two dimensions by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}}
 \end{figure}
 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/flu-2018-2020-mds-by-clade.png}
-\caption*{{\bf S5 Fig. MDS embeddings for late (2018--2020) influenza A/H3N2 HA sequences showing all three components.}}
+\caption*{{\bf S5 Fig. MDS embeddings for late (2018--2020) influenza H3N2 HA sequences showing all three components.}}
 \end{figure}
 
 \begin{figure}[!h]
@@ -652,7 +652,7 @@ The chart for PCA (top left), MDS (middle left), t-SNE (middle left), and UMAP (
 \label{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters}
 \end{figure}
 
-\subsection*{Joint embeddings of hemagglutinin and neuraminidase genomes identify seasonal influenza virus A/H3N2 reassortment events}
+\subsection*{Joint embeddings of hemagglutinin and neuraminidase genomes identify seasonal influenza virus H3N2 reassortment events}
 
 Given that clusters from embedding methods could recapitulate expert-defined clades, we measured how well the same methods could capture reassortment events between multiple gene segments as detected by biologically-informed computational models.
 Evolution of HA and NA surface proteins contributes to the ability of influenza viruses to escape existing immunity \cite{Petrova2018} and HA and NA genes frequently reassort \cite{Nelson2008,Marshall2013,Potter2019}.
@@ -687,31 +687,31 @@ These results suggest that a single embedding of multiple gene segments could id
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-all-embeddings-by-mcc.png}
-\caption*{{\bf S6 Fig. Embeddings influenza A/H3N2 HA-only (left) and combined HA/NA (right) showing the effects of additional NA genetic information on the placement of reassortment events detected by TreeKnit (MCCs).}}
+\caption*{{\bf S6 Fig. Embeddings influenza H3N2 HA-only (left) and combined HA/NA (right) showing the effects of additional NA genetic information on the placement of reassortment events detected by TreeKnit (MCCs).}}
 \end{figure}
 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-pca-by-cluster.png}
-\caption*{{\bf S7 Fig. PCA embeddings for influenza A/H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}
+\caption*{{\bf S7 Fig. PCA embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}
 \end{figure}
 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-mds-by-cluster.png}
-\caption*{{\bf S8 Fig. MDS embeddings for influenza A/H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}
+\caption*{{\bf S8 Fig. MDS embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}
 \end{figure}
 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-tsne-by-cluster.png}
-\caption*{{\bf S9 Fig. t-SNE embeddings for influenza A/H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}
+\caption*{{\bf S9 Fig. t-SNE embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}
 \end{figure}
 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-umap-by-cluster.png}
-\caption*{{\bf S10 Fig. UMAP embeddings for influenza A/H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}
+\caption*{{\bf S10 Fig. UMAP embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}
 \end{figure}
 
 \subsection*{SARS-CoV-2 clusters recapitulate broad genetic groups corresponding to Nextstrain clades}
