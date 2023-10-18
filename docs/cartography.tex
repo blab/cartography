@@ -254,20 +254,20 @@ TBD.
 \section*{Introduction}
 
 Tracking the evolution of human pathogenic viruses in real time enables epidemiologists to respond quickly to emerging epidemics and local outbreaks \cite{Grubaugh2019}.
-Real-time analyses of viral evolution typically rely on phylogenetic methods that can reconstruct the evolutionary history of viral populations from their genome sequences and estimate states of inferred ancestral viruses including their most likely genome sequence, time of circulation, and geographic location \cite{Volz2013,Baele2017,Sagulenko2018}.
+Real-time analyses of viral evolution typically rely on phylogenetic methods that can reconstruct the evolutionary history of viral populations from their genome sequences and estimate states of inferred ancestral viruses from the resulting trees including their most likely genome sequence, time of circulation, and geographic location \cite{Volz2013,Baele2017,Sagulenko2018}.
 Importantly, these methods assume that all sequence data share an evolutionary history represented by the clonal replication of genomes.
 In practice, the evolutionary histories of many human pathogenic viruses violate this assumption through processes of reassortment or recombination, as seen in seasonal influenza \cite{Nelson2008,Marshall2013} and seasonal coronaviruses \cite{Su2016}, respectively.
 Researchers account for these evolutionary mechanisms by limiting their analyses to individual genes \cite{Lemey2007,Bhatt2011}, combining multiple genes despite their different evolutionary histories \cite{Wiens1998}, or developing more sophisticated models to represent the joint likelihoods of multiple co-evolving lineages with ancestral reassortment or recombination graphs \cite{Barrat-Charlaix2022,Muller2022}.
 However, several key questions in genomic epidemiology do not require full phylogenetic inference of ancestral relationships and states.
 For example, genomic epidemiologists commonly need to 1) identify clusters of closely-related genomes that represent regional outbreaks or new variants of concern \cite{OToole2022,McBroome2022,Stoddard2022,Tran-Kiem2023}, 2) place newly sequenced viral genomes in the evolutionary context of other circulating samples \cite{OToole2021,Turakhia2021,Aksamentov2021}, and 3) visualize the genetic relationships among closely related virus samples \cite{Argimon2016,Campbell2021}.
-Standard statistical methods can address these common use cases by transforming an alignment of genome sequences into a matrix and operating on that matrix to calculate pairwise relationships between sequences.
-As these methods lack a formal biological model of evolutionary relationships, they make weak assumptions about the input data and therefore should be applicable to pathogen genomes that violate phylogenetic assumptions.
+Given that these common use cases rely on genetic distances between samples, tree-free statistical methods that operate on pairwise distances could be sufficient to address each case.
+As these tree-free methods lack a formal biological model of evolutionary relationships, they make weak assumptions about the input data and therefore should be applicable to pathogen genomes that violate phylogenetic assumptions.
 
-Common matrix representations of genome alignments include coding each distinct nucleotide character as an integer or calculating pairwise distances between sequences.
-The first of these transformations is the first step prior to performing a principal components analysis (PCA) to find orthogonal representations of the inputs that explain the most variance \cite{jolliffe_cadima_2016}.
+Common statistical approaches to analyzing variation from genome alignments start by transforming alignments into a matrix coding each distinct nucleotide character as an integer or a distance matrix representing pairwise distances between sequences.
+The first of these transformations is the first step prior to performing a principal component analysis (PCA) to find orthogonal representations of the inputs that explain the most variance \cite{jolliffe_cadima_2016}.
 The second transformation calculates the number of mismatches between each pair of aligned genome sequences, also known as the Hamming distance, to create a distance matrix.
 Most phylogenetic methods begin by building a distance matrix for all sequences in a given multiple sequence alignment.
-Dimensionality reduction algorithms such as multidimensional scaling (MDS) \cite{hout_papesh_goldinger_2012}, t-SNE \cite{maaten2008visualizing}, and UMAP \cite{lel2018umap} accept such distance matrices as an input and produce a corresponding low-dimensional representation or ``embedding'' of those data.
+Dimensionality reduction algorithms such as multidimensional scaling (MDS) \cite{hout_papesh_goldinger_2012}, t-distributed stochastic neighbor embedding (t-SNE) \cite{maaten2008visualizing}, and uniform manifold approximation and projection (UMAP) \cite{lel2018umap} accept such distance matrices as an input and produce a corresponding low-dimensional representation or ``embedding'' of those data.
 Both types of transformation allow us to reduce high-dimensional genome alignments ($M \times N$ values for $M$ genomes of length $N$) to low-dimensional embeddings where clustering algorithms and visualization are more tractable.
 Additionally, distance-based methods can reflect the presence or absence of insertions and deletions in an alignment that phylogenetic methods ignore.
 
@@ -287,6 +287,7 @@ Finally, we tested the ability of these methods to identify reassortment of seas
 These results inform our recommendations for future applications of these methods including which are most effective for specific problems in genomic epidemiology and which parameters researchers should use for each method.
 
 \section*{Materials and methods}
+\jhc{This placement of methods before results breaks with PLoS's default organization. This organization follows that used by the TreeKnit paper which seemed to be a useful model for this paper.}
 
 \subsection*{Embedding methods}
 
@@ -342,7 +343,7 @@ We created an embedding from the training data with the given parameters, fit a 
 We summarized the error for a given population type, method, and method parameters across all population replicates and training/test data by calculating the median of the MAE.
 For all method parameters except those controlling the number of components used for the embedding, we selected the optimal parameters as those that minimized the median MAE for a given embedding method.
 Since increasing the number of components used by PCA and MDS allows these methods to overfit to available data, we selected the optimal number of components for these methods as the number beyond which the median MAE did not decrease by at least 1 nucleotide.
-This approach follows the same concept from the MDS algorithm itself where optimization occurs iteratively until some predefined error threshold is reached.
+This approach follows the same concept from the MDS algorithm itself where optimization occurs iteratively until the algorithm reaches a predefined error threshold \cite{hout_papesh_goldinger_2012}.
 
 With the approach described above, we tested each method across a range of relevant parameters with all combinations of parameter values.
 For PCA, we tested the number of components between 2 and 6.
@@ -354,17 +355,20 @@ For UMAP, we tested nearest neighbor values of 25, 50, and 100, and we tested va
 \subsection*{Selection of natural virus population data}
 
 We selected recent publicly available genome sequences and metadata for seasonal influenza A/H3N2 HA and NA genes and SARS-CoV-2 genomes from INSDC databases \cite{Arita2021}.
-For both viruses, we divided the available data into an ``early'' and ``late'' dataset to use as training and test data, respectively, for identification of virus-specific clustering parameters.
+For both viruses, we divided the available data into ``early'' and ``late'' datasets to use as training and test data, respectively, for identification of virus-specific clustering parameters.
+\jhc{First mention of clustering happens here before we define what clustering is later on. Maybe ok as long as we reference the ``later on'' bit here parenthetically?}
 
 For analyses that focused only on A/H3N2 HA data, we defined the early dataset between October 2015 and April 2018 and the late dataset between April 2018 to January 2020.
 For both early and late datasets, we evenly sampled 25 sequences per country, year, and month, excluding known outliers.
 With this sampling scheme, we selected 1,918 HA sequences for the early dataset and 821 for the late dataset.
 For analyses that combined A/H3N2 HA and NA data, we defined a single dataset between January 2016 and July 2018, keeping 1,643 samples for which both HA and NA have been sequenced.
+\jhc{The date ranges for H3N2 datasets feel a little arbitrary now, in a way that the SC2 data do not. SC2 evolution has distinct periods of change (e.g., introduction of Delta or Omicron). We should revisit the date ranges for H3N2 more systematically.}
 
 For SARS-CoV-2 data, we defined the early dataset between January 1, 2020 and January 1, 2022 and the late dataset between January 1, 2022 and July 5, 2023.
 For the early dataset, we evenly sampled 1,734 SARS-CoV-2 genomes by geographic region, year, and month, excluding known outliers.
 For the late dataset, we used the same even sampling by space and time to select 1,394 representative genomes.
 In addition to these genomes, we sampled at most 20 genomes per Nextclade pango lineage for 10 known recombinant lineages (XAY, XBB, XBB.1, XBC, XBF, XBL, XC, XD, XE, XF, and XG) and their corresponding parental lineages (AY.29, AY.4, AY.45, B.1.1.7, B.1.617, BA.1, BA.2, BA.2.75, BA.4, BA.5, BA.5.2.3, BJ.1, BM.1.1.1, and CJ.1) as defined by \href{https://libguides.mskcc.org/SARS2/recombination}{https://libguides.mskcc.org/SARS2/recombination}.
+\jhc{At this point, we haven't defined ``Pango lineages'' yet, but I don't know that it makes sense to define lineages in this section. Curious what other people think.}
 With these additional genomes, the late SARS-CoV-2 dataset included 2,072 total genomes.
 
 \subsection*{Evaluation of linear relationships between genetic distance and Euclidean distance in embeddings}
@@ -379,7 +383,7 @@ The distance plots provide a qualitative assessment of each embedding's local an
 For each natural population described above, we created an annotated, time-scaled phylogenetic tree.
 For seasonal influenza A/H3N2 HA and NA sequences, we aligned sequences with MAAFT (version 7.486) \cite{Katoh2002,Katoh2013} using the \textit{augur align} command (version 22.0.3) \cite{Huddleston2021}.
 For SARS-CoV-2 sequences, we used existing reference-based alignments provided by the Nextstrain team (\href{https://docs.nextstrain.org/projects/ncov/en/latest/reference/remote_inputs.html#summary-of-available-genbank-open-files}{https://docs.nextstrain.org/projects/ncov/en/latest/reference/remote\_inputs.html}) and generated with Nextalign (version 2.14.0) \cite{Aksamentov2021}.
-We inferred a phylogeny with IQ-TREE (version 2.1.4-beta) \cite{Nguyen2014} using the \textit{augur tree} command and inferred a time tree with TreeTime (version 0.8.2) \cite{Sagulenko2018} using the \textit{augur refine} command.
+We inferred a phylogeny with IQ-TREE (version 2.1.4-beta) \cite{Nguyen2014} using the \textit{augur tree} command and inferred a time tree with TreeTime (version 0.10.1) \cite{Sagulenko2018} using the \textit{augur refine} command.
 We visualized phylogenies with Auspice \cite{Hadfield2018}, after first converting the trees to Auspice JSON format with \textit{augur export}.
 
 \subsection*{Definitions of genetic groups by experts or biologically-informed models}
@@ -395,19 +399,19 @@ TreeKnit attempts to resolve polytomies in one tree using information present in
 Input trees for TreeKnit must contain the same samples and root on the same sample.
 Because of these TreeKnit expectations, we inferred HA and NA trees with IQ-TREE with a custom argument to collapse near-zero-length branches (`-czb`).
 We rooted the resulting trees on the same sample that we used as an alignment reference, A/Beijing/32/1992, and pruned this sample prior to downstream analyses.
-We applied TreeKnit to the rooted HA and NA trees with a gamma value of 2.0 and the `--better-MCCs` flag.
+We applied TreeKnit to the rooted HA and NA trees with a gamma value of 2.0 and the `--better-MCCs` flag, as previously recommended for H3N2 analyses \cite{Barrat-Charlaix2022}.
 Finally, we filtered the MCCs identified by TreeKnit to retain only those with at least 10 samples and to omit the root MCC that represented the most recent common ancestor in both HA and NA trees.
 
-For SARS-CoV-2, we used both expert-defined ``Nextstrain clades'' \cite{Hodcroft2020,Bedford2021,Roemer2022} and computationally-defined Pangolin lineages \cite{OToole2021} provided by the Nextclade pango implementation as ``Nextclade pango'' annotations.
+For SARS-CoV-2, we used both expert-defined ``Nextstrain clades'' \cite{Hodcroft2020,Bedford2021,Roemer2022} and computationally-defined Pangolin lineages \cite{OToole2021} provided by Nextclade as ``Nextclade pango'' annotations.
 Nextstrain clade definitions represent the World Health Organization's variants of concern and other phylogenetic clades that have reached minimum global and regional frequencies and growth rates.
 Pangolin lineages represent a combination of lineages assigned by a machine learning model (\href{https://cov-lineages.org/resources/pangolin/pangolearn.html}{pangoLEARN}) and expert-curated lineages (\href{https://github.com/cov-lineages/pango-designation}{https://github.com/cov-lineages/pango-designation}) and must contain at least 5 samples with an unambiguous evolutionary event.
 As such, Nextstrain clades represent a much coarser genetic resolution than Pangolin lineages.
 Additionally, Pangolin lineages produced by recombination receive a lineage name prefixed by an ``X'', while Nextstrain clades do not explicitly reflect recombination events.
 
-Since Pangolin lineages can represent much smaller genetic groups than are practically useful, we collapsed Pango lineages with fewer than 10 samples in our analysis into their parental lineages using the pango\_aliasor tool (\href{https://github.com/corneliusroemer/pango_aliasor}{https://github.com/corneliusroemer/pango\_aliasor}).
+Since Pangolin lineages can represent much smaller genetic groups than are practically useful, we collapsed lineages with fewer than 10 samples in our analysis into their parental lineages using the pango\_aliasor tool (\href{https://github.com/corneliusroemer/pango_aliasor}{https://github.com/corneliusroemer/pango\_aliasor}).
 Specifically, we counted the number of samples per lineage, sorted lineages in ascending order by count, and collapsed each lineage with a count less than 10 into its parental lineage in the count-sorted order.
 This approach allowed small lineages to aggregate with other small parental lineages and meet the 10-sample threshold.
-We used these ``Nextclade pango collapsed'' lineages for subsequent analyses.
+We used these ``collapsed Nextclade pango'' lineages for subsequent analyses.
 
 \subsection*{Clustering of samples in embeddings}
 
@@ -438,6 +442,7 @@ First, we found all mutations between each sample's sequence and the reference s
 Within each cluster, we identified mutations that occurred in at least 10 samples and in at least 50\% of samples in the cluster.
 We recorded the resulting mutations per cluster in a table with columns for the embedding method, the position of the mutation, the derived allele of the mutation, and a list of the distinct clusters the mutation appeared in.
 From this table, we could identify mutations the only occurred in specific clusters and mutations that distinguished sets of clusters from each other.
+\jhc{This is an important part of the analysis (I think), but we don't discuss it in the Results or Discussion. The Results are already quite long without diving into specific mutations that define each cluster, but perhaps a sentence at the end of each virus's section could reference these tables as supplemental tables?}
 
 \subsection*{Assessment of HA/NA reassortment in seasonal influenza populations}
 
@@ -461,14 +466,14 @@ Note that we used the original uncollapsed ``Nextclade pango'' annotations to id
 The entire workflow for our analyses was implemented with Snakemake \cite{molder_2021}.
 We have provided all source code, configuration files, and datasets at \href{https://github.com/blab/cartography}{https://github.com/blab/cartography}.
 Interactive phylogenetic trees and corresponding embeddings for natural populations are available at \href{https://nextstrain.org/community/blab/cartography/}{https://nextstrain.org/community/blab/cartography/}.
-The \textit{pathogen-embed} Python package, available on PyPI, provides command line utilities to calculate distance matrices (\textit{pathogen-distance}), calculate embeddings per method (\textit{pathogen-embed}), and apply hierarchical clustering to embeddings (\textit{pathogen-cluster}).
+The \textit{pathogen-embed} Python package, available at \href{https://pypi.org/project/pathogen-embed/}{https://pypi.org/project/pathogen-embed/}, provides command line utilities to calculate distance matrices (\textit{pathogen-distance}), calculate embeddings per method (\textit{pathogen-embed}), and apply hierarchical clustering to embeddings (\textit{pathogen-cluster}).
 
 % Results and Discussion can be combined.
 \section*{Results}
 
 \subsection*{Simulated populations enable tuning of embedding method parameters}
 
-To understand how well PCA, MDS, t-SNE, and UMAP could represent genetic relationships between human pathogen viruses under well-defined evolutionary conditions, we simulated influenza-like and coronavirus-like populations, created embeddings for each population across a range of method parameters, and identified optimal parameters as those that maximized a linear relationship between genetic distance and Euclidean distance in low-dimensional space (see Methods).
+To understand how well PCA, MDS, t-SNE, and UMAP could represent genetic relationships between samples of human pathogen viruses under well-defined evolutionary conditions, we simulated influenza-like and coronavirus-like populations, created embeddings for each population across a range of method parameters, and identified optimal parameters as those that maximized a linear relationship between genetic distance and Euclidean distance in low-dimensional space (see Methods).
 Specifically, we selected parameters that minimized the median of the mean absolute error (MAE) between observed pairwise genetic distances of simulated genomes and predicted genetic distances for those genomes based on their Euclidean distances in each embedding.
 For methods like PCA and MDS where increasing the number of components available to the embedding could lead to overfitting, we selected the maximum number of components beyond which the median MAE did not decrease by more than 1 nucleotide.
 
@@ -513,9 +518,9 @@ These qualitative results matched our expectations based on how well each method
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/simulated-populations-representative-embeddings.png}
 \caption{{\bf Representative embeddings for simulated populations using optimal parameters per pathogen (rows) and embedding method (columns).}
-  Each panel represents an embedding method for a single replicate population for the corresponding pathogen type.
+  Each panel shows the embedding for sequences from the first four years of a single replicate population for the corresponding pathogen type.
   Each point represents a simulated viral sequence colored by its generation with darker values representing later generations.
-  The MDS embedding shows the first two of three total dimensions.
+  The MDS embedding shows the first two of three total components.
   \nameref{S3_Fig_simulated_representative_mds_embeddings} shows the full MDS embedding for all components.}
 \label{fig:simulated-populations-representative-embeddings}
 \end{figure}
@@ -534,7 +539,7 @@ These mutations produce distinct phylogenetic clades that represent potentially 
 The World Health Organization (WHO) Global Influenza Surveillance and Response System (GISRS) regularly sequences genomes of circulating influenza lineages \cite{Hay2018} and submits these sequences to public INSDC databases like NCBI's GenBank \cite{Arita2021}.
 These factors, coupled with HA's relatively short gene size of 1,701 nucleotides, facilitate real-time genomic epidemiology of A/H3N2 \cite{Neher2015} and rapid analysis by the embedding methods we wanted to evaluate.
 
-We first applied each embedding method to the ``early'' H3N2 data collected from 2016 through 2018, colored samples by previously defined phylogenetic clades, and inspected the placement of these samples in the embeddings and corresponding phylogeny.
+We first applied each embedding method to the ``early'' H3N2 HA sequences collected from 2015 through 2018, colored samples by previously defined phylogenetic clades, and inspected the placement of these samples in the embeddings and corresponding phylogeny.
 All four embedding methods qualitatively recapitulated clade-level groupings observed in the phylogeny (Fig~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}).
 Samples from the same clade generally grouped tightly together.
 Most embedding methods also clearly delineated larger phylogenetic clades, placing clades A1, A2, A3, A4, and 3c3.A into separate locations in the embeddings.
@@ -563,7 +568,7 @@ However, only MDS consistently maintained that linearity as genetic distance inc
 Values of Euclidean distances in MDS corresponded nearly perfectly with values of genetic distances.
 In contrast, we observed a nonlinear relationship for samples with more genetic differences in PCA (Pearson's $R^{2} = 0.689$), t-SNE (Pearson's $R^{2} = 0.502$), and UMAP (Pearson's $R^{2} = 0.447$) embeddings.
 Although the most genetically distant samples mapped far from each other in all of these embeddings, samples with intermediate distances could map much closer or farther than expected by a linear model.
-In t-SNE and UMAP embeddings, some pairs of samples with intermediate distances of 30-40 nucleotides mapped farther apart than pairs of samples with much greater distances.
+In t-SNE and UMAP embeddings, some pairs of samples with intermediate distances of 30-40 nucleotides mapped farther apart than pairs of samples with much greater genetic distances.
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png}
@@ -820,8 +825,8 @@ These results replicate the patterns we observed with early SARS-CoV-2 data wher
 \subsection*{Distance-based embeddings reflect SARS-CoV-2 recombination events}
 
 Finally, we tested the ability of sequence embeddings to capture patterns of recombination between known parental lineages of SARS-CoV-2.
-We reasoned that each recombinant lineage, ``X'', should always place closer to its parental lineages ``A'' and ``B'' than the parental lineages place to each other.
-Based on this logic, we calculated the average Euclidean distance between pairs of samples in lineages A and B, A and X, and B and X for each embedding method (see Methods).
+We reasoned that each recombinant lineage, $X$, should always place closer to its parental lineages $A$ and $B$ than the parental lineages place to each other.
+Based on this logic, we calculated the average Euclidean distance between pairs of samples in lineages $A$ and $B$, $A$ and $X$, and $B$ and $X$ for each embedding method (see Methods).
 We identified recombinant lineages that always mapped closer to their parental lineages and recombinant lineages that always mapped closer to at least one of the parental lineages.
 
 Only 5 of the 10 recombinant lineages had enough samples in both parental and recombinant lineages to calculate average pairwise distances (XD, XE, XG, XBB, and XBL).
