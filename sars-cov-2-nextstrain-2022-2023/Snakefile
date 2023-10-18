@@ -670,13 +670,18 @@ rule sarscov2_test_concat_recombinant_distances:
         distances=expand("sars-cov-2-nextstrain-2022-2023/results/recombinant_distances_for_{method}.csv", method=EMBEDDING_METHODS),
     output:
         distances="sars-cov-2-nextstrain-2022-2023/results/recombinant_distances.csv",
+        distances_latex="docs/tables/sars-cov-2-recombinant-distances.tex",
     conda: "../cartography.yml"
+    params:
+        latex_precision=2,
     shell:
         """
         python3 notebooks/scripts/concatenate_tables.py \
             --tables {input.distances} \
             --separator ',' \
-            --output {output.distances}
+            --output {output.distances} \
+            --output-latex {output.distances_latex} \
+            --latex-precision {params.latex_precision}
         """
 
 rule sarscov2_test_create_notebook_docs:

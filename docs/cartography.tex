@@ -819,6 +819,30 @@ These results replicate the patterns we observed with early SARS-CoV-2 data wher
 
 \subsection*{Distance-based embeddings reflect SARS-CoV-2 recombination events}
 
+Finally, we tested the ability of sequence embeddings to capture patterns of recombination between known parental lineages of SARS-CoV-2.
+We reasoned that each recombinant lineage, ``X'', should always place closer to its parental lineages ``A'' and ``B'' than the parental lineages place to each other.
+Based on this logic, we calculated the average Euclidean distance between pairs of samples in lineages A and B, A and X, and B and X for each embedding method (see Methods).
+We identified recombinant lineages that always mapped closer to their parental lineages and recombinant lineages that always mapped closer to at least one of the parental lineages.
+
+Only 5 of the 10 recombinant lineages had enough samples in both parental and recombinant lineages to calculate average pairwise distances (XD, XE, XG, XBB, and XBL).
+MDS embeddings most consistently reflected recombination events with four of five (80\%) recombinant lineages mapping closer to both parental lineages (\nameref{S1_Table}).
+Three (60\%) recombinant lineages mapped between parents in t-SNE embeddings and only two (40\%) mapped between parentals in PCA and UMAP.
+However, all recombinant lineages mapped closer to at least one parent in all embeddings.
+
+% Place tables after the first paragraph in which they are cited.
+\begin{table}[!ht]
+%\begin{adjustwidth}{-2.25in}{0in} % Comment out/remove adjustwidth environment if table fits in text column.
+\centering
+\caption*{
+  {\bf S1 Table. Average Euclidean distances between each known recombinant, ``X'', and its parental lineages ``A'' and ``B'' per embedding method.}
+  Distances include average pairwise comparisons between A and B, A and X, and B and X.
+  Additional columns indicate whether each recombinant lineage maps closer to both parental lineages (or at least one) than those parents map to each other.}
+\scalebox{0.5}{
+  \input{tables/sars-cov-2-recombinant-distances.tex}
+}
+%\end{adjustwidth}
+\end{table}
+
 \section*{Discussion}
 
 TBD.
@@ -889,6 +913,10 @@ TBD.
 \paragraph*{S15 Fig.}
 \label{S15_Fig_sarscov2_late_embeddings_by_cluster_vs_Nextclade_pango}
 {\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2022 and July 5, 2023 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (collapsed Nextclade pango lineage).}
+
+\paragraph*{S1 Table.}
+\label{S1_Table}
+{\bf Average Euclidean distances between each known recombinant, ``X'', and its parental lineages ``A'' and ``B'' per embedding method. Distances include average pairwise comparisons between A and B, A and X, and B and X. Additional columns indicate whether each recombinant lineage maps closer to both parental lineages (or at least one) than those parents map to each other.}
 
 \section*{Acknowledgments}
 TBD.

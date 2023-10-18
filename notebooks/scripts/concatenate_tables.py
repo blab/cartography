@@ -10,6 +10,8 @@ if __name__ == "__main__":
     parser.add_argument("--separator", default="\t", help="separator between columns in the given tables")
     parser.add_argument("--sort-by", help="what to sort the dataframe by (optional)")
     parser.add_argument("--output", help="concatenated table")
+    parser.add_argument("--output-latex", help="concatenated table in LaTeX format")
+    parser.add_argument("--latex-precision", type=int, default=4, help="precision to use for LaTeX table output")
 
     args = parser.parse_args()
 
@@ -26,3 +28,11 @@ if __name__ == "__main__":
         df = df[new_columns]
 
     df.to_csv(args.output, sep=args.separator, header=True, index=False)
+
+    if args.output_latex:
+        df.to_latex(
+            args.output_latex,
+            bold_rows=True,
+            index=False,
+            float_format=f"%.{args.latex_precision}f",
+        )
