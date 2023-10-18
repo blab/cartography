@@ -228,7 +228,7 @@ rule seasonal_flu_reassortment_convert_mccs_to_json:
 
 rule seasonal_flu_reassortment_refine:
     input:
-        tree = "ha-na-nextstrain/results/treeknit_results/rooted_tree_raw_{segment}_resolved.nwk",
+        tree = "ha-na-nextstrain/results/rooted_tree_raw_{segment}.nwk",
         alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta",
         metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
     output:
