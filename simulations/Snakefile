@@ -92,7 +92,7 @@ rule simulations_create_distance_matrix:
     conda: "../cartography.yml"
     shell:
         """
-        python3 notebooks/scripts/hamming_distance_from_fasta.py \
+        pathogen-distance \
             --alignment {input.alignment} \
             --output {output.output}
         """
@@ -167,7 +167,7 @@ rule simulations_create_training_or_test_distance_matrix:
     conda: "../cartography.yml"
     shell:
         """
-        python3 notebooks/scripts/hamming_distance_from_fasta.py \
+        pathogen-distance \
             --alignment {input.alignment} \
             --output {output.output}
         """

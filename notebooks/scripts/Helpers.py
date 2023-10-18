@@ -272,7 +272,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
         raise Exception(
             'The length of list_of_data and the length of list_of_titles should not be odd.')
     else:
-        base = alt.Chart(dataFrame[dataFrame["is_internal_node"] == True])
+        base = alt.Chart(dataFrame[dataFrame["is_internal_node"] == False])
         brush = alt.selection(type='interval', resolve='global')
         tips = base.mark_circle().encode(
             x=alt.X(

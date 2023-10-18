@@ -1,6 +1,7 @@
 import sys
 sys.path.append("../")
 
+import numpy as np
 import argparse
 from augur.utils import read_node_data, read_tree, annotate_parents_for_tree
 import pandas as pd
@@ -45,7 +46,7 @@ if __name__ == "__main__":
                 "strain": node.name,
                 "y_value": heights[node],
                 "parent_name" :  getattr(node, "parent", ""),
-                "is_internal_node" : node.is_terminal()
+                "is_internal_node" : not node.is_terminal()
             }
 
             for attribute in args.attributes:

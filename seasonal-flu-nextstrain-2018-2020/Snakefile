@@ -384,18 +384,22 @@ rule seasonal_flu_test_export:
 rule seasonal_flu_test_tree_to_table:
     message: "creating a table of node data values from the tree attributes"
     input:
-        tree = rules.seasonal_flu_test_export.output.auspice_tree
+        tree="seasonal-flu-nextstrain-2018-2020/results/tree.nwk",
+        clades="seasonal-flu-nextstrain-2018-2020/results/clades.json",
+        branch_lengths="seasonal-flu-nextstrain-2018-2020/results/branch_lengths.json",
     output:
-        table = "seasonal-flu-nextstrain-2018-2020/results/table.tsv"
+        table="seasonal-flu-nextstrain-2018-2020/results/table.tsv",
     params:
-        attributes = "num_date clade_membership"
+        attributes="numdate clade_membership mutation_length divergence"
     conda: "../cartography.yml"
     shell:
         """
-        python3 notebooks/scripts/auspice_tree_to_table.py \
-            {input.tree} \
-            {output.table} \
-            --attributes {params.attributes}
+        python3 notebooks/scripts/node_data_to_table.py \
+            --tree {input.tree} \
+            --node-data {input.clades} {input.branch_lengths} \
+            --include-internal-nodes \
+            --attributes {params.attributes} \
+            --output {output.table}
         """
 
 rule seasonal_flu_test_create_distance_dataframe:
