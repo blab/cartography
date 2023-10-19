@@ -852,9 +852,9 @@ However, all recombinant lineages mapped closer to at least one parent in all em
 
 \section*{Discussion}
 
+% What we learned and pros of methods
 Robustness of method parameters
 Importance of cluster parameters
-
 Ability to capture ``broad'' genetic groups but not ``fine'' groups
 Ability to capture reassortment events
 Ability to reflect intermediate state of recombinant lineages
@@ -863,6 +863,7 @@ MDS best for meaningful embedding distances
 PCA only useful without missing data, then imputation of missing data required
 t-SNE and UMAP limited in ability to maintain intermediate genetic structure
 
+% Limitations of methods and analysis
 Lack of biological model is strength and weakness
 Not surprising that distances reflect genetic relationships, since this is the essence of phylogenetics
 However, we show how well tree-free methods can capture phylogenetic groups and groups from biologically informed models like TreeKnit based on distances alone
@@ -871,6 +872,7 @@ Runtime performance of each method depends on input data size
 More work required to scale distance calculations and embeddings to higher sample sizes
 Limited number of recombinant lineages to compare
 
+% Future directions and use of methods
 Provide optimal settings for each method per pathogen.
 Open source tools to apply to any pathogens where automated genetic group labels are desired
 Easy integration with existing genomic epidemiology workflows to provide automated genetic group labels and low-dimensional visualizations of high-dimensional data without requiring a tree.
@@ -878,7 +880,8 @@ We anticipate that these methods could be readily adopted to jointly analyze mul
 
 \section*{Conclusion}
 
-TBD.
+We show that simple dimensionality reduction methods operating on pairwise genomic differences can capture biologically-relevant clusters of phylogenetic clades, reassortment events, and patterns of recombining lineages.
+The conceptual and practical simplicity of these tools should enable researchers to more readily visualize and compare samples for human pathogenic viruses when phylogenetic methods are either unnecessary or inappropriate.
 
 \section*{Supporting information}
 
