@@ -852,7 +852,29 @@ However, all recombinant lineages mapped closer to at least one parent in all em
 
 \section*{Discussion}
 
-TBD.
+Robustness of method parameters
+Importance of cluster parameters
+
+Ability to capture ``broad'' genetic groups but not ``fine'' groups
+Ability to capture reassortment events
+Ability to reflect intermediate state of recombinant lineages
+t-SNE best for clusters (tendency to produce more clusters)
+MDS best for meaningful embedding distances
+PCA only useful without missing data, then imputation of missing data required
+t-SNE and UMAP limited in ability to maintain intermediate genetic structure
+
+Lack of biological model is strength and weakness
+Not surprising that distances reflect genetic relationships, since this is the essence of phylogenetics
+However, we show how well tree-free methods can capture phylogenetic groups and groups from biologically informed models like TreeKnit based on distances alone
+Not meant to replace ARGs and other biological methods but to supplement these methods or provide a initial quick investigation of the data akin to iterating on subsampling approaches with ML trees prior to full Bayesian tree inference
+Runtime performance of each method depends on input data size
+More work required to scale distance calculations and embeddings to higher sample sizes
+Limited number of recombinant lineages to compare
+
+Provide optimal settings for each method per pathogen.
+Open source tools to apply to any pathogens where automated genetic group labels are desired
+Easy integration with existing genomic epidemiology workflows to provide automated genetic group labels and low-dimensional visualizations of high-dimensional data without requiring a tree.
+We anticipate that these methods could be readily adopted to jointly analyze multiple influenza gene segments or lineages and to identify genetic groups in bacterial and eukaryotic pathogens that cannot be studied by phylogenetic methods
 
 \section*{Conclusion}
 
