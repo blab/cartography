@@ -1,8 +1,51 @@
 rule manuscript:
     input:
         "docs/cartography.pdf",
-        "docs/figures/total_within_between_stats.png"
+        "docs/figures/total_within_between_stats.png",
+        "docs/tables/total_within_between_stats.csv",
+        "docs/figures/within_between_influenza.png"
         #"cartography.html",
+
+rule within_between_stats:
+    input:
+        within_between_df_training = "seasonal-flu-nextstrain/results/full_within_between_stats.csv",
+        within_between_df_test = "seasonal-flu-nextstrain-2018-2020/results/full_within_between_stats.csv",
+        within_between_df_sars_training = "sars-cov-2-nextstrain/results/full_within_between_stats.csv",
+        within_between_df_sars_test = "sars-cov-2-nextstrain-2022-2023/results/full_within_between_stats.csv"
+    output:
+        flu_png = "docs/figures/within_between_influenza.png",
+        sars_png = "docs/figures/within_between_sars.png"
+    notebook: 
+        "notebooks/2023-07-24WithinVBetweenFigure.ipynb"
+
+rule concat_mutation_tables: 
+    input: 
+        tables=[
+            "seasonal-flu-nextstrain/results/mutation_table.csv",
+            "seasonal-flu-nextstrain-2018-2020/results/mutation_table.csv",
+            "ha-na-nextstrain/results/mutation_table.csv",
+            "sars-cov-2-nextstrain/results/mutation_table_for_Nextstrain_clade.csv",
+            "sars-cov-2-nextstrain/results/mutation_table_for_Nextclade_pango.csv"
+        ]
+    output:
+        csv_table = "docs/tables/total_within_between_stats.csv",
+        tex_table = "docs/tables/within_between_table.tex"
+    params:
+        disease_names = [
+            "Influenza H3N2 HA (2016-2018)",
+            "Influenza H3N2 HA (2018-2020)",
+            "Influenza H3N2 HA/NA Reassorted",
+            "SARS-CoV-2 (2020-2022)",
+            "SARS-CoV-2 (2022-2023)",
+        ],
+    shell:
+        """
+        python3 notebooks/scripts/concat_KDE_tables.py \
+            --tables {input.tables} \
+            --output-csv {output.csv_table} \
+            --output-table {output.tex_table} \
+            --disease-names {params.disease_names:q}
+        """
 
 rule concat_HDBSCAN_tables:
     input:
