@@ -3,6 +3,7 @@ sys.path.append("../")
 
 import numpy as np
 import argparse
+from augur.io import read_metadata
 from augur.utils import read_node_data, read_tree, annotate_parents_for_tree
 import pandas as pd
 
@@ -12,6 +13,7 @@ from Helpers import get_y_positions
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--tree", required=True, help="Newick tree")
+    parser.add_argument("--metadata", help="metadata with attributes to include in output table. When a given attribute exists in metadata and node data, this script will select the node data value over the metadata value.")
     parser.add_argument("--node-data", nargs="+", required=True, help="node data JSON(s) to extract attributes from")
     parser.add_argument("--include-internal-nodes", action="store_true", help="include data from internal nodes in output")
     parser.add_argument("--attributes", nargs="+", help="names of attributes to export from the given tree")
@@ -26,6 +28,12 @@ if __name__ == "__main__":
 
     # Load node data.
     node_data = read_node_data(args.node_data)["nodes"]
+
+    # Load metadata.
+    metadata = {}
+    if args.metadata:
+        metadata = read_metadata(args.metadata)
+        metadata = metadata.to_dict(orient="index")
 
     if "divergence" in args.attributes:
         # loop through mutation lengths, making them cumulative and store in "divergence"
@@ -50,9 +58,12 @@ if __name__ == "__main__":
                 "is_internal_node" : not node.is_terminal()
             }
 
+            # Try to load attribute values from node data first and then metadata.
             for attribute in args.attributes:
                 if attribute in node_data[node.name]:
                     record[attribute] = node_data[node.name][attribute]
+                elif attribute in metadata.get(node.name, {}):
+                    record[attribute] = metadata[node.name][attribute]
                 else:
                     print(f"Attribute '{attribute}' missing from node '{node.name}'", file=sys.stderr)
 
