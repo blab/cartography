@@ -437,9 +437,20 @@ rule seasonal_flu_test_annotate_embeddings:
             --output {output.table}
         """
 
+rule seasonal_flu_test_get_table_of_tips:
+    input:
+        metadata="seasonal-flu-nextstrain-2018-2020/results/table.tsv",
+    output:
+        metadata="seasonal-flu-nextstrain-2018-2020/results/table_of_tips.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk filter2 -t -f '$is_internal_node=="False"' {input.metadata} > {output.metadata}
+        """
+
 rule seasonal_flu_test_cluster_accuracy:
     input:
-        metadata = "seasonal-flu-nextstrain-2018-2020/results/table.tsv",
+        metadata = "seasonal-flu-nextstrain-2018-2020/results/table_of_tips.tsv",
         embedding = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_{method}_sequences.csv",
     output:
         dataframe = "seasonal-flu-nextstrain-2018-2020/results/cluster_accuracy_{method}.csv",
