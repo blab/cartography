@@ -250,9 +250,20 @@ rule seasonal_flu_training_cluster:
             --output-figure {output.figure}
         """
 
+rule seasonal_flu_training_get_table_of_tips:
+    input:
+        metadata="seasonal-flu-nextstrain/results/table.tsv",
+    output:
+        metadata="seasonal-flu-nextstrain/results/table_of_tips.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk filter2 -t -f '$is_internal_node=="False"' {input.metadata} > {output.metadata}
+        """
+
 rule seasonal_flu_training_cluster_accuracy:
     input:
-        metadata = "seasonal-flu-nextstrain/results/table.tsv",
+        metadata = "seasonal-flu-nextstrain/results/table_of_tips.tsv",
         clusters="seasonal-flu-nextstrain/results/cluster/{method}/{distance_threshold}.csv",
     output:
         dataframe="seasonal-flu-nextstrain/results/cluster_accuracy/{method}/{distance_threshold}.csv",
