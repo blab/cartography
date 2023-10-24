@@ -86,7 +86,4 @@ if __name__ == "__main__":
         df['parent_y'] = df.apply(get_parent_y, axis=1)
         df['parent_mutation'] = df.apply(get_parent_mutation_length, axis=1)
 
-        df["y_value"] = df["y_value"].max() - df["y_value"]
-        df["parent_y"] = df["parent_y"].max() - df["parent_y"]
-
     df.to_csv(args.output, sep="\t", header=True, index=False)
