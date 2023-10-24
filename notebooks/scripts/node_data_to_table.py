@@ -15,6 +15,7 @@ if __name__ == "__main__":
     parser.add_argument("--node-data", nargs="+", required=True, help="node data JSON(s) to extract attributes from")
     parser.add_argument("--include-internal-nodes", action="store_true", help="include data from internal nodes in output")
     parser.add_argument("--attributes", nargs="+", help="names of attributes to export from the given tree")
+    parser.add_argument("--mutation-length-attribute", default="mutation_length", help="attribute name of the mutation length value stored in the branch lengths node data")
     parser.add_argument("--output", required=True, help="tab-delimited file of attributes per node of the given tree")
 
     args = parser.parse_args()
@@ -28,13 +29,13 @@ if __name__ == "__main__":
 
     if "divergence" in args.attributes:
         # loop through mutation lengths, making them cumulative and store in "divergence"
-        # look through branh_lengths for "mutation_length"
+        # look through branch lengths data for the mutation length attribute (e.g., "mutation_length")
         # start with root of tree
         for node in tree.find_clades():
             if getattr(node, "parent") is None:
-                node_data[node.name]["divergence"] = node_data[node.name]["mutation_length"]
+                node_data[node.name]["divergence"] = node_data[node.name][args.mutation_length_attribute]
             else:
-                node_data[node.name]["divergence"] = node_data[node.parent.name]["divergence"] + node_data[node.name]["mutation_length"]
+                node_data[node.name]["divergence"] = node_data[node.parent.name]["divergence"] + node_data[node.name][args.mutation_length_attribute]
 
     # Collect attributes per node from the tree to export.
     records = []
