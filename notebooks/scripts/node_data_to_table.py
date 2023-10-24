@@ -68,7 +68,7 @@ if __name__ == "__main__":
                 return parent_y[0]
             else:
                 return row['y_value']
-        
+
         return np.nan
 
     def get_parent_mutation_length(row):
@@ -79,9 +79,9 @@ if __name__ == "__main__":
                 return parent_y[0]
             else:
                 return row['divergence']
-        
+
         return np.nan
-    
+
     if "divergence" in args.attributes:
         df['parent_y'] = df.apply(get_parent_y, axis=1)
         df['parent_mutation'] = df.apply(get_parent_mutation_length, axis=1)

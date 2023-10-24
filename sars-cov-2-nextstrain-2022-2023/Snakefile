@@ -510,7 +510,7 @@ rule sarscov2_test_tree_to_table:
             --attributes {params.attributes} \
             --output {output.table}
         """
-        
+
 rule sarscov2_test_create_distance_dataframe:
     input:
         dataframes=expand("sars-cov-2-nextstrain-2022-2023/results/cluster_embed_{method}_for_{{clade_membership}}.csv", method=EMBEDDING_METHODS),
