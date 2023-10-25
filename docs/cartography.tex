@@ -824,6 +824,8 @@ These results replicate the patterns we observed with early SARS-CoV-2 data wher
 \caption*{{\bf S15 Fig. Embeddings of SARS-CoV-2 sequences collected between January 1, 2022 and July 5, 2023 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (collapsed Nextclade pango lineage).}}
 \end{figure}
 
+\jhc{Consider a new paragraph here or an extension of the previous paragraph describing the number of cluster-specific mutations for early and late data and referencing the cluster mutations supplemental table}
+
 \subsection*{Distance-based embeddings reflect SARS-CoV-2 recombination events}
 
 Finally, we tested the ability of sequence embeddings to capture patterns of recombination between known parental lineages of SARS-CoV-2.
@@ -850,6 +852,8 @@ However, all recombinant lineages mapped closer to at least one parent in all em
 %\end{adjustwidth}
 \end{table}
 
+\jhc{One last big question I have about our VI results is how robust they are to different subsamples of the available data. Separate from the main comparison between phylogenies and embeddings, we could generate S different randomly subsampled datasets of size N for each pathogen, create embeddings, find clusters, and calculate VI to known genetic groups for each dataset. This separate analysis would give us the distribution of VI values for each pathogen across a range of input sizes and give us more confidence about which embedding methods produce the most consistently accurate clusters.}
+
 \section*{Discussion}
 
 % What we learned and pros of methods
@@ -862,20 +866,19 @@ Clusters from t-SNE embeddings of H3N2 HA and NA sequences accurately matched re
 MDS embeddings placed known recombinant lineages of SARS-CoV-2 between their parental lineages.
 From these results, we conclude that tree-free dimensionality reduction methods provide valuable biological insights through easily interpretable visualizations of genetic relationships and the ability to account for genetic variation that phylogenetic methods cannot including indels, reassortment, and recombination.
 
+% Limitations of methods and analysis
 Ability to capture ``broad'' genetic groups but not ``fine'' groups
-Ability to capture reassortment events
-Ability to reflect intermediate state of recombinant lineages
-t-SNE best for clusters (tendency to produce more clusters)
-MDS best for meaningful embedding distances
 PCA only useful without missing data, then imputation of missing data required
 t-SNE and UMAP limited in ability to maintain intermediate genetic structure
 
-% Limitations of methods and analysis
 Lack of biological model is strength and weakness
 Not surprising that distances reflect genetic relationships, since this is the essence of phylogenetics
 However, we show how well tree-free methods can capture phylogenetic groups and groups from biologically informed models like TreeKnit based on distances alone
 Not meant to replace ARGs and other biological methods but to supplement these methods or provide a initial quick investigation of the data akin to iterating on subsampling approaches with ML trees prior to full Bayesian tree inference
+Other dimensionality methods may work even better, but we had to choose a subset for practical reasons
+Other human pathogenic viruses with different transmission modes or genome architectures could be relevant like HIV, Zika, RSV, etc.
 Runtime performance of each method depends on input data size
+Analysis used a consistent, fixed input size throughout, but embeddings and their optimal parameters may vary with input size
 More work required to scale distance calculations and embeddings to higher sample sizes
 Limited number of recombinant lineages to compare
 
@@ -883,7 +886,8 @@ Limited number of recombinant lineages to compare
 Provide optimal settings for each method per pathogen.
 Open source tools to apply to any pathogens where automated genetic group labels are desired
 Easy integration with existing genomic epidemiology workflows to provide automated genetic group labels and low-dimensional visualizations of high-dimensional data without requiring a tree.
-We anticipate that these methods could be readily adopted to jointly analyze multiple influenza gene segments or lineages and to identify genetic groups in bacterial and eukaryotic pathogens that cannot be studied by phylogenetic methods
+Could expand method to use amino acid distances instead of nucleotide distances, reducing the resolution of clusters but increasing their biological relevance
+We anticipate that these methods could be readily adopted to jointly analyze multiple influenza gene segments or lineages and to identify genetic groups in bacterial and eukaryotic pathogens that cannot be studied by phylogenetic methods.
 
 \section*{Conclusion}
 
