@@ -854,8 +854,15 @@ However, all recombinant lineages mapped closer to at least one parent in all em
 \section*{Discussion}
 
 % What we learned and pros of methods
-Robustness of method parameters
-Importance of cluster parameters
+We applied four standard dimensionality reduction methods to simulated and natural genome sequences of two relevant human pathogenic viruses and found that the resulting embeddings could reflect pairwise genetic relationships between samples and capture previously identified genetic groups.
+From our analysis of simulated influenza- and coronavirus-like sequences, we found that each method produced consistent embeddings of genetic sequences for two distinct pathogens, 55 years of evolution, and a wide range of practical method parameters.
+These results suggest that researchers could apply these biologically-uninformed methods to a broad range of human pathogenic viruses with minimal tuning of the method parameters.
+Of the four methods, MDS most accurately reflected pairwise genetic distances between simulated samples in its embeddings.
+From our analysis of natural populations of seasonal influenza H3N2 HA and SARS-CoV-2 sequences, we confirmed that MDS most reliably reflected pairwise genetic distances and we found that clusters from t-SNE embeddings most accurately recapitulated previously defined genetic groups at the resolution of WHO and Nextstrain clades.
+Clusters from t-SNE embeddings of H3N2 HA and NA sequences accurately matched reassortment clades identified by a biologically-informed model based on ancestral reassortment graphs.
+MDS embeddings placed known recombinant lineages of SARS-CoV-2 between their parental lineages.
+From these results, we conclude that tree-free dimensionality reduction methods provide valuable biological insights through easily interpretable visualizations of genetic relationships and the ability to account for genetic variation that phylogenetic methods cannot including indels, reassortment, and recombination.
+
 Ability to capture ``broad'' genetic groups but not ``fine'' groups
 Ability to capture reassortment events
 Ability to reflect intermediate state of recombinant lineages
