@@ -858,7 +858,7 @@ However, all recombinant lineages mapped closer to at least one parent in all em
 
 % What we learned and pros of methods
 We applied four standard dimensionality reduction methods to simulated and natural genome sequences of two relevant human pathogenic viruses and found that the resulting embeddings could reflect pairwise genetic relationships between samples and capture previously identified genetic groups.
-From our analysis of simulated influenza- and coronavirus-like sequences, we found that each method produced consistent embeddings of genetic sequences for two distinct pathogens, 55 years of evolution, and a wide range of practical method parameters.
+From our analysis of simulated influenza- and coronavirus-like sequences, we found that each method produced consistent embeddings of genetic sequences for two distinct pathogens, more than 55 years of evolution, and a wide range of practical method parameters.
 These results suggest that researchers could apply these biologically-uninformed methods to a broad range of human pathogenic viruses with minimal tuning of the method parameters.
 Of the four methods, MDS most accurately reflected pairwise genetic distances between simulated samples in its embeddings.
 From our analysis of natural populations of seasonal influenza H3N2 HA and SARS-CoV-2 sequences, we confirmed that MDS most reliably reflected pairwise genetic distances and we found that clusters from t-SNE embeddings most accurately recapitulated previously defined genetic groups at the resolution of WHO and Nextstrain clades.
@@ -872,26 +872,26 @@ The lack of an underlying biological model is both a strength and the clearest l
 For example, embeddings of SARS-CoV-2 genomes cannot capture the same fine-grained genetic resolution as Pangolin lineage annotations.
 Each method provides only a few parameters to tune its embeddings and these parameters have little effect on the qualitative outcome.
 Each method also suffers from specific issues in our analysis.
-PCA performs poorly with missing data and requires researchers to impute the missing values prior to analysis, as previously shown \cite{metsky_2017}.
-Neither t-SNE nor UMAP maintains a linear relationship between pairwise Euclidean and genetic distances across the observed range of genetic distances.
+PCA performs poorly with missing data and requires researchers to impute the missing values prior to analysis, as previously shown for Zika virus \cite{metsky_2017}.
+Neither t-SNE nor UMAP maintain a linear relationship between pairwise Euclidean and genetic distances across the observed range of genetic distances.
 As a result, viewers cannot know that samples mapping far apart in a t-SNE or UMAP embedding are as genetically distant as they appear.
 In maintaining a linear relationship between Euclidean and genetic distances, MDS sacrifices the ability to form more accurate genetic clusters.
 Given these limitations of these methods, we do not expect them to replace biologically-informed methods that provide more meaningful parameters to tune their algorithms.
 Instead, we expect that researchers can use these methods for rapid visualization and clustering of their genome sequences as the first step prior to analysis with more sophisticated and computationally intensive algorithms.
 
 We note that our analysis reflects a small subset of human pathogen viruses and dimensionality reduction methods.
-We focused on analysis of two respiratory RNA viruses that contribute dramatically to seasonal human morbidity and morality, but numerous alternative pathogens would also have been relevant subjects.
-For example, HIV represents a canonical example of a highly recombinant genome and bloodborne pathogen, while Zika, dengue, and West Nile viruses represent pathogens with multiple host species in a transmission chain.
+We focused on analysis of two respiratory RNA viruses that contribute dramatically to seasonal human morbidity and mortality, but numerous alternative pathogens would also have been relevant subjects.
+For example, HIV represents a canonical example of a highly recombinant and bloodborne virus, while Zika, dengue, and West Nile viruses represent pathogens with multiple host species in a transmission chain.
 Similarly, we selected only four dimensionality reduction methods from myriad options that are commonly applied to genetic data \cite{Armstrong2022}.
 We chose these methods based on their wide use and availability in tools like scikit-learn \cite{Pedregosa2011} and to limit the dimensionality of our analyses.
 Finally, we chose to analyze a consistent, fixed number of sequences for each pathogen, but the nature of embeddings, their optimal parameters, and their computational efficiency may vary with input size.
 
 % Future directions and use of methods
-The limitations noted above suggest future directions for this line of research.
+Some limitations noted above suggest future directions for this line of research.
 We provide optimal settings for each pathogen and embedding method in this study and open source tools to apply these methods to other pathogens.
 Researchers can easily integrate these tools into existing workflows for the genomic epidemiology of viruses and visualize the results with Nextstrain.
 Alternately, researchers may choose to apply similar existing tools developed for metagenomic analysis \cite{Schloss2009,Schloss2020,Bolyen2019,McMurdie2013} to the analysis of viral populations.
-We expect future work to expand the breadth of viral diversity assessed by these methods and tune the method parameters accordingly.
+We expect future work to expand the breadth of the dimensionality reduction methods applied to viruses and the breadth viral diversity assessed by these methods.
 
 \section*{Conclusion}
 
