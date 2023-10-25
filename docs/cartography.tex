@@ -864,25 +864,31 @@ Of the four methods, MDS most accurately reflected pairwise genetic distances be
 From our analysis of natural populations of seasonal influenza H3N2 HA and SARS-CoV-2 sequences, we confirmed that MDS most reliably reflected pairwise genetic distances and we found that clusters from t-SNE embeddings most accurately recapitulated previously defined genetic groups at the resolution of WHO and Nextstrain clades.
 Clusters from t-SNE embeddings of H3N2 HA and NA sequences accurately matched reassortment clades identified by a biologically-informed model based on ancestral reassortment graphs.
 MDS embeddings placed known recombinant lineages of SARS-CoV-2 between their parental lineages.
-From these results, we conclude that tree-free dimensionality reduction methods provide valuable biological insights through easily interpretable visualizations of genetic relationships and the ability to account for genetic variation that phylogenetic methods cannot including indels, reassortment, and recombination.
+From these results, we conclude that tree-free dimensionality reduction methods can provide valuable biological insights for human pathogenic viruses through easily interpretable visualizations of genetic relationships and the ability to account for genetic variation that phylogenetic methods cannot including indels, reassortment, and recombination.
 
 % Limitations of methods and analysis
-Ability to capture ``broad'' genetic groups but not ``fine'' groups
-PCA only useful without missing data, then imputation of missing data required
-t-SNE and UMAP limited in ability to maintain intermediate genetic structure
+Despite the promise of these simple methods to answer important public health questions about human pathogenic viruses, these methods and our analyses suffer from inherent limitations.
+The lack of an underlying biological model is both a strength and the clearest limitation of the dimensionality reduction methods we considered here.
+For example, embeddings of SARS-CoV-2 genomes cannot capture the same fine-grained genetic resolution as Pangolin lineage annotations.
+Each method provides only a few parameters to tune its embeddings and these parameters have little effect on the qualitative outcome.
+Each method also suffers from specific issues in our analysis.
+PCA performs poorly with missing data and requires researchers to impute the missing values prior to analysis, as previously shown \cite{metsky_2017}.
+Neither t-SNE nor UMAP maintains a linear relationship between pairwise Euclidean and genetic distances across the observed range of genetic distances.
+As a result, viewers cannot know that samples mapping far apart in a t-SNE or UMAP embedding are as genetically distant as they appear.
+In maintaining a linear relationship between Euclidean and genetic distances, MDS sacrifices the ability to form more accurate genetic clusters.
+Given these limitations of these methods, we do not expect them to replace biologically-informed methods that provide more meaningful parameters to tune their algorithms.
+Instead, we expect that researchers can use these methods for rapid visualization and clustering of their genome sequences as the first step prior to analysis with more sophisticated and computationally intensive algorithms.
 
-Lack of biological model is strength and weakness
-Not surprising that distances reflect genetic relationships, since this is the essence of phylogenetics
-However, we show how well tree-free methods can capture phylogenetic groups and groups from biologically informed models like TreeKnit based on distances alone
-Not meant to replace ARGs and other biological methods but to supplement these methods or provide a initial quick investigation of the data akin to iterating on subsampling approaches with ML trees prior to full Bayesian tree inference
-Other dimensionality methods may work even better, but we had to choose a subset for practical reasons
-Other human pathogenic viruses with different transmission modes or genome architectures could be relevant like HIV, Zika, RSV, etc.
-Runtime performance of each method depends on input data size
-Analysis used a consistent, fixed input size throughout, but embeddings and their optimal parameters may vary with input size
-More work required to scale distance calculations and embeddings to higher sample sizes
-Limited number of recombinant lineages to compare
+We note that our analysis reflects a small subset of human pathogen viruses and dimensionality reduction methods.
+We focused on analysis of two respiratory RNA viruses that contribute dramatically to seasonal human morbidity and morality, but numerous alternative pathogens would also have been relevant subjects.
+For example, HIV represents a canonical example of a highly recombinant genome and bloodborne pathogen, while Zika, dengue, and West Nile viruses represent pathogens with multiple host species in a transmission chain.
+Similarly, we selected only four dimensionality reduction methods from myriad options that are commonly applied to genetic data \cite{Armstrong2022}.
+We chose these methods based on their wide use and availability in tools like scikit-learn \cite{Pedregosa2011} and to limit the dimensionality of our analyses.
+Finally, we chose to analyze a consistent, fixed number of sequences for each pathogen, but the nature of embeddings, their optimal parameters, and their computational efficiency may vary with input size.
 
 % Future directions and use of methods
+
+
 Provide optimal settings for each method per pathogen.
 Open source tools to apply to any pathogens where automated genetic group labels are desired
 Easy integration with existing genomic epidemiology workflows to provide automated genetic group labels and low-dimensional visualizations of high-dimensional data without requiring a tree.
