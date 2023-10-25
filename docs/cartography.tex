@@ -606,8 +606,7 @@ Clusters from t-SNE performed nearly as well (normalized VI=0.08) with 11 cluste
 These clusters also captured broader clades (including the A4 clade that UMAP clustered with 3c2.A) and failed to distinguish among A1b and its subclades.
 Interestingly, t-SNE clusters included 3 biologically-relevant clusters that were not found in any other embeddings.
 The largest of these (cluster 3 with 289 samples) corresponded to a subclade of A2 that was previously associated with a reassortment to a different neuraminidase background \cite{Potter2019}.
-\jhc{Maybe this is a good place to reference a supplemental cluster-specific mutation table.}
-Cluster 7 (N=22 samples) descended from a subclade of A1a and its samples carried substitutions at known epitope sites (HA1:140M and HA1:193S).
+Cluster 7 (N=22 samples) descended from a subclade of A1a and its samples carried substitutions at known epitope sites of HA1:140M and HA1:193S (\nameref{S1_Table}).
 Cluster 8 (N=29 samples) descended from clade A1 and contained 14 samples with a substitution at another known epitope site (HA1:135K).
 The 7 MDS clusters were nearly twice as far from expert clades as UMAP clusters (normalized VI=0.13), suggesting that MDS's ability to accurately represent genetic distance did not correspond to high-resolution clusters.
 MDS clusters captured most of the larger clades (A1, A2, A3, A4, 3c2.A, and 3c3.A), but they also collected A1 and its descendants into the same cluster and suffered from more unassigned samples than the other embeddings.
@@ -833,7 +832,7 @@ Based on this logic, we calculated the average Euclidean distance between pairs 
 We identified recombinant lineages that mapped closer to both of their parental lineages and those that mapped closer to at least one of the parental lineages.
 
 Only five of the ten recombinant lineages that we inspected had enough samples in both parental and recombinant lineages to calculate average pairwise distances (XD, XE, XG, XBB, and XBL).
-MDS embeddings most consistently reflected recombination events with four of five (80\%) recombinant lineages mapping closer to both parental lineages (\nameref{S1_Table}).
+MDS embeddings most consistently reflected recombination events with four of five (80\%) recombinant lineages mapping closer to both parental lineages (\nameref{S2_Table}).
 Three (60\%) recombinant lineages mapped between parents in t-SNE embeddings and only two (40\%) mapped between parentals in PCA and UMAP.
 However, all recombinant lineages mapped closer to at least one parent in all embeddings.
 
@@ -842,7 +841,7 @@ However, all recombinant lineages mapped closer to at least one parent in all em
 %\begin{adjustwidth}{-2.25in}{0in} % Comment out/remove adjustwidth environment if table fits in text column.
 \centering
 \caption*{
-  {\bf S1 Table. Average Euclidean distances between each known recombinant, ``X'', and its parental lineages ``A'' and ``B'' per embedding method.}
+  {\bf S2 Table. Average Euclidean distances between each known recombinant, ``X'', and its parental lineages ``A'' and ``B'' per embedding method.}
   Distances include average pairwise comparisons between A and B, A and X, and B and X.
   Additional columns indicate whether each recombinant lineage maps closer to both parental lineages (or at least one) than those parents map to each other.}
 \scalebox{0.5}{
@@ -956,6 +955,10 @@ The conceptual and practical simplicity of these tools should enable researchers
 
 \paragraph*{S1 Table.}
 \label{S1_Table}
+{\bf Mutations observed per embedding cluster relative to a reference genome sequence for each pathogen. Each row reflects the alternate allele identified at a specific position of the given pathogen genome or gene sequence, the pathogen dataset, the embedding method, the number of clusters in the embedding with the observed mutation, and the list of distinct cluster labels with the mutation. Mutations must have occurred in at least 10 samples of the given dataset with an allele frequency of at least 50\%.}
+
+\paragraph*{S2 Table.}
+\label{S2_Table}
 {\bf Average Euclidean distances between each known recombinant, ``X'', and its parental lineages ``A'' and ``B'' per embedding method. Distances include average pairwise comparisons between A and B, A and X, and B and X. Additional columns indicate whether each recombinant lineage maps closer to both parental lineages (or at least one) than those parents map to each other.}
 
 \section*{Acknowledgments}
