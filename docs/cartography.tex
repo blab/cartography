@@ -887,17 +887,15 @@ We chose these methods based on their wide use and availability in tools like sc
 Finally, we chose to analyze a consistent, fixed number of sequences for each pathogen, but the nature of embeddings, their optimal parameters, and their computational efficiency may vary with input size.
 
 % Future directions and use of methods
-
-
-Provide optimal settings for each method per pathogen.
-Open source tools to apply to any pathogens where automated genetic group labels are desired
-Easy integration with existing genomic epidemiology workflows to provide automated genetic group labels and low-dimensional visualizations of high-dimensional data without requiring a tree.
-Could expand method to use amino acid distances instead of nucleotide distances, reducing the resolution of clusters but increasing their biological relevance
-We anticipate that these methods could be readily adopted to jointly analyze multiple influenza gene segments or lineages and to identify genetic groups in bacterial and eukaryotic pathogens that cannot be studied by phylogenetic methods.
+The limitations noted above suggest future directions for this line of research.
+We provide optimal settings for each pathogen and embedding method in this study and open source tools to apply these methods to other pathogens.
+Researchers can easily integrate these tools into existing workflows for the genomic epidemiology of viruses and visualize the results with Nextstrain.
+Alternately, researchers may choose to apply similar existing tools developed for metagenomic analysis \cite{Schloss2009,Schloss2020,Bolyen2019,McMurdie2013} to the analysis of viral populations.
+We expect future work to expand the breadth of viral diversity assessed by these methods and tune the method parameters accordingly.
 
 \section*{Conclusion}
 
-We show that simple dimensionality reduction methods operating on pairwise genomic differences can capture biologically-relevant clusters of phylogenetic clades, reassortment events, and patterns of recombining lineages.
+We showed that simple dimensionality reduction methods operating on pairwise genetic differences can capture biologically-relevant clusters of phylogenetic clades, reassortment events, and patterns of recombining lineages for human pathogenic viruses.
 The conceptual and practical simplicity of these tools should enable researchers to more readily visualize and compare samples for human pathogenic viruses when phylogenetic methods are either unnecessary or inappropriate.
 
 \section*{Supporting information}
