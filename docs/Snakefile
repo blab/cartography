@@ -28,8 +28,7 @@ rule concat_mutation_tables:
             "sars-cov-2-nextstrain/results/mutation_table_for_Nextclade_pango.csv"
         ]
     output:
-        csv_table = "docs/tables/total_within_between_stats.csv",
-        tex_table = "docs/tables/within_between_table.tex"
+        csv_table = "docs/tables/mutation_table.csv",
     params:
         disease_names = [
             "Influenza H3N2 HA (2016-2018)",
@@ -43,7 +42,6 @@ rule concat_mutation_tables:
         python3 notebooks/scripts/concat_KDE_tables.py \
             --tables {input.tables} \
             --output-csv {output.csv_table} \
-            --output-table {output.tex_table} \
             --disease-names {params.disease_names:q}
         """
 
