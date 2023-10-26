@@ -3,6 +3,7 @@ sys.path.append("../")
 
 import numpy as np
 import argparse
+from augur.io import read_metadata
 from augur.utils import read_node_data, read_tree, annotate_parents_for_tree
 import pandas as pd
 
@@ -12,9 +13,11 @@ from Helpers import get_y_positions
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--tree", required=True, help="Newick tree")
+    parser.add_argument("--metadata", help="metadata with attributes to include in output table. When a given attribute exists in metadata and node data, this script will select the node data value over the metadata value.")
     parser.add_argument("--node-data", nargs="+", required=True, help="node data JSON(s) to extract attributes from")
     parser.add_argument("--include-internal-nodes", action="store_true", help="include data from internal nodes in output")
     parser.add_argument("--attributes", nargs="+", help="names of attributes to export from the given tree")
+    parser.add_argument("--mutation-length-attribute", default="mutation_length", help="attribute name of the mutation length value stored in the branch lengths node data")
     parser.add_argument("--output", required=True, help="tab-delimited file of attributes per node of the given tree")
 
     args = parser.parse_args()
@@ -26,15 +29,21 @@ if __name__ == "__main__":
     # Load node data.
     node_data = read_node_data(args.node_data)["nodes"]
 
+    # Load metadata.
+    metadata = {}
+    if args.metadata:
+        metadata = read_metadata(args.metadata)
+        metadata = metadata.to_dict(orient="index")
+
     if "divergence" in args.attributes:
         # loop through mutation lengths, making them cumulative and store in "divergence"
-        # look through branh_lengths for "mutation_length"
+        # look through branch lengths data for the mutation length attribute (e.g., "mutation_length")
         # start with root of tree
         for node in tree.find_clades():
             if getattr(node, "parent") is None:
-                node_data[node.name]["divergence"] = node_data[node.name]["mutation_length"]
+                node_data[node.name]["divergence"] = node_data[node.name][args.mutation_length_attribute]
             else:
-                node_data[node.name]["divergence"] = node_data[node.parent.name]["divergence"] + node_data[node.name]["mutation_length"]
+                node_data[node.name]["divergence"] = node_data[node.parent.name]["divergence"] + node_data[node.name][args.mutation_length_attribute]
 
     # Collect attributes per node from the tree to export.
     records = []
@@ -49,9 +58,12 @@ if __name__ == "__main__":
                 "is_internal_node" : not node.is_terminal()
             }
 
+            # Try to load attribute values from node data first and then metadata.
             for attribute in args.attributes:
                 if attribute in node_data[node.name]:
                     record[attribute] = node_data[node.name][attribute]
+                elif attribute in metadata.get(node.name, {}):
+                    record[attribute] = metadata[node.name][attribute]
                 else:
                     print(f"Attribute '{attribute}' missing from node '{node.name}'", file=sys.stderr)
 
@@ -68,7 +80,7 @@ if __name__ == "__main__":
                 return parent_y[0]
             else:
                 return row['y_value']
-        
+
         return np.nan
 
     def get_parent_mutation_length(row):
@@ -79,14 +91,11 @@ if __name__ == "__main__":
                 return parent_y[0]
             else:
                 return row['divergence']
-        
+
         return np.nan
-    
+
     if "divergence" in args.attributes:
         df['parent_y'] = df.apply(get_parent_y, axis=1)
         df['parent_mutation'] = df.apply(get_parent_mutation_length, axis=1)
-
-        df["y_value"] = df["y_value"].max() - df["y_value"]
-        df["parent_y"] = df["parent_y"].max() - df["parent_y"]
 
     df.to_csv(args.output, sep="\t", header=True, index=False)

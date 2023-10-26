@@ -483,21 +483,27 @@ rule seasonal_flu_reassortment_export:
             --output {output.auspice_tree}
         """
 
-rule seasonal_flu_reassortment_tree_to_table:
+rule seasonal_flu_reassortment_create_table_from_tree_and_node_data:
     input:
-        tree = "auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json",
+        tree="ha-na-nextstrain/results/tree_{segment}.nwk",
+        clades="ha-na-nextstrain/results/clades_{segment}.json",
+        branch_lengths="ha-na-nextstrain/results/branch_lengths_{segment}.json",
+        mccs="ha-na-nextstrain/results/mccs.json",
     output:
-        table = "ha-na-nextstrain/results/table_{segment}.tsv"
+        table="ha-na-nextstrain/results/table_{segment}.tsv",
     params:
-        attributes = "date div MCC clade_membership"
+        attributes="MCC clade_membership branch_length divergence",
+        mutation_length_attribute="branch_length",
     conda: "../cartography.yml"
     shell:
         """
-        python3 notebooks/scripts/auspice_tree_to_table.py \
-            {input.tree} \
-            {output.table} \
+        python3 notebooks/scripts/node_data_to_table.py \
+            --tree {input.tree} \
+            --node-data {input.clades} {input.branch_lengths} {input.mccs} \
             --include-internal-nodes \
-            --attributes {params.attributes}
+            --attributes {params.attributes} \
+            --mutation-length-attribute {params.mutation_length_attribute} \
+            --output {output.table}
         """
 
 rule seasonal_flu_reassortment_create_distance_dataframe:
@@ -542,9 +548,20 @@ rule seasonal_flu_reassortment_annotate_embeddings:
             --output {output.table}
         """
 
+rule seasonal_flu_reassortment_get_table_of_tips:
+    input:
+        metadata="ha-na-nextstrain/results/table_{segment}.tsv",
+    output:
+        metadata="ha-na-nextstrain/results/table_of_tips_{segment}.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk filter2 -t -f '$is_internal_node=="False"' {input.metadata} > {output.metadata}
+        """
+
 rule seasonal_flu_reassortment_cluster_accuracy:
     input:
-        metadata = "ha-na-nextstrain/results/table_ha.tsv",
+        metadata = "ha-na-nextstrain/results/table_of_tips_ha.tsv",
         embedding = "ha-na-nextstrain/results/cluster_embed_{method}_{ha_concatenated}.csv",
     output:
         dataframe = "ha-na-nextstrain/results/cluster_accuracy_{method}_{ha_concatenated}.csv",

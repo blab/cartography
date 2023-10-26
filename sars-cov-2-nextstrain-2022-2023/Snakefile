@@ -491,26 +491,26 @@ rule sarscov2_test_create_node_output:
         """
 
 rule sarscov2_test_tree_to_table:
-    message: "creating a table of node data values from the tree attributes"
     input:
         tree = "sars-cov-2-nextstrain-2022-2023/results/tree.nwk",
-        clades = "sars-cov-2-nextstrain-2022-2023/results/clades.json",
+        metadata = "sars-cov-2-nextstrain-2022-2023/data/metadata.tsv",
         branch_lengths="sars-cov-2-nextstrain-2022-2023/results/branch_lengths.json"
     output:
         table = "sars-cov-2-nextstrain-2022-2023/results/table.tsv",
     params:
-        attributes = "num_date Nextstrain_clade Nextclade_pango Nextclade_pango_collapsed mutation_length divergence"
+        attributes = "numdate Nextstrain_clade Nextclade_pango Nextclade_pango_collapsed mutation_length divergence"
     conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/node_data_to_table.py \
             --tree {input.tree} \
-            --node-data {input.clades} {input.branch_lengths} \
+            --metadata {input.metadata} \
+            --node-data {input.branch_lengths} \
             --include-internal-nodes \
             --attributes {params.attributes} \
             --output {output.table}
         """
-        
+
 rule sarscov2_test_create_distance_dataframe:
     input:
         dataframes=expand("sars-cov-2-nextstrain-2022-2023/results/cluster_embed_{method}_for_{{clade_membership}}.csv", method=EMBEDDING_METHODS),
