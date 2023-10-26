@@ -54,9 +54,11 @@ if __name__ == "__main__":
             record = {
                 "strain": node.name,
                 "y_value": heights[node],
-                "parent_name" :  getattr(node, "parent", ""),
+                "parent_name": node.parent.name if getattr(node, "parent") else "",
                 "is_internal_node" : not node.is_terminal()
             }
+            
+
 
             # Try to load attribute values from node data first and then metadata.
             for attribute in args.attributes:
