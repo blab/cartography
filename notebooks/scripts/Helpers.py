@@ -278,7 +278,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
             x=alt.X(
                 "divergence:Q",
                 scale=alt.Scale(
-                    domain=(dataFrame["divergence"].min() - 0.0002, dataFrame["divergence"].max() + 0.0002)),
+                    domain=(dataFrame["divergence"].min(), dataFrame["divergence"].max()), nice=True),
                 title="Divergence",
                 axis=alt.Axis(labels=True, ticks=True)
             ),
@@ -291,14 +291,14 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
             tooltip=ToolTip
         ).add_selection(brush)
 
-        lines = alt.Chart(dataFrame).mark_line().encode(
-                    x=alt.X("parent_mutation:Q", scale=alt.Scale(domain=(dataFrame["divergence"].min() - 0.002, dataFrame["divergence"].max() + 0.002))),
+        lines = alt.Chart(dataFrame).mark_rule().encode(
+                    x=alt.X("parent_mutation:Q", scale=alt.Scale(domain=(dataFrame["divergence"].min(), dataFrame["divergence"].max()), nice=True)),
                     x2="divergence:Q",
-                    y=alt.Y("parent_y:Q", scale=alt.Scale(domain=(dataFrame["y_value"].min() - 1.0, dataFrame["y_value"].max() + 0.2))),
+                    y=alt.Y("parent_y:Q", scale=alt.Scale(domain=(dataFrame["y_value"].min(), dataFrame["y_value"].max()), nice=True)),
                     y2="y_value:Q",
                     color=alt.ColorValue("#cccccc")
                 )
-        
+
         # other lines:
         # horizontal_lines = alt.Chart(dataFrame).mark_line().encode(
         #     x="divergence:Q",
