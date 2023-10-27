@@ -529,6 +529,7 @@ rule seasonal_flu_test_concat_mutation_tables:
             --tables {input.mutation_tables} \
             --separator ',' \
             --sort-by {params.column} \
+            --dataset-name seasonal-flu-nextstrain-2018-2020 \
             --output {output.metadata}
         """
 

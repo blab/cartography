@@ -51,7 +51,7 @@ if __name__ == "__main__":
     ])
 
     # ignoring -1 cluster grouping
-    group_annotations = group_annotations[group_annotations[args.group_column] not in args.ignored_group_labels]
+    group_annotations = group_annotations[~group_annotations[args.group_column].isin(args.ignored_group_labels)]
 
     # difference between clades
     distance_matrix.columns = distance_matrix.index

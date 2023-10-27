@@ -623,6 +623,7 @@ rule seasonal_flu_training_concat_mutation_tables:
             --tables {input.mutation_tables} \
             --separator ',' \
             --sort-by {params.column} \
+            --dataset-name seasonal-flu-nextstrain-2016-2018 \
             --output {output.metadata}
         """
 

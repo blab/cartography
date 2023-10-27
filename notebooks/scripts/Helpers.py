@@ -272,9 +272,28 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
         raise Exception(
             'The length of list_of_data and the length of list_of_titles should not be odd.')
     else:
-        base = alt.Chart(dataFrame[dataFrame["is_internal_node"] == False])
+        unassigned_value = dict(zip(range_, domain))["#999999"]
+        base = alt.Chart(dataFrame[(dataFrame["is_internal_node"] == False) & (dataFrame[color.split(":")[0]] == unassigned_value)])
         brush = alt.selection(type='interval', resolve='global')
-        tips = base.mark_circle().encode(
+        tips_gray = base.mark_circle().encode(
+            x=alt.X(
+                "divergence:Q",
+                scale=alt.Scale(
+                    domain=(dataFrame["divergence"].min() - 0.0002, dataFrame["divergence"].max() + 0.0002)),
+                title="Divergence",
+                axis=alt.Axis(labels=True, ticks=True)
+            ),
+            y=alt.Y(
+                "y_value:Q",
+                title="",
+                axis=alt.Axis(labels=False, ticks=False)
+            ),
+            color=alt.condition(brush, if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_)), if_false=alt.ColorValue('gray')),
+            tooltip=ToolTip
+        ).add_selection(brush)
+
+        base = alt.Chart(dataFrame[(dataFrame["is_internal_node"] == False) & (dataFrame[color.split(":")[0]] != unassigned_value)])
+        tips_colored = base.mark_circle().encode(
             x=alt.X(
                 "divergence:Q",
                 scale=alt.Scale(
@@ -317,7 +336,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
 
         # lines = (horizontal_lines + vertical_lines)
 
-        tree_name = (lines + tips).properties(width=560, height=250)
+        tree_name = (lines + tips_gray + tips_colored).properties(width=560, height=250)
         list_of_chart.append(tree_name)
 
         for i in range(0, len(list_of_data) - 1, 2):

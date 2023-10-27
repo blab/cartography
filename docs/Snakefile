@@ -16,7 +16,7 @@ rule within_between_stats:
         flu_png = "docs/figures/within_between_influenza.png",
         sars_png = "docs/figures/within_between_sars.png"
     notebook: 
-        "notebooks/2023-07-24WithinVBetweenFigure.ipynb"
+        "../notebooks/2023-07-24WithinVBetweenFigure.ipynb"
 
 rule concat_mutation_tables: 
     input: 
@@ -39,10 +39,10 @@ rule concat_mutation_tables:
         ],
     shell:
         """
-        python3 notebooks/scripts/concat_KDE_tables.py \
+        python3 notebooks/scripts/concatenate_tables.py \
             --tables {input.tables} \
-            --output-csv {output.csv_table} \
-            --disease-names {params.disease_names:q}
+            --separator ,
+            --output {output.csv_table} \
         """
 
 rule concat_HDBSCAN_tables:
