@@ -3,7 +3,8 @@ rule manuscript:
         "docs/cartography.pdf",
         "docs/figures/total_within_between_stats.png",
         "docs/tables/total_within_between_stats.csv",
-        "docs/figures/within_between_influenza.png"
+        "docs/figures/within_between_influenza.png",
+        "docs/figures/within_between_sars.png",
         #"cartography.html",
 
 rule within_between_stats:
@@ -25,18 +26,12 @@ rule concat_mutation_tables:
             "seasonal-flu-nextstrain-2018-2020/results/mutation_table.csv",
             "ha-na-nextstrain/results/mutation_table.csv",
             "sars-cov-2-nextstrain/results/mutation_table_for_Nextstrain_clade.csv",
-            "sars-cov-2-nextstrain/results/mutation_table_for_Nextclade_pango.csv"
+            "sars-cov-2-nextstrain/results/mutation_table_for_Nextclade_pango.csv",
+            "sars-cov-2-nextstrain-2022-2023/results/mutation_table_for_Nextstrain_clade.csv",
+            "sars-cov-2-nextstrain-2022-2023/results/mutation_table_for_Nextclade_pango.csv",
         ]
     output:
         csv_table = "docs/tables/mutation_table.csv",
-    params:
-        disease_names = [
-            "Influenza H3N2 HA (2016-2018)",
-            "Influenza H3N2 HA (2018-2020)",
-            "Influenza H3N2 HA/NA Reassorted",
-            "SARS-CoV-2 (2020-2022)",
-            "SARS-CoV-2 (2022-2023)",
-        ],
     shell:
         """
         python3 notebooks/scripts/concatenate_tables.py \
