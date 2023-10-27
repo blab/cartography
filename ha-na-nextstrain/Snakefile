@@ -539,12 +539,14 @@ rule seasonal_flu_reassortment_annotate_embeddings:
     conda: "../cartography.yml"
     params:
         join_on="strain",
+        join_type="left",
     shell:
         """
         python3 notebooks/scripts/join_tables.py \
             --left {input.left} \
             --right {input.right} \
             --on {params.join_on} \
+            --join-type {params.join_type} \
             --output {output.table}
         """
 
