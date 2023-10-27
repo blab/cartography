@@ -16,11 +16,11 @@ rule within_between_stats:
     output:
         flu_png = "docs/figures/within_between_influenza.png",
         sars_png = "docs/figures/within_between_sars.png"
-    notebook: 
+    notebook:
         "../notebooks/2023-07-24WithinVBetweenFigure.ipynb"
 
-rule concat_mutation_tables: 
-    input: 
+rule concat_mutation_tables:
+    input:
         tables=[
             "seasonal-flu-nextstrain/results/mutation_table.csv",
             "seasonal-flu-nextstrain-2018-2020/results/mutation_table.csv",

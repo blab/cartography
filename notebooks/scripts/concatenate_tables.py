@@ -25,7 +25,7 @@ if __name__ == "__main__":
         cols_to_order = [args.sort_by]
         new_columns = cols_to_order + (df.columns.drop(cols_to_order).tolist())
         df = df[new_columns]
-    
+
     if args.dataset_name is not None:
         df["dataset_name"] = args.dataset_name
 
