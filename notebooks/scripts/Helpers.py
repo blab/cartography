@@ -256,7 +256,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
     list_of_titles: list
         list of all the TITLES you want for each axis: goes in order of[x1,y1,x2,y2,x3,y3] etc.
     color: string
-        what the data should be colored by (ex. by clade, by region)
+        what the data should be colored by (ex. by clade, by region) including the Vega type specification (e.g., "clade:N")
     legend_title: string
         title to use for the color legend
     ToolTip: list
@@ -272,28 +272,36 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
         raise Exception(
             'The length of list_of_data and the length of list_of_titles should not be odd.')
     else:
-        unassigned_value = dict(zip(range_, domain))["#999999"]
-        base = alt.Chart(dataFrame[(dataFrame["is_internal_node"] == False) & (dataFrame[color.split(":")[0]] == unassigned_value)])
-        brush = alt.selection(type='interval', resolve='global')
-        tips_gray = base.mark_circle().encode(
-            x=alt.X(
-                "divergence:Q",
-                scale=alt.Scale(
-                    domain=(dataFrame["divergence"].min() - 0.0002, dataFrame["divergence"].max() + 0.0002)),
-                title="Divergence",
-                axis=alt.Axis(labels=True, ticks=True)
-            ),
-            y=alt.Y(
-                "y_value:Q",
-                title="",
-                axis=alt.Axis(labels=False, ticks=False)
-            ),
-            color=alt.condition(brush, if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_)), if_false=alt.ColorValue('gray')),
-            tooltip=ToolTip
-        ).add_selection(brush)
+        # Split data frame into internal nodes and tips.
+        internal_nodes_df = dataFrame[dataFrame["is_internal_node"]].copy()
+        tips_df = dataFrame[~dataFrame["is_internal_node"]].copy()
 
-        base = alt.Chart(dataFrame[(dataFrame["is_internal_node"] == False) & (dataFrame[color.split(":")[0]] != unassigned_value)])
-        tips_colored = base.mark_circle().encode(
+        # Optionally, split tips data frame into gray tips and color tips. Gray
+        # tips represent "unassigned" values and get plotted below the color
+        # tips. We have to check for the gray color in the color scale to find
+        # the value that corresponds to the unassigned state and then check the
+        # tips data frame for those values to make sure we don't have an empty
+        # gray tips data frame.
+        color_map = dict(zip(range_, domain))
+        unassigned_color = "#999999"
+        unassigned_value = color_map.get(unassigned_color)
+
+        # Extract the color field name from the Vega field specification which
+        # includes type (e.g., "clade:N").
+        color_field = color.split(":")[0]
+        color_values = tips_df[color_field].drop_duplicates().values
+
+        if unassigned_color in color_map and unassigned_value in color_values:
+            tips_gray_df = tips_df[tips_df[color_field] == unassigned_value].copy()
+            tips_color_df = tips_df[tips_df[color_field] != unassigned_value].copy()
+        else:
+            tips_gray_df = None
+            tips_color_df = tips_df
+
+        # Prepare tree plot which is circles for tips and lines for branches
+        # (internal nodes).
+        brush = alt.selection(type='interval', resolve='global')
+        tips_color = alt.Chart(tips_color_df).mark_circle().encode(
             x=alt.X(
                 "divergence:Q",
                 scale=alt.Scale(
@@ -310,6 +318,27 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
             tooltip=ToolTip
         ).add_selection(brush)
 
+        if tips_gray_df is not None:
+            tips_gray = alt.Chart(tips_gray_df).mark_circle().encode(
+                x=alt.X(
+                    "divergence:Q",
+                    scale=alt.Scale(
+                        domain=(dataFrame["divergence"].min(), dataFrame["divergence"].max()), nice=True),
+                    title="Divergence",
+                    axis=alt.Axis(labels=True, ticks=True)
+                ),
+                y=alt.Y(
+                    "y_value:Q",
+                    title="",
+                    axis=alt.Axis(labels=False, ticks=False)
+                ),
+                color=alt.condition(brush, if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_)), if_false=alt.ColorValue('gray')),
+                tooltip=ToolTip
+            )
+            tips = tips_gray + tips_color
+        else:
+            tips = tips_color
+
         lines = alt.Chart(dataFrame).mark_rule().encode(
                     x=alt.X("parent_mutation:Q", scale=alt.Scale(domain=(dataFrame["divergence"].min(), dataFrame["divergence"].max()), nice=True)),
                     x2="divergence:Q",
@@ -318,33 +347,17 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
                     color=alt.ColorValue("#cccccc")
                 )
 
-        # other lines:
-        # horizontal_lines = alt.Chart(dataFrame).mark_line().encode(
-        #     x="divergence:Q",
-        #     x2="parent_mutation:Q",
-        #     y=alt.Y("parent_y:Q", scale=alt.Scale(domain=(dataFrame["y_value"].min() - 1.0, dataFrame["y_value"].max() + 0.2))),
-        #     color=alt.ColorValue("#cccccc")
-        # )
+        tree = (lines + tips).properties(width=560, height=250)
+        list_of_chart.append(tree)
 
-        # # Creating vertical lines
-        # vertical_lines = alt.Chart(dataFrame).mark_rule().encode(
-        #     x="divergence:Q",
-        #     y=alt.Y("parent_y:Q", scale=alt.Scale(domain=(dataFrame["y_value"].min() - 1.0, dataFrame["y_value"].max() + 0.2))),
-        #     y2="y_value:Q",
-        #     color=alt.ColorValue("#cccccc")
-        # )
-
-        # lines = (horizontal_lines + vertical_lines)
-
-        tree_name = (lines + tips_gray + tips_colored).properties(width=560, height=250)
-        list_of_chart.append(tree_name)
-
+        # Prepare embedding plots which are tips only.
         for i in range(0, len(list_of_data) - 1, 2):
             if(i == len(list_of_data)):
                 break
-            chart = base.mark_circle(size=60).encode(
+
+            chart_color = alt.Chart(tips_color_df).mark_circle(size=60).encode(
                 x=alt.X(list_of_data[i], title=list_of_titles[i], axis=alt.Axis(labels=False, ticks=False)),
-                y=alt.X(list_of_data[i + 1], title=list_of_titles[i + 1], axis=alt.Axis(labels=False, ticks=False)),
+                y=alt.Y(list_of_data[i + 1], title=list_of_titles[i + 1], axis=alt.Axis(labels=False, ticks=False)),
                 color=alt.condition(
                     brush,
                     if_false=alt.ColorValue('gray'),
@@ -357,12 +370,36 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
                 tooltip=ToolTip
             ).add_selection(
                 brush
-            ).properties(
+            )
+
+            # As with the tree plot, plot gray tips first, if they exist, and
+            # then plot color tips second to place them on top.
+            if tips_gray_df is not None:
+                chart_gray = alt.Chart(tips_gray_df).mark_circle(size=60).encode(
+                    x=alt.X(list_of_data[i], title=list_of_titles[i], axis=alt.Axis(labels=False, ticks=False)),
+                    y=alt.Y(list_of_data[i + 1], title=list_of_titles[i + 1], axis=alt.Axis(labels=False, ticks=False)),
+                    color=alt.condition(
+                        brush,
+                        if_false=alt.ColorValue('gray'),
+                        if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_), legend=alt.Legend(
+                            symbolLimit=len(domain),
+                            columns=legend_columns,
+                            title=legend_title,
+                        ))
+                    ),
+                    tooltip=ToolTip
+                )
+                chart = chart_gray + chart_color
+            else:
+                chart = chart_color
+
+            chart = chart.properties(
                 width=250,
-                height=250
+                height=250,
             )
 
             list_of_chart.append(chart)
+
         return list_of_chart
 
 
