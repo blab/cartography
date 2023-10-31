@@ -757,6 +757,7 @@ rule sarscov2_test_concat_within_between_stats:
         python3 notebooks/scripts/concatenate_tables.py \
             --tables {input.tables} \
             --separator ',' \
+            --dataset-name sars-cov-2-2022-2023 \
             --output {output.metadata}
         """
 

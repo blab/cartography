@@ -675,6 +675,7 @@ rule seasonal_flu_training_concat_within_between_stats:
         python3 notebooks/scripts/concatenate_tables.py \
             --tables {input.tables} \
             --separator ',' \
+            --dataset-name seasonal-flu-h3n2-ha-2016-2018 \
             --output {output.metadata}
         """
 

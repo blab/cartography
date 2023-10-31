@@ -36,7 +36,7 @@ rule concat_mutation_tables:
         """
         python3 notebooks/scripts/concatenate_tables.py \
             --tables {input.tables} \
-            --separator ,
+            --separator , \
             --output {output.csv_table} \
         """
 
@@ -73,22 +73,12 @@ rule concat_within_between_figure_table:
         ]
     output:
         csv_table = "docs/tables/total_within_between_stats.csv",
-        tex_table = "docs/tables/within_between_table.tex"
-    params:
-        disease_names = [
-            "Influenza H3N2 HA (2016-2018)",
-            "Influenza H3N2 HA (2018-2020)",
-            "Influenza H3N2 HA/NA Reassorted",
-            "SARS-CoV-2 (2020-2022)",
-            "SARS-CoV-2 (2022-2023)",
-        ],
     shell:
         """
-        python3 notebooks/scripts/concat_KDE_tables.py \
+        python3 notebooks/scripts/concatenate_tables.py \
             --tables {input.tables} \
-            --output-csv {output.csv_table} \
-            --output-table {output.tex_table} \
-            --disease-names {params.disease_names:q}
+            --separator ',' \
+            --output {output.csv_table}
         """
 
 rule create_within_between_figure:
