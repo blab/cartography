@@ -35,6 +35,8 @@ rule sarscov2_subsample_early_samples:
         outliers="sars-cov-2-nextstrain/config/exclude.txt",
     output:
         strains="sars-cov-2-nextstrain/data/strains.txt",
+    params:
+        random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
         """
@@ -46,6 +48,7 @@ rule sarscov2_subsample_early_samples:
             --max-date 2022-01-01 \
             --group-by region year month \
             --subsample-max-sequences 2000 \
+            --subsample-seed {params.random_seed} \
             --output-strains {output.strains}
         """
 
