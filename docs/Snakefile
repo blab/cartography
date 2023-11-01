@@ -1,11 +1,6 @@
 rule manuscript:
     input:
         "docs/cartography.pdf",
-        "docs/figures/total_within_between_stats.png",
-        "docs/tables/total_within_between_stats.csv",
-        "docs/figures/within_between_influenza.png",
-        "docs/figures/within_between_sars.png",
-        #"cartography.html",
 
 rule within_between_stats:
     input:
@@ -81,14 +76,6 @@ rule concat_within_between_figure_table:
             --output {output.csv_table}
         """
 
-rule create_within_between_figure:
-    input:
-        dataframe="docs/tables/total_within_between_stats.csv"
-    output:
-        png = "docs/figures/total_within_between_stats.png"
-    notebook:
-        "../notebooks/2023-07-24WithinVBetweenFigure.py.ipynb"
-
 rule manuscript_pdf:
     input:
         *rules.pathogens.input,
@@ -99,6 +86,11 @@ rule manuscript_pdf:
         manuscript="docs/cartography.tex",
         bibliography="docs/cartography.bib",
         accuracy_table="docs/tables/accuracy_table.tex",
+        mutation_table="docs/tables/mutation_table.csv",
+        within_between_stats_table="docs/tables/total_within_between_stats.csv",
+        within_between_influenza_figure="docs/figures/within_between_influenza.png",
+        within_between_sars_figure="docs/figures/within_between_sars.png",
+
     output:
         manuscript = "docs/cartography.pdf",
     conda: "../cartography.yml"
