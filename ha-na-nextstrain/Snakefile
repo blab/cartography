@@ -648,7 +648,7 @@ rule seasonal_flu_reassortment_concat_mutation_tables:
             --tables {input.mutation_tables} \
             --separator ',' \
             --sort-by {params.column} \
-            --dataset-name seasonal-flu-nextstrain-ha-na \
+            --dataset-name seasonal-flu-h3n2-ha-na-2016-2018 \
             --output {output.metadata}
         """
 

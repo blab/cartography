@@ -677,6 +677,7 @@ rule sarscov2_concat_mutation_tables:
             --tables {input.mutation_tables} \
             --separator ',' \
             --sort-by {params.column} \
+            --dataset-name sars-cov-2-2020-2022 \
             --output {output.metadata}
         """
 

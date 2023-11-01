@@ -651,7 +651,7 @@ rule sarscov2_test_concat_mutation_tables:
             --tables {input.mutation_tables} \
             --separator ',' \
             --sort-by {params.column} \
-            --dataset-name sars-cov-2-nextstrain-2022-2023 \
+            --dataset-name sars-cov-2-2022-2023 \
             --output {output.metadata}
         """
 
