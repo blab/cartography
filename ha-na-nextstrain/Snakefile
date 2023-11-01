@@ -92,6 +92,9 @@ rule seasonal_flu_reassortment_filter:
     output:
         sequences = "ha-na-nextstrain/results/filtered_{segment}.fasta",
         metadata = "ha-na-nextstrain/results/filtered_{segment}_metadata.tsv",
+    params:
+        min_date = 2016.0,
+        max_date = 2018.0,
     conda: "../cartography.yml"
     shell:
         """

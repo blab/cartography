@@ -63,8 +63,8 @@ rule seasonal_flu_test_filter:
         group_by = "country year month",
         sequences_per_group = 25,
         random_seed = RANDOM_SEED,
-        min_date = 2018.25,
-        max_date = 2020.75
+        min_date = 2018.0,
+        max_date = 2020.0,
     conda: "../cartography.yml"
     shell:
         """
