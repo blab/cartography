@@ -860,7 +860,7 @@ We applied four standard dimensionality reduction methods to simulated and natur
 From our analysis of simulated influenza- and coronavirus-like sequences, we found that each method produced consistent embeddings of genetic sequences for two distinct pathogens, more than 55 years of evolution, and a wide range of practical method parameters.
 These results suggest that researchers could apply these biologically-uninformed methods to a broad range of human pathogenic viruses with minimal tuning of the method parameters.
 Of the four methods, MDS most accurately reflected pairwise genetic distances between simulated samples in its embeddings.
-From our analysis of natural populations of seasonal influenza H3N2 HA and SARS-CoV-2 sequences, we confirmed that MDS most reliably reflected pairwise genetic distances and we found that clusters from t-SNE embeddings most accurately recapitulated previously defined genetic groups at the resolution of WHO and Nextstrain clades.
+From our analysis of natural populations of seasonal influenza H3N2 HA and SARS-CoV-2 sequences, we confirmed that MDS most reliably reflected pairwise genetic distances and we found that clusters from t-SNE and UMAP embeddings most accurately recapitulated previously defined genetic groups at the resolution of WHO and Nextstrain clades.
 Clusters from t-SNE embeddings of H3N2 HA and NA sequences accurately matched reassortment clades identified by a biologically-informed model based on ancestral reassortment graphs.
 MDS embeddings placed known recombinant lineages of SARS-CoV-2 between their parental lineages.
 From these results, we conclude that tree-free dimensionality reduction methods can provide valuable biological insights for human pathogenic viruses through easily interpretable visualizations of genetic relationships and the ability to account for genetic variation that phylogenetic methods cannot including indels, reassortment, and recombination.
@@ -890,7 +890,8 @@ Some limitations noted above suggest future directions for this line of research
 We provide optimal settings for each pathogen and embedding method in this study and open source tools to apply these methods to other pathogens.
 Researchers can easily integrate these tools into existing workflows for the genomic epidemiology of viruses and visualize the results with Nextstrain.
 Alternately, researchers may choose to apply similar existing tools developed for metagenomic analysis \cite{Schloss2009,Schloss2020,Bolyen2019,McMurdie2013} to the analysis of viral populations.
-We expect future work to expand the breadth of the dimensionality reduction methods applied to viruses and the breadth viral diversity assessed by these methods.
+In the short term, researchers can apply the methods we describe here to seasonal influenza and SARS-CoV-2 genomes to identify biologically relevant clusters including reassortment events or recombinant lineages.
+In the long term, we expect researchers will benefit from expanding the breadth of dimensionality reduction methods applied to viruses and the breath of viral diversity assessed by these methods.
 
 \section*{Conclusion}
 
