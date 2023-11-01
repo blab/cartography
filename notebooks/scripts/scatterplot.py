@@ -135,5 +135,5 @@ if __name__ == "__main__":
         total_df.to_csv(args.output_dataframe)
 
     if args.output_metadata is not None:
-        metadata_df = pd.DataFrame([[args.method, r_value ** 2, mean, std, mean_genetic, std_genetic, max_genetic, mean_euclidean, std_euclidean, max_euclidean]], columns=["embedding", "pearson_coef", "mean", "std", "genetic_mean", "genetic_std", "genetic_max", "euclidean_mean", "euclidean_std", "euclidean_max"])
+        metadata_df = pd.DataFrame([[args.method, r_value ** 2, mean, std, mean_genetic, std_genetic, max_genetic, mean_euclidean, std_euclidean, max_euclidean, slope, intercept]], columns=["embedding", "pearson_coef", "mean", "std", "genetic_mean", "genetic_std", "genetic_max", "euclidean_mean", "euclidean_std", "euclidean_max", "line_slope", "line_intercept"])
         metadata_df.to_csv(args.output_metadata)

@@ -9,6 +9,7 @@ if __name__ == "__main__":
     parser.add_argument("--tables", nargs="+", help="tables to concatenate")
     parser.add_argument("--separator", default="\t", help="separator between columns in the given tables")
     parser.add_argument("--sort-by", help="what to sort the dataframe by (optional)")
+    parser.add_argument("--dataset-name", help="name of dataset to add as column")
     parser.add_argument("--output", help="concatenated table")
     parser.add_argument("--output-latex", help="concatenated table in LaTeX format")
     parser.add_argument("--latex-precision", type=int, default=4, help="precision to use for LaTeX table output")
@@ -26,6 +27,9 @@ if __name__ == "__main__":
         cols_to_order = [args.sort_by]
         new_columns = cols_to_order + (df.columns.drop(cols_to_order).tolist())
         df = df[new_columns]
+
+    if args.dataset_name is not None:
+        df["dataset_name"] = args.dataset_name
 
     df.to_csv(args.output, sep=args.separator, header=True, index=False)
 

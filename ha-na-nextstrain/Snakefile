@@ -53,9 +53,22 @@ rule seasonal_flu_reassortment_split:
             --output_fastas {output.sequences_ha} {output.sequences_na}\
         """
 
-rule seasonal_flu_reassortment_parse:
+rule seasonal_flu_reassortment_deduplicate_sequences:
     input:
         sequences = "ha-na-nextstrain/results/ncbi-h3n2-{segment}.fasta"
+    output:
+        sequences = "ha-na-nextstrain/results/deduplicated_sequences_{segment}.fasta"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 ha-na-nextstrain/scripts/deduplicate_sequences.py \
+            --sequences {input.sequences} \
+            --output {output.sequences}
+        """
+
+rule seasonal_flu_reassortment_parse:
+    input:
+        sequences = "ha-na-nextstrain/results/deduplicated_sequences_{segment}.fasta"
     output:
         sequences = "ha-na-nextstrain/results/sequences_{segment}.fasta",
         metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv"
@@ -71,22 +84,9 @@ rule seasonal_flu_reassortment_parse:
             --fields {params.fasta_fields}
         """
 
-rule seasonal_flu_reassortment_deduplicate_sequences:
-    input:
-        sequences = "ha-na-nextstrain/results/sequences_{segment}.fasta"
-    output:
-        sequences = "ha-na-nextstrain/results/deduplicated_sequences_{segment}.fasta"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ha-na-nextstrain/scripts/deduplicate_sequences.py \
-            --sequences {input.sequences} \
-            --output {output.sequences}
-        """
-
 rule seasonal_flu_reassortment_filter:
     input:
-        sequences = "ha-na-nextstrain/results/deduplicated_sequences_{segment}.fasta",
+        sequences = "ha-na-nextstrain/results/sequences_{segment}.fasta",
         metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
         exclude = seasonal_flu_reassortment_files.dropped_strains
     output:
@@ -155,7 +155,7 @@ rule seasonal_flu_reassortment_tree:
         tree = "ha-na-nextstrain/results/tree_raw_{segment}.nwk"
     conda: "../cartography.yml"
     params:
-        tree_builder_args="-czb -bb 1000 -bnni -nt AUTO",
+        tree_builder_args="-czb",
     threads: 4
     shell:
         """
@@ -163,7 +163,6 @@ rule seasonal_flu_reassortment_tree:
             --alignment {input.alignment} \
             --method iqtree \
             --nthreads {threads} \
-            --override-default-args \
             --tree-builder-args="{params.tree_builder_args}" \
             --output {output.tree}
         """
@@ -229,7 +228,7 @@ rule seasonal_flu_reassortment_convert_mccs_to_json:
 
 rule seasonal_flu_reassortment_refine:
     input:
-        tree = "ha-na-nextstrain/results/treeknit_results/rooted_tree_raw_{segment}_resolved.nwk",
+        tree = "ha-na-nextstrain/results/rooted_tree_raw_{segment}.nwk",
         alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta",
         metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
     output:
@@ -252,7 +251,7 @@ rule seasonal_flu_reassortment_refine:
 
 rule seasonal_flu_reassortment_ancestral:
     input:
-        tree = rules.seasonal_flu_reassortment_refine.output.tree,
+        tree = "ha-na-nextstrain/results/tree_{segment}.nwk",
         alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta"
     output:
         node_data = "ha-na-nextstrain/results/nt_muts_{segment}.json"
@@ -270,7 +269,7 @@ rule seasonal_flu_reassortment_ancestral:
 
 rule seasonal_flu_reassortment_translate:
     input:
-        tree = rules.seasonal_flu_reassortment_refine.output.tree,
+        tree = "ha-na-nextstrain/results/tree_{segment}.nwk",
         node_data = rules.seasonal_flu_reassortment_ancestral.output.node_data,
         reference = seasonal_flu_reassortment_files.reference
     output:
@@ -287,7 +286,7 @@ rule seasonal_flu_reassortment_translate:
 
 rule seasonal_flu_reassortment_clades:
     input:
-        tree = rules.seasonal_flu_reassortment_refine.output.tree,
+        tree = "ha-na-nextstrain/results/tree_{segment}.nwk",
         aa_muts = rules.seasonal_flu_reassortment_translate.output.node_data,
         nuc_muts = rules.seasonal_flu_reassortment_ancestral.output.node_data,
         clades = seasonal_flu_reassortment_files.clades
@@ -460,7 +459,7 @@ rule seasonal_flu_reassortment_create_node_output:
 
 rule seasonal_flu_reassortment_export:
     input:
-        tree = rules.seasonal_flu_reassortment_refine.output.tree,
+        tree = "ha-na-nextstrain/results/tree_{segment}.nwk",
         metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
         branch_lengths = rules.seasonal_flu_reassortment_refine.output.node_data,
         nt_muts = rules.seasonal_flu_reassortment_ancestral.output.node_data,
@@ -471,7 +470,7 @@ rule seasonal_flu_reassortment_export:
         auspice_config = seasonal_flu_reassortment_files.auspice_config,
         clades = "ha-na-nextstrain/results/clades_ha.json"
     output:
-        auspice_tree = "auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json"
+        auspice_tree = "auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json",
     conda: "../cartography.yml"
     shell:
         """
@@ -484,20 +483,27 @@ rule seasonal_flu_reassortment_export:
             --output {output.auspice_tree}
         """
 
-rule seasonal_flu_reassortment_tree_to_table:
+rule seasonal_flu_reassortment_create_table_from_tree_and_node_data:
     input:
-        tree = rules.seasonal_flu_reassortment_export.output.auspice_tree
+        tree="ha-na-nextstrain/results/tree_{segment}.nwk",
+        clades="ha-na-nextstrain/results/clades_{segment}.json",
+        branch_lengths="ha-na-nextstrain/results/branch_lengths_{segment}.json",
+        mccs="ha-na-nextstrain/results/mccs.json",
     output:
-        table = "ha-na-nextstrain/results/table_{segment}.tsv"
+        table="ha-na-nextstrain/results/table_{segment}.tsv",
     params:
-        attributes = "date div MCC clade_membership"
+        attributes="MCC clade_membership branch_length divergence",
+        mutation_length_attribute="branch_length",
     conda: "../cartography.yml"
     shell:
         """
-        python3 notebooks/scripts/auspice_tree_to_table.py \
-            {input.tree} \
-            {output.table} \
-            --attributes {params.attributes}
+        python3 notebooks/scripts/node_data_to_table.py \
+            --tree {input.tree} \
+            --node-data {input.clades} {input.branch_lengths} {input.mccs} \
+            --include-internal-nodes \
+            --attributes {params.attributes} \
+            --mutation-length-attribute {params.mutation_length_attribute} \
+            --output {output.table}
         """
 
 rule seasonal_flu_reassortment_create_distance_dataframe:
@@ -533,18 +539,31 @@ rule seasonal_flu_reassortment_annotate_embeddings:
     conda: "../cartography.yml"
     params:
         join_on="strain",
+        join_type="left",
     shell:
         """
         python3 notebooks/scripts/join_tables.py \
             --left {input.left} \
             --right {input.right} \
             --on {params.join_on} \
+            --join-type {params.join_type} \
             --output {output.table}
+        """
+
+rule seasonal_flu_reassortment_get_table_of_tips:
+    input:
+        metadata="ha-na-nextstrain/results/table_{segment}.tsv",
+    output:
+        metadata="ha-na-nextstrain/results/table_of_tips_{segment}.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk filter2 -t -f '$is_internal_node=="False"' {input.metadata} > {output.metadata}
         """
 
 rule seasonal_flu_reassortment_cluster_accuracy:
     input:
-        metadata = "ha-na-nextstrain/results/table_ha.tsv",
+        metadata = "ha-na-nextstrain/results/table_of_tips_ha.tsv",
         embedding = "ha-na-nextstrain/results/cluster_embed_{method}_{ha_concatenated}.csv",
     output:
         dataframe = "ha-na-nextstrain/results/cluster_accuracy_{method}_{ha_concatenated}.csv",
@@ -622,6 +641,38 @@ rule seasonal_flu_reassortment_concat_mutation_tables:
             --tables {input.mutation_tables} \
             --separator ',' \
             --sort-by {params.column} \
+            --dataset-name seasonal-flu-nextstrain-ha-na \
+            --output {output.metadata}
+        """
+
+rule seasonal_flu_reassortment_within_between_stats:
+    input:
+        distance_matrix = "ha-na-nextstrain/results/distance_matrix_concatenated.csv",
+        annotated_embeddings = "ha-na-nextstrain/results/annotated_embeddings.tsv",
+    output:
+        dataframe = "ha-na-nextstrain/results/within_between_stats/{group_column}.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/within_v_between_stats.py \
+            --distance-matrix {input.distance_matrix} \
+            --metadata {input.annotated_embeddings} \
+            --group-column {wildcards.group_column} \
+            --output {output.dataframe}
+        """
+
+rule seasonal_flu_reassortment_concat_within_between_stats:
+    input:
+        tables=expand("ha-na-nextstrain/results/within_between_stats/{group_column}.csv", group_column=["MCC"] + [f"{method}_concatenated_label" for method in EMBEDDING_METHODS])
+    output:
+        metadata = "ha-na-nextstrain/results/full_within_between_stats.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.tables} \
+            --separator ',' \
+            --dataset-name seasonal-flu-h3n2-ha-na-2016-2018 \
             --output {output.metadata}
         """
 
