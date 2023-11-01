@@ -57,7 +57,8 @@ rule seasonal_flu_test_filter:
         metadata = "seasonal-flu-nextstrain-2018-2020/results/metadata.tsv",
         exclude = seasonal_flu_test_files.dropped_strains
     output:
-        sequences = "seasonal-flu-nextstrain-2018-2020/results/filtered.fasta"
+        sequences = "seasonal-flu-nextstrain-2018-2020/results/filtered.fasta",
+        metadata = "seasonal-flu-nextstrain-2018-2020/results/filtered_metadata.tsv",
     params:
         group_by = "country year month",
         sequences_per_group = 25,
@@ -71,7 +72,8 @@ rule seasonal_flu_test_filter:
             --sequences {input.sequences} \
             --metadata {input.metadata} \
             --exclude {input.exclude} \
-            --output {output.sequences} \
+            --output-sequences {output.sequences} \
+            --output-metadata {output.metadata} \
             --group-by {params.group_by} \
             --sequences-per-group {params.sequences_per_group} \
             --subsample-seed {params.random_seed} \
@@ -123,7 +125,7 @@ rule seasonal_flu_test_refine:
     input:
         tree = rules.seasonal_flu_test_tree.output.tree,
         alignment = rules.seasonal_flu_test_align.output,
-        metadata = rules.seasonal_flu_test_parse.output.metadata
+        metadata = "seasonal-flu-nextstrain-2018-2020/results/filtered_metadata.tsv",
     output:
         tree = "seasonal-flu-nextstrain-2018-2020/results/tree.nwk",
         node_data = "seasonal-flu-nextstrain-2018-2020/results/branch_lengths.json",
@@ -358,7 +360,7 @@ rule seasonal_flu_test_export:
     message: "Exporting data files for for auspice"
     input:
         tree = rules.seasonal_flu_test_refine.output.tree,
-        metadata = rules.seasonal_flu_test_parse.output.metadata,
+        metadata = "seasonal-flu-nextstrain-2018-2020/results/filtered_metadata.tsv",
         branch_lengths = rules.seasonal_flu_test_refine.output.node_data,
         nt_muts = rules.seasonal_flu_test_ancestral.output.node_data,
         aa_muts = rules.seasonal_flu_test_translate.output.node_data,

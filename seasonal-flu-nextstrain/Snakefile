@@ -66,7 +66,8 @@ rule seasonal_flu_training_filter:
         metadata = "seasonal-flu-nextstrain/results/metadata.tsv",
         exclude = seasonal_flu_training_files.dropped_strains,
     output:
-        sequences = "seasonal-flu-nextstrain/results/filtered.fasta"
+        sequences = "seasonal-flu-nextstrain/results/filtered.fasta",
+        metadata = "seasonal-flu-nextstrain/results/filtered_metadata.tsv",
     params:
         group_by = "country year month",
         sequences_per_group = 25,
@@ -82,7 +83,8 @@ rule seasonal_flu_training_filter:
             --sequences {input.sequences} \
             --metadata {input.metadata} \
             --exclude {input.exclude} \
-            --output {output.sequences} \
+            --output-sequences {output.sequences} \
+            --output-metadata {output.metadata} \
             --group-by {params.group_by} \
             --sequences-per-group {params.sequences_per_group} \
             --subsample-seed {params.random_seed} \
@@ -374,7 +376,7 @@ rule seasonal_flu_training_refine:
     input:
         tree = rules.seasonal_flu_training_tree.output.tree,
         alignment = rules.seasonal_flu_training_align.output,
-        metadata = rules.seasonal_flu_training_parse.output.metadata
+        metadata = "seasonal-flu-nextstrain/results/filtered_metadata.tsv",
     output:
         tree = "seasonal-flu-nextstrain/results/tree.nwk",
         node_data = "seasonal-flu-nextstrain/results/branch_lengths.json",
@@ -494,7 +496,7 @@ rule seasonal_flu_training_create_table_from_tree_and_node_data:
 rule seasonal_flu_training_export:
     input:
         tree = rules.seasonal_flu_training_refine.output.tree,
-        metadata = rules.seasonal_flu_training_parse.output.metadata,
+        metadata = "seasonal-flu-nextstrain/results/filtered_metadata.tsv",
         branch_lengths = rules.seasonal_flu_training_refine.output.node_data,
         nt_muts = rules.seasonal_flu_training_ancestral.output.node_data,
         aa_muts = rules.seasonal_flu_training_translate.output.node_data,

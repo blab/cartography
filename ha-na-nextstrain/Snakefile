@@ -90,7 +90,8 @@ rule seasonal_flu_reassortment_filter:
         metadata = "ha-na-nextstrain/results/metadata_{segment}.tsv",
         exclude = seasonal_flu_reassortment_files.dropped_strains
     output:
-        sequences = "ha-na-nextstrain/results/filtered_{segment}.fasta"
+        sequences = "ha-na-nextstrain/results/filtered_{segment}.fasta",
+        metadata = "ha-na-nextstrain/results/filtered_{segment}_metadata.tsv",
     conda: "../cartography.yml"
     shell:
         """
@@ -98,7 +99,10 @@ rule seasonal_flu_reassortment_filter:
             --sequences {input.sequences} \
             --metadata {input.metadata} \
             --exclude {input.exclude} \
-            --output {output.sequences}
+            --min-date {params.min_date} \
+            --max-date {params.max_date} \
+            --output-sequences {output.sequences} \
+            --output-metadata {output.metadata}
         """
 
 rule seasonal_flu_reassortment_pair_ha_strains:
