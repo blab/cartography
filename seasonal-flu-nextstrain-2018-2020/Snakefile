@@ -583,3 +583,341 @@ rule seasonal_flu_test_create_notebook_docs:
     conda: "../cartography.yml"
     notebook:
         "2021-03-09Notebook.ipynb"
+
+rule seasonal_flu_test_replication_subsample:
+    input:
+        sequences="seasonal-flu-nextstrain-2018-2020/results/sequences.fasta",
+        metadata="seasonal-flu-nextstrain-2018-2020/results/metadata.tsv",
+        exclude=seasonal_flu_test_files.dropped_strains,
+    output:
+        sequences="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/filtered_sequences.fasta",
+        metadata="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/filtered_metadata.tsv",
+    params:
+        group_by="country year month",
+        min_date=2018.0,
+        max_date=2020.0,
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur filter \
+            --sequences {input.sequences} \
+            --metadata {input.metadata} \
+            --exclude {input.exclude} \
+            --output-sequences {output.sequences} \
+            --output-metadata {output.metadata} \
+            --group-by {params.group_by} \
+            --sequences-per-group {wildcards.sequences_per_group} \
+            --subsample-seed {wildcards.replicate} \
+            --min-date {params.min_date} \
+            --max-date {params.max_date}
+        """
+
+rule seasonal_flu_test_replication_align:
+    input:
+        sequences="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/filtered_sequences.fasta",
+        reference=seasonal_flu_test_files.reference,
+    output:
+        alignment="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/aligned.fasta",
+    conda: "../cartography.yml"
+    threads: 4
+    shell:
+        """
+        augur align \
+            --sequences {input.sequences} \
+            --reference-sequence {input.reference} \
+            --output {output.alignment} \
+            --fill-gaps \
+            --nthreads {threads}
+        """
+
+rule seasonal_flu_test_replication_remove_reference_from_alignment:
+    input:
+        alignment="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/aligned.fasta",
+    output:
+        alignment="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/aligned_without_reference.fasta",
+    params:
+        reference="A/Beijing/32/1992",
+    conda: "../cartography.yml"
+    shell:
+        """
+        seqkit grep -v -p "{params.reference}" {input.alignment} > {output.alignment}
+        """
+
+rule seasonal_flu_test_replication_create_distance_matrix:
+    input:
+        alignment="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/aligned_without_reference.fasta",
+    output:
+        output="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/distance_matrix.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-distance \
+            --alignment {input.alignment} \
+            --output {output.output}
+        """
+
+rule seasonal_flu_test_replication_embed_pca:
+    input:
+        alignment="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/aligned_without_reference.fasta",
+        parameters="simulations/influenza-like/no-reassortment/pca_parameters.csv",
+    output:
+        dataframe="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/embed_pca.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-embed \
+            --alignment {input.alignment} \
+            --embedding-parameters {input.parameters} \
+            --random-seed {wildcards.replicate} \
+            --output-dataframe {output.dataframe} \
+            pca
+        """
+
+rule seasonal_flu_test_replication_embed_mds:
+    input:
+        alignment="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/aligned_without_reference.fasta",
+        distance_matrix="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/distance_matrix.csv",
+        parameters="simulations/influenza-like/no-reassortment/mds_parameters.csv",
+    output:
+        dataframe="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/embed_mds.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-embed \
+            --alignment {input.alignment} \
+            --distance-matrix {input.distance_matrix} \
+            --embedding-parameters {input.parameters} \
+            --random-seed {wildcards.replicate} \
+            --output-dataframe {output.dataframe} \
+            mds
+        """
+
+rule seasonal_flu_test_replication_embed_tsne:
+    input:
+        alignment="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/aligned_without_reference.fasta",
+        distance_matrix="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/distance_matrix.csv",
+        parameters="simulations/influenza-like/no-reassortment/t-sne_parameters.csv",
+    output:
+        dataframe="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/embed_t-sne.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-embed \
+            --alignment {input.alignment} \
+            --distance-matrix {input.distance_matrix} \
+            --embedding-parameters {input.parameters} \
+            --random-seed {wildcards.replicate} \
+            --output-dataframe {output.dataframe} \
+            t-sne
+        """
+
+rule seasonal_flu_test_replication_embed_umap:
+    input:
+        alignment="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/aligned_without_reference.fasta",
+        distance_matrix="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/distance_matrix.csv",
+        parameters="simulations/influenza-like/no-reassortment/umap_parameters.csv",
+    output:
+        dataframe="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/embed_umap.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-embed \
+            --alignment {input.alignment} \
+            --distance-matrix {input.distance_matrix} \
+            --embedding-parameters {input.parameters} \
+            --random-seed {wildcards.replicate} \
+            --output-dataframe {output.dataframe} \
+            umap
+        """
+
+rule seasonal_flu_test_replication_cluster_with_optimal_parameters:
+    input:
+        embedding="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/embed_{method}.csv",
+        parameters="seasonal-flu-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
+    output:
+        clustered_embedding="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/cluster_embed_{method}.csv",
+    conda: "../cartography.yml"
+    params:
+        min_size=CLUSTER_MIN_SIZE,
+        min_samples=CLUSTER_MIN_SAMPLES,
+    shell:
+        """
+        pathogen-cluster \
+            --embedding {input.embedding} \
+            --label-attribute "{wildcards.method}_label" \
+            --min-size {params.min_size} \
+            --min-samples {params.min_samples} \
+            --distance-threshold "$(csvtk filter2 -f '$method=="{wildcards.method}"' {input.parameters} | csvtk cut -f distance_threshold | csvtk del-header)" \
+            --output-dataframe {output.clustered_embedding}
+        """
+
+rule seasonal_flu_test_replication_tree:
+    input:
+        alignment="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/aligned.fasta",
+    output:
+        tree="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/tree_raw.nwk",
+    conda: "../cartography.yml"
+    threads: 4
+    shell:
+        """
+        augur tree \
+            --alignment {input.alignment} \
+            --output {output.tree} \
+            --nthreads {threads}
+        """
+
+rule seasonal_flu_test_replication_root_and_prune_tree:
+    input:
+        tree = "seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/tree_raw.nwk",
+    output:
+        tree = "seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/rooted_tree_raw.nwk",
+    conda: "../cartography.yml"
+    params:
+        root="A/Beijing/32/1992",
+        minimum_node_support=1,
+    shell:
+        """
+        python3 notebooks/scripts/root_and_prune_tree.py \
+            --tree {input.tree} \
+            --root {params.root} \
+            --minimum-node-support {params.minimum_node_support} \
+            --output {output.tree}
+        """
+
+rule seasonal_flu_test_replication_refine:
+    input:
+        alignment="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/aligned_without_reference.fasta",
+        tree="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/rooted_tree_raw.nwk",
+        metadata="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/filtered_metadata.tsv",
+    output:
+        tree="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/tree.nwk",
+        node_data="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/branch_lengths.json",
+    params:
+        coalescent = "opt",
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur refine \
+            --tree {input.tree} \
+            --alignment {input.alignment} \
+            --metadata {input.metadata} \
+            --output-tree {output.tree} \
+            --output-node-data {output.node_data} \
+            --stochastic-resolve \
+            --keep-root \
+            --coalescent {params.coalescent} \
+            --seed {wildcards.replicate}
+        """
+
+rule seasonal_flu_test_replication_ancestral:
+    input:
+        tree="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/tree.nwk",
+        alignment="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/aligned.fasta",
+    output:
+        node_data="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/nt_muts.json",
+    params:
+        inference="joint",
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur ancestral \
+            --tree {input.tree} \
+            --alignment {input.alignment} \
+            --output-node-data {output.node_data} \
+            --inference {params.inference}
+        """
+
+rule seasonal_flu_test_replication_translate:
+    input:
+        tree="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/tree.nwk",
+        node_data="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/nt_muts.json",
+        reference=seasonal_flu_test_files.reference,
+    output:
+        node_data="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/aa_muts.json",
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur translate \
+            --tree {input.tree} \
+            --ancestral-sequences {input.node_data} \
+            --reference-sequence {input.reference} \
+            --output {output.node_data}
+        """
+
+rule seasonal_flu_test_replication_clades:
+    input:
+        tree="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/tree.nwk",
+        nuc_muts="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/nt_muts.json",
+        aa_muts="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/aa_muts.json",
+        clades=seasonal_flu_test_files.clades,
+    output:
+        clade_data="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/clades.json",
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur clades --tree {input.tree} \
+            --mutations {input.nuc_muts} {input.aa_muts} \
+            --clades {input.clades} \
+            --output {output.clade_data}
+        """
+
+rule seasonal_flu_test_replication_tree_to_table:
+    input:
+        tree="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/tree.nwk",
+        branch_lengths="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/branch_lengths.json",
+        clades="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/clades.json",
+    output:
+        table="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/table.tsv",
+    params:
+        attributes="clade_membership branch_length",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/node_data_to_table.py \
+            --tree {input.tree} \
+            --node-data {input.clades} {input.branch_lengths} \
+            --attributes {params.attributes} \
+            --output {output.table}
+        """
+
+rule seasonal_flu_test_replication_cluster_accuracy:
+    input:
+        metadata="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/table.tsv",
+        embedding="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/cluster_embed_{method}.csv",
+    output:
+        dataframe="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/cluster_accuracy_{method}.csv",
+    conda: "../cartography.yml"
+    params:
+        clade_column="clade_membership",
+    shell:
+        """
+        python3 notebooks/scripts/metadata_HDBSCAN.py \
+            --method {wildcards.method} \
+            --true-clusters {input.metadata} \
+            --true-clusters-column {params.clade_column:q} \
+            --predicted-clusters {input.embedding} \
+            --predicted-clusters-column "{wildcards.method}_label" \
+            --output /dev/stdout \
+            | csvtk mutate2 -n "sequences_per_group" -e "'{wildcards.sequences_per_group}'" \
+            | csvtk mutate2 -n "replicate" -e "'{wildcards.replicate}'" > {output.dataframe}
+        """
+
+rule seasonal_flu_test_replication_aggregate_cluster_accuracy:
+    input:
+        accuracies=expand("seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/cluster_accuracy_{method}.csv", method=EMBEDDING_METHODS, replicate=CLUSTER_REPLICATION_REPLICATES, sequences_per_group=CLUSTER_REPLICATION_SEQUENCES_PER_GROUP),
+    output:
+        accuracies="seasonal-flu-nextstrain-2018-2020/results/replication_analysis_cluster_accuracy.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk concat {input.accuracies} > {output.accuracies}
+        """
+
+rule seasonal_flu_test_replication_plot_cluster_accuracy:
+    input:
+        accuracies="seasonal-flu-nextstrain-2018-2020/results/replication_analysis_cluster_accuracy.csv",
+    output:
+        accuracies="docs/figures/flu-2018-2020-replication-of-cluster-accuracy.png",
+    conda: "../cartography.yml"
+    notebook:
+        "../notebooks/plot-replication-of-cluster-accuracy.py.ipynb"

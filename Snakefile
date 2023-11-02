@@ -46,7 +46,11 @@ INTERNAL_NODE = [
 ]
 
 RANDOM_SEED = 314159
-CLUSTER_THRESHOLD = 2.0
+
+# Define parameters for replication of cluster accuracy analysis across late
+# pathogen datasets.
+CLUSTER_REPLICATION_REPLICATES = list(range(10))
+CLUSTER_REPLICATION_SEQUENCES_PER_GROUP = [5, 10, 15, 20, 25]
 
 wildcard_constraints:
     method="(pca|mds|t-sne|umap|genetic)",
