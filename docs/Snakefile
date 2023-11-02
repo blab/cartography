@@ -7,10 +7,11 @@ rule within_between_stats:
         within_between_df_training = "seasonal-flu-nextstrain/results/full_within_between_stats.csv",
         within_between_df_test = "seasonal-flu-nextstrain-2018-2020/results/full_within_between_stats.csv",
         within_between_df_sars_training = "sars-cov-2-nextstrain/results/full_within_between_stats.csv",
-        within_between_df_sars_test = "sars-cov-2-nextstrain-2022-2023/results/full_within_between_stats.csv"
+        within_between_df_sars_test = "sars-cov-2-nextstrain-2022-2023/results/full_within_between_stats.csv",
     output:
         flu_png = "docs/figures/within_between_influenza.png",
-        sars_png = "docs/figures/within_between_sars.png"
+        sars_png = "docs/figures/within_between_sars.png",
+    conda: "../cartography.yml"
     notebook:
         "../notebooks/2023-07-24WithinVBetweenFigure.ipynb"
 
@@ -27,6 +28,7 @@ rule concat_mutation_tables:
         ]
     output:
         csv_table = "docs/tables/mutation_table.csv",
+    conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/concatenate_tables.py \
@@ -68,6 +70,7 @@ rule concat_within_between_figure_table:
         ]
     output:
         csv_table = "docs/tables/total_within_between_stats.csv",
+    conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/concatenate_tables.py \
@@ -90,7 +93,6 @@ rule manuscript_pdf:
         within_between_stats_table="docs/tables/total_within_between_stats.csv",
         within_between_influenza_figure="docs/figures/within_between_influenza.png",
         within_between_sars_figure="docs/figures/within_between_sars.png",
-
     output:
         manuscript = "docs/cartography.pdf",
     conda: "../cartography.yml"
