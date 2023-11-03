@@ -25,19 +25,6 @@ rule sarscov2_test_download_filtered_metadata:
         curl -fsSL --proto '=https' -o {output.metadata} {params.metadata_url}
         """
 
-rule sarscov2_test_prioritize_recombinant_samples:
-    input:
-        metadata="sars-cov-2-nextstrain-2022-2023/data/filtered_metadata.tsv.zst",
-    output:
-        priorities="sars-cov-2-nextstrain-2022-2023/data/priorities.tsv",
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 sars-cov-2-nextstrain-2022-2023/scripts/prioritize_recombinants.py \
-            --metadata {input.metadata} \
-            --output {output.priorities}
-        """
-
 rule sarscov2_test_subsample_late_samples:
     input:
         metadata="sars-cov-2-nextstrain-2022-2023/data/filtered_metadata.tsv.zst",
