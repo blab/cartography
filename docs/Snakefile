@@ -112,6 +112,7 @@ rule manuscript_pdf:
         within_between_stats_table="docs/tables/total_within_between_stats.csv",
         within_between_influenza_figure="docs/figures/within_between_influenza.png",
         within_between_sars_figure="docs/figures/within_between_sars.png",
+        accessions_and_authors_table="docs/tables/accessions_and_authors.tsv",
     output:
         manuscript = "docs/cartography.pdf",
     conda: "../cartography.yml"
