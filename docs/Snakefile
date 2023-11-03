@@ -103,6 +103,8 @@ rule manuscript_pdf:
         "docs/figures/simulated-coronavirus-like-with-moderate-recombination-rate-scores-by-parameters.png",
         "docs/figures/simulated-populations-representative-embeddings.png",
         "docs/figures/simulated-populations-representative-mds-embeddings.png",
+        "docs/figures/flu-2018-2020-replication-of-cluster-accuracy.png",
+        "docs/figures/sarscov2-test-replication-of-cluster-accuracy.png",
         manuscript="docs/cartography.tex",
         bibliography="docs/cartography.bib",
         accuracy_table="docs/tables/accuracy_table.tex",
