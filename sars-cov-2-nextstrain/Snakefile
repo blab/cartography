@@ -781,3 +781,31 @@ rule sarscov2_create_notebook_docs:
     conda: "../cartography.yml"
     notebook:
         "2022-03-29-final-figures.py.ipynb"
+
+rule sarscov2_get_accessions:
+    input:
+        metadata="sars-cov-2-nextstrain/data/metadata.tsv",
+    output:
+        accessions="sars-cov-2-nextstrain/results/accessions.txt",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk cut -t -f "genbank_accession_rev" {input.metadata} \
+            | sed 1d \
+            | sort -k 1,1 > {output}
+        """
+
+rule sarscov2_get_authors_for_accessions:
+    input:
+        accessions="sars-cov-2-nextstrain/results/accessions.txt",
+    output:
+        authors="sars-cov-2-nextstrain/results/accessions_and_authors.tsv",
+    params:
+        fields="accession,virus-name,submitter-affiliation,submitter-names",
+    conda: "../cartography.yml"
+    shell:
+        """
+        datasets summary virus genome accession --as-json-lines --inputfile {input.accessions} \
+            | dataformat tsv virus-genome --fields {params.fields} \
+            | csvtk mutate2 -t -n "dataset" -e "'sars-cov-2-2020-2022'" > {output.authors}
+        """

@@ -79,6 +79,23 @@ rule concat_within_between_figure_table:
             --output {output.csv_table}
         """
 
+rule concat_accessions_and_authors_tables:
+    input:
+        authors=[
+            "seasonal-flu-nextstrain/results/accessions_and_authors.tsv",
+            "seasonal-flu-nextstrain-2018-2020/results/accessions_and_authors.tsv",
+            "ha-na-nextstrain/results/accessions_and_authors.tsv",
+            "sars-cov-2-nextstrain/results/accessions_and_authors.tsv",
+            "sars-cov-2-nextstrain-2022-2023/results/accessions_and_authors.tsv",
+        ],
+    output:
+        authors="docs/tables/accessions_and_authors.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk concat -t {input.authors} > {output.authors}
+        """
+
 rule manuscript_pdf:
     input:
         *rules.pathogens.input,

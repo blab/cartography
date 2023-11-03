@@ -709,3 +709,43 @@ rule seasonal_flu_reassortment_create_notebook_docs:
     conda: "../cartography.yml"
     notebook:
         "2022-02-23-seasonal-flu-ha-na-reassortment.ipynb"
+
+rule seasonal_flu_reassortment_get_accessions:
+    input:
+        metadata="ha-na-nextstrain/results/filtered_{segment}_metadata.tsv",
+    output:
+        accessions="ha-na-nextstrain/results/accessions_{segment}.txt",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk mutate2 -t -n "versioned_accession" -e '$accession + ".1"' {input.metadata} \
+            | csvtk cut -t -f versioned_accession \
+            | sed 1d \
+            | sort -k 1,1 > {output}
+        """
+
+rule seasonal_flu_reassortment_get_authors_for_accessions:
+    input:
+        accessions="ha-na-nextstrain/results/accessions_{segment}.txt",
+    output:
+        authors="ha-na-nextstrain/results/accessions_and_authors_{segment}.tsv",
+    params:
+        fields="accession,virus-name,submitter-affiliation,submitter-names",
+    conda: "../cartography.yml"
+    shell:
+        """
+        datasets summary virus genome accession --as-json-lines --inputfile {input.accessions} \
+            | dataformat tsv virus-genome --fields {params.fields} \
+            | csvtk mutate2 -t -n "dataset" -e "'seasonal-flu-h3n2-ha-na-2016-2018-{wildcards.segment}'" > {output.authors}
+        """
+
+rule seasonal_flu_reassortment_aggregate_authors_for_accessions:
+    input:
+        authors=expand("ha-na-nextstrain/results/accessions_and_authors_{segment}.tsv", segment=SEGMENTS),
+    output:
+        authors="ha-na-nextstrain/results/accessions_and_authors.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk concat -t {input.authors} > {output.authors}
+        """

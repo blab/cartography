@@ -921,3 +921,32 @@ rule seasonal_flu_test_replication_plot_cluster_accuracy:
     conda: "../cartography.yml"
     notebook:
         "../notebooks/plot-replication-of-cluster-accuracy.py.ipynb"
+
+rule seasonal_flu_test_get_accessions:
+    input:
+        metadata="seasonal-flu-nextstrain-2018-2020/results/filtered_metadata.tsv",
+    output:
+        accessions="seasonal-flu-nextstrain-2018-2020/results/accessions.txt",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk mutate2 -t -n "versioned_accession" -e '$accession + ".1"' {input.metadata} \
+            | csvtk cut -t -f versioned_accession \
+            | sed 1d \
+            | sort -k 1,1 > {output}
+        """
+
+rule seasonal_flu_test_get_authors_for_accessions:
+    input:
+        accessions="seasonal-flu-nextstrain-2018-2020/results/accessions.txt",
+    output:
+        authors="seasonal-flu-nextstrain-2018-2020/results/accessions_and_authors.tsv",
+    params:
+        fields="accession,virus-name,submitter-affiliation,submitter-names",
+    conda: "../cartography.yml"
+    shell:
+        """
+        datasets summary virus genome accession --as-json-lines --inputfile {input.accessions} \
+            | dataformat tsv virus-genome --fields {params.fields} \
+            | csvtk mutate2 -t -n "dataset" -e "'seasonal-flu-h3n2-ha-2018-2020'" > {output.authors}
+        """

@@ -711,6 +711,35 @@ rule seasonal_flu_training_create_notebook_docs:
     notebook:
         "2022-03-29-final-figures.py.ipynb"
 
+rule seasonal_flu_training_get_accessions:
+    input:
+        metadata="seasonal-flu-nextstrain/results/filtered_metadata.tsv",
+    output:
+        accessions="seasonal-flu-nextstrain/results/accessions.txt",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk mutate2 -t -n "versioned_accession" -e '$accession + ".1"' {input.metadata} \
+            | csvtk cut -t -f versioned_accession \
+            | sed 1d \
+            | sort -k 1,1 > {output}
+        """
+
+rule seasonal_flu_training_get_authors_for_accessions:
+    input:
+        accessions="seasonal-flu-nextstrain/results/accessions.txt",
+    output:
+        authors="seasonal-flu-nextstrain/results/accessions_and_authors.tsv",
+    params:
+        fields="accession,virus-name,submitter-affiliation,submitter-names",
+    conda: "../cartography.yml"
+    shell:
+        """
+        datasets summary virus genome accession --as-json-lines --inputfile {input.accessions} \
+            | dataformat tsv virus-genome --fields {params.fields} \
+            | csvtk mutate2 -t -n "dataset" -e "'seasonal-flu-h3n2-ha-2016-2018'" > {output.authors}
+        """
+
 rule seasonal_flu_training_clean:
     message: "Removing directories: {params}"
     params:
