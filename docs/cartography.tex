@@ -730,16 +730,16 @@ These results suggest that a single embedding of multiple gene segments could id
 SARS-CoV-2 poses a greater challenge to embedding methods than seasonal influenza, with an unsegmented genome an order of magnitude longer than influenza's HA or NA \cite{Zhu2020}, a mutation rate in the spike surface protein subunit S1 that is four times higher than influenza H3N2's HA rate \cite{Kistler2022}, and increasingly common recombination \cite{Focosi2022,Turakhia2022}.
 However, multiple expert- and model-based clade definitions exist for SARS-CoV-2, enabling comparison between clusters from embeddings and known genetic groups.
 These definitions span from broad genetic groups named by the WHO as ``variants of concern'' (e.g., ``Alpha'', ``Beta'', etc.) \cite{Konings2021} or systematically defined by the Nextstrain team \cite{Hodcroft2020,Bedford2021,Roemer2022} to smaller, emerging genetic clusters defined by Pangolin \cite{OToole2021}.
-As with seasonal influenza, we defined an ``early'' SARS-CoV-2 dataset spanning from January 2020 to January 2022, embedded genomes with the same four methods, and identified HDBSCAN clustering parameters that minimized the VI distance between embedding clusters and previously defined genetic groups as defined by Nextstrain clades and collapsed ``Nextclade pango'' lineages (see Methods).
-Using these optimal cluster parameters, we produced clusters from embeddings of a ``late'' SARS-CoV-2 dataset spanning from January 2022 to November 2023 and calculated the VI distance between those clusters and known genetic groups.
+As with seasonal influenza, we defined an early SARS-CoV-2 dataset spanning from January 2020 to January 2022, embedded genomes with the same four methods, and identified HDBSCAN clustering parameters that minimized the VI distance between embedding clusters and previously defined genetic groups as defined by Nextstrain clades and collapsed ``Nextclade pango'' lineages (see Methods).
+Using these optimal cluster parameters, we produced clusters from embeddings of a late SARS-CoV-2 dataset spanning from January 2022 to November 2023 and calculated the VI distance between those clusters and known genetic groups.
 
-The early SARS-CoV-2 dataset represented 23 Nextstrain clades and 35 collapsed Nextclade pango lineages.
+The early SARS-CoV-2 dataset represented 24 Nextstrain clades and 35 collapsed Nextclade pango lineages.
 With the exception of PCA, all other embedding methods placed samples from the same Nextstrain clades closer together and closely related Nextstrain clades near each other (Fig.~\ref{fig:sars-cov-2-early-embeddings-by-Nextstrain-clade}).
 For example, the most genetically distinct clades like 21J (Delta) and 21K (Omicron) placed farthest from other clades, while all Delta clades (21A, 21I, and 21J) placed close together (Fig.~\ref{fig:sars-cov-2-early-embeddings-by-Nextstrain-clade}, \nameref{S13_Fig_sarscov2_early_mds}).
 As we saw with embeddings of H3N2 HA sequences, MDS placed related clades closer together on a continuous scale, while t-SNE and UMAP produced more clearly separate groups of samples.
 Unlike the H3N2 HA analysis, the PCA embedding of SARS-CoV-2 sequences failed to create any genetically meaningful clusters.
 We suspected that PCA components reflected variation in missing (``N'') or gap (``-'') characters that we represented with a separate character state than the standard nucleotide characters of A, C, G, and T.
-We plotted the PC1 value of each sample against the number of missing bases in its alignment and confirmed that missing data explained a substantial proportion of variation in PC1 (\nameref{S14_Fig_sarscov2_early_pc1_vs_bases_missing}, Pearson's $R^{2}=0.354$).
+We plotted the PC1 value of each sample against the number of missing bases in its alignment and confirmed that missing data explained a substantial proportion of variation in PC1 but not all (\nameref{S14_Fig_sarscov2_early_pc1_vs_bases_missing}, Pearson's $R^{2}=0.304$).
 When we compared embedding clusters to Nextclade pango lineages, we did not observe the same clear grouping as we did with Nextstrain clades.
 For example, the Nextstrain clade 21J (Delta) contained 11 pango lineages that all appeared to map into the same overlapping space in MDS, t-SNE, and UMAP embeddings (\nameref{S15_Fig_sarscov2_early_embeddings_by_Nextclade_pango}).
 These results suggest that distance-based embedding methods can recapitulate broader genetic groups of SARS-CoV-2, but that these methods lack the resolution of finer groups defined by Pangolin.
@@ -771,12 +771,12 @@ These results suggest that distance-based embedding methods can recapitulate bro
 
 We quantified the maintenance of local and global structure in early SARS-CoV-2 embeddings by fitting a linear model between pairwise genetic and Euclidean distances of samples.
 As we expected from the qualitative evaluation of the PCA embedding above, we found no relationship between Euclidean distance in PCA and genetic distance in alignments (Fig.~\ref{fig:sars-cov-2-pairwise-distances}).
-In contrast, the MDS embedding produced a strong linear mapping across the range of observed genetic distances (Pearson's $R^{2}=0.917$).
-Both t-SNE and UMAP maintained intermediate degrees of linearity (Pearson's $R^{2}=0.617$ and $R^{2}=0.586$, respectively).
+In contrast, the MDS embedding produced a strong linear mapping across the range of observed genetic distances (Pearson's $R^{2}=0.92$).
+Both t-SNE and UMAP maintained intermediate degrees of linearity (Pearson's $R^{2}=0.63$ and $R^{2}=0.55$, respectively).
 These embeddings placed the most genetically similar samples close together and the most genetically distinct farther apart.
 However, these embeddings did not consistently place pairs of samples with intermediate genetic distances at an intermediate distance in Euclidean space.
 The linear relationship for genetically similar samples in t-SNE remained consistent up to a genetic distance of approximately 30 nucleotides.
-The corresponding relationship for UMAP only remained consistent up to a genetic distance of approximately 15 nucleotides.
+The corresponding relationship for UMAP only remained consistent up to a genetic distance of approximately 10 nucleotides.
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/sarscov2-euclidean-distance-by-genetic-distance.png}
@@ -786,10 +786,10 @@ The corresponding relationship for UMAP only remained consistent up to a genetic
 
 We identified clusters in embeddings from early SARS-CoV-2 data using cluster parameters that minimized the normalized VI distance between clusters and known genetic groups.
 Since Nextstrain clades and Nextclade pango lineages represented different resolutions of genetic diversity, we identified separate optimal parameters for clusters compared to each of these known genetic groups.
-When comparing clusters to Nextstrain clades, the t-SNE embedding produced the most accurate clusters with a normalized VI of 0.09 (N=14 clusters, minimum distance of 1.5) (Fig.~\ref{fig:sars-cov-2-2020-2022-clusters-vs-Nextstrain-clade}, Table~\ref{table:accuracy}).
-MDS and UMAP produced similarly accurate clusters with normalized VIs of 0.14 (N=11) and 0.15 (N=6) at minimum distances of 0 and 0.5, respectively.
-As expected, PCA produced the least accurate clusters with a normalized VI of 0.37 (N=2, minimum distance of 4.0).
-We found 21 cluster-specific mutations for one of the two PCA clusters (all deletions), 161 for seven of 11 MDS clusters, 175 for 11 of 14 t-SNE clusters, and 149 for five of six UMAP clusters (\nameref{S1_Table}).
+When comparing clusters to Nextstrain clades, the t-SNE embedding produced the most accurate clusters with a normalized VI of 0.07 (N=19 clusters, minimum distance of 1.0) (Fig.~\ref{fig:sars-cov-2-2020-2022-clusters-vs-Nextstrain-clade}, Table~\ref{table:accuracy}).
+MDS and UMAP produced similarly accurate clusters with normalized VIs of 0.15 (N=16) and 0.16 (N=6) at minimum distances of 0 and 0.5, respectively.
+As expected, PCA produced the least accurate clusters with a normalized VI of 0.36 (N=2, minimum distance of 4.5).
+We found 18 cluster-specific mutations for one of the two PCA clusters, 232 for nine of 16 MDS clusters, 363 for 15 of 19 t-SNE clusters, and 155 for five of six UMAP clusters (\nameref{S1_Table}).
 Clusters from t-SNE produced within-group genetic distances that were most similar to distances within Nextstrain clades (\nameref{S16_Fig_sarscov2_within_between_group_distances}).
 
 \begin{figure}[!h]
@@ -806,11 +806,11 @@ Clusters from t-SNE produced within-group genetic distances that were most simil
 \end{figure}
 
 When comparing clusters to Nextclade pango lineages, all four methods produced less accurate clusters (\nameref{S17_Fig_sarscov2_early_embeddings_by_cluster_vs_Nextclade_pango}).
-Clusters from t-SNE were the most accurate with a VI of 0.17.
-MDS and UMAP clusters performed similarly with VIs of 0.24 and 0.26.
-PCA clusters remained the least accurate with a VI of 0.46.
-The optimal minimum distances for three of the four methods remained the same, with only t-SNE's value changing from 1.5 to 1.0.
-These results confirm quantitatively that these embeddings methods can accurately capture broader genetic diversity of SARS-CoV-2, but they cannot distinguish between fine resolution genetic groups identified by Pangolin.
+Clusters from t-SNE were the most accurate with a VI of 0.12.
+MDS and UMAP clusters performed similarly with VIs of 0.23 and 0.25.
+PCA clusters remained the least accurate with a VI of 0.42.
+The optimal minimum distances for all four methods remained the same with Nextclade pango lineages as when trained with Nextstrain clades.
+These results confirm quantitatively that these embeddings methods can accurately capture broader genetic diversity of SARS-CoV-2, but most methods cannot distinguish between fine resolution genetic groups identified by Pangolin.
 However, we observed greater pairwise genetic distances within collapsed Nextclade pango lineages than within Nextstrain clades, suggesting that Pangolin lineages were not as tightly scoped as we originally expected (\nameref{S16_Fig_sarscov2_within_between_group_distances}).
 
 \begin{figure}[!h]
