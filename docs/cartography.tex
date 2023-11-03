@@ -357,15 +357,15 @@ For both viruses, we divided the available data into ``early'' and ``late'' data
 For analyses that focused only on H3N2 HA data, we defined the early dataset between January 2016 and January 2018 and the late dataset between January 2018 to January 2020.
 These datasets reflected two years of recent H3N2 evolution up to the time when the SARS-CoV-2 pandemic disrupted seasonal influenza circulation.
 For both early and late datasets, we evenly sampled 25 sequences per country, year, and month, excluding known outliers.
-With this sampling scheme, we selected 1,918 HA sequences for the early dataset and 821 for the late dataset.
-For analyses that combined H3N2 HA and NA data, we defined a single dataset between January 2016 and January 2018, keeping 1,643 samples for which both HA and NA have been sequenced.
+With this sampling scheme, we selected 1,523 HA sequences for the early dataset and 1,073 for the late dataset.
+For analyses that combined H3N2 HA and NA data, we defined a single dataset between January 2016 and January 2018, keeping 1,607 samples for which both HA and NA have been sequenced.
 
-For SARS-CoV-2 data, we defined the early dataset between January 1, 2020 and January 1, 2022 and the late dataset between January 1, 2022 and July 5, 2023.
-For the early dataset, we evenly sampled 1,734 SARS-CoV-2 genomes by geographic region, year, and month, excluding known outliers.
-For the late dataset, we used the same even sampling by space and time to select 1,394 representative genomes.
+For SARS-CoV-2 data, we defined the early dataset between January 1, 2020 and January 1, 2022 and the late dataset between January 1, 2022 and November 3, 2023.
+For the early dataset, we evenly sampled 1,736 SARS-CoV-2 genomes by geographic region, year, and month, excluding known outliers.
+For the late dataset, we used the same even sampling by space and time to select 1,309 representative genomes.
 In addition to these genomes, we sampled at most 20 genomes per Nextclade pango lineage for 10 known recombinant lineages (XAY, XBB, XBB.1, XBC, XBF, XBL, XC, XD, XE, XF, and XG) and their corresponding parental lineages (AY.29, AY.4, AY.45, B.1.1.7, B.1.617, BA.1, BA.2, BA.2.75, BA.4, BA.5, BA.5.2.3, BJ.1, BM.1.1.1, and CJ.1) as defined by \href{https://libguides.mskcc.org/SARS2/recombination}{https://libguides.mskcc.org/SARS2/recombination}.
 \jhc{At this point, we haven't defined ``Pango lineages'' yet, but I don't know that it makes sense to define lineages in this section. Curious what other people think.}
-With these additional genomes, the late SARS-CoV-2 dataset included 2,072 total genomes.
+With these additional genomes, the late SARS-CoV-2 dataset included 1,668 total genomes.
 
 \subsection*{Evaluation of linear relationships between genetic distance and Euclidean distance in embeddings}
 
@@ -535,7 +535,7 @@ These mutations produce distinct phylogenetic clades that represent potentially 
 The World Health Organization (WHO) Global Influenza Surveillance and Response System (GISRS) regularly sequences genomes of circulating influenza lineages \cite{Hay2018} and submits these sequences to public INSDC databases like NCBI's GenBank \cite{Arita2021}.
 These factors, coupled with HA's relatively short gene size of 1,701 nucleotides, facilitate real-time genomic epidemiology of H3N2 \cite{Neher2015} and rapid analysis by the embedding methods we wanted to evaluate.
 
-We first applied each embedding method to the ``early'' H3N2 HA sequences collected from 2015 through 2018, colored samples by previously defined phylogenetic clades, and inspected the placement of these samples in the embeddings and corresponding phylogeny.
+We first applied each embedding method to the ``early'' H3N2 HA sequences collected from 2016 through 2018, colored samples by previously defined phylogenetic clades, and inspected the placement of these samples in the embeddings and corresponding phylogeny.
 All four embedding methods qualitatively recapitulated clade-level groupings observed in the phylogeny (Fig~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}).
 Samples from the same clade generally grouped tightly together.
 Most embedding methods also clearly delineated larger phylogenetic clades, placing clades A1, A2, A3, A4, and 3c3.A into separate locations in the embeddings.
@@ -553,7 +553,7 @@ These results qualitatively replicate the patterns we observed in embeddings for
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-embeddings-by-clade.png}
-\caption{{\bf Phylogeny of early (2015--2018) influenza H3N2 HA sequences (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
+\caption{{\bf Phylogeny of early (2016--2018) influenza H3N2 HA sequences (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
 }
 \label{fig:seasonal-influenza-h3n2-ha-embeddings}
 \end{figure}
@@ -568,7 +568,7 @@ In t-SNE and UMAP embeddings, some pairs of samples with intermediate distances 
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png}
-\caption{{\bf Relationship between pairwise genetic and Euclidean distances in embeddings of early (2015--2018) influenza H3N2 HA sequences by PCA (upper left), MDS (upper right), t-SNE (lower left), and UMAP (lower right)}}
+\caption{{\bf Relationship between pairwise genetic and Euclidean distances in embeddings of early (2016--2018) influenza H3N2 HA sequences by PCA (upper left), MDS (upper right), t-SNE (lower left), and UMAP (lower right)}}
 \label{fig:seasonal-influenza-h3n2-ha-pairwise-distances}
 \end{figure}
 
@@ -613,7 +613,7 @@ In practice, these clusters may need to be filtered to reflect only those with u
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-embeddings-by-cluster.png}
-\caption{{\bf Phylogenetic trees (left) and embeddings (right) of early (2015--2018) H3N2 HA sequences colored by HDBSCAN cluster.}
+\caption{{\bf Phylogenetic trees (left) and embeddings (right) of early (2016--2018) H3N2 HA sequences colored by HDBSCAN cluster.}
 Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Nextstrain clades).}
 \label{fig:seasonal-influenza-h3n2-ha-2016-2018-clusters}
 \end{figure}
@@ -721,7 +721,7 @@ SARS-CoV-2 poses a greater challenge to embedding methods than seasonal influenz
 However, multiple expert- and model-based clade definitions exist for SARS-CoV-2, enabling comparison between clusters from embeddings and known genetic groups.
 These definitions span from broad genetic groups named by the WHO as ``variants of concern'' (e.g., ``Alpha'', ``Beta'', etc.) \cite{Konings2021} or systematically defined by the Nextstrain team \cite{Hodcroft2020,Bedford2021,Roemer2022} to smaller, emerging genetic clusters defined by Pangolin \cite{OToole2021}.
 As with seasonal influenza, we defined an ``early'' SARS-CoV-2 dataset spanning from January 2020 to January 2022, embedded genomes with the same four methods, and identified HDBSCAN clustering parameters that minimized the VI distance between embedding clusters and previously defined genetic groups as defined by Nextstrain clades and collapsed ``Nextclade pango'' lineages (see Methods).
-Using these optimal cluster parameters, we produced clusters from embeddings of a ``late'' SARS-CoV-2 dataset spanning from January 2022 to July 2023 and calculated the VI distance between those clusters and known genetic groups.
+Using these optimal cluster parameters, we produced clusters from embeddings of a ``late'' SARS-CoV-2 dataset spanning from January 2022 to November 2023 and calculated the VI distance between those clusters and known genetic groups.
 
 The early SARS-CoV-2 dataset represented 23 Nextstrain clades and 35 collapsed Nextclade pango lineages.
 With the exception of PCA, all other embedding methods placed samples from the same Nextstrain clades closer together and closely related Nextstrain clades near each other (Fig.~\ref{fig:sars-cov-2-early-embeddings-by-Nextstrain-clade}).
@@ -814,7 +814,7 @@ These results replicate the patterns we observed with early SARS-CoV-2 data wher
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/sarscov2-test-embeddings-by-cluster-vs-Nextstrain_clade.png}
-\caption{{\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2022 and July 5, 2023 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (Nextstrain clade).}
+\caption{{\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2022 and November 3, 2023 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (Nextstrain clade).}
 }
 \label{fig:sars-cov-2-2022-2023-clusters-vs-Nextstrain-clade}
 \end{figure}
@@ -822,7 +822,7 @@ These results replicate the patterns we observed with early SARS-CoV-2 data wher
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/sarscov2-test-embeddings-by-cluster-vs-Nextclade_pango_collapsed.png}
-\caption*{{\bf S15 Fig. Embeddings of SARS-CoV-2 sequences collected between January 1, 2022 and July 5, 2023 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (collapsed Nextclade pango lineage).}}
+\caption*{{\bf S15 Fig. Embeddings of SARS-CoV-2 sequences collected between January 1, 2022 and November 3, 2023 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (collapsed Nextclade pango lineage).}}
 \end{figure}
 
 \subsection*{Distance-based embeddings reflect SARS-CoV-2 recombination events}
@@ -959,7 +959,7 @@ The conceptual and practical simplicity of these tools should enable researchers
 
 \paragraph*{S15 Fig.}
 \label{S15_Fig_sarscov2_late_embeddings_by_cluster_vs_Nextclade_pango}
-{\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2022 and July 5, 2023 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (collapsed Nextclade pango lineage).}
+{\bf Embeddings of SARS-CoV-2 sequences collected between January 1, 2022 and November 3, 2023 colored by embedding cluster and annotated by normalized VI to indicate accuracy of clusters for training data compared to expert clade assignment (collapsed Nextclade pango lineage).}
 
 \paragraph*{S1 Table.}
 \label{S1_Table}
