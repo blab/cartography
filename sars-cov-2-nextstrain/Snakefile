@@ -801,11 +801,12 @@ rule sarscov2_get_authors_for_accessions:
     output:
         authors="sars-cov-2-nextstrain/results/accessions_and_authors.tsv",
     params:
-        fields="accession,virus-name,submitter-affiliation,submitter-names",
+        fields="accession,isolate-lineage,submitter-affiliation,submitter-names",
     conda: "../cartography.yml"
     shell:
         """
         datasets summary virus genome accession --as-json-lines --inputfile {input.accessions} \
             | dataformat tsv virus-genome --fields {params.fields} \
-            | csvtk mutate2 -t -n "dataset" -e "'sars-cov-2-2020-2022'" > {output.authors}
+            | csvtk rename -l -t -f "Isolate Lineage" -n "Virus Name" \
+            | csvtk mutate2 -l -t -n "dataset" -e "'sars-cov-2-2020-2022'" > {output.authors}
         """

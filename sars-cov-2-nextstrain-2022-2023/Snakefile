@@ -817,11 +817,12 @@ rule sarscov2_test_get_authors_for_accessions:
     output:
         authors="sars-cov-2-nextstrain-2022-2023/results/accessions_and_authors.tsv",
     params:
-        fields="accession,virus-name,submitter-affiliation,submitter-names",
+        fields="accession,isolate-lineage,submitter-affiliation,submitter-names",
     conda: "../cartography.yml"
     shell:
         """
         datasets summary virus genome accession --as-json-lines --inputfile {input.accessions} \
             | dataformat tsv virus-genome --fields {params.fields} \
+            | csvtk rename -t -f "Isolate Lineage" -n "Virus Name" \
             | csvtk mutate2 -t -n "dataset" -e "'sars-cov-2-2022-2023'" > {output.authors}
         """
