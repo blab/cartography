@@ -785,33 +785,78 @@ rule sarscov2_test_create_notebook_docs:
     notebook:
         "../sars-cov-2-nextstrain/2022-03-29-final-figures.py.ipynb"
 
-rule sarscov2_test_replication_subsample:
+rule sarscov2_test_replication_simplify_metadata:
     input:
-        sequences="sars-cov-2-nextstrain-2022-2023/data/aligned.fasta",
-        metadata="sars-cov-2-nextstrain-2022-2023/data/metadata.tsv",
+        metadata="sars-cov-2-nextstrain-2022-2023/data/filtered_metadata.tsv.zst",
         outliers="sars-cov-2-nextstrain/config/exclude.txt",
     output:
-        sequences="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/aligned.fasta",
-        metadata="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/metadata.tsv",
+        metadata="sars-cov-2-nextstrain-2022-2023/results/replication_analysis_metadata.tsv",
     params:
-        group_by="region year month",
-        min_date="2022-01-01",
-        max_date="2023-07-05",
+        fields="strain,genbank_accession_rev,date,region,Nextstrain_clade",
+    log:
+        "logs/sars-cov-2-nextstrain-2022-2023/simplify_metadata.txt"
     conda: "../cartography.yml"
     shell:
         """
-        augur filter \
-            --sequences {input.sequences} \
-            --metadata {input.metadata} \
-            --exclude {input.outliers} \
-            --output-sequences {output.sequences} \
-            --output-metadata {output.metadata} \
-            --group-by {params.group_by} \
-            --sequences-per-group {wildcards.sequences_per_group} \
-            --subsample-seed {wildcards.replicate} \
-            --min-date {params.min_date} \
-            --max-date {params.max_date} \
-            --exclude-ambiguous-dates-by any
+        zstd -c -d {input.metadata} \
+            | csvtk cut -t -f {params.fields} \
+            | csvtk grep -t -f strain -P {input.outliers} -v \
+            | csvtk mutate -t -f date -n year -p "^(\d{{4}}).*" \
+            | csvtk mutate -t -f date -n month -p "^\d{{4}}-(\d{{2}}).*" \
+            | csvtk filter2 -t -f '$year>2021' \
+            | csvtk filter2 -t -f '$month!=""' > {output.metadata} 2> {log}
+        """
+
+rule sarscov2_test_replication_split_metadata:
+    input:
+        metadata="sars-cov-2-nextstrain-2022-2023/results/replication_analysis_metadata.tsv",
+    output:
+        metadata_dir=directory("sars-cov-2-nextstrain-2022-2023/results/replication_analysis_split_metadata"),
+        metadata_dir_exists="sars-cov-2-nextstrain-2022-2023/results/replication_analysis_split_metadata.txt",
+    params:
+        fields="region,year,month",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk split -t -f {params.fields} -o {output.metadata_dir} {input.metadata} && touch {output.metadata_dir_exists}
+        """
+
+rule sarscov2_test_replication_subsample_metadata:
+    input:
+        metadata="sars-cov-2-nextstrain-2022-2023/results/replication_analysis_metadata.tsv",
+        metadata_dir_exists="sars-cov-2-nextstrain-2022-2023/results/replication_analysis_split_metadata.txt",
+    output:
+        metadata="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/metadata.tsv",
+    params:
+        metadata_dir="sars-cov-2-nextstrain-2022-2023/results/replication_analysis_split_metadata",
+    conda: "../cartography.yml"
+    shell:
+        """
+        head -n 1 {input.metadata} > {output.metadata}
+        for file in {params.metadata_dir}/*.tsv; do tsv-sample -H -n {wildcards.sequences_per_group} -v {wildcards.replicate} "$file" | sed 1d; done >> {output.metadata}
+        """
+
+rule sarscov2_test_replication_subsample_strains:
+    input:
+        metadata="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/metadata.tsv",
+    output:
+        strains="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/strains.txt",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk cut -t -f strain {input.metadata} | sed 1d > {output.strains}
+        """
+
+rule sarscov2_test_replication_subsample_sequences:
+    input:
+        alignment="sars-cov-2-nextstrain-2022-2023/data/all_aligned.fasta.zst",
+        strains="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/strains.txt",
+    output:
+        sequences="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/aligned.fasta",
+    conda: "../cartography.yml"
+    shell:
+        """
+        seqkit grep -f {input.strains} {input.alignment} > {output.sequences}
         """
 
 rule sarscov2_test_replication_create_distance_matrix:
