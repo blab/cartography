@@ -844,7 +844,7 @@ rule sarscov2_test_replication_subsample_strains:
     conda: "../cartography.yml"
     shell:
         """
-        csvtk cut -t -f strain {input.metadata} | sed 1d > {output.strains}
+        csvtk cut -t -f strain {input.metadata} | sed 1d | sort -k 1,1 | uniq > {output.strains}
         """
 
 rule sarscov2_test_replication_subsample_sequences:
