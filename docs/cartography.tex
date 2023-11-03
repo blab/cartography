@@ -542,16 +542,15 @@ These mutations produce distinct phylogenetic clades that represent potentially 
 The World Health Organization (WHO) Global Influenza Surveillance and Response System (GISRS) regularly sequences genomes of circulating influenza lineages \cite{Hay2018} and submits these sequences to public INSDC databases like NCBI's GenBank \cite{Arita2021}.
 These factors, coupled with HA's relatively short gene size of 1,701 nucleotides, facilitate real-time genomic epidemiology of H3N2 \cite{Neher2015} and rapid analysis by the embedding methods we wanted to evaluate.
 
-We first applied each embedding method to the ``early'' H3N2 HA sequences collected from 2016 through 2018, colored samples by previously defined phylogenetic clades, and inspected the placement of these samples in the embeddings and corresponding phylogeny.
+We first applied each embedding method to the early H3N2 HA sequences collected from 2016 through 2018, colored samples by previously defined phylogenetic clades, and inspected the placement of these samples in the embeddings and corresponding phylogeny.
 All four embedding methods qualitatively recapitulated clade-level groupings observed in the phylogeny (Fig~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}).
 Samples from the same clade generally grouped tightly together.
 Most embedding methods also clearly delineated larger phylogenetic clades, placing clades A1, A2, A3, A4, and 3c3.A into separate locations in the embeddings.
 One exception to this pattern was the PCA embedding which grouped samples from clades A3 and A4 into the same space.
 Despite maintaining local and broader global structure, not all embeddings captured intermediate genetic structure.
 For example, clade A1b descended from clade A1 and diversified into the smaller subclades A1b/131K, A1b/135K, and A1b/135N.
-All methods placed A1b far from its ancestor A1, but PCA, t-SNE, and UMAP all placed descendants of A1b into tight clusters together.
-MDS was the only method that clearly separated the descendants of A1b into their own clusters.
-The t-SNE embedding also created separate clusters of the three descendants, but these clusters all placed so close together in the embedding space that, without previously defined clade labels, we would have visually grouped these samples into a single cluster.
+All methods placed A1b far from its ancestor A1, but all methods also placed descendants of A1b into tight clusters together.
+The t-SNE embedding created separate clusters of the three descendant clades, but these clusters all placed so close together in the embedding space that, without previously defined clade labels, we would have visually grouped these samples into a single cluster.
 These results qualitatively replicate the patterns we observed in embeddings for simulated influenza-like populations (Fig~\ref{fig:simulated-populations-representative-embeddings}).
 
 % For figure citations, please use "Fig" instead of "Figure".
@@ -567,9 +566,9 @@ These results qualitatively replicate the patterns we observed in embeddings for
 
 To quantify the apparent maintenance of local and global structure by all four embedding methods, we calculated the relationship between pairwise genetic and Euclidean distance of samples in each embedding.
 All four methods maintained a linear relationship between genetic and Euclidean distances for samples that differed by no more than $\approx$10 nucleotides (Fig~\ref{fig:seasonal-influenza-h3n2-ha-pairwise-distances}).
-However, only MDS consistently maintained that linearity as genetic distance increased (Pearson's $R^{2} = 0.942$).
+However, only MDS consistently maintained that linearity as genetic distance increased (Pearson's $R^{2} = 0.94$).
 Values of Euclidean distances in MDS corresponded nearly perfectly with values of genetic distances.
-In contrast, we observed a nonlinear relationship for samples with more genetic differences in PCA (Pearson's $R^{2} = 0.689$), t-SNE (Pearson's $R^{2} = 0.502$), and UMAP (Pearson's $R^{2} = 0.447$) embeddings.
+In contrast, we observed a nonlinear relationship for samples with more genetic differences in PCA (Pearson's $R^{2} = 0.67$), t-SNE (Pearson's $R^{2} = 0.37$), and UMAP (Pearson's $R^{2} = 0.48$) embeddings.
 Although the most genetically distant samples mapped far from each other in all of these embeddings, samples with intermediate distances could map much closer or farther than expected by a linear model.
 In t-SNE and UMAP embeddings, some pairs of samples with intermediate distances of 30-40 nucleotides mapped farther apart than pairs of samples with much greater genetic distances.
 
@@ -585,7 +584,7 @@ HDBSCAN does require definition of a minimum distance that its initial clusters 
 This distance corresponds to the Euclidean distance between clusters in embedding space which varies by method (Fig~\ref{fig:seasonal-influenza-h3n2-ha-pairwise-distances}).
 To find the optimal minimum distance for HDBSCAN clusters of H3N2 HA data, we assigned clusters to each embedding for a range of distance values (0-7) with a step size of 0.5 and calculated the accuracy of clusters at each distance value compared to the Nextstrain clade assignments shown in Fig~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}.
 We selected the minimum distance value per method that minimized the difference between HDBSCAN clusters and clade assignments as measured by the normalized variation of information (VI) metric \cite{meilua2003comparing} (see Methods).
-The optimal minimum distances were 0.5 for PCA, 3.5 for MDS, 2.5 for t-SNE, and 1.5 for UMAP (Table~\ref{table:accuracy}).
+The optimal minimum distances were 0.5 for PCA, 3.5 for MDS, 2.0 for t-SNE, and 1.0 for UMAP (Table~\ref{table:accuracy}).
 Since Euclidean distances for MDS correspond directly to genetic distances, these results show that clusters must be at least 3.5 nucleotides apart to be considered distinct.
 
 % Place tables after the first paragraph in which they are cited.
@@ -602,22 +601,17 @@ Since Euclidean distances for MDS correspond directly to genetic distances, thes
 \end{table}
 
 As expected, the clusters for each method generally corresponded to larger phylogenetic clades (Fig~\ref{fig:seasonal-influenza-h3n2-ha-2016-2018-clusters}).
-Clusters from UMAP most accurately captured expert clade assignments (normalized VI=0.07) with 6 clusters.
-These clusters captured broader phylogenetic clades (A1, A1b, A2, A3, 3c2.A, and 3c3.A) but failed to distinguish between smaller or less divergent clades (A4 and A1b's descendants).
-Clusters from t-SNE performed nearly as well (normalized VI=0.08) with 11 clusters.
-These clusters also captured broader clades (including the A4 clade that UMAP clustered with 3c2.A) and failed to distinguish among A1b and its subclades.
-Interestingly, t-SNE clusters included 3 biologically-relevant clusters that were not found in any other embeddings.
-The largest of these (cluster 3 with 289 samples) corresponded to a subclade of A2 that was previously associated with a reassortment to a different neuraminidase background \cite{Potter2019}.
-Cluster 7 (N=22 samples) descended from a subclade of A1a and its samples carried substitutions at known epitope sites of HA1:140M and HA1:193S (\nameref{S1_Table}).
-Cluster 8 (N=29 samples) descended from clade A1 and contained 14 samples with a substitution at another known epitope site (HA1:135K).
-The 7 MDS clusters were nearly twice as far from expert clades as UMAP clusters (normalized VI=0.13), suggesting that MDS's ability to accurately represent genetic distance did not correspond to high-resolution clusters.
-MDS clusters captured most of the larger clades (A1, A2, A3, A4, 3c2.A, and 3c3.A), but they also collected A1 and its descendants into the same cluster and suffered from more unassigned samples than the other embeddings.
-The PCA embedding produced the lowest accuracy (normalized VI=0.18) and fewest clusters (N=3).
-Despite the appearance of distinct clusters associated with clades in the PCA embedding (Fig~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}), each component of the PCA embedding appeared to form only two clusters corresponding to some of the most distantly related and ancestral clades (3c2.A, 3c3.A, and A2).
-We identified 32 cluster-specific mutations for all three PCA clusters, 40 for six of the seven MDS clusters, 38 for eight of 11 t-SNE clusters, and 29 for four of the six UMAP clusters (\nameref{S1_Table}).
+Clusters from t-SNE most accurately captured expert clade assignments (normalized VI=0.04) with nine clusters.
+These clusters captured broader phylogenetic clades (A1, A1b, A2, A3, A4, 3c2.A, and 3c3.A) but failed to distinguish between A1b and its descendants.
+Clusters from UMAP performed nearly as well (normalized VI=0.08) with six clusters.
+These clusters captured broader clades, but they failed to distinguish among A1 and A1a, A1b and its subclades, and 3c2.A and A4.
+The nine MDS clusters were more than twice as far from expert clades as t-SNE clusters (normalized VI=0.10), but this difference in accuracy appeared to be driven primarily by the cost of more samples that HDBSCAN failed to assign to clusters in the MDS embedding.
+MDS clusters captured most of the larger clades (A1, A2, A3, A4, 3c2.A, and 3c3.A), but they also collected A1 and its descendants into two large clusters.
+The PCA embedding produced the lowest accuracy (normalized VI=0.19) and fewest clusters (N=3).
+PCA's three clusters corresponded to some of the most distantly-related and ancestral clades (3c2.A, 3c3.A, and A2).
+We identified 30 cluster-specific mutations for all three PCA clusters, 34 for seven of the nine MDS clusters, 32 for six of nine t-SNE clusters, and 25 for four of the six UMAP clusters (\nameref{S1_Table}).
 We also found that pairwise genetic distances between sequences in the same MDS, t-SNE, or UMAP clusters matched the genetic distances between sequences in the same Nextstrain clades (\nameref{S4_Fig_flu_within_between_group_distances}).
 These results indicate that nonlinear embeddings of t-SNE and UMAP could be better-suited for clustering and classification than linear embeddings from PCA and MDS.
-In practice, these clusters may need to be filtered to reflect only those with uniquely characteristic mutations.
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-embeddings-by-cluster.png}
