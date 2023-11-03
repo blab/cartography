@@ -615,7 +615,7 @@ MDS clusters captured most of the larger clades (A1, A2, A3, A4, 3c2.A, and 3c3.
 The PCA embedding produced the lowest accuracy (normalized VI=0.18) and fewest clusters (N=3).
 Despite the appearance of distinct clusters associated with clades in the PCA embedding (Fig~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}), each component of the PCA embedding appeared to form only two clusters corresponding to some of the most distantly related and ancestral clades (3c2.A, 3c3.A, and A2).
 We identified 32 cluster-specific mutations for all three PCA clusters, 40 for six of the seven MDS clusters, 38 for eight of 11 t-SNE clusters, and 29 for four of the six UMAP clusters (\nameref{S1_Table}).
-We also found that pairwise genetic distances between sequences in the same MDS, t-SNE, or UMAP clusters matched the genetic distances between sequences in the same Nextstrain clades (\nameref{S3a_Fig_flu_within_between_group_distances}).
+We also found that pairwise genetic distances between sequences in the same MDS, t-SNE, or UMAP clusters matched the genetic distances between sequences in the same Nextstrain clades (\nameref{S4_Fig_flu_within_between_group_distances}).
 These results indicate that nonlinear embeddings of t-SNE and UMAP could be better-suited for clustering and classification than linear embeddings from PCA and MDS.
 In practice, these clusters may need to be filtered to reflect only those with uniquely characteristic mutations.
 
@@ -629,14 +629,14 @@ Normalized VI values per embedding reflect the distance between clusters and kno
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/within_between_influenza.png}
-\caption*{{\bf S3a Fig. Pairwise nucleotide distances for early (2016--2018) and late (2018--2020) influenza H3N2 HA sequences within and between genetic groups defined by Nextstrain clades and clusters from PCA, MDS, t-SNE, and UMAP embeddings.}}
+\caption*{{\bf S4 Fig. Pairwise nucleotide distances for early (2016--2018) and late (2018--2020) influenza H3N2 HA sequences within and between genetic groups defined by Nextstrain clades and clusters from PCA, MDS, t-SNE, and UMAP embeddings.}}
 \end{figure}
 
 To understand whether these embedding methods and optimal cluster parameters could effectively cluster previously unseen sequences, we applied each method to the late H3N2 HA dataset (2018--2020), clustered sequences in the embedding space with HDBSCAN using the optimal minimum distance threshold from the early dataset, and calculated the accuracy of the cluster assignments based on previously defined clades.
-Unlike the early H3N2 HA dataset, the late dataset represented less genetic diversity with most clades descending from clade A1b with at least one additional characteristic HA1 amino acid substitution (\nameref{S4_Fig_late_flu_embeddings_by_clade}).
+Unlike the early H3N2 HA dataset, the late dataset represented less genetic diversity with most clades descending from clade A1b with at least one additional characteristic HA1 amino acid substitution (\nameref{S5_Fig_late_flu_embeddings_by_clade}).
 The tree also included older samples from clades A2 and 3c3.A.
-Clusters from all four methods generally captured relevant phylogenetic clades (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters} and \nameref{S4_Fig_late_flu_embeddings_by_clade}).
-The MDS clusters most accurately captured expert clades (normalized VI=0.06) with 8 clusters corresponding to clades 3c3.A, A2, A3, A1b/94N, A1b/135K, A1b/135N, A1b/137F, and A1b/131K merged with A1b/197R (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters} and \nameref{S5_Fig_late_flu_mds_embeddings}).
+Clusters from all four methods generally captured relevant phylogenetic clades (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters} and \nameref{S5_Fig_late_flu_embeddings_by_clade}).
+The MDS clusters most accurately captured expert clades (normalized VI=0.06) with 8 clusters corresponding to clades 3c3.A, A2, A3, A1b/94N, A1b/135K, A1b/135N, A1b/137F, and A1b/131K merged with A1b/197R (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters} and \nameref{S6_Fig_late_flu_mds_embeddings}).
 Similarly, MDS cluster 4 merged a separate subset of A1b/131K samples with their descendants in A1b/94N.
 MDS failed to create a cluster for A1b/186D samples, leaving these all as unassigned.
 Both t-SNE and UMAP followed closely in accuracy (normalized VI=0.09) with 6 and 5 clusters, respectively.
