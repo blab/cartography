@@ -17,11 +17,25 @@ zstd -d -c metadata.tsv.zst \
     | tsv-select -H -f strain,genbank_accession_rev,date,region,country,division,originating_lab,submitting_lab,Nextstrain_clade,Nextclade_pango \
     | zstd -c > filtered_metadata.tsv.zst
 
+# Download full open aligned sequences.
+curl -fsSLO --proto '=https' https://data.nextstrain.org/files/ncov/open/aligned.fasta.zst
+
+# Get the list of strains with metadata.
+zstd -c -d filtered_metadata.tsv.zst | tsv-select -H -f strain | sed 1d | sort -k 1,1 | uniq > filtered_strains.txt
+
+# Get the sequences that match the metadata strains.
+seqkit grep -f filtered_strains.txt aligned.fasta.zst | zstd -c > filtered_aligned.fasta.zst
+
 # Upload date-stamped filtered metadata to AWS S3 bucket.
 aws s3 cp \
     filtered_metadata.tsv.zst \
     s3://nextstrain-data/files/workflows/cartography/filtered_metadata_$(date "+%Y-%m-%d").tsv.zst
 
-# Remove full metadata.
-rm -f metadata.tsv.zst
+# Upload date-stamped filtered alignments to AWS S3 bucket.
+aws s3 cp \
+    filtered_aligned.fasta.zst \
+    s3://nextstrain-data/files/workflows/cartography/filtered_aligned_$(date "+%Y-%m-%d").fasta.zst
+
+# Remove full metadata and alignments.
+rm -f metadata.tsv.zst aligned.fasta.zst
 ```

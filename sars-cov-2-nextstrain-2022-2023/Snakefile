@@ -18,7 +18,7 @@ rule sarscov2_test_download_filtered_metadata:
     output:
         metadata="sars-cov-2-nextstrain-2022-2023/data/filtered_metadata.tsv.zst",
     params:
-        metadata_url="https://data.nextstrain.org/files/workflows/cartography/filtered_metadata_2023-07-05.tsv.zst",
+        metadata_url="https://data.nextstrain.org/files/workflows/cartography/filtered_metadata_2023-11-03.tsv.zst",
     conda: "../cartography.yml"
     shell:
         """
@@ -42,7 +42,7 @@ rule sarscov2_test_subsample_late_samples:
             --include {input.reference} \
             --exclude {input.outliers} \
             --min-date 2022-01-01 \
-            --max-date 2023-07-05 \
+            --max-date 2023-11-03 \
             --exclude-ambiguous-dates-by any \
             --group-by region year month \
             --subsample-max-sequences 1500 \
@@ -74,11 +74,11 @@ rule sarscov2_test_subsample_late_recombinant_samples_and_parental_lineages:
             --output-strains {output.strains}
         """
 
-rule sarscov2_test_download_all_aligned_sequences:
+rule sarscov2_test_download_filtered_aligned_sequences:
     output:
-        alignment=temp("sars-cov-2-nextstrain-2022-2023/data/all_aligned.fasta.zst"),
+        alignment="sars-cov-2-nextstrain-2022-2023/data/filtered_aligned.fasta.zst",
     params:
-        alignment_url="https://data.nextstrain.org/files/ncov/open/aligned.fasta.zst",
+        alignment_url="https://data.nextstrain.org/files/workflows/cartography/filtered_aligned_2023-11-03.fasta.zst",
     conda: "../cartography.yml"
     shell:
         """
@@ -88,7 +88,7 @@ rule sarscov2_test_download_all_aligned_sequences:
 rule sarscov2_test_extract_subsampled_data:
     input:
         metadata="sars-cov-2-nextstrain-2022-2023/data/filtered_metadata.tsv.zst",
-        alignment="sars-cov-2-nextstrain-2022-2023/data/all_aligned.fasta.zst",
+        alignment="sars-cov-2-nextstrain-2022-2023/data/filtered_aligned.fasta.zst",
         strains="sars-cov-2-nextstrain-2022-2023/data/strains.txt",
         recombinant_strains="sars-cov-2-nextstrain-2022-2023/data/known_recombinant_and_parental_strains.txt",
     output:
@@ -849,7 +849,7 @@ rule sarscov2_test_replication_subsample_strains:
 
 rule sarscov2_test_replication_subsample_sequences:
     input:
-        alignment="sars-cov-2-nextstrain-2022-2023/data/all_aligned.fasta.zst",
+        alignment="sars-cov-2-nextstrain-2022-2023/data/filtered_aligned.fasta.zst",
         strains="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/strains.txt",
     output:
         sequences="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/aligned.fasta",

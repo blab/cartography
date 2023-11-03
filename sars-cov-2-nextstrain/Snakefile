@@ -21,7 +21,7 @@ rule sarscov2_download_filtered_metadata:
     output:
         metadata="sars-cov-2-nextstrain/data/filtered_metadata.tsv.zst",
     params:
-        metadata_url="https://data.nextstrain.org/files/workflows/cartography/filtered_metadata_2023-07-05.tsv.zst",
+        metadata_url="https://data.nextstrain.org/files/workflows/cartography/filtered_metadata_2023-11-03.tsv.zst",
     conda: "../cartography.yml"
     shell:
         """
@@ -54,9 +54,9 @@ rule sarscov2_subsample_early_samples:
 
 rule sarscov2_download_all_aligned_sequences:
     output:
-        alignment=temp("sars-cov-2-nextstrain/data/all_aligned.fasta.zst"),
+        alignment="sars-cov-2-nextstrain/data/all_aligned.fasta.zst",
     params:
-        alignment_url="https://data.nextstrain.org/files/ncov/open/aligned.fasta.zst",
+        alignment_url="https://data.nextstrain.org/files/workflows/cartography/filtered_aligned_2023-11-03.fasta.zst",
     conda: "../cartography.yml"
     shell:
         """
