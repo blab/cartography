@@ -890,8 +890,8 @@ From our analysis of simulated influenza- and coronavirus-like sequences, we fou
 These results suggest that researchers could apply these biologically-uninformed methods to a broad range of human pathogenic viruses with minimal tuning of the method parameters.
 Of the four methods, MDS most accurately reflected pairwise genetic distances between simulated samples in its embeddings.
 From our analysis of natural populations of seasonal influenza H3N2 HA and SARS-CoV-2 sequences, we confirmed that MDS most reliably reflected pairwise genetic distances and we found that clusters from t-SNE and UMAP embeddings most accurately recapitulated previously defined genetic groups at the resolution of WHO and Nextstrain clades.
-Clusters from t-SNE embeddings of H3N2 HA and NA sequences accurately matched reassortment clades identified by a biologically-informed model based on ancestral reassortment graphs.
-MDS embeddings placed known recombinant lineages of SARS-CoV-2 between their parental lineages.
+Clusters from both MDS and t-SNE embeddings of H3N2 HA and NA sequences accurately matched reassortment clades identified by a biologically-informed model based on ancestral reassortment graphs.
+MDS embeddings consistently placed known recombinant lineages of SARS-CoV-2 between their parental lineages.
 From these results, we conclude that tree-free dimensionality reduction methods can provide valuable biological insights for human pathogenic viruses through easily interpretable visualizations of genetic relationships and the ability to account for genetic variation that phylogenetic methods cannot including indels, reassortment, and recombination.
 
 % Limitations of methods and analysis
@@ -903,7 +903,7 @@ Each method also suffers from specific issues in our analysis.
 PCA performs poorly with missing data and requires researchers to impute the missing values prior to analysis, as previously shown for Zika virus \cite{metsky_2017}.
 Neither t-SNE nor UMAP maintain a linear relationship between pairwise Euclidean and genetic distances across the observed range of genetic distances.
 As a result, viewers cannot know that samples mapping far apart in a t-SNE or UMAP embedding are as genetically distant as they appear.
-In maintaining a linear relationship between Euclidean and genetic distances, MDS sacrifices the ability to form more accurate genetic clusters.
+In maintaining a linear relationship between Euclidean and genetic distances, MDS sacrifices the ability to form more accurate genetic clusters for viruses with large genomes like SARS-CoV-2.
 Given these limitations of these methods, we do not expect them to replace biologically-informed methods that provide more meaningful parameters to tune their algorithms.
 Instead, we expect that researchers can use these methods for rapid visualization and clustering of their genome sequences as the first step prior to analysis with more sophisticated and computationally intensive algorithms.
 
@@ -912,7 +912,6 @@ We focused on analysis of two respiratory RNA viruses that contribute dramatical
 For example, HIV represents a canonical example of a highly recombinant and bloodborne virus, while Zika, dengue, and West Nile viruses represent pathogens with multiple host species in a transmission chain.
 Similarly, we selected only four dimensionality reduction methods from myriad options that are commonly applied to genetic data \cite{Armstrong2022}.
 We chose these methods based on their wide use and availability in tools like scikit-learn \cite{Pedregosa2011} and to limit the dimensionality of our analyses.
-Finally, we chose to analyze a consistent, fixed number of sequences for each pathogen, but the nature of embeddings, their optimal parameters, and their computational efficiency may vary with input size.
 
 % Future directions and use of methods
 Some limitations noted above suggest future directions for this line of research.
@@ -920,7 +919,7 @@ We provide optimal settings for each pathogen and embedding method in this study
 Researchers can easily integrate these tools into existing workflows for the genomic epidemiology of viruses and visualize the results with Nextstrain.
 Alternately, researchers may choose to apply similar existing tools developed for metagenomic analysis \cite{Schloss2009,Schloss2020,Bolyen2019,McMurdie2013} to the analysis of viral populations.
 In the short term, researchers can apply the methods we describe here to seasonal influenza and SARS-CoV-2 genomes to identify biologically relevant clusters including reassortment events or recombinant lineages.
-In the long term, we expect researchers will benefit from expanding the breadth of dimensionality reduction methods applied to viruses and the breath of viral diversity assessed by these methods.
+In the long term, we expect researchers will benefit from expanding the breadth of dimensionality reduction methods applied to viruses and the breadth of viral diversity assessed by these methods.
 
 \section*{Conclusion}
 
