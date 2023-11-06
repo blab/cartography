@@ -69,7 +69,7 @@ Explore the phylogenetic trees and embeddings on Nextstrain.
 ## Interactive figures
 
  - [Fig 2. **Phylogeny of early (2016–2018) influenza H3N2 HA sequences plotted by nucleotide substitutions per site on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).** Tips in the tree and embeddings are colored by their Nextstrain clade assignment.](https://blab.github.io/cartography/figures/flu-2016-2018-ha-embeddings-by-clade.html)
- - [**MDS embeddings for late (2018–2020) influenza H3N2 HA sequences showing all three components.**](https://blab.github.io/cartography/figures/flu-2016-2018-mds-by-clade.html)
+ - [**MDS embeddings for early (2016–2018) influenza H3N2 HA sequences showing all three components.**](https://blab.github.io/cartography/figures/flu-2016-2018-mds-by-clade.html)
  - [Fig 4. **Phylogenetic trees (left) and embeddings (right) of early (2016–2018) influenza H3N2 HA sequences colored by HDBSCAN cluster.** Normalized VI values per embedding reflect the distance between clusters and known genetic groups
 (Nextstrain clades).](https://blab.github.io/cartography/figures/flu-2016-2018-ha-embeddings-by-cluster.html)
  - [S5 Fig. **Phylogeny of late (2018–2020) influenza H3N2 HA sequences plotted by nucleotide substitutions per site on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).** Tips in the tree and embeddings are colored by their Nextstrain clade assignment.](https://blab.github.io/cartography/figures/flu-2018-2020-ha-embeddings-by-clade.html)
