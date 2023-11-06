@@ -24,18 +24,20 @@ Our open source implementation of these methods for analysis of viral genome seq
 
 ## Phylogenetic trees and embeddings
 
-Explore the phylogenetic trees and embeddings on Nextstrain:
+Explore the phylogenetic trees and embeddings on Nextstrain.
 
 - Early influenza H3N2 HA (2016-2018)
-  - [Phylogeny](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2016-2018?m=div)
+  - [Phylogeny](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2016-2018?m=div) colored by Nextstrain clade
   - [PCA embedding](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2016-2018?l=scatter&m=div&scatterX=pca1&scatterY=pca2)
   - [MDS embedding (1 and 2)](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2016-2018?l=scatter&m=div&scatterX=mds1&scatterY=mds2)
+  - [MDS embedding (2 and 3)](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2016-2018?l=scatter&m=div&scatterX=mds2&scatterY=mds3)
   - [t-SNE embedding](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2016-2018?l=scatter&m=div&scatterX=tsne_x&scatterY=tsne_y)
   - [UMAP embedding](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2016-2018?l=scatter&m=div&scatterX=umap_x&scatterY=umap_y)
 - Late influenza H3N2 HA (2018-2020)
-  - [Phylogeny](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2018-2020?m=div)
+  - [Phylogeny](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2018-2020?m=div) colored by Nextstrain clade
   - [PCA embedding](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2018-2020?l=scatter&m=div&scatterX=pca1&scatterY=pca2)
   - [MDS embedding (1 and 2)](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2018-2020?l=scatter&m=div&scatterX=mds1&scatterY=mds2)
+  - [MDS embedding (2 and 3)](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2018-2020?l=scatter&m=div&scatterX=mds2&scatterY=mds3)
   - [t-SNE embedding](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2018-2020?l=scatter&m=div&scatterX=tsne_x&scatterY=tsne_y)
   - [UMAP embedding](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2018-2020?l=scatter&m=div&scatterX=umap_x&scatterY=umap_y)
 - Influenza H3N2 HA and NA (2016-2018)
@@ -47,6 +49,22 @@ Explore the phylogenetic trees and embeddings on Nextstrain:
   - [MDS embedding (2 and 3)](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2016-2018-reassort?l=scatter&scatterX=mds2&scatterY=mds3)
   - [t-SNE embedding](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2016-2018-reassort?l=scatter&scatterX=tsne_x&scatterY=tsne_y)
   - [UMAP embedding](https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2016-2018-reassort?l=scatter&scatterX=umap_x&scatterY=umap_y)
+- Early SARS-CoV-2 (2020-2022)
+  - [Phylogeny](https://nextstrain.org/groups/blab/cartography/ncov/2020-2022?m=div) colored by Nextstrain clade
+  - [Phylogeny](https://nextstrain.org/groups/blab/cartography/ncov/2020-2022?c=Nextclade_pango_collapsed&m=div) colored by collapsed Nextclade pango lineage
+  - [PCA embedding](https://nextstrain.org/groups/blab/cartography/ncov/2020-2022?l=scatter&m=div&scatterX=pca1&scatterY=pca2)
+  - [MDS embedding (1 and 2)](https://nextstrain.org/groups/blab/cartography/ncov/2020-2022?l=scatter&m=div&scatterX=mds1&scatterY=mds2)
+  - [MDS embedding (2 and 3)](https://nextstrain.org/groups/blab/cartography/ncov/2020-2022?l=scatter&m=div&scatterX=mds2&scatterY=mds3)
+  - [t-SNE embedding](https://nextstrain.org/groups/blab/cartography/ncov/2020-2022?l=scatter&m=div&scatterX=tsne_x&scatterY=tsne_y)
+  - [UMAP embedding](https://nextstrain.org/groups/blab/cartography/ncov/2020-2022?l=scatter&m=div&scatterX=umap_x&scatterY=umap_y)
+- Late SARS-CoV-2 (2022-2023)
+  - [Phylogeny](https://nextstrain.org/groups/blab/cartography/ncov/2022-2023?m=div) colored by Nextstrain clade
+  - [Phylogeny](https://nextstrain.org/groups/blab/cartography/ncov/2022-2023?c=Nextclade_pango_collapsed&m=div) colored by collapsed Nextclade pango lineage
+  - [PCA embedding](https://nextstrain.org/groups/blab/cartography/ncov/2022-2023?l=scatter&m=div&scatterX=pca1&scatterY=pca2)
+  - [MDS embedding (1 and 2)](https://nextstrain.org/groups/blab/cartography/ncov/2022-2023?l=scatter&m=div&scatterX=mds1&scatterY=mds2)
+  - [MDS embedding (2 and 3)](https://nextstrain.org/groups/blab/cartography/ncov/2022-2023?l=scatter&m=div&scatterX=mds2&scatterY=mds3)
+  - [t-SNE embedding](https://nextstrain.org/groups/blab/cartography/ncov/2022-2023?l=scatter&m=div&scatterX=tsne_x&scatterY=tsne_y)
+  - [UMAP embedding](https://nextstrain.org/groups/blab/cartography/ncov/2022-2023?l=scatter&m=div&scatterX=umap_x&scatterY=umap_y)
 
 ## Figures
 
