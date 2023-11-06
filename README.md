@@ -92,6 +92,12 @@ placement of reassortment events detected by TreeKnit (MCCs).**](https://blab.gi
 (Nextstrain clades).](https://blab.github.io/cartography/figures/sarscov2-test-embeddings-by-cluster-vs-Nextstrain_clade.html)
  - [S19 Fig. **Phylogenetic trees (left) and embeddings (right) of late (2022–2023) SARS-CoV-2 sequences colored by HDBSCAN cluster.** Normalized VI values per embedding reflect the distance between clusters and known genetic groups (collapsed Nextclade pango lineages).](https://blab.github.io/cartography/figures/sarscov2-test-embeddings-by-cluster-vs-Nextclade_pango_collapsed.html)
 
+## Supplemental tables
+
+ - [S1 Table. Mutations observed per embedding cluster relative to a reference genome sequence for each pathogen.](https://raw.githubusercontent.com/blab/cartography/master/docs/tables/mutation_table.csv) Each row reflects the alternate allele identified at a specific position of the given pathogen genome or gene sequence, the pathogen dataset, the embedding method, the number of clusters in the embedding with the observed mutation, and the list of distinct cluster labels with the mutation. Mutations must have occurred in at least 10 samples of the given dataset with an allele frequency of at least 50%.
+ - [S2 Table. Average Euclidean distances between each known recombinant, _X_, and its parental lineages _A_ and _B_ per embedding method.](https://raw.githubusercontent.com/blab/cartography/master/sars-cov-2-nextstrain-2022-2023/results/recombinant_distances.csv) Distances include average pairwise comparisons between _A_ and _B_, _A_ and _X_, and _B_ and _X_. Additional columns indicate whether each recombinant lineage maps closer to both parental lineages (or at least one) than those parents map to each other.
+ - [S3 Table. Accessions and authors from originating and submitting laboratories of seasonal influenza and SARS-CoV-2 sequences from INSDC databases.](https://raw.githubusercontent.com/blab/cartography/master/docs/tables/accessions_and_authors.tsv)
+
 ## Full analysis
 
 ## Notes for Windows  
