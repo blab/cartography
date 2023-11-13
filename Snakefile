@@ -65,9 +65,9 @@ wildcard_constraints:
 rule all:
     input:
         # Static version of the paper.
-        "docs/cartography.pdf",
+        "manuscript/cartography.pdf",
         # Interactive version of the paper.
-        "docs/cartography.html",
+        #"manuscript/cartography.html",
 
 # Include rules for each pathogen.
 include: "simulations/Snakefile"
@@ -86,4 +86,4 @@ rule pathogens:
         *rules.sarscov2_test.input,
 
 # Include rules for the manuscript.
-include: "docs/Snakefile"
+include: "manuscript/Snakefile"

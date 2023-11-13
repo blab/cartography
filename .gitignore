@@ -65,9 +65,6 @@ instance/
 # Scrapy stuff:
 .scrapy
 
-# Sphinx documentation
-docs/_build/
-
 # PyBuilder
 target/
 
@@ -135,10 +132,10 @@ notebooks/zika_tree.json
 source/docs/_build
 .vscode/
 
-docs/cartography.aux
-docs/cartography.bbl
-docs/cartography.blg
-docs/cartography.suppinfo
+manuscript/cartography.aux
+manuscript/cartography.bbl
+manuscript/cartography.blg
+manuscript/cartography.suppinfo
 
 # Adding gridsearch but not results
 **/seasonal-flu-nextstrain/results/*

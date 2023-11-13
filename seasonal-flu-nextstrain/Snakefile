@@ -1,12 +1,12 @@
 rule seasonal_flu_training:
     input:
-        "docs/figures/flu-2016-2018-ha-embeddings-by-clade.png",
-        "docs/figures/flu-2016-2018-ha-embeddings-by-clade.html",
-        "docs/figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png",
-        "docs/figures/flu-2016-2018-ha-embeddings-by-cluster.png",
-        "docs/figures/flu-2016-2018-ha-embeddings-by-cluster.html",
-        "docs/figures/flu-2016-2018-mds-by-clade.html",
-        "docs/figures/flu-2016-2018-mds-by-clade.png",
+        "manuscript/figures/flu-2016-2018-ha-embeddings-by-clade.png",
+        "manuscript/figures/flu-2016-2018-ha-embeddings-by-clade.html",
+        "manuscript/figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png",
+        "manuscript/figures/flu-2016-2018-ha-embeddings-by-cluster.png",
+        "manuscript/figures/flu-2016-2018-ha-embeddings-by-cluster.html",
+        "manuscript/figures/flu-2016-2018-mds-by-clade.html",
+        "manuscript/figures/flu-2016-2018-mds-by-clade.png",
         "auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json",
         "seasonal-flu-nextstrain/results/mutation_table.csv",
         "seasonal-flu-nextstrain/results/full_within_between_stats.csv"
@@ -689,7 +689,7 @@ rule seasonal_flu_training_create_scatterplot_figure:
         scatterplot_tsne = "seasonal-flu-nextstrain/results/scatterplot_t-sne.csv",
         scatterplot_umap = "seasonal-flu-nextstrain/results/scatterplot_umap.csv",
     output:
-        scatterplot = "docs/figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png",
+        scatterplot = "manuscript/figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png",
     conda: "../cartography.yml"
     notebook:
         "../notebooks/2022-09-26-scatterplot-figure.py.ipynb"
@@ -701,12 +701,12 @@ rule seasonal_flu_training_create_notebook_docs:
         accuracy_table="seasonal-flu-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
         explained_variance_pca="seasonal-flu-nextstrain/results/explained_variance_pca_sequences.csv",
     output:
-        fullChartPNG = "docs/figures/flu-2016-2018-ha-embeddings-by-clade.png",
-        fullChart = "docs/figures/flu-2016-2018-ha-embeddings-by-clade.html",
-        fullChartHDBSCANPNG = "docs/figures/flu-2016-2018-ha-embeddings-by-cluster.png",
-        fullChartHDBSCAN = "docs/figures/flu-2016-2018-ha-embeddings-by-cluster.html",
-        MDS_Supplement = "docs/figures/flu-2016-2018-mds-by-clade.html",
-        MDS_Supplement_PNG = "docs/figures/flu-2016-2018-mds-by-clade.png",
+        fullChartPNG = "manuscript/figures/flu-2016-2018-ha-embeddings-by-clade.png",
+        fullChart = "manuscript/figures/flu-2016-2018-ha-embeddings-by-clade.html",
+        fullChartHDBSCANPNG = "manuscript/figures/flu-2016-2018-ha-embeddings-by-cluster.png",
+        fullChartHDBSCAN = "manuscript/figures/flu-2016-2018-ha-embeddings-by-cluster.html",
+        MDS_Supplement = "manuscript/figures/flu-2016-2018-mds-by-clade.html",
+        MDS_Supplement_PNG = "manuscript/figures/flu-2016-2018-mds-by-clade.png",
     conda: "../cartography.yml"
     notebook:
         "2022-03-29-final-figures.py.ipynb"

@@ -1,6 +1,6 @@
 rule manuscript:
     input:
-        "docs/cartography.pdf",
+        "manuscript/cartography.pdf",
 
 rule within_between_stats:
     input:
@@ -9,8 +9,8 @@ rule within_between_stats:
         within_between_df_sars_training = "sars-cov-2-nextstrain/results/full_within_between_stats.csv",
         within_between_df_sars_test = "sars-cov-2-nextstrain-2022-2023/results/full_within_between_stats.csv",
     output:
-        flu_png = "docs/figures/within_between_influenza.png",
-        sars_png = "docs/figures/within_between_sars.png",
+        flu_png = "manuscript/figures/within_between_influenza.png",
+        sars_png = "manuscript/figures/within_between_sars.png",
     conda: "../cartography.yml"
     notebook:
         "../notebooks/2023-07-24WithinVBetweenFigure.ipynb"
@@ -27,7 +27,7 @@ rule concat_mutation_tables:
             "sars-cov-2-nextstrain-2022-2023/results/mutation_table_for_Nextclade_pango.csv",
         ]
     output:
-        csv_table = "docs/tables/mutation_table.csv",
+        csv_table = "manuscript/tables/mutation_table.csv",
     conda: "../cartography.yml"
     shell:
         """
@@ -45,8 +45,8 @@ rule concat_HDBSCAN_tables:
             "sars-cov-2-nextstrain/results/optimal_cluster_accuracy_and_parameters_for_Nextclade_pango_collapsed.csv",
         ]
     output:
-        fullKDE = "docs/tables/total_HDBSCAN_table.csv",
-        table = "docs/tables/accuracy_table.tex",
+        fullKDE = "manuscript/tables/total_HDBSCAN_table.csv",
+        table = "manuscript/tables/accuracy_table.tex",
     params:
         disease_names = ["Influenza H3N2", "SARS-CoV-2 (Nextstrain clade)", "SARS-CoV-2 (Nextclade pango)"],
     conda: "../cartography.yml"
@@ -69,7 +69,7 @@ rule concat_within_between_figure_table:
             "sars-cov-2-nextstrain-2022-2023/results/full_within_between_stats.csv",
         ]
     output:
-        csv_table = "docs/tables/total_within_between_stats.csv",
+        csv_table = "manuscript/tables/total_within_between_stats.csv",
     conda: "../cartography.yml"
     shell:
         """
@@ -89,7 +89,7 @@ rule concat_accessions_and_authors_tables:
             "sars-cov-2-nextstrain-2022-2023/results/accessions_and_authors.tsv",
         ],
     output:
-        authors="docs/tables/accessions_and_authors.tsv",
+        authors="manuscript/tables/accessions_and_authors.tsv",
     conda: "../cartography.yml"
     shell:
         """
@@ -99,22 +99,22 @@ rule concat_accessions_and_authors_tables:
 rule manuscript_pdf:
     input:
         *rules.pathogens.input,
-        "docs/figures/simulated-influenza-like-with-no-reassortment-scores-by-parameters.png",
-        "docs/figures/simulated-coronavirus-like-with-moderate-recombination-rate-scores-by-parameters.png",
-        "docs/figures/simulated-populations-representative-embeddings.png",
-        "docs/figures/simulated-populations-representative-mds-embeddings.png",
-        "docs/figures/flu-2018-2020-replication-of-cluster-accuracy.png",
-        "docs/figures/sarscov2-test-replication-of-cluster-accuracy.png",
-        manuscript="docs/cartography.tex",
-        bibliography="docs/cartography.bib",
-        accuracy_table="docs/tables/accuracy_table.tex",
-        mutation_table="docs/tables/mutation_table.csv",
-        within_between_stats_table="docs/tables/total_within_between_stats.csv",
-        within_between_influenza_figure="docs/figures/within_between_influenza.png",
-        within_between_sars_figure="docs/figures/within_between_sars.png",
-        accessions_and_authors_table="docs/tables/accessions_and_authors.tsv",
+        "manuscript/figures/simulated-influenza-like-with-no-reassortment-scores-by-parameters.png",
+        "manuscript/figures/simulated-coronavirus-like-with-moderate-recombination-rate-scores-by-parameters.png",
+        "manuscript/figures/simulated-populations-representative-embeddings.png",
+        "manuscript/figures/simulated-populations-representative-mds-embeddings.png",
+        "manuscript/figures/flu-2018-2020-replication-of-cluster-accuracy.png",
+        "manuscript/figures/sarscov2-test-replication-of-cluster-accuracy.png",
+        manuscript="manuscript/cartography.tex",
+        bibliography="manuscript/cartography.bib",
+        accuracy_table="manuscript/tables/accuracy_table.tex",
+        mutation_table="manuscript/tables/mutation_table.csv",
+        within_between_stats_table="manuscript/tables/total_within_between_stats.csv",
+        within_between_influenza_figure="manuscript/figures/within_between_influenza.png",
+        within_between_sars_figure="manuscript/figures/within_between_sars.png",
+        accessions_and_authors_table="manuscript/tables/accessions_and_authors.tsv",
     output:
-        manuscript = "docs/cartography.pdf",
+        manuscript = "manuscript/cartography.pdf",
     conda: "../cartography.yml"
     shell:
         """
@@ -129,7 +129,7 @@ rule manuscript_html:
         template = "pandoc-scholar.html",
         css = "pandoc-scholar.css"
     output:
-        manuscript = "cartography.html"
+        manuscript = "manuscript/cartography.html"
     conda: "../cartography.yml"
     shell:
         """

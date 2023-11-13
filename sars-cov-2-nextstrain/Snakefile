@@ -5,15 +5,15 @@ SARS_COV_2_CLADE_MEMBERSHIPS = [
 
 rule sarscov2:
     input:
-        expand("docs/figures/sarscov2-embeddings-by-{clade_membership}-clade.html", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
-        expand("docs/figures/sarscov2-embeddings-by-{clade_membership}-clade.png", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
-        expand("docs/figures/sarscov2-embeddings-by-cluster-vs-{clade_membership}.html", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
-        expand("docs/figures/sarscov2-embeddings-by-cluster-vs-{clade_membership}.png", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
-        expand("docs/figures/sarscov2-pca-explained-variance-for-{clade_membership}.png", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
-        expand("docs/figures/sarscov2-pca-by-{clade_membership}-clade.html", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
-        expand("docs/figures/sarscov2-pca-by-{clade_membership}-clade.png", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
-        "docs/figures/sarscov2-euclidean-distance-by-genetic-distance.png",
-        "docs/figures/sarscov2-pc1-vs-bases-missing.png",
+        expand("manuscript/figures/sarscov2-embeddings-by-{clade_membership}-clade.html", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        expand("manuscript/figures/sarscov2-embeddings-by-{clade_membership}-clade.png", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        expand("manuscript/figures/sarscov2-embeddings-by-cluster-vs-{clade_membership}.html", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        expand("manuscript/figures/sarscov2-embeddings-by-cluster-vs-{clade_membership}.png", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        expand("manuscript/figures/sarscov2-pca-explained-variance-for-{clade_membership}.png", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        expand("manuscript/figures/sarscov2-pca-by-{clade_membership}-clade.html", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        expand("manuscript/figures/sarscov2-pca-by-{clade_membership}-clade.png", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        "manuscript/figures/sarscov2-euclidean-distance-by-genetic-distance.png",
+        "manuscript/figures/sarscov2-pc1-vs-bases-missing.png",
         "auspice/cartography_ncov_2020-2022.json",
         expand("sars-cov-2-nextstrain/results/mutation_table_for_{clade_membership}.csv", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
 
@@ -156,7 +156,7 @@ rule sarscov2_bases_missing_vs_pc1:
         metadata = "sars-cov-2-nextstrain/data/metadata.tsv",
         pca = "sars-cov-2-nextstrain/results/embed_pca_before.csv",
     output:
-        figure = "docs/figures/sarscov2-pc1-vs-bases-missing.png"
+        figure = "manuscript/figures/sarscov2-pc1-vs-bases-missing.png"
     params:
         bootstrap = 100,
     conda: "../cartography.yml"
@@ -631,7 +631,7 @@ rule sarscov2_create_scatterplot_figure:
         scatterplot_tsne = "sars-cov-2-nextstrain/results/scatterplot_t-sne.csv",
         scatterplot_umap = "sars-cov-2-nextstrain/results/scatterplot_umap.csv",
     output:
-        scatterplot = "docs/figures/sarscov2-euclidean-distance-by-genetic-distance.png",
+        scatterplot = "manuscript/figures/sarscov2-euclidean-distance-by-genetic-distance.png",
     conda: "../cartography.yml"
     notebook:
         "../notebooks/2022-09-26-scatterplot-figure.py.ipynb"
@@ -763,15 +763,15 @@ rule sarscov2_create_notebook_docs:
         accuracy_table="sars-cov-2-nextstrain/results/optimal_cluster_accuracy_and_parameters_for_{clade_membership}.csv",
         explained_variance_pca = "sars-cov-2-nextstrain/results/explained_variance_pca.csv",
     output:
-        fullChart="docs/figures/sarscov2-embeddings-by-{clade_membership}-clade.html",
-        fullChartPNG="docs/figures/sarscov2-embeddings-by-{clade_membership}-clade.png",
-        fullChartHDBSCAN="docs/figures/sarscov2-embeddings-by-cluster-vs-{clade_membership}.html",
-        fullChartHDBSCANPNG="docs/figures/sarscov2-embeddings-by-cluster-vs-{clade_membership}.png",
-        Explained_variance_PCA="docs/figures/sarscov2-pca-explained-variance-for-{clade_membership}.png",
-        PCA_Supplement="docs/figures/sarscov2-pca-by-{clade_membership}-clade.html",
-        PCA_Supplement_PNG="docs/figures/sarscov2-pca-by-{clade_membership}-clade.png",
-        MDS_Supplement="docs/figures/sarscov2-mds-by-{clade_membership}-clade.html",
-        MDS_Supplement_PNG="docs/figures/sarscov2-mds-by-{clade_membership}-clade.png",
+        fullChart="manuscript/figures/sarscov2-embeddings-by-{clade_membership}-clade.html",
+        fullChartPNG="manuscript/figures/sarscov2-embeddings-by-{clade_membership}-clade.png",
+        fullChartHDBSCAN="manuscript/figures/sarscov2-embeddings-by-cluster-vs-{clade_membership}.html",
+        fullChartHDBSCANPNG="manuscript/figures/sarscov2-embeddings-by-cluster-vs-{clade_membership}.png",
+        Explained_variance_PCA="manuscript/figures/sarscov2-pca-explained-variance-for-{clade_membership}.png",
+        PCA_Supplement="manuscript/figures/sarscov2-pca-by-{clade_membership}-clade.html",
+        PCA_Supplement_PNG="manuscript/figures/sarscov2-pca-by-{clade_membership}-clade.png",
+        MDS_Supplement="manuscript/figures/sarscov2-mds-by-{clade_membership}-clade.html",
+        MDS_Supplement_PNG="manuscript/figures/sarscov2-mds-by-{clade_membership}-clade.png",
     params:
         clade_membership=lambda wildcards: wildcards.clade_membership,
         pca_label=lambda wildcards: f"pca_label_for_{wildcards.clade_membership}",

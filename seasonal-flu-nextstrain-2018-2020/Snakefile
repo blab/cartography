@@ -1,11 +1,11 @@
 rule seasonal_flu_test:
     input:
-        "docs/figures/flu-2018-2020-ha-embeddings-by-clade.png",
-        "docs/figures/flu-2018-2020-ha-embeddings-by-clade.html",
-        "docs/figures/flu-2018-2020-ha-embeddings-by-cluster.html",
-        "docs/figures/flu-2018-2020-ha-embeddings-by-cluster.png",
-        "docs/figures/flu-2018-2020-mds-by-clade.html",
-        "docs/figures/flu-2018-2020-mds-by-clade.png",
+        "manuscript/figures/flu-2018-2020-ha-embeddings-by-clade.png",
+        "manuscript/figures/flu-2018-2020-ha-embeddings-by-clade.html",
+        "manuscript/figures/flu-2018-2020-ha-embeddings-by-cluster.html",
+        "manuscript/figures/flu-2018-2020-ha-embeddings-by-cluster.png",
+        "manuscript/figures/flu-2018-2020-mds-by-clade.html",
+        "manuscript/figures/flu-2018-2020-mds-by-clade.png",
         "auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json",
         "seasonal-flu-nextstrain-2018-2020/results/mutation_table.csv",
         "seasonal-flu-nextstrain-2018-2020/results/full_within_between_stats.csv"
@@ -574,12 +574,12 @@ rule seasonal_flu_test_create_notebook_docs:
         accuracy_table="seasonal-flu-nextstrain-2018-2020/results/full_HDBSCAN_metadata.csv",
         explained_variance_pca = "seasonal-flu-nextstrain-2018-2020/results/explained_variance_pca_sequences.csv",
     output:
-        fullChartPNG = "docs/figures/flu-2018-2020-ha-embeddings-by-clade.png",
-        fullChart = "docs/figures/flu-2018-2020-ha-embeddings-by-clade.html",
-        fullChartHDBSCAN20182020="docs/figures/flu-2018-2020-ha-embeddings-by-cluster.html",
-        fullChartHDBSCANPNG20182020="docs/figures/flu-2018-2020-ha-embeddings-by-cluster.png",
-        MDS_Supplement = "docs/figures/flu-2018-2020-mds-by-clade.html",
-        MDS_Supplement_PNG = "docs/figures/flu-2018-2020-mds-by-clade.png",
+        fullChartPNG = "manuscript/figures/flu-2018-2020-ha-embeddings-by-clade.png",
+        fullChart = "manuscript/figures/flu-2018-2020-ha-embeddings-by-clade.html",
+        fullChartHDBSCAN20182020="manuscript/figures/flu-2018-2020-ha-embeddings-by-cluster.html",
+        fullChartHDBSCANPNG20182020="manuscript/figures/flu-2018-2020-ha-embeddings-by-cluster.png",
+        MDS_Supplement = "manuscript/figures/flu-2018-2020-mds-by-clade.html",
+        MDS_Supplement_PNG = "manuscript/figures/flu-2018-2020-mds-by-clade.png",
     conda: "../cartography.yml"
     notebook:
         "2021-03-09Notebook.ipynb"
@@ -917,7 +917,7 @@ rule seasonal_flu_test_replication_plot_cluster_accuracy:
     input:
         accuracies="seasonal-flu-nextstrain-2018-2020/results/replication_analysis_cluster_accuracy.csv",
     output:
-        accuracies="docs/figures/flu-2018-2020-replication-of-cluster-accuracy.png",
+        accuracies="manuscript/figures/flu-2018-2020-replication-of-cluster-accuracy.png",
     conda: "../cartography.yml"
     notebook:
         "../notebooks/plot-replication-of-cluster-accuracy.py.ipynb"
