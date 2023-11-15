@@ -245,7 +245,7 @@ def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip,
     return chart
 
 
-def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color, legend_title, ToolTip, domain=None, range_=None, legend_columns=1):
+def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color, legend_title, ToolTip, domain=None, range_=None, legend_columns=1, plot_legend=True):
     """Creates a linked brushable altair plot with the tree and the charts appended
     Parameters
     -----------
@@ -355,17 +355,22 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
             if(i == len(list_of_data)):
                 break
 
+            if plot_legend:
+                legend = alt.Legend(
+                        symbolLimit=len(domain),
+                        columns=legend_columns,
+                        title=legend_title,
+                    )
+            else:
+                legend = None
+
             chart_color = alt.Chart(tips_color_df).mark_circle(size=60).encode(
                 x=alt.X(list_of_data[i], title=list_of_titles[i], axis=alt.Axis(labels=False, ticks=False)),
                 y=alt.Y(list_of_data[i + 1], title=list_of_titles[i + 1], axis=alt.Axis(labels=False, ticks=False)),
                 color=alt.condition(
                     brush,
                     if_false=alt.ColorValue('gray'),
-                    if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_), legend=alt.Legend(
-                        symbolLimit=len(domain),
-                        columns=legend_columns,
-                        title=legend_title,
-                    ))
+                    if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_), legend=legend)
                 ),
                 tooltip=ToolTip
             ).add_selection(
@@ -375,17 +380,22 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
             # As with the tree plot, plot gray tips first, if they exist, and
             # then plot color tips second to place them on top.
             if tips_gray_df is not None:
+                if plot_legend:
+                    legend = alt.Legend(
+                            symbolLimit=len(domain),
+                            columns=legend_columns,
+                            title=legend_title,
+                        )
+                else:
+                    legend = None
+
                 chart_gray = alt.Chart(tips_gray_df).mark_circle(size=60).encode(
                     x=alt.X(list_of_data[i], title=list_of_titles[i], axis=alt.Axis(labels=False, ticks=False)),
                     y=alt.Y(list_of_data[i + 1], title=list_of_titles[i + 1], axis=alt.Axis(labels=False, ticks=False)),
                     color=alt.condition(
                         brush,
                         if_false=alt.ColorValue('gray'),
-                        if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_), legend=alt.Legend(
-                            symbolLimit=len(domain),
-                            columns=legend_columns,
-                            title=legend_title,
-                        ))
+                        if_true=alt.Color(color, scale=alt.Scale(domain=domain, range=range_), legend=legend)
                     ),
                     tooltip=ToolTip
                 )
