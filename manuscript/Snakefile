@@ -118,7 +118,7 @@ rule manuscript_pdf:
     conda: "../cartography.yml"
     shell:
         """
-        cd docs && bash build.sh
+        cd manuscript && bash build.sh
         """
 
 rule manuscript_html:
