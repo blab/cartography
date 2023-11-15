@@ -2,4 +2,4 @@ normalized_vi,method,predicted_clusters_column,n_predicted_clusters,n_ignored_pr
 0.16,t-sne,t-sne_label_for_Nextclade_pango_collapsed,1668,0,1668,0,1668
 0.23,umap,umap_label_for_Nextclade_pango_collapsed,1668,0,1668,0,1668
 0.24,mds,mds_label_for_Nextclade_pango_collapsed,1668,0,1668,0,1668
-0.49,pca,pca_label_for_Nextclade_pango_collapsed,1668,0,1668,0,1668
+0.37,pca,pca_label_for_Nextclade_pango_collapsed,1668,0,1668,0,1668

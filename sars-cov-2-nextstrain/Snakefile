@@ -320,9 +320,24 @@ rule sarscov2_create_distance_matrix:
             --output {output.output}
         """
 
+rule sarscov2_clean_alignment_for_pca:
+    input:
+        alignment="sars-cov-2-nextstrain/data/aligned.fasta",
+    output:
+        alignment="sars-cov-2-nextstrain/data/cleaned_aligned.fasta",
+    conda: "../cartography.yml"
+    log:
+        "logs/sarscov2_clean_alignment_for_pca.txt"
+    shell:
+        """
+        python3 notebooks/scripts/clean_alignment.py \
+            --alignment {input.alignment} \
+            --output {output.alignment} 2>&1 | tee {log}
+        """
+
 rule sarscov2_embed_pca:
     input:
-        alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
+        alignment = "sars-cov-2-nextstrain/data/cleaned_aligned.fasta",
         parameters = "simulations/coronavirus-like/moderate-recombination-rate/pca_parameters.csv",
     output:
         dataframe = "sars-cov-2-nextstrain/results/embed_pca.csv",

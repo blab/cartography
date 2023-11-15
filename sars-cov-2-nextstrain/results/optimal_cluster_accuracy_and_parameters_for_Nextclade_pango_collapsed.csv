@@ -2,4 +2,4 @@ normalized_vi,method,predicted_clusters_column,n_predicted_clusters,n_ignored_pr
 0.12,t-sne,t-sne_cluster_at_1.0,1736,0,1736,0,1736,1.0
 0.23,mds,mds_cluster_at_0.0,1736,0,1736,0,1736,0.0
 0.25,umap,umap_cluster_at_0.5,1736,0,1736,0,1736,0.5
-0.42,pca,pca_cluster_at_4.5,1736,0,1736,0,1736,4.5
+0.31,pca,pca_cluster_at_0.5,1736,0,1736,0,1736,0.5

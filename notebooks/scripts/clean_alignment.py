@@ -18,8 +18,9 @@ if __name__ == '__main__':
     drop_indexes = [
         i
         for i in range(alignment.get_alignment_length())
-        if "N" in alignment[:, i]
+        if "N" in alignment[:, i] or "-" in alignment[:, i]
     ]
+    print(f"Dropping {len(drop_indexes)} from alignment of length {alignment.get_alignment_length()}.")
 
     # Collect positions that will not be dropped.
     edited_alignment = reduce(
