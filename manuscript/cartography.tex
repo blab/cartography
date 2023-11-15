@@ -298,6 +298,7 @@ These results inform our recommendations for future applications of these method
 We selected four standard and common dimensionality reduction (or ``embedding'') methods to apply to human pathogenic viruses: PCA, MDS, t-SNE, and UMAP.
 PCA operates on a matrix with samples in rows, ``features'' in columns, and numeric values in each cell \cite{jolliffe_cadima_2016}.
 To apply PCA to multiple sequence alignments, we transformed each nucleotide value into a corresponding integer (A to 1, G to 2, C to 3, T to 4, and all other values to 5) and applied scikit-learn's PCA implementation to the resulting numerical matrix with the ``full'' singular value decomposition solver and 10 components \cite{Pedregosa2011}.
+To minimize the effects of missing data on the PCA embeddings, we dropped all columns with ``N'' or ``-'' characters from concatenated H3N2 HA/NA alignments and SARS-CoV-2 alignments prior to producing PCA embeddings.
 
 The remaining three methods operate on a distance matrix.
 We constructed a distance matrix from a multiple sequence alignment by calculating the pairwise Hamming distance between nucleotide sequences.
@@ -458,7 +459,7 @@ From this table, we could identify mutations the only occurred in specific clust
 \subsection*{Assessment of HA/NA reassortment in seasonal influenza populations}
 
 To assess the ability of embedding methods to detect reassortment in seasonal influenza populations, we applied each method to either HA alignments only or concatenated alignments of HA and NA sequences from the same samples, performed HDBSCAN clustering with the optimal distance threshold for the given method, and calculated the normalized VI between the resulting clusters and TreeKnit MCCs.
-To minimize the effects of missing data on the PCA embeddings, we dropped all columns with N characters from the HA and HA/NA alignments prior to producing PCA embeddings.
+As mentioned above, we dropped all columns with ``N'' or ``-'' characters from the HA and HA/NA alignments prior to producing PCA embeddings.
 We used the original alignments to calculate distance matrices for all other methods, since distance-based methods can ignore N characters in pairwise comparisons.
 We compared normalized VI values for the HA-only clusters of each method to the corresponding VI values for the HA/NA clusters.
 Lower VI values in the HA/NA clusters than HA-only clusters indicated better clustering of samples into known reassortment groups.
