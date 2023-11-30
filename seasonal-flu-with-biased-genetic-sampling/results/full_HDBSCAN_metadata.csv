@@ -1,0 +1,5 @@
+normalized_vi,method,predicted_clusters_column,n_predicted_clusters,n_ignored_predicted_clusters,n_true_clusters,n_ignored_true_clusters,n_vi_clusters
+0.04,pca,pca_label,3132,3,3135,0,3132
+0.07,umap,umap_label,3135,0,3135,0,3135
+0.08,mds,mds_label,3112,23,3135,0,3112
+0.14,t-sne,t-sne_label,3134,1,3135,0,3134

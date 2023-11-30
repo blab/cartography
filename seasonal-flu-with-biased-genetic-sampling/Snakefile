@@ -1,0 +1,522 @@
+rule seasonal_flu_test_genetic_bias:
+    input:
+        "auspice/cartography_flu-seasonal-h3n2-ha-2018-2020-with-genetic-bias.json",
+        "seasonal-flu-with-biased-genetic-sampling/results/full_HDBSCAN_metadata.csv",
+        "manuscript/figures/flu-2018-2020-ha-with-genetic-bias-euclidean-distance-by-genetic-distance.png",
+
+rule seasonal_flu_test_genetic_bias_files:
+    params:
+        input_fasta = "seasonal-flu-nextstrain-2018-2020/data/ncbi-h3n2-ha.fa",
+        dropped_strains = "seasonal-flu-nextstrain-2018-2020/config/exclude.txt",
+        reference = "seasonal-flu-nextstrain-2018-2020/config/reference_h3n2_ha.gb",
+        auspice_config = "seasonal-flu-nextstrain-2018-2020/config/auspice_config.json",
+        clades = "seasonal-flu-nextstrain-2018-2020/config/clades_h3n2_ha.tsv"
+
+seasonal_flu_test_genetic_bias_files = rules.seasonal_flu_test_genetic_bias_files.params
+
+rule seasonal_flu_test_genetic_bias_deduplicate_sequences:
+    input:
+        sequences = seasonal_flu_test_genetic_bias_files.input_fasta
+    output:
+        sequences = "seasonal-flu-with-biased-genetic-sampling/results/deduplicated_sequences.fasta"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 seasonal-flu-nextstrain/scripts/deduplicate_sequences.py \
+            --sequences {input.sequences} \
+            --output {output.sequences}
+        """
+
+rule seasonal_flu_test_genetic_bias_parse:
+    input:
+        sequences = "seasonal-flu-with-biased-genetic-sampling/results/deduplicated_sequences.fasta",
+    output:
+        sequences = "seasonal-flu-with-biased-genetic-sampling/results/sequences.fasta",
+        metadata = "seasonal-flu-with-biased-genetic-sampling/results/metadata.tsv",
+    params:
+        fasta_fields = "strain date accession country region"
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur parse \
+            --sequences {input.sequences} \
+            --output-sequences {output.sequences} \
+            --output-metadata {output.metadata} \
+            --fields {params.fasta_fields}
+        """
+
+rule seasonal_flu_test_genetic_bias_filter:
+    input:
+        sequences = "seasonal-flu-with-biased-genetic-sampling/results/sequences.fasta",
+        metadata = "seasonal-flu-with-biased-genetic-sampling/results/metadata.tsv",
+        exclude = seasonal_flu_test_genetic_bias_files.dropped_strains
+    output:
+        sequences = "seasonal-flu-with-biased-genetic-sampling/results/filtered.fasta",
+        metadata = "seasonal-flu-with-biased-genetic-sampling/results/filtered_metadata.tsv",
+    params:
+        min_date = 2018.0,
+        max_date = 2020.0,
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur filter \
+            --sequences {input.sequences} \
+            --metadata {input.metadata} \
+            --exclude {input.exclude} \
+            --output-sequences {output.sequences} \
+            --output-metadata {output.metadata} \
+            --min-date {params.min_date} \
+            --max-date {params.max_date}
+        """
+
+rule seasonal_flu_test_genetic_bias_align:
+    input:
+        sequences = rules.seasonal_flu_test_genetic_bias_filter.output.sequences,
+        reference = seasonal_flu_test_genetic_bias_files.reference
+    output:
+        alignment = "seasonal-flu-with-biased-genetic-sampling/results/aligned_sequences.fasta"
+    conda: "../cartography.yml"
+    threads: 4
+    shell:
+        """
+        augur align \
+            --sequences {input.sequences} \
+            --reference-sequence {input.reference} \
+            --output {output.alignment} \
+            --fill-gaps \
+            --remove-reference \
+            --nthreads {threads}
+        """
+
+rule seasonal_flu_test_genetic_bias_tree:
+    input:
+        alignment = rules.seasonal_flu_test_genetic_bias_align.output.alignment
+    output:
+        tree = "seasonal-flu-with-biased-genetic-sampling/results/tree_raw.nwk"
+    conda: "../cartography.yml"
+    threads: 4
+    shell:
+        """
+        augur tree \
+            --alignment {input.alignment} \
+            --output {output.tree} \
+            --nthreads {threads}
+        """
+
+rule seasonal_flu_test_genetic_bias_refine:
+    input:
+        tree = rules.seasonal_flu_test_genetic_bias_tree.output.tree,
+        alignment = rules.seasonal_flu_test_genetic_bias_align.output,
+        metadata = "seasonal-flu-with-biased-genetic-sampling/results/filtered_metadata.tsv",
+    output:
+        tree = "seasonal-flu-with-biased-genetic-sampling/results/tree.nwk",
+        node_data = "seasonal-flu-with-biased-genetic-sampling/results/branch_lengths.json",
+    log:
+        "logs/seasonal-flu-with-biased-genetic-sampling/refine.txt",
+    params:
+        coalescent = "opt",
+        date_inference = "marginal",
+        clock_rate = 0.00382,
+        clock_std_dev = 0.000764,
+        random_seed = RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur refine \
+            --tree {input.tree} \
+            --alignment {input.alignment} \
+            --metadata {input.metadata} \
+            --output-tree {output.tree} \
+            --output-node-data {output.node_data} \
+            --timetree \
+            --use-fft \
+            --stochastic-resolve \
+            --coalescent {params.coalescent} \
+            --date-confidence \
+            --date-inference {params.date_inference} \
+            --clock-rate {params.clock_rate} \
+            --clock-std-dev {params.clock_std_dev} \
+            --seed {params.random_seed} 2>&1 | tee {log}
+        """
+
+rule seasonal_flu_test_genetic_bias_ancestral:
+    input:
+        tree = rules.seasonal_flu_test_genetic_bias_refine.output.tree,
+        alignment = rules.seasonal_flu_test_genetic_bias_align.output.alignment
+    output:
+        node_data = "seasonal-flu-with-biased-genetic-sampling/results/nt_muts.json",
+        sequences = "seasonal-flu-with-biased-genetic-sampling/results/aligned_ancestral.fasta"
+    params:
+        inference = "joint"
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur ancestral \
+            --tree {input.tree} \
+            --alignment {input.alignment} \
+            --output-node-data {output.node_data} \
+            --output-sequences {output.sequences} \
+            --inference {params.inference}
+        """
+
+rule seasonal_flu_test_genetic_bias_translate:
+    input:
+        tree = rules.seasonal_flu_test_genetic_bias_refine.output.tree,
+        node_data = rules.seasonal_flu_test_genetic_bias_ancestral.output.node_data,
+        reference = seasonal_flu_test_genetic_bias_files.reference
+    output:
+        node_data = "seasonal-flu-with-biased-genetic-sampling/results/aa_muts.json"
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur translate \
+            --tree {input.tree} \
+            --ancestral-sequences {input.node_data} \
+            --reference-sequence {input.reference} \
+            --output {output.node_data}
+        """
+
+rule seasonal_flu_test_genetic_bias_clades:
+    input:
+        tree = rules.seasonal_flu_test_genetic_bias_refine.output.tree,
+        aa_muts = rules.seasonal_flu_test_genetic_bias_translate.output.node_data,
+        nuc_muts = rules.seasonal_flu_test_genetic_bias_ancestral.output.node_data,
+        clades = seasonal_flu_test_genetic_bias_files.clades
+    output:
+        clade_data = "seasonal-flu-with-biased-genetic-sampling/results/clades.json"
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur clades --tree {input.tree} \
+            --mutations {input.nuc_muts} {input.aa_muts} \
+            --clades {input.clades} \
+            --output {output.clade_data}
+        """
+
+rule seasonal_flu_test_genetic_bias_create_distance_matrix:
+    input:
+        alignment = "seasonal-flu-with-biased-genetic-sampling/results/aligned_{ancestral}.fasta"
+    output:
+        output = "seasonal-flu-with-biased-genetic-sampling/results/distance_matrix_{ancestral}.csv"
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-distance \
+            --alignment {input.alignment} \
+            --output {output.output}
+        """
+
+rule seasonal_flu_test_genetic_bias_embed_pca:
+    input:
+        alignment="seasonal-flu-with-biased-genetic-sampling/results/aligned_{ancestral}.fasta",
+        parameters="simulations/influenza-like/no-reassortment/pca_parameters.csv",
+    output:
+        dataframe = "seasonal-flu-with-biased-genetic-sampling/results/embed_pca_{ancestral}.csv",
+        figure = "seasonal-flu-with-biased-genetic-sampling/results/embed_pca_{ancestral}.pdf",
+        explained_variance = "seasonal-flu-with-biased-genetic-sampling/results/explained_variance_pca_{ancestral}.csv"
+    params:
+        random_seed = RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-embed \
+            --alignment {input.alignment} \
+            --embedding-parameters {input.parameters} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
+            pca \
+            --explained-variance {output.explained_variance}
+        """
+
+rule seasonal_flu_test_genetic_bias_embed_mds:
+    input:
+        alignment="seasonal-flu-with-biased-genetic-sampling/results/aligned_{ancestral}.fasta",
+        distance_matrix="seasonal-flu-with-biased-genetic-sampling/results/distance_matrix_{ancestral}.csv",
+        parameters="simulations/influenza-like/no-reassortment/mds_parameters.csv",
+    output:
+        dataframe="seasonal-flu-with-biased-genetic-sampling/results/embed_mds_{ancestral}.csv",
+        figure="seasonal-flu-with-biased-genetic-sampling/results/embed_mds_{ancestral}.pdf"
+    params:
+        random_seed = RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-embed \
+            --alignment {input.alignment} \
+            --distance-matrix {input.distance_matrix} \
+            --embedding-parameters {input.parameters} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
+            mds
+        """
+
+rule seasonal_flu_test_genetic_bias_embed_tsne:
+    input:
+        alignment="seasonal-flu-with-biased-genetic-sampling/results/aligned_{ancestral}.fasta",
+        distance_matrix="seasonal-flu-with-biased-genetic-sampling/results/distance_matrix_{ancestral}.csv",
+        parameters="simulations/influenza-like/no-reassortment/t-sne_parameters.csv",
+    output:
+        dataframe = "seasonal-flu-with-biased-genetic-sampling/results/embed_t-sne_{ancestral}.csv",
+        figure = "seasonal-flu-with-biased-genetic-sampling/results/embed_t-sne_{ancestral}.pdf"
+    params:
+        random_seed = RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-embed \
+            --alignment {input.alignment} \
+            --distance-matrix {input.distance_matrix} \
+            --embedding-parameters {input.parameters} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
+            t-sne
+        """
+
+rule seasonal_flu_test_genetic_bias_embed_umap:
+    input:
+        alignment="seasonal-flu-with-biased-genetic-sampling/results/aligned_{ancestral}.fasta",
+        distance_matrix="seasonal-flu-with-biased-genetic-sampling/results/distance_matrix_{ancestral}.csv",
+        parameters="simulations/influenza-like/no-reassortment/umap_parameters.csv",
+    output:
+        dataframe = "seasonal-flu-with-biased-genetic-sampling/results/embed_umap_{ancestral}.csv",
+        figure = "seasonal-flu-with-biased-genetic-sampling/results/embed_umap_{ancestral}.pdf"
+    params:
+        random_seed = RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-embed \
+            --alignment {input.alignment} \
+            --distance-matrix {input.distance_matrix} \
+            --embedding-parameters {input.parameters} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure} \
+            umap
+        """
+
+rule seasonal_flu_test_genetic_bias_cluster_with_optimal_parameters:
+    input:
+        embedding="seasonal-flu-with-biased-genetic-sampling/results/embed_{method}_{ancestral}.csv",
+        parameters="seasonal-flu-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
+    output:
+        clustered_embedding="seasonal-flu-with-biased-genetic-sampling/results/cluster_embed_{method}_{ancestral}.csv",
+        clustered_embedding_figure="seasonal-flu-with-biased-genetic-sampling/results/cluster_embed_{method}_{ancestral}.pdf",
+    conda: "../cartography.yml"
+    params:
+        min_size=CLUSTER_MIN_SIZE,
+        min_samples=CLUSTER_MIN_SAMPLES,
+    shell:
+        """
+        pathogen-cluster \
+            --embedding {input.embedding} \
+            --label-attribute "{wildcards.method}_label" \
+            --min-size {params.min_size} \
+            --min-samples {params.min_samples} \
+            --distance-threshold "$(csvtk filter2 -f '$method=="{wildcards.method}"' {input.parameters} | csvtk cut -f distance_threshold | csvtk del-header)" \
+            --output-dataframe {output.clustered_embedding} \
+            --output-figure {output.clustered_embedding_figure}
+        """
+
+rule seasonal_flu_test_genetic_bias_create_node_output:
+    input:
+        dataframe = "seasonal-flu-with-biased-genetic-sampling/results/cluster_embed_{method}_{ancestral}.csv"
+    output:
+        node_data = "seasonal-flu-with-biased-genetic-sampling/results/cluster_embed_{method}_{ancestral}.json"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/output_node_data.py \
+            --table {input.dataframe} \
+            --output {output.node_data}
+        """
+
+rule seasonal_flu_test_genetic_bias_export:
+    input:
+        tree = rules.seasonal_flu_test_genetic_bias_refine.output.tree,
+        metadata = "seasonal-flu-with-biased-genetic-sampling/results/filtered_metadata.tsv",
+        branch_lengths = rules.seasonal_flu_test_genetic_bias_refine.output.node_data,
+        nt_muts = rules.seasonal_flu_test_genetic_bias_ancestral.output.node_data,
+        aa_muts = rules.seasonal_flu_test_genetic_bias_translate.output.node_data,
+        embeddings = expand("seasonal-flu-with-biased-genetic-sampling/results/cluster_embed_{embedding}_{ancestral}.json", embedding=EMBEDDING_METHODS, ancestral=INTERNAL_NODE),
+        auspice_config = seasonal_flu_test_genetic_bias_files.auspice_config,
+        clades = rules.seasonal_flu_test_genetic_bias_clades.output.clade_data
+    output:
+        auspice_tree = "auspice/cartography_flu-seasonal-h3n2-ha-2018-2020-with-genetic-bias.json"
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur export v2 \
+            --tree {input.tree} \
+            --metadata {input.metadata} \
+            --node-data {input.branch_lengths} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} \
+            --auspice-config {input.auspice_config} \
+            --validation-mode warn \
+            --output {output.auspice_tree}
+        """
+
+rule seasonal_flu_test_genetic_bias_tree_to_table:
+    input:
+        tree="seasonal-flu-with-biased-genetic-sampling/results/tree.nwk",
+        clades="seasonal-flu-with-biased-genetic-sampling/results/clades.json",
+        branch_lengths="seasonal-flu-with-biased-genetic-sampling/results/branch_lengths.json",
+    output:
+        table="seasonal-flu-with-biased-genetic-sampling/results/table.tsv",
+    params:
+        attributes="numdate clade_membership mutation_length divergence"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/node_data_to_table.py \
+            --tree {input.tree} \
+            --node-data {input.clades} {input.branch_lengths} \
+            --include-internal-nodes \
+            --attributes {params.attributes} \
+            --output {output.table}
+        """
+
+rule seasonal_flu_test_genetic_bias_create_distance_dataframe:
+    input:
+        dataframe_pca = "seasonal-flu-with-biased-genetic-sampling/results/cluster_embed_pca_sequences.csv",
+        dataframe_mds = "seasonal-flu-with-biased-genetic-sampling/results/cluster_embed_mds_sequences.csv",
+        dataframe_tsne = "seasonal-flu-with-biased-genetic-sampling/results/cluster_embed_t-sne_sequences.csv",
+        dataframe_umap = "seasonal-flu-with-biased-genetic-sampling/results/cluster_embed_umap_sequences.csv",
+    output:
+        metadata = "seasonal-flu-with-biased-genetic-sampling/results/embedding_data.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/make_table.py \
+            --tables {input} \
+            --separator ',' \
+            --output {output.metadata}
+        """
+
+rule seasonal_flu_test_genetic_bias_annotate_embeddings:
+    input:
+        left="seasonal-flu-with-biased-genetic-sampling/results/table.tsv",
+        right="seasonal-flu-with-biased-genetic-sampling/results/embedding_data.csv",
+    output:
+        table="seasonal-flu-with-biased-genetic-sampling/results/annotated_embeddings.tsv",
+    conda: "../cartography.yml"
+    params:
+        join_on="strain",
+        join_type="left",
+    shell:
+        """
+        python3 notebooks/scripts/join_tables.py \
+            --left {input.left} \
+            --right {input.right} \
+            --on {params.join_on} \
+            --join-type {params.join_type} \
+            --output {output.table}
+        """
+
+rule seasonal_flu_test_genetic_bias_get_table_of_tips:
+    input:
+        metadata="seasonal-flu-with-biased-genetic-sampling/results/table.tsv",
+    output:
+        metadata="seasonal-flu-with-biased-genetic-sampling/results/table_of_tips.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk filter2 -t -f '$is_internal_node=="False"' {input.metadata} > {output.metadata}
+        """
+
+rule seasonal_flu_test_genetic_bias_cluster_accuracy:
+    input:
+        metadata = "seasonal-flu-with-biased-genetic-sampling/results/table_of_tips.tsv",
+        embedding = "seasonal-flu-with-biased-genetic-sampling/results/cluster_embed_{method}_sequences.csv",
+    output:
+        dataframe = "seasonal-flu-with-biased-genetic-sampling/results/cluster_accuracy_{method}.csv",
+    conda: "../cartography.yml"
+    params:
+        clade_column="clade_membership",
+    shell:
+        """
+        python3 notebooks/scripts/metadata_HDBSCAN.py \
+            --method {wildcards.method} \
+            --true-clusters {input.metadata} \
+            --true-clusters-column {params.clade_column:q} \
+            --predicted-clusters {input.embedding} \
+            --predicted-clusters-column "{wildcards.method}_label" \
+            --output {output.dataframe}
+        """
+
+rule seasonal_flu_test_genetic_bias_concat_HDBSCAN_table:
+    input:
+        accuracies=expand("seasonal-flu-with-biased-genetic-sampling/results/cluster_accuracy_{method}.csv", method=EMBEDDING_METHODS)
+    output:
+        metadata = "seasonal-flu-with-biased-genetic-sampling/results/full_HDBSCAN_metadata.csv"
+    params:
+        column = "normalized_vi",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.accuracies} \
+            --separator ',' \
+            --sort-by {params.column} \
+            --output {output.metadata}
+        """
+
+rule seasonal_flu_test_genetic_bias_scatterplot:
+    input:
+        distance_matrix="seasonal-flu-with-biased-genetic-sampling/results/distance_matrix_sequences.csv",
+        embedding="seasonal-flu-with-biased-genetic-sampling/results/embed_{method}_sequences.csv",
+        method_parameters="simulations/influenza-like/no-reassortment/{method}_parameters.csv",
+    output:
+        figure = "seasonal-flu-with-biased-genetic-sampling/results/scatterplot_{method}.png",
+        dataframe = "seasonal-flu-with-biased-genetic-sampling/results/scatterplot_{method}.csv",
+        metadata = "seasonal-flu-with-biased-genetic-sampling/results/scatterplot_{method}_metadata.csv"
+    params:
+        bootstrap = 100,
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/scatterplot.py \
+            --distance {input.distance_matrix} \
+            --embedding {input.embedding} \
+            --method {wildcards.method} \
+            --method-parameters {input.method_parameters} \
+            --bootstrapping-sample {params.bootstrap} \
+            --output-figure {output.figure} \
+            --output-dataframe {output.dataframe} \
+            --output-metadata {output.metadata}
+        """
+
+rule seasonal_flu_test_genetic_bias_concat_scatterplot_table:
+    input:
+       dataframe_pca = "seasonal-flu-with-biased-genetic-sampling/results/scatterplot_pca_metadata.csv",
+       dataframe_mds = "seasonal-flu-with-biased-genetic-sampling/results/scatterplot_mds_metadata.csv",
+       dataframe_tsne = "seasonal-flu-with-biased-genetic-sampling/results/scatterplot_t-sne_metadata.csv",
+       dataframe_umap = "seasonal-flu-with-biased-genetic-sampling/results/scatterplot_umap_metadata.csv"
+    output:
+        metadata = "seasonal-flu-with-biased-genetic-sampling/results/full_Scatterplot_metadata.csv"
+    params:
+        column = "pearson_coef",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.dataframe_pca} {input.dataframe_mds} {input.dataframe_tsne} {input.dataframe_umap} \
+            --separator ',' \
+            --sort-by {params.column} \
+            --output {output.metadata}
+        """
+
+rule seasonal_flu_test_genetic_bias_create_scatterplot_figure:
+    input:
+        scatterplot_metadata="seasonal-flu-with-biased-genetic-sampling/results/full_Scatterplot_metadata.csv",
+        scatterplot_pca = "seasonal-flu-with-biased-genetic-sampling/results/scatterplot_pca.csv",
+        scatterplot_mds = "seasonal-flu-with-biased-genetic-sampling/results/scatterplot_mds.csv",
+        scatterplot_tsne = "seasonal-flu-with-biased-genetic-sampling/results/scatterplot_t-sne.csv",
+        scatterplot_umap = "seasonal-flu-with-biased-genetic-sampling/results/scatterplot_umap.csv",
+    output:
+        scatterplot = "manuscript/figures/flu-2018-2020-ha-with-genetic-bias-euclidean-distance-by-genetic-distance.png",
+    conda: "../cartography.yml"
+    notebook:
+        "../notebooks/2022-09-26-scatterplot-figure.py.ipynb"

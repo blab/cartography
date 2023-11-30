@@ -73,6 +73,7 @@ rule all:
 include: "simulations/Snakefile"
 include: "seasonal-flu-nextstrain/Snakefile"
 include: "seasonal-flu-nextstrain-2018-2020/Snakefile"
+include: "seasonal-flu-with-biased-genetic-sampling/Snakefile"
 include: "ha-na-nextstrain/Snakefile"
 include: "sars-cov-2-nextstrain/Snakefile"
 include: "sars-cov-2-nextstrain-2022-2023/Snakefile"
@@ -81,6 +82,7 @@ rule pathogens:
     input:
         *rules.seasonal_flu_training.input,
         *rules.seasonal_flu_test.input,
+        *rules.seasonal_flu_test_genetic_bias.input,
         *rules.seasonal_flu_reassortment.input,
         *rules.sarscov2.input,
         *rules.sarscov2_test.input,
