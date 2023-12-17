@@ -235,12 +235,12 @@ John Huddleston\textsuperscript{2*}
 \jhc{285 words, limit is 300}
 Public health studies commonly infer phylogenies from viral genome sequences to understand transmission dynamics and identify clusters of genetically-related samples.
 However, viruses that reassort or recombine violate phylogenetic assumptions and require more sophisticated methods.
-Even when phylogenies are appropriate, they can be unnecessary.
+Even when phylogenies are appropriate, they can be unnecessary, or difficult to interpret without specialty knowledge.
 For example, pairwise distances between sequences can be enough to identify clusters of related samples or assign new samples to existing phylogenetic clusters.
 In this work, we tested whether dimensionality reduction methods could capture known genetic groups within two human pathogenic viruses that cause substantial human morbidity and mortality and frequently reassort or recombine, respectively: seasonal influenza A/H3N2 and SARS-CoV-2.
 We applied principal component analysis (PCA), multidimensional scaling (MDS), t-distributed stochastic neighbor embedding (t-SNE), and uniform manifold approximation and projection (UMAP) to sequences with well-defined phylogenetic clades and either reassortment (H3N2) or recombination (SARS-CoV-2).
 For each low-dimensional embedding of sequences, we calculated the correlation between pairwise genetic and Euclidean distances in the embedding and applied a hierarchical clustering method to identify clusters in the embedding.
-We measured the accuracy of these clusters compared to previously defined phylogenetic clades, reassortment clusters, or recombinant lineages.
+We measured the accuracy of cluster definition compared to previously defined phylogenetic clades, reassortment clusters, or recombinant lineages.
 We found that MDS maintained the strongest correlation between pairwise genetic and Euclidean distances between sequences, best captured the intermediate placement of recombinant lineages between parental lineages, and most accurately identified reassortment groups.
 Clusters from t-SNE most accurately recapitulated known phylogenetic clades.
 We show that simple statistical methods without a biological model can accurately represent known genetic relationships for relevant human pathogenic viruses.
@@ -259,13 +259,13 @@ TBD.
 
 Tracking the evolution of human pathogenic viruses in real time enables epidemiologists to respond quickly to emerging epidemics and local outbreaks \cite{Grubaugh2019}.
 Real-time analyses of viral evolution typically rely on phylogenetic methods that can reconstruct the evolutionary history of viral populations from their genome sequences and estimate states of inferred ancestral viruses from the resulting trees including their most likely genome sequence, time of circulation, and geographic location \cite{Volz2013,Baele2017,Sagulenko2018}.
-Importantly, these methods assume that all sequence data share an evolutionary history represented by the clonal replication of genomes.
+Importantly, these methods assume that the sequence diversity of sampled tips accrued through clonal evolution, that is, the occurrence of mutations on top of an inherited genomic backdrop, that is further inherited by descendent pathogens.
 In practice, the evolutionary histories of many human pathogenic viruses violate this assumption through processes of reassortment or recombination, as seen in seasonal influenza \cite{Nelson2008,Marshall2013} and seasonal coronaviruses \cite{Su2016}, respectively.
 Researchers account for these evolutionary mechanisms by limiting their analyses to individual genes \cite{Lemey2007,Bhatt2011}, combining multiple genes despite their different evolutionary histories \cite{Wiens1998}, or developing more sophisticated models to represent the joint likelihoods of multiple co-evolving lineages with ancestral reassortment or recombination graphs \cite{Barrat-Charlaix2022,Muller2022}.
-However, several key questions in genomic epidemiology do not require full phylogenetic inference of ancestral relationships and states.
+However, several key questions in genomic epidemiology do not require inference of ancestral relationships and states, and therefore may be amenable to non-phylogenetic approaches for summarizing genetic relationships.
 For example, genomic epidemiologists commonly need to 1) identify clusters of closely-related genomes that represent regional outbreaks or new variants of concern \cite{OToole2022,McBroome2022,Stoddard2022,Tran-Kiem2023}, 2) place newly sequenced viral genomes in the evolutionary context of other circulating samples \cite{OToole2021,Turakhia2021,Aksamentov2021}, and 3) visualize the genetic relationships among closely related virus samples \cite{Argimon2016,Campbell2021}.
 Given that these common use cases rely on genetic distances between samples, tree-free statistical methods that operate on pairwise distances could be sufficient to address each case.
-As these tree-free methods lack a formal biological model of evolutionary relationships, they make weak assumptions about the input data and therefore should be applicable to pathogen genomes that violate phylogenetic assumptions.
+As these tree-free methods lack a formal biological model of evolutionary relationships, they make weak assumptions about the input data and therefore should be applicable to pathogen genomes that violate phylogenetic assumptions. Furthermore, methods that describe pathogen genetic relationships with cluster-based visualizations may feel more familiar to public health practitioners, and therefore more easily applied for public health action.
 
 Common statistical approaches to analyzing variation from genome alignments start by transforming alignments into a matrix that codes each distinct nucleotide character as an integer or a distance matrix representing the pairwise distances between sequences.
 The first of these transformations is the first step prior to performing a principal component analysis (PCA) to find orthogonal representations of the inputs that explain the most variance \cite{jolliffe_cadima_2016}.
@@ -912,25 +912,25 @@ We applied four standard dimensionality reduction methods to simulated and natur
 From our analysis of simulated influenza- and coronavirus-like sequences, we found that each method produced consistent embeddings of genetic sequences for two distinct pathogens, more than 55 years of evolution, and a wide range of practical method parameters.
 These results suggest that researchers could apply these biologically-uninformed methods to a broad range of human pathogenic viruses with minimal tuning of the method parameters.
 Of the four methods, MDS most accurately reflected pairwise genetic distances between simulated samples in its embeddings.
-From our analysis of natural populations of seasonal influenza H3N2 HA and SARS-CoV-2 sequences, we confirmed that MDS most reliably reflected pairwise genetic distances and we found that clusters from t-SNE embeddings most accurately recapitulated previously defined genetic groups at the resolution of WHO and Nextstrain clades.
+From our analysis of natural populations of seasonal influenza H3N2 HA and SARS-CoV-2 sequences, we confirmed that MDS most reliably reflected pairwise genetic distances. We found that clusters from t-SNE embeddings most accurately recapitulated previously defined genetic groups at the resolution of WHO and Nextstrain clades. These differences highlight that embedding selection should be informed by the question under investigation. Notably, in some applications the amount of genetic distance separating samples provides important proxy information about epidemiologic dynamics. In such cases, an embedding such as MDS that not only clusters similar samples, but meaningfully communicates the relative difference between clusters, may be most appropriate. In other scenarios, the clear assignment of samples into high-level, easily differentiable groups may be the primary task, and an embedding such as t-SNE may be preferable.
 Clusters from both MDS and t-SNE embeddings of H3N2 HA and NA sequences accurately matched reassortment clades identified by a biologically-informed model based on ancestral reassortment graphs.
 MDS embeddings consistently placed known recombinant lineages of SARS-CoV-2 between their parental lineages.
-From these results, we conclude that tree-free dimensionality reduction methods can provide valuable biological insights for human pathogenic viruses through easily interpretable visualizations of genetic relationships and the ability to account for genetic variation that phylogenetic methods cannot including indels, reassortment, and recombination.
+From these results, we conclude that tree-free dimensionality reduction methods can provide valuable biological insights for human pathogenic viruses through easily interpretable visualizations of genetic relationships and the ability to account for genetic variation that phylogenetic methods cannot use, including indels, reassortment, and recombination.
 
 % Limitations of methods and analysis
 Despite the promise of these simple methods to answer important public health questions about human pathogenic viruses, these methods and our analyses suffer from inherent limitations.
 The lack of an underlying biological model is both a strength and the clearest limitation of the dimensionality reduction methods we considered here.
 For example, embeddings of SARS-CoV-2 genomes cannot capture the same fine-grained genetic resolution as Pangolin lineage annotations.
 Each method provides only a few parameters to tune its embeddings and these parameters have little effect on the qualitative outcome.
-Each method also suffers from specific issues in our analysis.
+Each method also suffers from specific issues explored in our analyses.
 PCA performs poorly with missing data and requires researchers to either ignore columns with missing values or impute the missing values prior to analysis, as previously shown for Zika virus \cite{metsky_2017}.
 Neither t-SNE nor UMAP maintain a linear relationship between pairwise Euclidean and genetic distances across the observed range of genetic distances.
 As a result, viewers cannot know that samples mapping far apart in a t-SNE or UMAP embedding are as genetically distant as they appear.
 In maintaining a linear relationship between Euclidean and genetic distances, MDS sacrifices the ability to form more accurate genetic clusters for viruses with large genomes like SARS-CoV-2.
 Given these limitations of these methods, we do not expect them to replace biologically-informed methods that provide more meaningful parameters to tune their algorithms.
-Instead, we expect that researchers can use these methods for rapid visualization and clustering of their genome sequences as the first step prior to analysis with more sophisticated and computationally intensive algorithms.
+Instead, we expect that researchers can use these methods for rapid visualization and clustering of their genome sequences as the first step prior to analysis with more sophisticated and computationally intensive inferential procedures.
 
-We note that our analysis reflects a small subset of human pathogen viruses and dimensionality reduction methods.
+We note that our analysis reflects a small subset of human pathogenic viruses and dimensionality reduction methods.
 We focused on analysis of two respiratory RNA viruses that contribute dramatically to seasonal human morbidity and mortality, but numerous alternative pathogens would also have been relevant subjects.
 For example, HIV represents a canonical example of a highly recombinant and bloodborne virus, while Zika, dengue, and West Nile viruses represent pathogens with multiple host species in a transmission chain.
 Similarly, we selected only four dimensionality reduction methods from myriad options that are commonly applied to genetic data \cite{Armstrong2022}.
@@ -947,7 +947,7 @@ In the long term, we expect researchers will benefit from expanding the breadth 
 \section*{Conclusion}
 
 We showed that simple dimensionality reduction methods operating on pairwise genetic differences can capture biologically-relevant clusters of phylogenetic clades, reassortment events, and patterns of recombining lineages for human pathogenic viruses.
-The conceptual and practical simplicity of these tools should enable researchers to more readily visualize and compare samples for human pathogenic viruses when phylogenetic methods are either unnecessary or inappropriate.
+The conceptual and practical simplicity of these tools should enable researchers and public health practitioners to more readily visualize and compare samples for human pathogenic viruses when phylogenetic methods are either unnecessary or inappropriate.
 
 \section*{Supporting information}
 
