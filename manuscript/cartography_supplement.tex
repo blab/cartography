@@ -314,21 +314,21 @@ John Huddleston\textsuperscript{2*}
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/sarscov2-embeddings-by-Nextclade_pango_collapsed-clade.png}
 \caption*{{\bf S15 Fig. Phylogeny of early (2020--2022) SARS-CoV-2 sequences plotted by number of nucleotide substitutions from the most recent common ancestor on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
-  Tips in the tree and embeddings are colored by their collapsed Pango lineage assignment.
+  Tips in the tree and embeddings are colored by their Pango lineage assignment.
 }
 \end{figure}
 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/within_between_sars.png}
-\caption*{{\bf S16 Fig. Pairwise nucleotide distances for early (2020-2022) and late (2022-2023) SARS-CoV-2 sequences within and between genetic groups defined by Nextstrain clades, collapsed Pango lineages, and clusters from PCA, MDS, t-SNE, and UMAP embeddings.}}
+\caption*{{\bf S16 Fig. Pairwise nucleotide distances for early (2020-2022) and late (2022-2023) SARS-CoV-2 sequences within and between genetic groups defined by Nextstrain clades, Pango lineages, and clusters from PCA, MDS, t-SNE, and UMAP embeddings.}}
 \end{figure}
 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/sarscov2-embeddings-by-cluster-vs-Nextclade_pango_collapsed.png}
 \caption*{{\bf S17 Fig. Phylogenetic trees (left) and embeddings (right) of early (2020--2022) SARS-CoV-2 sequences colored by HDBSCAN cluster.}
-  Normalized VI values per embedding reflect the distance between clusters and known genetic groups (collapsed Pango lineages).
+  Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Pango lineages).
 }
 \end{figure}
 
@@ -342,7 +342,7 @@ John Huddleston\textsuperscript{2*}
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/sarscov2-test-embeddings-by-cluster-vs-Nextclade_pango_collapsed.png}
 \caption*{{\bf S19 Fig. Phylogenetic trees (left) and embeddings (right) of late (2022--2023) SARS-CoV-2 sequences colored by HDBSCAN cluster.}
-  Normalized VI values per embedding reflect the distance between clusters and known genetic groups (collapsed Pango lineages).
+  Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Pango lineages).
 }
 \end{figure}
 
@@ -353,7 +353,8 @@ John Huddleston\textsuperscript{2*}
 \caption*{
   {\bf S2 Table. Average Euclidean distances between each known recombinant, $X$, and its parental lineages $A$ and $B$ per embedding method.}
   Distances include average pairwise comparisons between $A$ and $B$, $A$ and $X$, and $B$ and $X$.
-  Additional columns indicate whether each recombinant lineage maps closer to both parental lineages (or at least one) than those parents map to each other.}
+  Additional columns indicate whether each recombinant lineage maps closer to both parental lineages (or at least one) than those parents map to each other.
+  Pango lineages for this analysis were the original lineages assigned to each sample by Nextclade and used during subsampling and were not the collapsed Pango lineages used in elsewhere in this study.}
 \scalebox{0.5}{
   \input{tables/sars-cov-2-recombinant-distances.tex}
 }
