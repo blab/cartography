@@ -49,7 +49,7 @@ rule concat_HDBSCAN_tables:
         fullKDE = "manuscript/tables/total_HDBSCAN_table.csv",
         table = "manuscript/tables/accuracy_table.tex",
     params:
-        disease_names = ["Influenza H3N2", "SARS-CoV-2 (Nextstrain clade)", "SARS-CoV-2 (Nextclade pango)"],
+        disease_names = ["Influenza H3N2", "SARS-CoV-2 (Nextstrain clade)", "SARS-CoV-2 (Pango)"],
     conda: "../cartography.yml"
     shell:
         """
