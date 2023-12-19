@@ -1,6 +1,7 @@
 rule manuscript:
     input:
         "manuscript/cartography.pdf",
+        "manuscript/cartography_supplement.pdf",
 
 rule within_between_stats:
     input:
@@ -115,6 +116,7 @@ rule manuscript_pdf:
         accessions_and_authors_table="manuscript/tables/accessions_and_authors.tsv",
     output:
         manuscript = "manuscript/cartography.pdf",
+        supplement = "manuscript/cartography_supplement.pdf",
     conda: "../cartography.yml"
     shell:
         """
