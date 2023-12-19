@@ -373,7 +373,7 @@ For analyses that combined H3N2 HA and NA data, we defined a single dataset betw
 For SARS-CoV-2 data, we defined the early dataset between January 1, 2020 and January 1, 2022 and the late dataset between January 1, 2022 and November 3, 2023.
 For the early dataset, we evenly sampled 1,736 SARS-CoV-2 genomes by geographic region, year, and month, excluding known outliers.
 For the late dataset, we used the same even sampling by space and time to select 1,309 representative genomes.
-In addition to these genomes, we sampled at most 20 genomes per Nextclade pango lineage for 10 known recombinant lineages (XAY, XBB, XBB.1, XBC, XBF, XBL, XC, XD, XE, XF, and XG) and their corresponding parental lineages (AY.29, AY.4, AY.45, B.1.1.7, B.1.617, BA.1, BA.2, BA.2.75, BA.4, BA.5, BA.5.2.3, BJ.1, BM.1.1.1, and CJ.1) as defined by \href{https://libguides.mskcc.org/SARS2/recombination}{https://libguides.mskcc.org/SARS2/recombination}.
+In addition to these genomes, we sampled at most 20 genomes per Pango lineage for 10 known recombinant lineages (XAY, XBB, XBB.1, XBC, XBF, XBL, XC, XD, XE, XF, and XG) and their corresponding parental lineages (AY.29, AY.4, AY.45, B.1.1.7, B.1.617, BA.1, BA.2, BA.2.75, BA.4, BA.5, BA.5.2.3, BJ.1, BM.1.1.1, and CJ.1) as defined by \href{https://libguides.mskcc.org/SARS2/recombination}{https://libguides.mskcc.org/SARS2/recombination}.
 \jhc{At this point, we haven't defined ``Pango lineages'' yet, but I don't know that it makes sense to define lineages in this section. Curious what other people think.}
 With these additional genomes, the late SARS-CoV-2 dataset included 1,668 total genomes.
 
@@ -408,16 +408,15 @@ We rooted the resulting trees on the same sample that we used as an alignment re
 We applied TreeKnit to the rooted HA and NA trees with a gamma value of 2.0 and the `--better-MCCs` flag, as previously recommended for H3N2 analyses \cite{Barrat-Charlaix2022}.
 Finally, we filtered the MCCs identified by TreeKnit to retain only those with at least 10 samples and to omit the root MCC that represented the most recent common ancestor in both HA and NA trees.
 
-For SARS-CoV-2, we used both expert-defined ``Nextstrain clades'' \cite{Hodcroft2020,Bedford2021,Roemer2022} and computationally-defined Pangolin lineages \cite{OToole2021} provided by Nextclade as ``Nextclade pango'' annotations.
+For SARS-CoV-2, we used both coarser ``Nextstrain clades'' \cite{Hodcroft2020,Bedford2021,Roemer2022} and more granular Pango lineages \cite{OToole2021} provided by Nextclade as ``Nextclade pango'' annotations.
 Nextstrain clade definitions represent the World Health Organization's variants of concern and other phylogenetic clades that have reached minimum global and regional frequencies and growth rates.
-Pangolin lineages represent a combination of lineages assigned by a machine learning model (\href{https://cov-lineages.org/resources/pangolin/pangolearn.html}{pangoLEARN}) and expert-curated lineages (\href{https://github.com/cov-lineages/pango-designation}{https://github.com/cov-lineages/pango-designation}) and must contain at least 5 samples with an unambiguous evolutionary event.
-As such, Nextstrain clades represent a much coarser genetic resolution than Pangolin lineages.
-Additionally, Pangolin lineages produced by recombination receive a lineage name prefixed by an ``X'', while Nextstrain clades do not explicitly reflect recombination events.
+Pango lineages represent expert-curated lineages (\href{https://github.com/cov-lineages/pango-designation}{https://github.com/cov-lineages/pango-designation}) and must contain at least 5 samples with an unambiguous evolutionary event.
+Additionally, Pango lineages produced by recombination receive a lineage name prefixed by an ``X'', while Nextstrain clades do not explicitly reflect recombination events.
 
-Since Pangolin lineages can represent much smaller genetic groups than are practically useful, we collapsed lineages with fewer than 10 samples in our analysis into their parental lineages using the pango\_aliasor tool (\href{https://github.com/corneliusroemer/pango_aliasor}{https://github.com/corneliusroemer/pango\_aliasor}).
+Since Pango lineages can represent much smaller genetic groups than are practically useful, we collapsed lineages with fewer than 10 samples in our analysis into their parental lineages using the pango\_aliasor tool (\href{https://github.com/corneliusroemer/pango_aliasor}{https://github.com/corneliusroemer/pango\_aliasor}).
 Specifically, we counted the number of samples per lineage, sorted lineages in ascending order by count, and collapsed each lineage with a count less than 10 into its parental lineage in the count-sorted order.
 This approach allowed small lineages to aggregate with other small parental lineages and meet the 10-sample threshold.
-We used these ``collapsed Nextclade pango'' lineages for subsequent analyses.
+We used these ``collapsed Nextclade Pango'' lineages for subsequent analyses.
 
 \subsection*{Clustering of samples in embeddings}
 
@@ -437,7 +436,7 @@ When two sets of clusters are identical, VI equals 0.
 When the sets are maximally different, VI is $\log{N}$ where $N$ is the total number of samples.
 To make VI values comparable across datasets, we normalized each value by dividing by $\log{N}$, following the pattern used to validate TreeKnit's MCCs \cite{Barrat-Charlaix2022}.
 Unlike other standard metrics like accuracy, sensitivity, or specificity, VI distances do not favor methods that tend to produce more, smaller clusters.
-For each virus dataset and embedding method, we identified the distance threshold that minimized the normalized VI between HDBSCAN clusters and genetic groups defined by experts or biologically-informed models (``Nextstrain clade'' for seasonal influenza and both ``Nextstrain clade'' and ``collapsed Nextclade pango lineage'' for SARS-CoV-2).
+For each virus dataset and embedding method, we identified the distance threshold that minimized the normalized VI between HDBSCAN clusters and genetic groups defined by experts or biologically-informed models (``Nextstrain clade'' for seasonal influenza and both ``Nextstrain clade'' and ``collapsed Pango lineage'' for SARS-CoV-2).
 HDBSCAN allows samples to not belong to a cluster and assigns these samples a numeric label of -1.
 We intentionally included all unassigned samples in the normalized VI calculation thereby penalizing cluster parameters that increased the number of unassigned samples by increasing their VI values.
 Finally, we used these optimal distance thresholds to identify clusters in out-of-sample data from the late datasets for both viruses and calculate the normalized VI between those clusters and previously defined genetic groups.
@@ -472,7 +471,7 @@ Given that we optimized each method's parameters to maximize a linear relationsh
 For a recombinant lineage $X$ and its parental lineages $A$ and $B$, we calculated the average pairwise Euclidean distance, $D$, between samples in $A$ and $B$, $A$ and $X$, and $B$ and $X$.
 We identified lineages that mapped properly as those for which $D(A, X) < D(A, B)$ and $D(B, X) < D(A, B)$.
 We also identified lineages for which the recombinant lineage placed closer to at least one parent than the distance between the parents.
-Note that we used the original uncollapsed ``Nextclade pango'' annotations to identify samples in each lineage, as these were the lineage names used to include recombinant samples in the analysis and define known relationships between recombinant and parental lineages.
+Note that we used the original uncollapsed Pango annotations to identify samples in each lineage, as these were the lineage names used to include recombinant samples in the analysis and define known relationships between recombinant and parental lineages.
 
 \subsection*{Data and software availability}
 
@@ -750,17 +749,17 @@ These results suggest that a single embedding of multiple gene segments could id
 
 SARS-CoV-2 poses a greater challenge to embedding methods than seasonal influenza, with an unsegmented genome an order of magnitude longer than influenza's HA or NA \cite{Zhu2020}, a mutation rate in the spike surface protein subunit S1 that is four times higher than influenza H3N2's HA rate \cite{Kistler2022}, and increasingly common recombination \cite{Focosi2022,Turakhia2022}.
 However, multiple expert- and model-based clade definitions exist for SARS-CoV-2, enabling comparison between clusters from embeddings and known genetic groups.
-These definitions span from broad genetic groups named by the WHO as ``variants of concern'' (e.g., ``Alpha'', ``Beta'', etc.) \cite{Konings2021} or systematically defined by the Nextstrain team \cite{Hodcroft2020,Bedford2021,Roemer2022} to smaller, emerging genetic clusters defined by Pangolin \cite{OToole2021}.
-As with seasonal influenza, we defined an early SARS-CoV-2 dataset spanning from January 2020 to January 2022, embedded genomes with the same four methods, and identified HDBSCAN clustering parameters that minimized the VI distance between embedding clusters and previously defined genetic groups as defined by Nextstrain clades and collapsed ``Nextclade pango'' lineages (see Methods).
+These definitions span from broad genetic groups named by the WHO as ``variants of concern'' (e.g., ``Alpha'', ``Beta'', etc.) \cite{Konings2021} or systematically defined by the Nextstrain team \cite{Hodcroft2020,Bedford2021,Roemer2022} to smaller, emerging genetic clusters defined by Pango curators \cite{OToole2021}.
+As with seasonal influenza, we defined an early SARS-CoV-2 dataset spanning from January 2020 to January 2022, embedded genomes with the same four methods, and identified HDBSCAN clustering parameters that minimized the VI distance between embedding clusters and previously defined genetic groups as defined by Nextstrain clades and collapsed Pango lineages (see Methods).
 Using these optimal cluster parameters, we produced clusters from embeddings of a late SARS-CoV-2 dataset spanning from January 2022 to November 2023 and calculated the VI distance between those clusters and known genetic groups.
 
-The early SARS-CoV-2 dataset represented 24 Nextstrain clades and 35 collapsed Nextclade pango lineages.
+The early SARS-CoV-2 dataset represented 24 Nextstrain clades and 35 collapsed Pango lineages.
 All embedding methods placed samples from the same Nextstrain clades closer together and closely related Nextstrain clades near each other (Fig.~\ref{fig:sars-cov-2-early-embeddings-by-Nextstrain-clade}).
 For example, the most genetically distinct clades like 21J (Delta) and 21K (Omicron) placed farthest from other clades, while all Delta clades (21A, 21I, and 21J) placed close together (Fig.~\ref{fig:sars-cov-2-early-embeddings-by-Nextstrain-clade}, \nameref{S_Fig_sarscov2_early_mds}).
 As we saw with embeddings of H3N2 HA sequences, MDS placed related clades closer together on a continuous scale, while PCA, t-SNE, and UMAP produced more clearly separate groups of samples.
-When we compared embedding clusters to Nextclade pango lineages, we did not observe the same clear grouping as we did with Nextstrain clades.
-For example, the Nextstrain clade 21J (Delta) contained 11 pango lineages that all appeared to map into the same overlapping space in all four embeddings (\nameref{S_Fig_sarscov2_early_embeddings_by_Nextclade_pango}).
-These results suggest that distance-based embedding methods can recapitulate broader genetic groups of SARS-CoV-2, but that these methods lack the resolution of finer groups defined by Pangolin.
+When we compared embedding clusters to Pango lineages, we did not observe the same clear grouping as we did with Nextstrain clades.
+For example, the Nextstrain clade 21J (Delta) contained 11 Pango lineages that all appeared to map into the same overlapping space in all four embeddings (\nameref{S_Fig_sarscov2_early_embeddings_by_Nextclade_pango}).
+These results suggest that distance-based embedding methods can recapitulate broader genetic groups of SARS-CoV-2, but that these methods lack the resolution of finer groups defined by Pango nomenclature.
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/sarscov2-embeddings-by-Nextstrain_clade-clade.png}
@@ -780,7 +779,7 @@ These results suggest that distance-based embedding methods can recapitulate bro
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/sarscov2-embeddings-by-Nextclade_pango_collapsed-clade.png}
 \caption*{{\bf S15 Fig. Phylogeny of early (2020--2022) SARS-CoV-2 sequences plotted by number of nucleotide substitutions from the most recent common ancestor on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
-  Tips in the tree and embeddings are colored by their collapsed Nextclade pango lineage assignment.
+  Tips in the tree and embeddings are colored by their collapsed Pango lineage assignment.
 }
 \end{figure}
 
@@ -802,7 +801,7 @@ The corresponding relationship for UMAP only remained consistent up to a genetic
 \end{figure}
 
 We identified clusters in embeddings from early SARS-CoV-2 data using cluster parameters that minimized the normalized VI distance between clusters and known genetic groups.
-Since Nextstrain clades and Nextclade pango lineages represented different resolutions of genetic diversity, we identified separate optimal parameters for clusters compared to each of these known genetic groups.
+Since Nextstrain clades and Pango lineages represented different resolutions of genetic diversity, we identified separate optimal parameters for clusters compared to each of these known genetic groups.
 When comparing clusters to Nextstrain clades, the t-SNE embedding produced the most accurate clusters with a normalized VI of 0.07 (N=19 clusters, minimum distance of 1.0) (Fig.~\ref{fig:sars-cov-2-2020-2022-clusters-vs-Nextstrain-clade}, Table~\ref{table:accuracy}).
 MDS and UMAP produced similarly accurate clusters with normalized VIs of 0.15 (N=16) and 0.16 (N=6) at minimum distances of 0 and 0.5, respectively.
 PCA produced the least accurate clusters with a normalized VI of 0.22 (N=4, minimum distance of 0.5).
@@ -820,28 +819,28 @@ Clusters from t-SNE produced within-group genetic distances that were most simil
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/within_between_sars.png}
-\caption*{{\bf S16 Fig. Pairwise nucleotide distances for early (2020-2022) and late (2022-2023) SARS-CoV-2 sequences within and between genetic groups defined by Nextstrain clades, collapsed Nextclade pango lineages, and clusters from PCA, MDS, t-SNE, and UMAP embeddings.}}
+\caption*{{\bf S16 Fig. Pairwise nucleotide distances for early (2020-2022) and late (2022-2023) SARS-CoV-2 sequences within and between genetic groups defined by Nextstrain clades, collapsed Pango lineages, and clusters from PCA, MDS, t-SNE, and UMAP embeddings.}}
 \end{figure}
 
-When comparing clusters to Nextclade pango lineages, all four methods produced less accurate clusters (\nameref{S_Fig_sarscov2_early_embeddings_by_cluster_vs_Nextclade_pango}).
+When comparing clusters to Pango lineages, all four methods produced less accurate clusters (\nameref{S_Fig_sarscov2_early_embeddings_by_cluster_vs_Nextclade_pango}).
 Clusters from t-SNE were the most accurate with a VI of 0.12.
 MDS and UMAP clusters performed similarly with VIs of 0.23 and 0.25.
 PCA clusters remained the least accurate with a VI of 0.31.
-The optimal minimum distances for all four methods remained the same with Nextclade pango lineages as when trained with Nextstrain clades.
-These results confirm quantitatively that these embeddings methods can accurately capture broader genetic diversity of SARS-CoV-2, but most methods cannot distinguish between fine resolution genetic groups identified by Pangolin.
-However, we observed greater pairwise genetic distances within collapsed Nextclade pango lineages than within Nextstrain clades, suggesting that Pangolin lineages were not as tightly scoped as we originally expected (\nameref{S_Fig_sarscov2_within_between_group_distances}).
+The optimal minimum distances for all four methods remained the same with Pango lineages as when trained with Nextstrain clades.
+These results confirm quantitatively that these embeddings methods can accurately capture broader genetic diversity of SARS-CoV-2, but most methods cannot distinguish between fine resolution genetic groups defined by Pango lineage nomenclature.
+However, we observed greater pairwise genetic distances within collapsed Pango lineages than within Nextstrain clades, suggesting that Pango lineages were not as tightly scoped as we originally expected (\nameref{S_Fig_sarscov2_within_between_group_distances}).
 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/sarscov2-embeddings-by-cluster-vs-Nextclade_pango_collapsed.png}
 \caption*{{\bf S17 Fig. Phylogenetic trees (left) and embeddings (right) of early (2020--2022) SARS-CoV-2 sequences colored by HDBSCAN cluster.}
-  Normalized VI values per embedding reflect the distance between clusters and known genetic groups (collapsed Nextclade pango lineages).
+  Normalized VI values per embedding reflect the distance between clusters and known genetic groups (collapsed Pango lineages).
 }
 \end{figure}
 
 To test the optimal cluster parameters identified above, we applied embedding methods to late SARS-CoV-2 data and compared clusters from these embeddings to known genetic groups.
 Of the 17 Nextstrain clades defined during this time period, 14 (82\%) descended from Omicron and represented 1,495 (90\%) of all samples in the dataset.
-Of the 51 Nextclade pango lineages, 20 originated from a recombination event and corresponded to 521 (31\%) of all samples.
+Of the 51 Pango lineages, 20 originated from a recombination event and corresponded to 521 (31\%) of all samples.
 The clusters from embeddings of these more recent SARS-CoV-2 sequences performed as well or better than the clusters from earlier SARS-CoV-2 sequences (Fig.~\ref{fig:sars-cov-2-2022-2023-clusters-vs-Nextstrain-clade}).
 Clusters from t-SNE most accurately matched Nextstrain clades (normalized VI=0.08) with 22 clusters.
 Clusters from UMAP followed (normalized VI=0.13) with nine clusters and MDS produced 10 clusters (normalized VI=0.15).
@@ -864,19 +863,19 @@ UMAP clusters became more accurate and less variable as we added more sequences 
 \caption*{{\bf S18 Fig. Replication of cluster accuracy per embedding method for late (2022--2023) SARS-CoV-2 sequences across different sequences per group sampled from the original dataset and five replicates per sampling density.}}
 \end{figure}
 
-All methods produced less accurate representations of Nextclade pango lineages (\nameref{S_Fig_sarscov2_late_embeddings_by_cluster_vs_Nextclade_pango}).
-Clusters from t-SNE were twice as far from Nextclade pango lineages than Nextstrain clades (normalized VI=0.16).
-UMAP's clusters were nearly two times farther from pango lineages than Nextstrain clades (normalized VI=0.23).
-Clusters from MDS were 1.6 times as far from pango lineages as Nextstrain clades (normalized VI=0.24).
-Clusters from PCA were 1.4 times father from pango lineages than Nextstrain clades (normalized VI=0.31).
-These results replicate the patterns we observed with early SARS-CoV-2 data where clusters from embeddings more effectively represented broader genetic diversity than the finer resolution diversity labeled by Pangolin.
-Unlike the Nextclade pango lineages in the early SARS-CoV-2 data, the lineages from the later data exhibited fewer pairwise genetic distances between samples in each lineage than samples in Nextstrain clades or any embedding cluster (\nameref{S_Fig_sarscov2_within_between_group_distances}).
+All methods produced less accurate representations of Pango lineages (\nameref{S_Fig_sarscov2_late_embeddings_by_cluster_vs_Nextclade_pango}).
+Clusters from t-SNE were twice as far from Pango lineages than Nextstrain clades (normalized VI=0.16).
+UMAP's clusters were nearly two times farther from Pango lineages than Nextstrain clades (normalized VI=0.23).
+Clusters from MDS were 1.6 times as far from Pango lineages as Nextstrain clades (normalized VI=0.24).
+Clusters from PCA were 1.4 times father from Pango lineages than Nextstrain clades (normalized VI=0.31).
+These results replicate the patterns we observed with early SARS-CoV-2 data where clusters from embeddings more effectively represented broader genetic diversity than the finer resolution diversity denoted by Pango lineages.
+Unlike the Pango lineages in the early SARS-CoV-2 data, the lineages from the later data exhibited fewer pairwise genetic distances between samples in each lineage than samples in Nextstrain clades or any embedding cluster (\nameref{S_Fig_sarscov2_within_between_group_distances}).
 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/sarscov2-test-embeddings-by-cluster-vs-Nextclade_pango_collapsed.png}
 \caption*{{\bf S19 Fig. Phylogenetic trees (left) and embeddings (right) of late (2022--2023) SARS-CoV-2 sequences colored by HDBSCAN cluster.}
-  Normalized VI values per embedding reflect the distance between clusters and known genetic groups (collapsed Nextclade pango lineages).
+  Normalized VI values per embedding reflect the distance between clusters and known genetic groups (collapsed Pango lineages).
 }
 \end{figure}
 
@@ -926,7 +925,7 @@ From these results, we conclude that tree-free dimensionality reduction methods 
 % Limitations of methods and analysis
 Despite the promise of these simple methods to answer important public health questions about human pathogenic viruses, these methods and our analyses suffer from inherent limitations.
 The lack of an underlying biological model is both a strength and the clearest limitation of the dimensionality reduction methods we considered here.
-For example, embeddings of SARS-CoV-2 genomes cannot capture the same fine-grained genetic resolution as Pangolin lineage annotations.
+For example, embeddings of SARS-CoV-2 genomes cannot capture the same fine-grained genetic resolution as Pango lineage annotations.
 Each method provides only a few parameters to tune its embeddings and these parameters have little effect on the qualitative outcome.
 Each method also suffers from specific issues explored in our analyses.
 PCA performs poorly with missing data and requires researchers to either ignore columns with missing values or impute the missing values prior to analysis, as previously shown for Zika virus \cite{metsky_2017}.
@@ -1018,16 +1017,16 @@ The conceptual and practical simplicity of these tools should enable researchers
 \paragraph*{S15 Fig.}
 \label{S_Fig_sarscov2_early_embeddings_by_Nextclade_pango}
 {\bf Phylogeny of early (2020--2022) SARS-CoV-2 sequences plotted by number of nucleotide substitutions from the most recent common ancestor on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).
-  Tips in the tree and embeddings are colored by their collapsed Nextclade pango lineage assignment.}
+  Tips in the tree and embeddings are colored by their collapsed Pango lineage assignment.}
 
 \paragraph*{S16 Fig.}
 \label{S_Fig_sarscov2_within_between_group_distances}
-{\bf Pairwise nucleotide distances for early (2020-2022) and late (2022-2023) SARS-CoV-2 sequences within and between genetic groups defined by Nextstrain clades, collapsed Nextclade pango lineages, and clusters from PCA, MDS, t-SNE, and UMAP embeddings.}
+{\bf Pairwise nucleotide distances for early (2020-2022) and late (2022-2023) SARS-CoV-2 sequences within and between genetic groups defined by Nextstrain clades, collapsed Pango lineages, and clusters from PCA, MDS, t-SNE, and UMAP embeddings.}
 
 \paragraph*{S17 Fig.}
 \label{S_Fig_sarscov2_early_embeddings_by_cluster_vs_Nextclade_pango}
 {\bf Phylogenetic trees (left) and embeddings (right) of early (2020--2022) SARS-CoV-2 sequences colored by HDBSCAN cluster.
-  Normalized VI values per embedding reflect the distance between clusters and known genetic groups (collapsed Nextclade pango lineages).}
+  Normalized VI values per embedding reflect the distance between clusters and known genetic groups (collapsed Pango lineages).}
 
 \paragraph*{S18 Fig.}
 \label{S_Fig_late_sarscov2_replication_of_cluster_accuracy}
@@ -1036,7 +1035,7 @@ The conceptual and practical simplicity of these tools should enable researchers
 \paragraph*{S19 Fig.}
 \label{S_Fig_sarscov2_late_embeddings_by_cluster_vs_Nextclade_pango}
 {\bf Phylogenetic trees (left) and embeddings (right) of late (2022--2023) SARS-CoV-2 sequences colored by HDBSCAN cluster.
-  Normalized VI values per embedding reflect the distance between clusters and known genetic groups (collapsed Nextclade pango lineages).}
+  Normalized VI values per embedding reflect the distance between clusters and known genetic groups (collapsed Pango lineages).}
 
 \paragraph*{S1 Table.}
 \label{S1_Table}
