@@ -123,6 +123,7 @@
 \usepackage{booktabs}
 
 % Inline comments for authors by initials.
+\definecolor{purple}{rgb}{0.459,0.109,0.538}
 \def\jhc#1{\textcolor{red}{[#1]}}
 \def\snc#1{\textcolor{blue}{[#1]}}
 \def\tbc#1{\textcolor{purple}{[#1]}}
@@ -376,6 +377,8 @@ For the late dataset, we used the same even sampling by space and time to select
 In addition to these genomes, we sampled at most 20 genomes per Pango lineage for 10 known recombinant lineages (XAY, XBB, XBB.1, XBC, XBF, XBL, XC, XD, XE, XF, and XG) and their corresponding parental lineages (AY.29, AY.4, AY.45, B.1.1.7, B.1.617, BA.1, BA.2, BA.2.75, BA.4, BA.5, BA.5.2.3, BJ.1, BM.1.1.1, and CJ.1) as defined by \href{https://libguides.mskcc.org/SARS2/recombination}{https://libguides.mskcc.org/SARS2/recombination}.
 \jhc{At this point, we haven't defined ``Pango lineages'' yet, but I don't know that it makes sense to define lineages in this section. Curious what other people think.}
 With these additional genomes, the late SARS-CoV-2 dataset included 1,668 total genomes.
+\tbc{I think of https://github.com/cov-lineages/pango-designation/blob/master/pango\_designation/alias\_key.json as the central source of truth regarding recombinant lineages.}
+\tbc{I'm also a bit confused on why XBB.1 is listed as a recombinant lineage along with XBB.}
 
 \subsection*{Evaluation of linear relationships between genetic distance and Euclidean distance in embeddings}
 
@@ -397,6 +400,7 @@ We visualized phylogenies with Auspice \cite{Hadfield2018}, after first converti
 We annotated phylogenetic trees with genetic groups previously identified by experts or assigned by biologically-informed models.
 For seasonal influenza H3N2, the World Health Organization assigns ``clade'' labels to clades in HA phylogenies that appear to be genetically or phenotypically distinct from other recently circulating H3N2 samples.
 We used the latest clade definitions for H3N2 maintained by the Nextstrain team as part of their seasonal influenza surveillance efforts \cite{Neher2015}.
+\tbc{If you don't mention this later, list the total number of flu clades to give feel for level of granularity.}
 
 As seasonal influenza clades only account for the HA gene and lack information about reassortment events, we assigned joint HA and NA genetic groups using a biologically-informed model, TreeKnit \cite{Barrat-Charlaix2022}.
 TreeKnit infers ancestral reassortment graphs from two gene trees, finding groups of samples for which both genes share the same history.
@@ -409,14 +413,15 @@ We applied TreeKnit to the rooted HA and NA trees with a gamma value of 2.0 and 
 Finally, we filtered the MCCs identified by TreeKnit to retain only those with at least 10 samples and to omit the root MCC that represented the most recent common ancestor in both HA and NA trees.
 
 For SARS-CoV-2, we used both coarser ``Nextstrain clades'' \cite{Hodcroft2020,Bedford2021,Roemer2022} and more granular Pango lineages \cite{OToole2021} provided by Nextclade as ``Nextclade pango'' annotations.
-Nextstrain clade definitions represent the World Health Organization's variants of concern and other phylogenetic clades that have reached minimum global and regional frequencies and growth rates.
+Nextstrain clade definitions represent the World Health Organization's variants of concern along with post-Omicron phylogenetic clades that have reached minimum global and regional frequencies and growth rates.
 Pango lineages represent expert-curated lineages (\href{https://github.com/cov-lineages/pango-designation}{https://github.com/cov-lineages/pango-designation}) and must contain at least 5 samples with an unambiguous evolutionary event.
 Additionally, Pango lineages produced by recombination receive a lineage name prefixed by an ``X'', while Nextstrain clades do not explicitly reflect recombination events.
 
 Since Pango lineages can represent much smaller genetic groups than are practically useful, we collapsed lineages with fewer than 10 samples in our analysis into their parental lineages using the pango\_aliasor tool (\href{https://github.com/corneliusroemer/pango_aliasor}{https://github.com/corneliusroemer/pango\_aliasor}).
 Specifically, we counted the number of samples per lineage, sorted lineages in ascending order by count, and collapsed each lineage with a count less than 10 into its parental lineage in the count-sorted order.
 This approach allowed small lineages to aggregate with other small parental lineages and meet the 10-sample threshold.
-We used these collapsed Pango lineages for all subsequent analyses except our analysis of recombinant lineages in SARS-CoV-2 where we included specific uncollapsed lineage names during subsampling.
+\tbc{If you don't mention this later, just list the total number of Nextstrain clades and the total number of collapsed Pango lineages here to give a feel for level of granularity.}
+We used these ``collapsed Nextclade Pango'' lineages for subsequent analyses.
 
 \subsection*{Clustering of samples in embeddings}
 
@@ -618,9 +623,11 @@ To understand whether these embedding methods and optimal cluster parameters cou
 Unlike the early H3N2 HA dataset, the late dataset contained fewer clades (\nameref{S_Fig_late_flu_embeddings_by_clade}) and a greater genetic distance between samples in clades (\nameref{S_Fig_flu_within_between_group_distances}).
 Clusters from all four methods generally captured phylogenetic clades (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters} and \nameref{S_Fig_late_flu_embeddings_by_clade}).
 The MDS clusters most accurately captured expert clades (normalized VI=0.07) with six clusters corresponding to the largest clades (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters} and \nameref{S_Fig_late_flu_mds_embeddings}).
+\tbc{I might be reading the table wrong, but my reading of Table 1 is that t-SNE has the lowest VI at 0.04 and MDS has a VI of 0.10.}
 MDS split A3 samples into two widely separated groups in its Euclidean space, indicating substantial within-clade genetic differences.
 On inspection of this clade, we found recurrent HA1 substitutions of 135K, 142G, and 193S in multiple subclades that MDS could not effectively represent.
 Clusters from t-SNE, UMAP, and PCA followed closely in accuracy (normalized VI=0.08, 0.08, and 0.09) with 5, 7, and 6 clusters, respectively.
+\tbc{Again, VI values here don't match what's in Table 1.}
 We identified 25 cluster-specific mutations for four of the six PCA clusters, 51 for all six MDS clusters, 53 for all five t-SNE clusters, and 30 for five of the seven UMAP clusters (\nameref{S1_Table}).
 Pairwise genetic distances within clusters generally matched the diversity within Nextstrain clades (\nameref{S_Fig_flu_within_between_group_distances}).
 Cluster accuracies remained robust to sampling density and composition (\nameref{S_Fig_late_flu_replication_of_cluster_accuracy}).
@@ -778,7 +785,7 @@ From our analysis of simulated influenza- and coronavirus-like sequences, we fou
 These results suggest that researchers could apply these biologically-uninformed methods to a broad range of human pathogenic viruses with minimal tuning of the method parameters.
 Of the four methods, MDS most accurately reflected pairwise genetic distances between simulated samples in its embeddings.
 From our analysis of natural populations of seasonal influenza H3N2 HA and SARS-CoV-2 sequences, we confirmed that MDS most reliably reflected pairwise genetic distances.
-We found that clusters from t-SNE embeddings most accurately recapitulated previously defined genetic groups at the resolution of WHO and Nextstrain clades.
+We found that clusters from t-SNE embeddings most accurately recapitulated previously defined genetic groups at the resolution of WHO variants and Nextstrain clades.
 These differences highlight that embedding selection should be informed by the question under investigation.
 Notably, in some applications the amount of genetic distance separating samples provides important proxy information about epidemiologic dynamics.
 In such cases, an embedding such as MDS that not only clusters similar samples, but meaningfully communicates the relative difference between clusters, may be most appropriate.
