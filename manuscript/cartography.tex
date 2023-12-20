@@ -399,7 +399,6 @@ We visualized phylogenies with Auspice \cite{Hadfield2018}, after first converti
 We annotated phylogenetic trees with genetic groups previously identified by experts or assigned by biologically-informed models.
 For seasonal influenza H3N2, the World Health Organization assigns ``clade'' labels to clades in HA phylogenies that appear to be genetically or phenotypically distinct from other recently circulating H3N2 samples.
 We used the latest clade definitions for H3N2 maintained by the Nextstrain team as part of their seasonal influenza surveillance efforts \cite{Neher2015}.
-\tbc{If you don't mention this later, list the total number of flu clades to give feel for level of granularity.}
 
 As seasonal influenza clades only account for the HA gene and lack information about reassortment events, we assigned joint HA and NA genetic groups using a biologically-informed model, TreeKnit \cite{Barrat-Charlaix2022}.
 TreeKnit infers ancestral reassortment graphs from two gene trees, finding groups of samples for which both genes share the same history.
@@ -419,7 +418,6 @@ Additionally, Pango lineages produced by recombination receive a lineage name pr
 Since Pango lineages can represent much smaller genetic groups than are practically useful, we collapsed lineages with fewer than 10 samples in our analysis into their parental lineages using the pango\_aliasor tool (\href{https://github.com/corneliusroemer/pango_aliasor}{https://github.com/corneliusroemer/pango\_aliasor}).
 Specifically, we counted the number of samples per lineage, sorted lineages in ascending order by count, and collapsed each lineage with a count less than 10 into its parental lineage in the count-sorted order.
 This approach allowed small lineages to aggregate with other small parental lineages and meet the 10-sample threshold.
-\tbc{If you don't mention this later, just list the total number of Nextstrain clades and the total number of collapsed Pango lineages here to give a feel for level of granularity.}
 We used these ``collapsed Nextclade Pango'' lineages for subsequent analyses.
 
 \subsection*{Clustering of samples in embeddings}
@@ -538,6 +536,7 @@ The World Health Organization (WHO) Global Influenza Surveillance and Response S
 These factors, coupled with HA's relatively short gene size of 1,701 nucleotides, facilitate real-time genomic epidemiology of H3N2 \cite{Neher2015} and rapid analysis by the embedding methods we wanted to evaluate.
 
 We first applied each embedding method to the early H3N2 HA sequences collected from 2016 through 2018, colored samples by previously defined phylogenetic clades, and inspected the placement of these samples in the embeddings and corresponding phylogeny.
+The early H3N2 dataset represented 12 Nextstrain clades total including 10 clades with at least 10 samples.
 All four embedding methods qualitatively recapitulated clade-level groupings observed in the phylogeny (Fig~\ref{fig:seasonal-influenza-h3n2-ha-embeddings} and \nameref{S_Fig_early_flu_mds_embeddings}).
 Samples from the same clade generally grouped tightly together.
 Most embedding methods also clearly delineated larger phylogenetic clades, placing clades A1, A2, A3, A4, and 3c3.A into separate locations in the embeddings.
@@ -619,7 +618,8 @@ Normalized VI values per embedding reflect the distance between clusters and kno
 \end{figure}
 
 To understand whether these embedding methods and optimal cluster parameters could effectively cluster previously unseen sequences, we applied each method to the late H3N2 HA dataset (2018--2020), clustered sequences in the embedding space with HDBSCAN using the optimal minimum distance threshold from the early dataset, and calculated the accuracy of the cluster assignments based on previously defined clades.
-Unlike the early H3N2 HA dataset, the late dataset contained fewer clades (\nameref{S_Fig_late_flu_embeddings_by_clade}) and a greater genetic distance between samples in clades (\nameref{S_Fig_flu_within_between_group_distances}).
+The late dataset included 16 Nextclade clades total, but only 10 of these had at least 10 samples (\nameref{S_Fig_late_flu_embeddings_by_clade}).
+Although the average pairwise genetic distance within these later clades of 9 was similar to the within-clade distance for early clades of 10, later clades had a greater average between-clade distance of 42 nucleotide variants compared to 27 for early clades  (\nameref{S_Fig_flu_within_between_group_distances}).
 Clusters from all four methods generally captured phylogenetic clades (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters} and \nameref{S_Fig_late_flu_embeddings_by_clade}).
 The MDS clusters most accurately captured expert clades (normalized VI=0.07) with six clusters corresponding to the largest clades (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters} and \nameref{S_Fig_late_flu_mds_embeddings}).
 \tbc{I might be reading the table wrong, but my reading of Table 1 is that t-SNE has the lowest VI at 0.04 and MDS has a VI of 0.10.}
