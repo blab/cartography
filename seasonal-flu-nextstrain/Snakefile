@@ -320,8 +320,8 @@ rule seasonal_flu_training_cluster_with_optimal_parameters:
         embedding="seasonal-flu-nextstrain/results/embed_{method}_{ancestral}.csv",
         parameters="seasonal-flu-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
     output:
-        clustered_embedding="seasonal-flu-nextstrain/results/cluster_embed_{method}_{ancestral}.csv",
-        clustered_embedding_figure="seasonal-flu-nextstrain/results/cluster_embed_{method}_{ancestral}.pdf",
+        clustered_embedding="seasonal-flu-nextstrain/results/initial_cluster_embed_{method}_{ancestral}.csv",
+        clustered_embedding_figure="seasonal-flu-nextstrain/results/initial_cluster_embed_{method}_{ancestral}.pdf",
     conda: "../cartography.yml"
     params:
         min_size=CLUSTER_MIN_SIZE,
@@ -336,6 +336,29 @@ rule seasonal_flu_training_cluster_with_optimal_parameters:
             --distance-threshold "$(csvtk filter2 -f '$method=="{wildcards.method}"' {input.parameters} | csvtk cut -f distance_threshold | csvtk del-header)" \
             --output-dataframe {output.clustered_embedding} \
             --output-figure {output.clustered_embedding_figure}
+        """
+
+rule seasonal_flu_training_rename_cluster_with_optimal_parameters:
+    input:
+        clustered_embedding="seasonal-flu-nextstrain/results/initial_cluster_embed_{method}_{ancestral}.csv",
+    output:
+        clustered_embedding="seasonal-flu-nextstrain/results/cluster_embed_{method}_{ancestral}.csv",
+    conda: "../cartography.yml"
+    params:
+        # t-SNE columns can be either "tsne" or "t-sne", so we need to match for
+        # both in our fuzzy fields definition.
+        fields=lambda wildcards: f"{wildcards.method}*,{wildcards.method.replace('-', '')}*" if wildcards.method == "t-sne" else f"{wildcards.method}*",
+        # Only rename columns for inputs with ancestral sequences. Otherwise,
+        # this rule has no effect on the input.
+        prefix=lambda wildcards: "ancestral_" if wildcards.ancestral == "ancestral" else "",
+    shell:
+        """
+        csvtk rename2 \
+          -F \
+          -f '{params.fields}' \
+          -p '(.*)' \
+          -r '{params.prefix}${{1}}' \
+          {input.clustered_embedding} > {output.clustered_embedding}
         """
 
 rule seasonal_flu_training_create_node_output:
@@ -501,6 +524,7 @@ rule seasonal_flu_training_export:
         nt_muts = rules.seasonal_flu_training_ancestral.output.node_data,
         aa_muts = rules.seasonal_flu_training_translate.output.node_data,
         embeddings = expand("seasonal-flu-nextstrain/results/cluster_embed_{embedding}_sequences.json", embedding=EMBEDDING_METHODS),
+        ancestral_embeddings = expand("seasonal-flu-nextstrain/results/cluster_embed_{embedding}_ancestral.json", embedding=EMBEDDING_METHODS),
         auspice_config = seasonal_flu_training_files.auspice_config,
         colors = "seasonal-flu-nextstrain/config/colors.tsv",
         clades = rules.seasonal_flu_training_clades.output.clade_data,
@@ -513,7 +537,7 @@ rule seasonal_flu_training_export:
         augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} \
+            --node-data {input.branch_lengths} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} {input.ancestral_embeddings} \
             --auspice-config {input.auspice_config} \
             --include-root-sequence \
             --colors {input.colors} \
@@ -523,25 +547,45 @@ rule seasonal_flu_training_export:
 
 rule seasonal_flu_training_create_distance_dataframe:
     input:
-        dataframe_pca = "seasonal-flu-nextstrain/results/cluster_embed_pca_sequences.csv",
-        dataframe_mds = "seasonal-flu-nextstrain/results/cluster_embed_mds_sequences.csv",
-        dataframe_tsne = "seasonal-flu-nextstrain/results/cluster_embed_t-sne_sequences.csv",
-        dataframe_umap = "seasonal-flu-nextstrain/results/cluster_embed_umap_sequences.csv",
+        tables = expand("seasonal-flu-nextstrain/results/cluster_embed_{method}_{{ancestral}}.csv", method=EMBEDDING_METHODS),
     output:
-        metadata = "seasonal-flu-nextstrain/results/embedding_data.csv",
+        metadata = "seasonal-flu-nextstrain/results/embedding_data_{ancestral}.csv",
     conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/make_table.py \
-            --tables {input} \
+            --tables {input.tables} \
             --separator ',' \
             --output {output.metadata}
         """
+
 # TODO: add filters for table where necessary
-rule seasonal_flu_training_annotate_embeddings:
+# Left join table of internal nodes and tips with embeddings for tip sequences only.
+rule seasonal_flu_training_annotate_embeddings_for_sequences:
     input:
         left="seasonal-flu-nextstrain/results/table.tsv",
-        right="seasonal-flu-nextstrain/results/embedding_data.csv",
+        right="seasonal-flu-nextstrain/results/embedding_data_sequences.csv",
+    output:
+        table="seasonal-flu-nextstrain/results/annotated_embeddings_for_sequences.tsv",
+    conda: "../cartography.yml"
+    params:
+        join_on="strain",
+        join_type="left",
+    shell:
+        """
+        python3 notebooks/scripts/join_tables.py \
+            --left {input.left} \
+            --right {input.right} \
+            --on {params.join_on} \
+            --join-type {params.join_type} \
+            --output {output.table}
+        """
+
+# Annotate merged tree and tip embedding data with ancestral sequence embeddings.
+rule seasonal_flu_training_annotate_embeddings_for_ancestral:
+    input:
+        left="seasonal-flu-nextstrain/results/annotated_embeddings_for_sequences.tsv",
+        right="seasonal-flu-nextstrain/results/embedding_data_ancestral.csv",
     output:
         table="seasonal-flu-nextstrain/results/annotated_embeddings.tsv",
     conda: "../cartography.yml"

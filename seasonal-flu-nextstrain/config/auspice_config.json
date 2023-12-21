@@ -38,12 +38,12 @@
         },
         {
             "key": "pca1",
-            "title": "PCA1",
+            "title": "PC 1",
             "type": "continuous"
         },
         {
             "key": "pca2",
-            "title": "PCA2",
+            "title": "PC 2",
             "type": "continuous"
         },
         {
@@ -80,6 +80,71 @@
             "key": "umap_y",
             "title": "UMAP 2",
             "type": "continuous"
+        },
+        {
+            "key": "ancestral_pca_label",
+            "title": "PCA cluster (ancestral)",
+            "type": "categorical"
+        },
+        {
+            "key": "ancestral_mds_label",
+            "title": "MDS cluster (ancestral)",
+            "type": "categorical"
+        },
+        {
+            "key": "ancestral_t-sne_label",
+            "title": "t-SNE cluster (ancestral)",
+            "type": "categorical"
+        },
+        {
+            "key": "ancestral_umap_label",
+            "title": "UMAP cluster (ancestral)",
+            "type": "categorical"
+        },
+        {
+            "key": "ancestral_pca1",
+            "title": "PC 1 (ancestral)",
+            "type": "continuous"
+        },
+        {
+            "key": "ancestral_pca2",
+            "title": "PC 2 (ancestral)",
+            "type": "continuous"
+        },
+        {
+            "key": "ancestral_mds1",
+            "title": "MDS 1 (ancestral)",
+            "type": "continuous"
+        },
+        {
+            "key": "ancestral_mds2",
+            "title": "MDS 2 (ancestral)",
+            "type": "continuous"
+        },
+        {
+            "key": "ancestral_mds3",
+            "title": "MDS 3 (ancestral)",
+            "type": "continuous"
+        },
+        {
+            "key": "ancestral_tsne_x",
+            "title": "t-SNE 1 (ancestral)",
+            "type": "continuous"
+        },
+        {
+            "key": "ancestral_tsne_y",
+            "title": "t-SNE 2 (ancestral)",
+            "type": "continuous"
+        },
+        {
+            "key": "ancestral_umap_x",
+            "title": "UMAP 1 (ancestral)",
+            "type": "continuous"
+        },
+        {
+            "key": "ancestral_umap_y",
+            "title": "UMAP 2 (ancestral)",
+            "type": "continuous"
         }
     ],
     "display_defaults": {
@@ -91,11 +156,15 @@
         {"name": "John Huddleston"}
     ],
     "filters": [
+      "clade_membership",
       "pca_label",
       "mds_label",
       "t-sne_label",
       "umap_label",
-      "clade_membership"
+      "ancestral_pca_label",
+      "ancestral_mds_label",
+      "ancestral_t-sne_label",
+      "ancestral_umap_label"
     ],
     "panels": [
         "tree",
