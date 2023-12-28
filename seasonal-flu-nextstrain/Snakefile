@@ -338,11 +338,26 @@ rule seasonal_flu_training_cluster_with_optimal_parameters:
             --output-figure {output.clustered_embedding_figure}
         """
 
+rule seasonal_flu_training_calculate_internal_node_embedding_positions:
+    input:
+        tree="seasonal-flu-nextstrain/results/tree.nwk",
+        embedding="seasonal-flu-nextstrain/results/cluster_embed_{method}_sequences.csv",
+    output:
+        embedding="seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_{method}_sequences.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/calculate_internal_node_embedding_positions.py \
+            --tree {input.tree} \
+            --embedding {input.embedding} \
+            --output {output.embedding}
+        """
+
 rule seasonal_flu_training_create_node_output:
     input:
-        dataframe = "seasonal-flu-nextstrain/results/cluster_embed_{method}_{ancestral}.csv"
+        dataframe = "seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_{method}_{ancestral}.csv"
     output:
-        node_data = "seasonal-flu-nextstrain/results/cluster_embed_{method}_{ancestral}.json"
+        node_data = "seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_{method}_{ancestral}.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -500,7 +515,7 @@ rule seasonal_flu_training_export:
         branch_lengths = rules.seasonal_flu_training_refine.output.node_data,
         nt_muts = rules.seasonal_flu_training_ancestral.output.node_data,
         aa_muts = rules.seasonal_flu_training_translate.output.node_data,
-        embeddings = expand("seasonal-flu-nextstrain/results/cluster_embed_{embedding}_sequences.json", embedding=EMBEDDING_METHODS),
+        embeddings = expand("seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_{embedding}_sequences.json", embedding=EMBEDDING_METHODS),
         auspice_config = seasonal_flu_training_files.auspice_config,
         colors = "seasonal-flu-nextstrain/config/colors.tsv",
         clades = rules.seasonal_flu_training_clades.output.clade_data,
@@ -523,10 +538,10 @@ rule seasonal_flu_training_export:
 
 rule seasonal_flu_training_create_distance_dataframe:
     input:
-        dataframe_pca = "seasonal-flu-nextstrain/results/cluster_embed_pca_sequences.csv",
-        dataframe_mds = "seasonal-flu-nextstrain/results/cluster_embed_mds_sequences.csv",
-        dataframe_tsne = "seasonal-flu-nextstrain/results/cluster_embed_t-sne_sequences.csv",
-        dataframe_umap = "seasonal-flu-nextstrain/results/cluster_embed_umap_sequences.csv",
+        dataframe_pca = "seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_pca_sequences.csv",
+        dataframe_mds = "seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_mds_sequences.csv",
+        dataframe_tsne = "seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_t-sne_sequences.csv",
+        dataframe_umap = "seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_umap_sequences.csv",
     output:
         metadata = "seasonal-flu-nextstrain/results/embedding_data.csv",
     conda: "../cartography.yml"
