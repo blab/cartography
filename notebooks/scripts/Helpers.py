@@ -2,6 +2,7 @@
 dimensionality embeddings of distance matrices.
 """
 from augur.io import read_sequences
+from augur.utils import read_tree
 import Bio.SeqIO
 from collections import OrderedDict
 import numpy as np
@@ -243,6 +244,61 @@ def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip,
     ).interactive()
     # chart.display()
     return chart
+
+
+def make_node_branch_widths(tree_path, min_width=1.0, max_width=4.0):
+    """Build a data frame of branch widths for a given Newick tree path bounded
+    by the given min and max width. Branch widths reflect the log of the number
+    of leaves descended from each node normalized to range from 0 to 1. Nodes
+    receive a branch width of the minimum width plus the remaining range between
+    the max and min values scaled by the normalized log leaves.
+    """
+    tree = read_tree(tree_path)
+
+    node_branch_widths = []
+    for node in tree.find_clades(order="postorder"):
+        if node.is_terminal():
+            node.branch_width = 1
+        else:
+            node.branch_width = sum((child.branch_width for child in node.clades))
+
+        node_branch_widths.append({
+            "node": node.name,
+            "leaves": node.branch_width
+        })
+
+    node_branch_widths = pd.DataFrame.from_records(node_branch_widths)
+    node_branch_widths["log_leaves"] = np.log(node_branch_widths["leaves"])
+    node_branch_widths["branch_weight"] = node_branch_widths["log_leaves"] / node_branch_widths["log_leaves"].max()
+
+    width_range = max_width - min_width
+    node_branch_widths["branch_width"] = min_width + width_range * node_branch_widths["branch_weight"]
+
+    return node_branch_widths
+
+
+def make_branch_lines_for_columns(embedding_segments, column1, column2, color_domain=None, color_range=None):
+    """Return an Altair chart representing branch line segments defined in the
+    given data frame. Each segment spans from `column1` to `{column1}_parent`
+    and `column2` to `{column2}_parent`. Color branches by clade membership with
+    an optional domain and range. Otherwise, color branches gray.
+
+    """
+    if color_domain and color_range:
+        color = alt.Color("clade_membership_color:N").scale(domain=color_domain, range=color_range)
+    else:
+        color = alt.ColorValue("#cccccc")
+
+    branch_lines = alt.Chart(embedding_segments).mark_rule().encode(
+        x=f"{column1}_parent:Q",
+        x2=f"{column1}:Q",
+        y=f"{column2}_parent:Q",
+        y2=f"{column2}:Q",
+        color=color,
+        strokeWidth=alt.StrokeWidth("branch_width", legend=None),
+    )
+
+    return branch_lines
 
 
 def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color, legend_title, ToolTip, domain=None, range_=None, legend_columns=1, plot_legend=True):
