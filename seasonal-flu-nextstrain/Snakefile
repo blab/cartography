@@ -712,6 +712,7 @@ rule seasonal_flu_training_create_scatterplot_figure:
 rule seasonal_flu_training_create_notebook_docs:
     input:
         colors="notebooks/config/color_schemes.tsv",
+        tree="seasonal-flu-nextstrain/results/tree.nwk",
         annotated_embeddings="seasonal-flu-nextstrain/results/annotated_embeddings.tsv",
         accuracy_table="seasonal-flu-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
         explained_variance_pca="seasonal-flu-nextstrain/results/explained_variance_pca_sequences.csv",
