@@ -268,8 +268,7 @@ def make_node_branch_widths(tree_path, min_width=1.0, max_width=4.0):
         })
 
     node_branch_widths = pd.DataFrame.from_records(node_branch_widths)
-    node_branch_widths["log_leaves"] = np.log(node_branch_widths["leaves"])
-    node_branch_widths["branch_weight"] = node_branch_widths["log_leaves"] / node_branch_widths["log_leaves"].max()
+    node_branch_widths["branch_weight"] = np.sqrt(node_branch_widths["leaves"] / node_branch_widths["leaves"].max())
 
     width_range = max_width - min_width
     node_branch_widths["branch_width"] = min_width + width_range * node_branch_widths["branch_weight"]
