@@ -29,7 +29,7 @@ def describe_dict(result):
 if __name__ == "__main__":
 
     # Initialize parsers
-    parser = argparse.ArgumentParser(description = "creates embeddings", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description="Calculate average within and between group distances", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     # group column instead of cluster (naming)
     parser.add_argument("--distance-matrix", required=True, help="the path to a CSV genetic distance matrix")
