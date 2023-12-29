@@ -291,8 +291,6 @@ rule sarscov2_export:
         auspice_tree = "auspice/cartography_ncov_2020-2022.json",
         root_sequence = "auspice/cartography_ncov_2020-2022_root-sequence.json",
     conda: "../cartography.yml"
-    params:
-        color_by="Nextstrain_clade Nextclade_pango Nextclade_pango_collapsed"
     shell:
         """
         augur export v2 \
@@ -301,7 +299,6 @@ rule sarscov2_export:
             --node-data {input.branch_lengths} {input.nt_muts} {input.aa_muts} {input.embeddings} \
             --auspice-config {input.auspice_config} \
             --include-root-sequence \
-            --color-by-metadata {params.color_by} \
             --minify-json \
             --output {output.auspice_tree}
         """
