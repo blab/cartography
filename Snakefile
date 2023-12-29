@@ -52,6 +52,8 @@ RANDOM_SEED = 314159
 CLUSTER_REPLICATION_REPLICATES = list(range(5))
 CLUSTER_REPLICATION_SEQUENCES_PER_GROUP = [5, 10, 15, 20, 25]
 
+SEASONAL_FLU_REFERENCE_STRAIN = "A/Beijing/32/1992"
+
 wildcard_constraints:
     method="(pca|mds|t-sne|umap|genetic)",
     internal_node= "(ancestral|sequences)",
