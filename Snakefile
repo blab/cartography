@@ -53,6 +53,7 @@ CLUSTER_REPLICATION_REPLICATES = list(range(5))
 CLUSTER_REPLICATION_SEQUENCES_PER_GROUP = [5, 10, 15, 20, 25]
 
 SEASONAL_FLU_REFERENCE_STRAIN = "A/Beijing/32/1992"
+SARS_COV_2_REFERENCE_STRAIN = "Wuhan-Hu-1/2019"
 
 wildcard_constraints:
     method="(pca|mds|t-sne|umap|genetic)",

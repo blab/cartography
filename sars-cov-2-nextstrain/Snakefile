@@ -14,7 +14,7 @@ rule sarscov2:
         expand("manuscript/figures/sarscov2-pca-by-{clade_membership}-clade.png", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
         "manuscript/figures/sarscov2-euclidean-distance-by-genetic-distance.png",
         "manuscript/figures/sarscov2-pc1-vs-bases-missing.png",
-        "auspice/cartography_ncov_2020-2022.json",
+        "auspice/cartography_ncov-2020-2022.json",
         expand("sars-cov-2-nextstrain/results/mutation_table_for_{clade_membership}.csv", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
 
 rule sarscov2_download_filtered_metadata:
@@ -204,10 +204,6 @@ rule sarscov2_refine:
         "logs/sars-cov-2-nextstrain/refine.txt",
     params:
         root = "Wuhan-Hu-1/2019",
-        coalescent = "opt",
-        date_inference = "marginal",
-        clock_rate = 0.0008,
-        clock_std_dev = 0.0004,
         divergence_units="mutations",
     conda: "../cartography.yml"
     resources:
@@ -224,14 +220,7 @@ rule sarscov2_refine:
             --output-tree {output.tree} \
             --output-node-data {output.node_data} \
             --root {params.root} \
-            --stochastic-resolve \
-            --timetree \
-            --coalescent {params.coalescent} \
-            --date-confidence \
-            --date-inference {params.date_inference} \
-            --divergence-units {params.divergence_units} \
-            --clock-rate {params.clock_rate} \
-            --clock-std-dev {params.clock_std_dev} 2>&1 | tee {log}
+            --divergence-units {params.divergence_units} 2>&1 | tee {log}
         """
 
 rule sarscov2_ancestral:
@@ -278,7 +267,6 @@ rule sarscov2_translate:
         """
 
 rule sarscov2_export:
-    message: "Exporting data files for for auspice"
     input:
         tree = "sars-cov-2-nextstrain/results/tree.nwk",
         metadata = "sars-cov-2-nextstrain/data/metadata.tsv",
@@ -288,8 +276,8 @@ rule sarscov2_export:
         embeddings = expand("sars-cov-2-nextstrain/results/cluster_embed_with_internal_nodes_{embedding}_for_{clade_membership}.json", embedding=EMBEDDING_METHODS, clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
         auspice_config = "sars-cov-2-nextstrain/config/auspice_config.json",
     output:
-        auspice_tree = "auspice/cartography_ncov_2020-2022.json",
-        root_sequence = "auspice/cartography_ncov_2020-2022_root-sequence.json",
+        auspice_tree = "auspice/cartography_ncov-2020-2022.json",
+        root_sequence = "auspice/cartography_ncov-2020-2022_root-sequence.json",
     conda: "../cartography.yml"
     shell:
         """
@@ -556,7 +544,8 @@ rule sarscov2_tree_to_table:
     output:
         table = "sars-cov-2-nextstrain/results/table.tsv",
     params:
-        attributes = "numdate Nextstrain_clade Nextclade_pango Nextclade_pango_collapsed mutation_length divergence"
+        attributes = "Nextstrain_clade Nextclade_pango Nextclade_pango_collapsed branch_length divergence",
+        mutation_length_attribute="branch_length",
     conda: "../cartography.yml"
     shell:
         """
@@ -566,6 +555,7 @@ rule sarscov2_tree_to_table:
             --node-data {input.branch_lengths} \
             --include-internal-nodes \
             --attributes {params.attributes} \
+            --mutation-length-attribute {params.mutation_length_attribute} \
             --output {output.table}
         """
 

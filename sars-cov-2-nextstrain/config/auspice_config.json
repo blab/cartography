@@ -148,8 +148,7 @@
   ],
   "display_defaults": {
     "color_by": "Nextstrain_clade",
-    "distance_measure": "num_date",
-    "geo_resolution": "division",
+    "distance_measure": "div",
     "map_triplicate": true
   },
   "filters": [
@@ -168,6 +167,7 @@
     "division"
   ],
   "panels": [
-    "tree"
+    "tree",
+    "entropy"
   ]
 }
