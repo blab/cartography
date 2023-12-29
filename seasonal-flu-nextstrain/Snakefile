@@ -1,3 +1,5 @@
+SEASONAL_FLU_REFERENCE_STRAIN = "A/Beijing/32/1992"
+
 rule seasonal_flu_training:
     input:
         "manuscript/figures/flu-2016-2018-ha-embeddings-by-clade.png",
@@ -100,9 +102,9 @@ rule seasonal_flu_training_align:
         """
     input:
         sequences = rules.seasonal_flu_training_filter.output.sequences,
-        reference = seasonal_flu_training_files.reference
+        reference = seasonal_flu_training_files.reference,
     output:
-        alignment = "seasonal-flu-nextstrain/results/aligned_sequences.fasta"
+        alignment = "seasonal-flu-nextstrain/results/aligned.fasta",
     conda: "../cartography.yml"
     threads: 4
     resources:
@@ -117,8 +119,20 @@ rule seasonal_flu_training_align:
             --reference-sequence {input.reference} \
             --output {output.alignment} \
             --fill-gaps \
-            --remove-reference \
             --nthreads {threads}
+        """
+
+rule seasonal_flu_training_remove_reference_from_embedding_alignment:
+    input:
+        alignment="seasonal-flu-nextstrain/results/aligned.fasta",
+    output:
+        alignment="seasonal-flu-nextstrain/results/aligned_sequences.fasta",
+    conda: "../cartography.yml"
+    params:
+        reference=SEASONAL_FLU_REFERENCE_STRAIN,
+    shell:
+        """
+        seqkit grep -v -p "{params.reference}" {input.alignment} > {output.alignment}
         """
 
 rule seasonal_flu_training_create_distance_matrix:
@@ -367,12 +381,13 @@ rule seasonal_flu_training_create_node_output:
         """
 
 rule seasonal_flu_training_tree:
-    message: "Building tree"
     input:
-        alignment = rules.seasonal_flu_training_align.output.alignment
+        alignment = "seasonal-flu-nextstrain/results/aligned.fasta",
     output:
         tree = "seasonal-flu-nextstrain/results/tree_raw.nwk"
     conda: "../cartography.yml"
+    params:
+        tree_builder_args="-czb",
     threads: 4
     resources:
         mem_mb=16000,
@@ -383,14 +398,33 @@ rule seasonal_flu_training_tree:
         """
         augur tree \
             --alignment {input.alignment} \
+            --tree-builder-args="{params.tree_builder_args}" \
             --output {output.tree} \
             --nthreads {threads}
         """
 
+rule seasonal_flu_training_root_and_prune_tree:
+    input:
+        tree = "seasonal-flu-nextstrain/results/tree_raw.nwk",
+    output:
+        tree = "seasonal-flu-nextstrain/results/rooted_tree_raw.nwk",
+    conda: "../cartography.yml"
+    params:
+        root=SEASONAL_FLU_REFERENCE_STRAIN,
+    log:
+        "logs/seasonal-flu-nextstrain/root_and_prune_tree.txt"
+    shell:
+        """
+        python3 notebooks/scripts/root_and_prune_tree.py \
+            --tree {input.tree} \
+            --root {params.root} \
+            --output {output.tree} 2>&1 | tee {log}
+        """
+
 rule seasonal_flu_training_refine:
     input:
-        tree = rules.seasonal_flu_training_tree.output.tree,
-        alignment = rules.seasonal_flu_training_align.output,
+        tree = "seasonal-flu-nextstrain/results/rooted_tree_raw.nwk",
+        alignment = "seasonal-flu-nextstrain/results/aligned_sequences.fasta",
         metadata = "seasonal-flu-nextstrain/results/filtered_metadata.tsv",
     output:
         tree = "seasonal-flu-nextstrain/results/tree.nwk",
@@ -398,10 +432,6 @@ rule seasonal_flu_training_refine:
     log:
         "logs/seasonal-flu-nextstrain/refine.txt",
     params:
-        coalescent = "opt",
-        date_inference = "marginal",
-        clock_rate = 0.00382,
-        clock_std_dev = 0.000764,
         random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     resources:
@@ -415,16 +445,9 @@ rule seasonal_flu_training_refine:
             --tree {input.tree} \
             --alignment {input.alignment} \
             --metadata {input.metadata} \
+            --keep-root \
             --output-tree {output.tree} \
             --output-node-data {output.node_data} \
-            --timetree \
-            --use-fft \
-            --stochastic-resolve \
-            --coalescent {params.coalescent} \
-            --date-confidence \
-            --date-inference {params.date_inference} \
-            --clock-rate {params.clock_rate} \
-            --clock-std-dev {params.clock_std_dev} \
             --seed {params.random_seed} 2>&1 | tee {log}
         """
 
@@ -496,7 +519,8 @@ rule seasonal_flu_training_create_table_from_tree_and_node_data:
     output:
         table="seasonal-flu-nextstrain/results/table.tsv",
     params:
-        attributes="numdate clade_membership mutation_length divergence"
+        attributes="clade_membership branch_length divergence",
+        mutation_length_attribute="branch_length",
     conda: "../cartography.yml"
     shell:
         """
@@ -505,6 +529,7 @@ rule seasonal_flu_training_create_table_from_tree_and_node_data:
             --node-data {input.clades} {input.branch_lengths} \
             --include-internal-nodes \
             --attributes {params.attributes} \
+            --mutation-length-attribute {params.mutation_length_attribute} \
             --output {output.table}
         """
 
