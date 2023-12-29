@@ -276,7 +276,7 @@ def make_node_branch_widths(tree_path, min_width=1.0, max_width=4.0):
     return node_branch_widths
 
 
-def make_branch_lines_for_columns(embedding_segments, column1, column2, color_domain=None, color_range=None):
+def make_branch_lines_for_columns(embedding_segments, column1, column2, color_domain=None, color_range=None, color_spec="clade_membership_color:N"):
     """Return an Altair chart representing branch line segments defined in the
     given data frame. Each segment spans from `column1` to `{column1}_parent`
     and `column2` to `{column2}_parent`. Color branches by clade membership with
@@ -284,7 +284,7 @@ def make_branch_lines_for_columns(embedding_segments, column1, column2, color_do
 
     """
     if color_domain and color_range:
-        color = alt.Color("clade_membership_color:N").scale(domain=color_domain, range=color_range)
+        color = alt.Color(color_spec).scale(domain=color_domain, range=color_range)
     else:
         color = alt.ColorValue("#cccccc")
 

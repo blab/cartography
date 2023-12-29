@@ -796,6 +796,7 @@ rule sarscov2_test_create_notebook_docs:
         mds_label=lambda wildcards: f"mds_label_for_{wildcards.clade_membership}",
         tsne_label=lambda wildcards: f"t-sne_label_for_{wildcards.clade_membership}",
         umap_label=lambda wildcards: f"umap_label_for_{wildcards.clade_membership}",
+        plot_branches=False,
     conda: "../cartography.yml"
     notebook:
         "../sars-cov-2-nextstrain/2022-03-29-final-figures.py.ipynb"
