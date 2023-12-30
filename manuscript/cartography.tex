@@ -730,11 +730,13 @@ The distance plots provide a qualitative assessment of each embedding's local an
 
 \subsection*{Phylogenetic analysis}
 
-For each natural population described above, we created an annotated, time-scaled phylogenetic tree.
+For each natural population described above, we created an annotated phylogenetic tree.
 For seasonal influenza H3N2 HA and NA sequences, we aligned sequences with MAAFT (version 7.486) \cite{Katoh2002,Katoh2013} using the \textit{augur align} command (version 22.0.3) \cite{Huddleston2021}.
 For SARS-CoV-2 sequences, we used existing reference-based alignments provided by the Nextstrain team (\href{https://docs.nextstrain.org/projects/ncov/en/latest/reference/remote_inputs.html#summary-of-available-genbank-open-files}{https://docs.nextstrain.org/projects/ncov/en/latest/reference/remote\_inputs.html}) and generated with Nextalign (version 2.14.0) \cite{Aksamentov2021}.
-We inferred a phylogeny with IQ-TREE (version 2.1.4-beta) \cite{Nguyen2014} using the \textit{augur tree} command and inferred a time tree with TreeTime (version 0.10.1) \cite{Sagulenko2018} using the \textit{augur refine} command.
+We inferred a phylogeny with IQ-TREE (version 2.1.4-beta) \cite{Nguyen2014} using the \textit{augur tree} command and named internal nodes of the resulting divergence tree with TreeTime (version 0.10.1) \cite{Sagulenko2018} using the \textit{augur refine} command.
 We visualized phylogenies with Auspice \cite{Hadfield2018}, after first converting the trees to Auspice JSON format with \textit{augur export}.
+To visualize phylogenetic relationships in the context of each pathogen embedding, we calculated the mean Euclidean position of each internal node in each dimension of a given embedding (e.g., MDS 1) based on the Euclidean positions of that node's immediate descendants and plotted line segments on the embedding connecting each node of the tree with its immediate parent to represent branches in the phylogeny.
+We only plotted these phylogenetic relationships on embeddings for pathogen datasets that lacked reassortment and recombination including early and late H3N2 HA and early SARS-CoV-2 datasets.
 
 \subsection*{Definitions of genetic groups by experts or biologically-informed models}
 
