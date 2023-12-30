@@ -384,8 +384,6 @@ rule seasonal_flu_training_tree:
     output:
         tree = "seasonal-flu-nextstrain/results/tree_raw.nwk"
     conda: "../cartography.yml"
-    params:
-        tree_builder_args="-czb",
     threads: 4
     resources:
         mem_mb=16000,
@@ -396,7 +394,6 @@ rule seasonal_flu_training_tree:
         """
         augur tree \
             --alignment {input.alignment} \
-            --tree-builder-args="{params.tree_builder_args}" \
             --output {output.tree} \
             --nthreads {threads}
         """

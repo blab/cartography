@@ -118,14 +118,11 @@ rule seasonal_flu_test_tree:
     output:
         tree = "seasonal-flu-nextstrain-2018-2020/results/tree_raw.nwk",
     conda: "../cartography.yml"
-    params:
-        tree_builder_args="-czb",
     threads: 4
     shell:
         """
         augur tree \
             --alignment {input.alignment} \
-            --tree-builder-args="{params.tree_builder_args}" \
             --output {output.tree} \
             --nthreads {threads}
         """
