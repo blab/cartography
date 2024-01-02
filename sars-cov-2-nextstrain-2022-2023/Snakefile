@@ -50,13 +50,73 @@ rule sarscov2_test_subsample_late_samples:
             --output-strains {output.strains}
         """
 
-rule sarscov2_test_subsample_late_recombinant_samples_and_parental_lineages:
+rule sarscov2_test_download_official_pango_lineages:
+    output:
+        lineages="sars-cov-2-nextstrain-2022-2023/data/alias_key.json",
+    conda: "../cartography.yml"
+    shell:
+        """
+        curl -L \
+            -o {output.lineages} \
+            "https://github.com/cov-lineages/pango-designation/raw/1bf41233556859320bad75e269f595690294098a/pango_designation/alias_key.json"
+        """
+
+rule sarscov2_test_count_records_per_pango_lineage:
     input:
         metadata="sars-cov-2-nextstrain-2022-2023/data/filtered_metadata.tsv.zst",
+    output:
+        counts="sars-cov-2-nextstrain-2022-2023/data/pango_lineage_counts.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        zstd -c -d {input.metadata} \
+            | tsv-select -H -f strain,Nextclade_pango \
+            | tsv-summarize -H --group-by Nextclade_pango --count > {output.counts}
+        """
+
+rule sarscov2_test_get_distinct_well_covered_recombinant_lineages:
+    input:
+        lineages="sars-cov-2-nextstrain-2022-2023/data/alias_key.json",
+        counts="sars-cov-2-nextstrain-2022-2023/data/pango_lineage_counts.tsv",
+    output:
+        distinct_lineages="sars-cov-2-nextstrain-2022-2023/data/distinct_recombinant_and_parental_lineages.txt",
+        recombinant_and_parental_lineages="sars-cov-2-nextstrain-2022-2023/data/recombinant_and_parental_lineages.csv",
+    conda: "../cartography.yml"
+    params:
+        min_count=10,
+    shell:
+        """
+        python3 sars-cov-2-nextstrain-2022-2023/scripts/get_distinct_recombinant_lineages.py \
+            --lineages {input.lineages} \
+            --lineage-counts {input.counts} \
+            --min-count {params.min_count} \
+            --output-distinct {output.distinct_lineages} \
+            --output-table {output.recombinant_and_parental_lineages}
+        """
+
+rule sarscov2_test_filter_to_recombinant_metadata:
+    input:
+        metadata="sars-cov-2-nextstrain-2022-2023/data/filtered_metadata.tsv.zst",
+        distinct_lineages="sars-cov-2-nextstrain-2022-2023/data/distinct_recombinant_and_parental_lineages.txt",
+    output:
+        metadata="sars-cov-2-nextstrain-2022-2023/data/recombinant_metadata.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        zstd -c -d {input.metadata} \
+            | tsv-select -H -f strain,date,region,Nextclade_pango \
+            | tsv-filter -H --regex "date:(2022|2023)-" \
+            | tsv-join -H -f {input.distinct_lineages} -k Nextclade_pango > {output.metadata}
+        """
+
+rule sarscov2_test_subsample_late_recombinant_samples_and_parental_lineages:
+    input:
+        metadata="sars-cov-2-nextstrain-2022-2023/data/recombinant_metadata.tsv",
         outliers="sars-cov-2-nextstrain/config/exclude.txt",
     output:
         strains="sars-cov-2-nextstrain-2022-2023/data/known_recombinant_and_parental_strains.txt",
     params:
+        sequences_per_group=10,
         random_seed=RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
@@ -64,12 +124,11 @@ rule sarscov2_test_subsample_late_recombinant_samples_and_parental_lineages:
         augur filter \
             --metadata {input.metadata} \
             --exclude {input.outliers} \
-            --query "Nextclade_pango in ['AY.29', 'AY.4', 'AY.45', 'B.1.1.7', 'B.1.617', 'BA.1', 'BA.2', 'BA.2.75', 'BA.4', 'BA.5', 'BA.5.2.3', 'BJ.1', 'BM.1.1.1', 'CJ.1', 'XAY', 'XBB', 'XBB.1', 'XBC', 'XBF', 'XBL', 'XC', 'XD', 'XE', 'XF', 'XG']" \
             --min-date 2022-01-01 \
-            --max-date 2023-07-05 \
+            --max-date 2023-11-03 \
             --exclude-ambiguous-dates-by any \
             --group-by Nextclade_pango \
-            --sequences-per-group 20 \
+            --sequences-per-group {params.sequences_per_group} \
             --subsample-seed {params.random_seed} \
             --output-strains {output.strains}
         """
