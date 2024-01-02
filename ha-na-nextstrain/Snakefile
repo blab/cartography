@@ -686,6 +686,7 @@ rule seasonal_flu_reassortment_concat_within_between_stats:
 rule seasonal_flu_reassortment_create_notebook_docs:
     input:
         colors = "notebooks/config/color_schemes.tsv",
+        tree = "ha-na-nextstrain/results/tree_ha.nwk",
         annotated_embeddings="ha-na-nextstrain/results/annotated_embeddings.tsv",
         accuracy_table_ha="ha-na-nextstrain/results/full_HDBSCAN_metadata_ha.csv",
         accuracy_table_concatenated="ha-na-nextstrain/results/full_HDBSCAN_metadata_concatenated.csv",
