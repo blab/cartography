@@ -842,11 +842,15 @@ The \textit{pathogen-embed} Python package, available at \href{https://pypi.org/
 % Include only the SI item label in the paragraph heading. Use the \nameref{label} command to cite SI items in the text.
 \paragraph*{S1 Fig.}
 \label{S_Fig_simulated_flu_errors}
-{\bf Distribution of mean absolute errors (MAE) between observed and predicted pairwise genetic distances per embedding method parameters for simulated influenza-like populations.} Each panel shows boxplots of MAEs for a specific embedding method (PCA, MDS, t-SNE, and UMAP) and a given combination of method parameters. Boxplots reflect median, upper and lower quartiles, and the range of values.
+{\bf Distribution of mean absolute errors (MAE) between observed and predicted pairwise genetic distances per embedding method parameters for simulated influenza-like populations.}
+Each panel shows boxplots of MAEs for a specific embedding method (PCA, MDS, t-SNE, and UMAP) and a given combination of method parameters.
+Boxplots reflect median, upper and lower quartiles, and the range of values.
 
 \paragraph*{S2 Fig.}
 \label{S_Fig_simulated_coronavirus_errors}
-{\bf Distribution of mean absolute errors (MAE) between observed and predicted pairwise genetic distances per embedding method parameters for simulated coronavirus-like populations.} Each panel shows boxplots of MAEs for a specific embedding method (PCA, MDS, t-SNE, and UMAP) and a given combination of method parameters. Boxplots reflect median, upper and lower quartiles, and the range of values.
+{\bf Distribution of mean absolute errors (MAE) between observed and predicted pairwise genetic distances per embedding method parameters for simulated coronavirus-like populations.}
+Each panel shows boxplots of MAEs for a specific embedding method (PCA, MDS, t-SNE, and UMAP) and a given combination of method parameters.
+Boxplots reflect median, upper and lower quartiles, and the range of values.
 
 \paragraph*{S3 Fig.}
 \label{S_Fig_simulated_representative_mds_embeddings}
@@ -855,6 +859,9 @@ The \textit{pathogen-embed} Python package, available at \href{https://pypi.org/
 \paragraph*{S4 Fig.}
 \label{S_Fig_early_flu_mds_embeddings}
 {\bf MDS embeddings for early (2016--2018) influenza H3N2 HA sequences showing all three components.}
+Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+Line colors represent the clade membership of the most ancestral node in the pair of nodes connected by the segment.
+Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.
 
 \paragraph*{S5 Fig.}
 \label{S_Fig_flu_within_between_group_distances}
@@ -862,12 +869,18 @@ The \textit{pathogen-embed} Python package, available at \href{https://pypi.org/
 
 \paragraph*{S6 Fig.}
 \label{S_Fig_late_flu_embeddings_by_clade}
-{\bf Phylogeny of late (2018--2020) influenza H3N2 HA sequences plotted by nucleotide substitutions per site on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).
-  Tips in the tree and embeddings are colored by their Nextstrain clade assignment.}
+{\bf Phylogeny of late (2018--2020) influenza H3N2 HA sequences plotted by nucleotide substitutions per site on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
+Tips in the tree and embeddings are colored by their Nextstrain clade assignment.
+Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+Line colors represent the clade membership of the most ancestral node in the pair of nodes connected by the segment.
+Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.
 
 \paragraph*{S7 Fig.}
 \label{S_Fig_late_flu_mds_embeddings}
 {\bf MDS embeddings for late (2018--2020) influenza H3N2 HA sequences showing all three components.}
+Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+Line colors represent the clade membership of the most ancestral node in the pair of nodes connected by the segment.
+Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.
 
 \paragraph*{S8 Fig.}
 \label{S_Fig_late_flu_replication_of_cluster_accuracy}
@@ -896,11 +909,15 @@ The \textit{pathogen-embed} Python package, available at \href{https://pypi.org/
 \paragraph*{S14 Fig.}
 \label{S_Fig_sarscov2_early_mds}
 {\bf MDS embeddings for early SARS-CoV-2 sequences showing all three components.}
+Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.
 
 \paragraph*{S15 Fig.}
 \label{S_Fig_sarscov2_early_embeddings_by_Nextclade_pango}
-{\bf Phylogeny of early (2020--2022) SARS-CoV-2 sequences plotted by number of nucleotide substitutions from the most recent common ancestor on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).
-  Tips in the tree and embeddings are colored by their Pango lineage assignment.}
+{\bf Phylogeny of early (2020--2022) SARS-CoV-2 sequences plotted by number of nucleotide substitutions from the most recent common ancestor on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
+Tips in the tree and embeddings are colored by their Pango lineage assignment.
+Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.
 
 \paragraph*{S16 Fig.}
 \label{S_Fig_sarscov2_within_between_group_distances}
@@ -908,8 +925,10 @@ The \textit{pathogen-embed} Python package, available at \href{https://pypi.org/
 
 \paragraph*{S17 Fig.}
 \label{S_Fig_sarscov2_early_embeddings_by_cluster_vs_Nextclade_pango}
-{\bf Phylogenetic trees (left) and embeddings (right) of early (2020--2022) SARS-CoV-2 sequences colored by HDBSCAN cluster.
-  Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Pango lineages).}
+{\bf Phylogenetic trees (left) and embeddings (right) of early (2020--2022) SARS-CoV-2 sequences colored by HDBSCAN cluster.}
+Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Pango lineages).
+Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.
 
 \paragraph*{S18 Fig.}
 \label{S_Fig_late_sarscov2_replication_of_cluster_accuracy}
@@ -917,16 +936,20 @@ The \textit{pathogen-embed} Python package, available at \href{https://pypi.org/
 
 \paragraph*{S19 Fig.}
 \label{S_Fig_sarscov2_late_embeddings_by_cluster_vs_Nextclade_pango}
-{\bf Phylogenetic trees (left) and embeddings (right) of late (2022--2023) SARS-CoV-2 sequences colored by HDBSCAN cluster.
-  Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Pango lineages).}
+{\bf Phylogenetic trees (left) and embeddings (right) of late (2022--2023) SARS-CoV-2 sequences colored by HDBSCAN cluster.}
+Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Pango lineages).
 
 \paragraph*{S1 Table.}
 \label{S1_Table}
-{\bf Mutations observed per embedding cluster relative to a reference genome sequence for each pathogen. Each row reflects the alternate allele identified at a specific position of the given pathogen genome or gene sequence, the pathogen dataset, the embedding method, the number of clusters in the embedding with the observed mutation, and the list of distinct cluster labels with the mutation. Mutations must have occurred in at least 10 samples of the given dataset with an allele frequency of at least 50\%.}
+{\bf Mutations observed per embedding cluster relative to a reference genome sequence for each pathogen.}
+Each row reflects the alternate allele identified at a specific position of the given pathogen genome or gene sequence, the pathogen dataset, the embedding method, the number of clusters in the embedding with the observed mutation, and the list of distinct cluster labels with the mutation.
+Mutations must have occurred in at least 10 samples of the given dataset with an allele frequency of at least 50\%.
 
 \paragraph*{S2 Table.}
 \label{S2_Table}
-{\bf Average Euclidean distances between each known recombinant, $X$, and its parental lineages $A$ and $B$ per embedding method. Distances include average pairwise comparisons between $A$ and $B$, $A$ and $X$, and $B$ and $X$. Additional columns indicate whether each recombinant lineage maps closer to both parental lineages (or at least one) than those parents map to each other.}
+{\bf Average Euclidean distances between each known recombinant, $X$, and its parental lineages $A$ and $B$ per embedding method.}
+Distances include average pairwise comparisons between $A$ and $B$, $A$ and $X$, and $B$ and $X$.
+Additional columns indicate whether each recombinant lineage maps closer to both parental lineages (or at least one) than those parents map to each other.
 
 \paragraph*{S3 Table.}
 \label{S3_Table}
