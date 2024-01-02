@@ -367,6 +367,7 @@ These results qualitatively replicate the patterns we observed in embeddings for
   Tips in the tree and embeddings are colored by their Nextstrain clade assignment.
   Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
   Line colors represent the clade membership of the most ancestral node in the pair of nodes connected by the segment.
+  Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.
 }
 \label{fig:seasonal-influenza-h3n2-ha-embeddings}
 \end{figure}
@@ -426,7 +427,8 @@ These results indicate that nonlinear embeddings of t-SNE and UMAP could be bett
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-embeddings-by-cluster.png}
 \caption{{\bf Phylogenetic trees (left) and embeddings (right) of early (2016--2018) influenza H3N2 HA sequences colored by HDBSCAN cluster.}
   Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Nextstrain clades).
-  Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).}
+  Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+  Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.}
 \label{fig:seasonal-influenza-h3n2-ha-2016-2018-clusters}
 \end{figure}
 
@@ -449,7 +451,8 @@ These results show that all four methods can produce well-supported clusters tha
 \includegraphics[width=\columnwidth]{figures/flu-2018-2020-ha-embeddings-by-cluster.png}
 \caption{{\bf Phylogenetic trees (left) and embeddings (right) of late (2018--2020) H3N2 HA sequences colored by HDBSCAN cluster.}
   Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Nextstrain clades).
-  Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).}
+  Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+  Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.}
 \label{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters}
 \end{figure}
 
@@ -507,6 +510,7 @@ These results suggest that distance-based embedding methods can recapitulate bro
 \caption{{\bf Phylogeny of early (2020--2022) SARS-CoV-2 sequences plotted by number of nucleotide substitutions from the most recent common ancestor on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
   Tips in the tree and embeddings are colored by their Nextstrain clade assignment.
   Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+  Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.
 }
 \label{fig:sars-cov-2-early-embeddings-by-Nextstrain-clade}
 \end{figure}
@@ -541,6 +545,7 @@ Clusters from t-SNE produced within-group genetic distances that were most simil
 \caption{{\bf Phylogenetic trees (left) and embeddings (right) of early (2020--2022) SARS-CoV-2 sequences colored by HDBSCAN cluster.}
   Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Nextstrain clades).
   Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+  Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.
 }
 \label{fig:sars-cov-2-2020-2022-clusters-vs-Nextstrain-clade}
 \end{figure}
