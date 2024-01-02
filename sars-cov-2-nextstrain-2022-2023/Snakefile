@@ -504,7 +504,8 @@ rule sarscov2_test_tree_to_table:
     output:
         table = "sars-cov-2-nextstrain-2022-2023/results/table.tsv",
     params:
-        attributes = "numdate Nextstrain_clade Nextclade_pango Nextclade_pango_collapsed mutation_length divergence"
+        attributes = "Nextstrain_clade Nextclade_pango Nextclade_pango_collapsed branch_length divergence",
+        mutation_length_attribute = "branch_length",
     conda: "../cartography.yml"
     shell:
         """
@@ -514,6 +515,7 @@ rule sarscov2_test_tree_to_table:
             --node-data {input.branch_lengths} \
             --include-internal-nodes \
             --attributes {params.attributes} \
+            --mutation-length-attribute {params.mutation_length_attribute} \
             --output {output.table}
         """
 
@@ -775,6 +777,7 @@ rule sarscov2_test_concat_within_between_stats:
 rule sarscov2_test_create_notebook_docs:
     input:
         colors="notebooks/config/color_schemes.tsv",
+        tree = "sars-cov-2-nextstrain-2022-2023/results/tree.nwk",
         annotated_embeddings="sars-cov-2-nextstrain-2022-2023/results/annotated_embeddings_for_{clade_membership}.tsv",
         accuracy_table="sars-cov-2-nextstrain-2022-2023/results/full_HDBSCAN_metadata_for_{clade_membership}.csv",
         explained_variance_pca = "sars-cov-2-nextstrain-2022-2023/results/explained_variance_pca.csv",
