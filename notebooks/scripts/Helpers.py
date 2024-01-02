@@ -394,12 +394,28 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
         else:
             tips = tips_color
 
+        # Look for parent color field (e.g., "parent_clade_membership_color") in
+        # data frame to determine whether to color tree branches by that field.
+        # This field allows us to color branches by the value of the node from
+        # which the branch descends.
+        if f"parent_{color_field}" in dataFrame.columns:
+            tree_branch_color_spec = f"parent_{color_field}:N"
+            tree_branch_color = alt.Color(tree_branch_color_spec).scale(domain=domain, range=range_)
+        else:
+            tree_branch_color = alt.ColorValue("#cccccc")
+
+        if "branch_width" in dataFrame.columns:
+            tree_branch_width = alt.StrokeWidth("branch_width", legend=None)
+        else:
+            tree_branch_width = alt.StrokeValue(1)
+
         lines = alt.Chart(dataFrame).mark_rule().encode(
                     x=alt.X("parent_mutation:Q", scale=alt.Scale(domain=(dataFrame["divergence"].min(), dataFrame["divergence"].max()), nice=True)),
                     x2="divergence:Q",
                     y=alt.Y("parent_y:Q", scale=alt.Scale(domain=(dataFrame["y_value"].min(), dataFrame["y_value"].max()), nice=True)),
                     y2="y_value:Q",
-                    color=alt.ColorValue("#cccccc")
+                    color=tree_branch_color,
+                    strokeWidth=tree_branch_width,
                 )
 
         tree = (lines + tips).properties(width=560, height=250)
