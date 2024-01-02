@@ -100,9 +100,9 @@ rule seasonal_flu_training_align:
         """
     input:
         sequences = rules.seasonal_flu_training_filter.output.sequences,
-        reference = seasonal_flu_training_files.reference
+        reference = seasonal_flu_training_files.reference,
     output:
-        alignment = "seasonal-flu-nextstrain/results/aligned_sequences.fasta"
+        alignment = "seasonal-flu-nextstrain/results/aligned.fasta",
     conda: "../cartography.yml"
     threads: 4
     resources:
@@ -117,8 +117,20 @@ rule seasonal_flu_training_align:
             --reference-sequence {input.reference} \
             --output {output.alignment} \
             --fill-gaps \
-            --remove-reference \
             --nthreads {threads}
+        """
+
+rule seasonal_flu_training_remove_reference_from_embedding_alignment:
+    input:
+        alignment="seasonal-flu-nextstrain/results/aligned.fasta",
+    output:
+        alignment="seasonal-flu-nextstrain/results/aligned_sequences.fasta",
+    conda: "../cartography.yml"
+    params:
+        reference=SEASONAL_FLU_REFERENCE_STRAIN,
+    shell:
+        """
+        seqkit grep -v -p "{params.reference}" {input.alignment} > {output.alignment}
         """
 
 rule seasonal_flu_training_create_distance_matrix:
@@ -338,11 +350,26 @@ rule seasonal_flu_training_cluster_with_optimal_parameters:
             --output-figure {output.clustered_embedding_figure}
         """
 
+rule seasonal_flu_training_calculate_internal_node_embedding_positions:
+    input:
+        tree="seasonal-flu-nextstrain/results/tree.nwk",
+        embedding="seasonal-flu-nextstrain/results/cluster_embed_{method}_sequences.csv",
+    output:
+        embedding="seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_{method}_sequences.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/calculate_internal_node_embedding_positions.py \
+            --tree {input.tree} \
+            --embedding {input.embedding} \
+            --output {output.embedding}
+        """
+
 rule seasonal_flu_training_create_node_output:
     input:
-        dataframe = "seasonal-flu-nextstrain/results/cluster_embed_{method}_{ancestral}.csv"
+        dataframe = "seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_{method}_{ancestral}.csv"
     output:
-        node_data = "seasonal-flu-nextstrain/results/cluster_embed_{method}_{ancestral}.json"
+        node_data = "seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_{method}_{ancestral}.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -352,9 +379,8 @@ rule seasonal_flu_training_create_node_output:
         """
 
 rule seasonal_flu_training_tree:
-    message: "Building tree"
     input:
-        alignment = rules.seasonal_flu_training_align.output.alignment
+        alignment = "seasonal-flu-nextstrain/results/aligned.fasta",
     output:
         tree = "seasonal-flu-nextstrain/results/tree_raw.nwk"
     conda: "../cartography.yml"
@@ -372,10 +398,28 @@ rule seasonal_flu_training_tree:
             --nthreads {threads}
         """
 
+rule seasonal_flu_training_root_and_prune_tree:
+    input:
+        tree = "seasonal-flu-nextstrain/results/tree_raw.nwk",
+    output:
+        tree = "seasonal-flu-nextstrain/results/rooted_tree_raw.nwk",
+    conda: "../cartography.yml"
+    params:
+        root=SEASONAL_FLU_REFERENCE_STRAIN,
+    log:
+        "logs/seasonal-flu-nextstrain/root_and_prune_tree.txt"
+    shell:
+        """
+        python3 notebooks/scripts/root_and_prune_tree.py \
+            --tree {input.tree} \
+            --root {params.root} \
+            --output {output.tree} 2>&1 | tee {log}
+        """
+
 rule seasonal_flu_training_refine:
     input:
-        tree = rules.seasonal_flu_training_tree.output.tree,
-        alignment = rules.seasonal_flu_training_align.output,
+        tree = "seasonal-flu-nextstrain/results/rooted_tree_raw.nwk",
+        alignment = "seasonal-flu-nextstrain/results/aligned_sequences.fasta",
         metadata = "seasonal-flu-nextstrain/results/filtered_metadata.tsv",
     output:
         tree = "seasonal-flu-nextstrain/results/tree.nwk",
@@ -383,10 +427,6 @@ rule seasonal_flu_training_refine:
     log:
         "logs/seasonal-flu-nextstrain/refine.txt",
     params:
-        coalescent = "opt",
-        date_inference = "marginal",
-        clock_rate = 0.00382,
-        clock_std_dev = 0.000764,
         random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     resources:
@@ -400,16 +440,9 @@ rule seasonal_flu_training_refine:
             --tree {input.tree} \
             --alignment {input.alignment} \
             --metadata {input.metadata} \
+            --keep-root \
             --output-tree {output.tree} \
             --output-node-data {output.node_data} \
-            --timetree \
-            --use-fft \
-            --stochastic-resolve \
-            --coalescent {params.coalescent} \
-            --date-confidence \
-            --date-inference {params.date_inference} \
-            --clock-rate {params.clock_rate} \
-            --clock-std-dev {params.clock_std_dev} \
             --seed {params.random_seed} 2>&1 | tee {log}
         """
 
@@ -481,7 +514,8 @@ rule seasonal_flu_training_create_table_from_tree_and_node_data:
     output:
         table="seasonal-flu-nextstrain/results/table.tsv",
     params:
-        attributes="numdate clade_membership mutation_length divergence"
+        attributes="clade_membership branch_length divergence",
+        mutation_length_attribute="branch_length",
     conda: "../cartography.yml"
     shell:
         """
@@ -490,6 +524,7 @@ rule seasonal_flu_training_create_table_from_tree_and_node_data:
             --node-data {input.clades} {input.branch_lengths} \
             --include-internal-nodes \
             --attributes {params.attributes} \
+            --mutation-length-attribute {params.mutation_length_attribute} \
             --output {output.table}
         """
 
@@ -500,7 +535,7 @@ rule seasonal_flu_training_export:
         branch_lengths = rules.seasonal_flu_training_refine.output.node_data,
         nt_muts = rules.seasonal_flu_training_ancestral.output.node_data,
         aa_muts = rules.seasonal_flu_training_translate.output.node_data,
-        embeddings = expand("seasonal-flu-nextstrain/results/cluster_embed_{embedding}_sequences.json", embedding=EMBEDDING_METHODS),
+        embeddings = expand("seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_{embedding}_sequences.json", embedding=EMBEDDING_METHODS),
         auspice_config = seasonal_flu_training_files.auspice_config,
         colors = "seasonal-flu-nextstrain/config/colors.tsv",
         clades = rules.seasonal_flu_training_clades.output.clade_data,
@@ -523,10 +558,10 @@ rule seasonal_flu_training_export:
 
 rule seasonal_flu_training_create_distance_dataframe:
     input:
-        dataframe_pca = "seasonal-flu-nextstrain/results/cluster_embed_pca_sequences.csv",
-        dataframe_mds = "seasonal-flu-nextstrain/results/cluster_embed_mds_sequences.csv",
-        dataframe_tsne = "seasonal-flu-nextstrain/results/cluster_embed_t-sne_sequences.csv",
-        dataframe_umap = "seasonal-flu-nextstrain/results/cluster_embed_umap_sequences.csv",
+        dataframe_pca = "seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_pca_sequences.csv",
+        dataframe_mds = "seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_mds_sequences.csv",
+        dataframe_tsne = "seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_t-sne_sequences.csv",
+        dataframe_umap = "seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_umap_sequences.csv",
     output:
         metadata = "seasonal-flu-nextstrain/results/embedding_data.csv",
     conda: "../cartography.yml"
@@ -697,6 +732,7 @@ rule seasonal_flu_training_create_scatterplot_figure:
 rule seasonal_flu_training_create_notebook_docs:
     input:
         colors="notebooks/config/color_schemes.tsv",
+        tree="seasonal-flu-nextstrain/results/tree.nwk",
         annotated_embeddings="seasonal-flu-nextstrain/results/annotated_embeddings.tsv",
         accuracy_table="seasonal-flu-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
         explained_variance_pca="seasonal-flu-nextstrain/results/explained_variance_pca_sequences.csv",

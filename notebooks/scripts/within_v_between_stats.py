@@ -29,7 +29,7 @@ def describe_dict(result):
 if __name__ == "__main__":
 
     # Initialize parsers
-    parser = argparse.ArgumentParser(description = "creates embeddings", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description="Calculate average within and between group distances", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     # group column instead of cluster (naming)
     parser.add_argument("--distance-matrix", required=True, help="the path to a CSV genetic distance matrix")
@@ -43,6 +43,11 @@ if __name__ == "__main__":
     distance_matrix = pd.read_csv(args.distance_matrix, index_col=0)
 
     node_data = pd.read_csv(args.metadata, sep="\t" if args.metadata.endswith(".tsv") else ",", index_col="strain")
+
+    # Drop internal nodes, if they exist.
+    if "is_internal_node" in node_data.columns:
+        node_data = node_data[~node_data["is_internal_node"]].copy()
+
     node_dict = node_data.transpose().to_dict()
 
     group_annotations = pd.DataFrame([

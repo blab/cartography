@@ -33,22 +33,22 @@
     },
     {
       "key": "tsne_x",
-      "title": "t-SNE x",
+      "title": "t-SNE 1",
       "type": "continuous"
     },
     {
       "key": "tsne_y",
-      "title": "t-SNE y",
+      "title": "t-SNE 2",
       "type": "continuous"
     },
     {
       "key": "umap_x",
-      "title": "UMAP x",
+      "title": "UMAP 1",
       "type": "continuous"
     },
     {
       "key": "umap_y",
-      "title": "UMAP y",
+      "title": "UMAP 2",
       "type": "continuous"
     },
     {
@@ -148,8 +148,7 @@
   ],
   "display_defaults": {
     "color_by": "Nextstrain_clade",
-    "distance_measure": "num_date",
-    "geo_resolution": "division",
+    "distance_measure": "div",
     "map_triplicate": true
   },
   "filters": [
@@ -168,6 +167,7 @@
     "division"
   ],
   "panels": [
-    "tree"
+    "tree",
+    "entropy"
   ]
 }

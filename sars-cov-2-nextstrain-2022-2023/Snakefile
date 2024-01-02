@@ -10,7 +10,7 @@ rule sarscov2_test:
         expand("manuscript/figures/sarscov2-test-mds-by-{clade_membership}-clade.html", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
         expand("manuscript/figures/sarscov2-test-mds-by-{clade_membership}-clade.png", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
         "manuscript/figures/sarscov2-test-euclidean-distance-by-genetic-distance.png",
-        "auspice/cartography_ncov_2022-2023.json",
+        "auspice/cartography_ncov-2022-2023.json",
         "sars-cov-2-nextstrain-2022-2023/results/recombinant_distances.csv",
         expand("sars-cov-2-nextstrain-2022-2023/results/mutation_table_for_{clade_membership}.csv", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
 
@@ -143,16 +143,29 @@ rule sarscov2_test_uncompress_alignment:
     input:
         alignment="sars-cov-2-nextstrain-2022-2023/data/aligned.fasta.zst",
     output:
-        alignment="sars-cov-2-nextstrain-2022-2023/data/aligned.fasta",
+        alignment="sars-cov-2-nextstrain-2022-2023/data/aligned_with_reference.fasta",
     conda: "../cartography.yml"
     shell:
         """
         zstd -c -d {input.alignment} > {output.alignment}
         """
 
+rule sarscov2_test_remove_reference_from_embedding_alignment:
+    input:
+        alignment="sars-cov-2-nextstrain-2022-2023/data/aligned_with_reference.fasta",
+    output:
+        alignment="sars-cov-2-nextstrain-2022-2023/data/aligned.fasta",
+    conda: "../cartography.yml"
+    params:
+        reference=SARS_COV_2_REFERENCE_STRAIN,
+    shell:
+        """
+        seqkit grep -v -p "{params.reference}" {input.alignment} > {output.alignment}
+        """
+
 rule sarscov2_test_tree:
     input:
-        alignment = "sars-cov-2-nextstrain-2022-2023/data/aligned.fasta",
+        alignment = "sars-cov-2-nextstrain-2022-2023/data/aligned_with_reference.fasta",
     output:
         tree = "sars-cov-2-nextstrain-2022-2023/results/tree_raw.nwk",
     conda: "../cartography.yml"
@@ -178,7 +191,7 @@ rule sarscov2_test_root_and_prune_tree:
         tree = "sars-cov-2-nextstrain-2022-2023/results/rooted_tree_raw.nwk",
     conda: "../cartography.yml"
     params:
-        root="Wuhan-Hu-1/2019",
+        root=SARS_COV_2_REFERENCE_STRAIN,
     log:
         "logs/sars-cov-2-nextstrain-2022-2023/root_and_prune_tree.txt"
     shell:
@@ -200,10 +213,6 @@ rule sarscov2_test_refine:
     log:
         "logs/sars-cov-2-nextstrain-2022-2023/refine.txt",
     params:
-        coalescent = "opt",
-        date_inference = "marginal",
-        clock_rate = 0.0008,
-        clock_std_dev = 0.0004,
         divergence_units="mutations",
     conda: "../cartography.yml"
     resources:
@@ -220,14 +229,7 @@ rule sarscov2_test_refine:
             --output-tree {output.tree} \
             --output-node-data {output.node_data} \
             --keep-root \
-            --stochastic-resolve \
-            --timetree \
-            --coalescent {params.coalescent} \
-            --date-confidence \
-            --date-inference {params.date_inference} \
-            --divergence-units {params.divergence_units} \
-            --clock-rate {params.clock_rate} \
-            --clock-std-dev {params.clock_std_dev} 2>&1 | tee {log}
+            --divergence-units {params.divergence_units} 2>&1 | tee {log}
         """
 
 rule sarscov2_test_ancestral:
@@ -274,7 +276,6 @@ rule sarscov2_test_translate:
         """
 
 rule sarscov2_test_export:
-    message: "Exporting data files for for auspice"
     input:
         tree = "sars-cov-2-nextstrain-2022-2023/results/tree.nwk",
         metadata = "sars-cov-2-nextstrain-2022-2023/data/metadata.tsv",
@@ -284,11 +285,9 @@ rule sarscov2_test_export:
         embeddings = expand("sars-cov-2-nextstrain-2022-2023/results/cluster_embed_{embedding}_for_{clade_membership}.json", embedding=EMBEDDING_METHODS, clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
         auspice_config = "sars-cov-2-nextstrain-2022-2023/config/auspice_config.json",
     output:
-        auspice_tree = "auspice/cartography_ncov_2022-2023.json",
-        root_sequence = "auspice/cartography_ncov_2022-2023_root-sequence.json",
+        auspice_tree = "auspice/cartography_ncov-2022-2023.json",
+        root_sequence = "auspice/cartography_ncov-2022-2023_root-sequence.json",
     conda: "../cartography.yml"
-    params:
-        color_by="Nextstrain_clade Nextclade_pango Nextclade_pango_collapsed"
     shell:
         """
         augur export v2 \
@@ -297,7 +296,6 @@ rule sarscov2_test_export:
             --node-data {input.branch_lengths} {input.nt_muts} {input.aa_muts} {input.embeddings} \
             --auspice-config {input.auspice_config} \
             --include-root-sequence \
-            --color-by-metadata {params.color_by} \
             --minify-json \
             --output {output.auspice_tree}
         """
@@ -506,7 +504,8 @@ rule sarscov2_test_tree_to_table:
     output:
         table = "sars-cov-2-nextstrain-2022-2023/results/table.tsv",
     params:
-        attributes = "numdate Nextstrain_clade Nextclade_pango Nextclade_pango_collapsed mutation_length divergence"
+        attributes = "Nextstrain_clade Nextclade_pango Nextclade_pango_collapsed branch_length divergence",
+        mutation_length_attribute = "branch_length",
     conda: "../cartography.yml"
     shell:
         """
@@ -516,6 +515,7 @@ rule sarscov2_test_tree_to_table:
             --node-data {input.branch_lengths} \
             --include-internal-nodes \
             --attributes {params.attributes} \
+            --mutation-length-attribute {params.mutation_length_attribute} \
             --output {output.table}
         """
 
@@ -777,6 +777,7 @@ rule sarscov2_test_concat_within_between_stats:
 rule sarscov2_test_create_notebook_docs:
     input:
         colors="notebooks/config/color_schemes.tsv",
+        tree = "sars-cov-2-nextstrain-2022-2023/results/tree.nwk",
         annotated_embeddings="sars-cov-2-nextstrain-2022-2023/results/annotated_embeddings_for_{clade_membership}.tsv",
         accuracy_table="sars-cov-2-nextstrain-2022-2023/results/full_HDBSCAN_metadata_for_{clade_membership}.csv",
         explained_variance_pca = "sars-cov-2-nextstrain-2022-2023/results/explained_variance_pca.csv",
@@ -796,6 +797,7 @@ rule sarscov2_test_create_notebook_docs:
         mds_label=lambda wildcards: f"mds_label_for_{wildcards.clade_membership}",
         tsne_label=lambda wildcards: f"t-sne_label_for_{wildcards.clade_membership}",
         umap_label=lambda wildcards: f"umap_label_for_{wildcards.clade_membership}",
+        plot_branches=False,
     conda: "../cartography.yml"
     notebook:
         "../sars-cov-2-nextstrain/2022-03-29-final-figures.py.ipynb"

@@ -82,16 +82,11 @@ rule seasonal_flu_test_filter:
         """
 
 rule seasonal_flu_test_align:
-    message:
-        """
-        Aligning sequences to {input.reference}
-          - filling gaps with N
-        """
     input:
         sequences = rules.seasonal_flu_test_filter.output.sequences,
-        reference = seasonal_flu_test_files.reference
+        reference = seasonal_flu_test_files.reference,
     output:
-        alignment = "seasonal-flu-nextstrain-2018-2020/results/aligned_sequences.fasta"
+        alignment = "seasonal-flu-nextstrain-2018-2020/results/aligned.fasta",
     conda: "../cartography.yml"
     threads: 4
     shell:
@@ -101,16 +96,27 @@ rule seasonal_flu_test_align:
             --reference-sequence {input.reference} \
             --output {output.alignment} \
             --fill-gaps \
-            --remove-reference \
             --nthreads {threads}
         """
 
-rule seasonal_flu_test_tree:
-    message: "Building tree"
+rule seasonal_flu_test_remove_reference_from_embedding_alignment:
     input:
-        alignment = rules.seasonal_flu_test_align.output.alignment
+        alignment="seasonal-flu-nextstrain-2018-2020/results/aligned.fasta",
     output:
-        tree = "seasonal-flu-nextstrain-2018-2020/results/tree_raw.nwk"
+        alignment="seasonal-flu-nextstrain-2018-2020/results/aligned_sequences.fasta",
+    conda: "../cartography.yml"
+    params:
+        reference=SEASONAL_FLU_REFERENCE_STRAIN,
+    shell:
+        """
+        seqkit grep -v -p "{params.reference}" {input.alignment} > {output.alignment}
+        """
+
+rule seasonal_flu_test_tree:
+    input:
+        alignment = "seasonal-flu-nextstrain-2018-2020/results/aligned.fasta",
+    output:
+        tree = "seasonal-flu-nextstrain-2018-2020/results/tree_raw.nwk",
     conda: "../cartography.yml"
     threads: 4
     shell:
@@ -121,10 +127,28 @@ rule seasonal_flu_test_tree:
             --nthreads {threads}
         """
 
+rule seasonal_flu_test_root_and_prune_tree:
+    input:
+        tree = "seasonal-flu-nextstrain-2018-2020/results/tree_raw.nwk",
+    output:
+        tree = "seasonal-flu-nextstrain-2018-2020/results/rooted_tree_raw.nwk",
+    conda: "../cartography.yml"
+    params:
+        root=SEASONAL_FLU_REFERENCE_STRAIN,
+    log:
+        "logs/seasonal-flu-nextstrain-2018-2020/root_and_prune_tree.txt"
+    shell:
+        """
+        python3 notebooks/scripts/root_and_prune_tree.py \
+            --tree {input.tree} \
+            --root {params.root} \
+            --output {output.tree} 2>&1 | tee {log}
+        """
+
 rule seasonal_flu_test_refine:
     input:
-        tree = rules.seasonal_flu_test_tree.output.tree,
-        alignment = rules.seasonal_flu_test_align.output,
+        tree = "seasonal-flu-nextstrain-2018-2020/results/rooted_tree_raw.nwk",
+        alignment = "seasonal-flu-nextstrain-2018-2020/results/aligned_sequences.fasta",
         metadata = "seasonal-flu-nextstrain-2018-2020/results/filtered_metadata.tsv",
     output:
         tree = "seasonal-flu-nextstrain-2018-2020/results/tree.nwk",
@@ -132,10 +156,6 @@ rule seasonal_flu_test_refine:
     log:
         "logs/seasonal-flu-nextstrain-2018-2020/refine.txt",
     params:
-        coalescent = "opt",
-        date_inference = "marginal",
-        clock_rate = 0.00382,
-        clock_std_dev = 0.000764,
         random_seed = RANDOM_SEED,
     conda: "../cartography.yml"
     shell:
@@ -144,24 +164,16 @@ rule seasonal_flu_test_refine:
             --tree {input.tree} \
             --alignment {input.alignment} \
             --metadata {input.metadata} \
+            --keep-root \
             --output-tree {output.tree} \
             --output-node-data {output.node_data} \
-            --timetree \
-            --use-fft \
-            --stochastic-resolve \
-            --coalescent {params.coalescent} \
-            --date-confidence \
-            --date-inference {params.date_inference} \
-            --clock-rate {params.clock_rate} \
-            --clock-std-dev {params.clock_std_dev} \
             --seed {params.random_seed} 2>&1 | tee {log}
         """
 
 rule seasonal_flu_test_ancestral:
-    message: "Reconstructing ancestral sequences and mutations"
     input:
-        tree = rules.seasonal_flu_test_refine.output.tree,
-        alignment = rules.seasonal_flu_test_align.output.alignment
+        tree = "seasonal-flu-nextstrain-2018-2020/results/tree.nwk",
+        alignment = "seasonal-flu-nextstrain-2018-2020/results/aligned_sequences.fasta",
     output:
         node_data = "seasonal-flu-nextstrain-2018-2020/results/nt_muts.json",
         sequences = "seasonal-flu-nextstrain-2018-2020/results/aligned_ancestral.fasta"
@@ -342,12 +354,26 @@ rule seasonal_flu_test_cluster_with_optimal_parameters:
             --output-figure {output.clustered_embedding_figure}
         """
 
-rule seasonal_flu_test_create_node_output:
-    message: "creates node output that is used by augur to create the phylogenies"
+rule seasonal_flu_test_calculate_internal_node_embedding_positions:
     input:
-        dataframe = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_{method}_{ancestral}.csv"
+        tree="seasonal-flu-nextstrain-2018-2020/results/tree.nwk",
+        embedding="seasonal-flu-nextstrain-2018-2020/results/cluster_embed_{method}_sequences.csv",
     output:
-        node_data = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_{method}_{ancestral}.json"
+        embedding="seasonal-flu-nextstrain-2018-2020/results/cluster_embed_with_internal_nodes_{method}_sequences.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/calculate_internal_node_embedding_positions.py \
+            --tree {input.tree} \
+            --embedding {input.embedding} \
+            --output {output.embedding}
+        """
+
+rule seasonal_flu_test_create_node_output:
+    input:
+        dataframe = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_with_internal_nodes_{method}_{ancestral}.csv"
+    output:
+        node_data = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_with_internal_nodes_{method}_{ancestral}.json"
     conda: "../cartography.yml"
     shell:
         """
@@ -357,19 +383,19 @@ rule seasonal_flu_test_create_node_output:
         """
 
 rule seasonal_flu_test_export:
-    message: "Exporting data files for for auspice"
     input:
         tree = rules.seasonal_flu_test_refine.output.tree,
         metadata = "seasonal-flu-nextstrain-2018-2020/results/filtered_metadata.tsv",
         branch_lengths = rules.seasonal_flu_test_refine.output.node_data,
         nt_muts = rules.seasonal_flu_test_ancestral.output.node_data,
         aa_muts = rules.seasonal_flu_test_translate.output.node_data,
-        embeddings = expand("seasonal-flu-nextstrain-2018-2020/results/cluster_embed_{embedding}_{ancestral}.json", embedding=EMBEDDING_METHODS, ancestral=INTERNAL_NODE),
+        embeddings = expand("seasonal-flu-nextstrain-2018-2020/results/cluster_embed_with_internal_nodes_{embedding}_{ancestral}.json", embedding=EMBEDDING_METHODS, ancestral=INTERNAL_NODE),
         auspice_config = seasonal_flu_test_files.auspice_config,
         colors = "seasonal-flu-nextstrain-2018-2020/config/colors.tsv",
         clades = rules.seasonal_flu_test_clades.output.clade_data
     output:
-        auspice_tree = "auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json"
+        auspice_tree = "auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json",
+        root_sequence = "auspice/cartography_flu-seasonal-h3n2-ha-2018-2020_root-sequence.json",
     conda: "../cartography.yml"
     shell:
         """
@@ -378,6 +404,7 @@ rule seasonal_flu_test_export:
             --metadata {input.metadata} \
             --node-data {input.branch_lengths} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} \
             --auspice-config {input.auspice_config} \
+            --include-root-sequence \
             --colors {input.colors} \
             --validation-mode warn \
             --output {output.auspice_tree}
@@ -392,7 +419,8 @@ rule seasonal_flu_test_tree_to_table:
     output:
         table="seasonal-flu-nextstrain-2018-2020/results/table.tsv",
     params:
-        attributes="numdate clade_membership mutation_length divergence"
+        attributes="clade_membership branch_length divergence",
+        mutation_length_attribute="branch_length",
     conda: "../cartography.yml"
     shell:
         """
@@ -401,15 +429,16 @@ rule seasonal_flu_test_tree_to_table:
             --node-data {input.clades} {input.branch_lengths} \
             --include-internal-nodes \
             --attributes {params.attributes} \
+            --mutation-length-attribute {params.mutation_length_attribute} \
             --output {output.table}
         """
 
 rule seasonal_flu_test_create_distance_dataframe:
     input:
-        dataframe_pca = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_pca_sequences.csv",
-        dataframe_mds = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_mds_sequences.csv",
-        dataframe_tsne = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_t-sne_sequences.csv",
-        dataframe_umap = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_umap_sequences.csv",
+        dataframe_pca = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_with_internal_nodes_pca_sequences.csv",
+        dataframe_mds = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_with_internal_nodes_mds_sequences.csv",
+        dataframe_tsne = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_with_internal_nodes_t-sne_sequences.csv",
+        dataframe_umap = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_with_internal_nodes_umap_sequences.csv",
     output:
         metadata = "seasonal-flu-nextstrain-2018-2020/results/embedding_data.csv",
     conda: "../cartography.yml"
@@ -626,8 +655,8 @@ rule seasonal_flu_test_create_scatterplot_figure:
 
 rule seasonal_flu_test_create_notebook_docs:
     input:
-        #Charts, tree:
         colors = "notebooks/config/color_schemes.tsv",
+        tree="seasonal-flu-nextstrain-2018-2020/results/tree.nwk",
         annotated_embeddings = "seasonal-flu-nextstrain-2018-2020/results/annotated_embeddings.tsv",
         accuracy_table="seasonal-flu-nextstrain-2018-2020/results/full_HDBSCAN_metadata.csv",
         explained_variance_pca = "seasonal-flu-nextstrain-2018-2020/results/explained_variance_pca_sequences.csv",
@@ -694,7 +723,7 @@ rule seasonal_flu_test_replication_remove_reference_from_alignment:
     output:
         alignment="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/aligned_without_reference.fasta",
     params:
-        reference="A/Beijing/32/1992",
+        reference=SEASONAL_FLU_REFERENCE_STRAIN,
     conda: "../cartography.yml"
     shell:
         """
@@ -831,7 +860,7 @@ rule seasonal_flu_test_replication_root_and_prune_tree:
         tree = "seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/rooted_tree_raw.nwk",
     conda: "../cartography.yml"
     params:
-        root="A/Beijing/32/1992",
+        root=SEASONAL_FLU_REFERENCE_STRAIN,
         minimum_node_support=1,
     shell:
         """

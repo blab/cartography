@@ -2,6 +2,7 @@
 dimensionality embeddings of distance matrices.
 """
 from augur.io import read_sequences
+from augur.utils import read_tree
 import Bio.SeqIO
 from collections import OrderedDict
 import numpy as np
@@ -245,6 +246,60 @@ def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip,
     return chart
 
 
+def make_node_branch_widths(tree_path, min_width=1.0, max_width=4.0):
+    """Build a data frame of branch widths for a given Newick tree path bounded
+    by the given min and max width. Branch widths reflect the log of the number
+    of leaves descended from each node normalized to range from 0 to 1. Nodes
+    receive a branch width of the minimum width plus the remaining range between
+    the max and min values scaled by the normalized log leaves.
+    """
+    tree = read_tree(tree_path)
+
+    node_branch_widths = []
+    for node in tree.find_clades(order="postorder"):
+        if node.is_terminal():
+            node.branch_width = 1
+        else:
+            node.branch_width = sum((child.branch_width for child in node.clades))
+
+        node_branch_widths.append({
+            "node": node.name,
+            "leaves": node.branch_width
+        })
+
+    node_branch_widths = pd.DataFrame.from_records(node_branch_widths)
+    node_branch_widths["branch_weight"] = np.sqrt(node_branch_widths["leaves"] / node_branch_widths["leaves"].max())
+
+    width_range = max_width - min_width
+    node_branch_widths["branch_width"] = min_width + width_range * node_branch_widths["branch_weight"]
+
+    return node_branch_widths
+
+
+def make_branch_lines_for_columns(embedding_segments, column1, column2, color_domain=None, color_range=None, color_spec="clade_membership_color:N"):
+    """Return an Altair chart representing branch line segments defined in the
+    given data frame. Each segment spans from `column1` to `{column1}_parent`
+    and `column2` to `{column2}_parent`. Color branches by clade membership with
+    an optional domain and range. Otherwise, color branches gray.
+
+    """
+    if color_domain and color_range:
+        color = alt.Color(color_spec).scale(domain=color_domain, range=color_range)
+    else:
+        color = alt.ColorValue("#cccccc")
+
+    branch_lines = alt.Chart(embedding_segments).mark_rule().encode(
+        x=f"{column1}_parent:Q",
+        x2=f"{column1}:Q",
+        y=f"{column2}_parent:Q",
+        y2=f"{column2}:Q",
+        color=color,
+        strokeWidth=alt.StrokeWidth("branch_width", legend=None),
+    )
+
+    return branch_lines
+
+
 def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color, legend_title, ToolTip, domain=None, range_=None, legend_columns=1, plot_legend=True):
     """Creates a linked brushable altair plot with the tree and the charts appended
     Parameters
@@ -339,12 +394,28 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
         else:
             tips = tips_color
 
+        # Look for parent color field (e.g., "parent_clade_membership_color") in
+        # data frame to determine whether to color tree branches by that field.
+        # This field allows us to color branches by the value of the node from
+        # which the branch descends.
+        if f"parent_{color_field}" in dataFrame.columns:
+            tree_branch_color_spec = f"parent_{color_field}:N"
+            tree_branch_color = alt.Color(tree_branch_color_spec).scale(domain=domain, range=range_)
+        else:
+            tree_branch_color = alt.ColorValue("#cccccc")
+
+        if "branch_width" in dataFrame.columns:
+            tree_branch_width = alt.StrokeWidth("branch_width", legend=None)
+        else:
+            tree_branch_width = alt.StrokeValue(1)
+
         lines = alt.Chart(dataFrame).mark_rule().encode(
                     x=alt.X("parent_mutation:Q", scale=alt.Scale(domain=(dataFrame["divergence"].min(), dataFrame["divergence"].max()), nice=True)),
                     x2="divergence:Q",
                     y=alt.Y("parent_y:Q", scale=alt.Scale(domain=(dataFrame["y_value"].min(), dataFrame["y_value"].max()), nice=True)),
                     y2="y_value:Q",
-                    color=alt.ColorValue("#cccccc")
+                    color=tree_branch_color,
+                    strokeWidth=tree_branch_width,
                 )
 
         tree = (lines + tips).properties(width=560, height=250)

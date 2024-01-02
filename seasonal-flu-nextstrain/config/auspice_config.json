@@ -84,7 +84,7 @@
     ],
     "display_defaults": {
         "color_by": "clade_membership",
-        "distance_measure": "num_date"
+        "distance_measure": "div"
     },
     "maintainers": [
         {"name": "Sravani Nanduri"},
