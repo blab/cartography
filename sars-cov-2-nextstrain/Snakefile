@@ -203,7 +203,7 @@ rule sarscov2_refine:
     log:
         "logs/sars-cov-2-nextstrain/refine.txt",
     params:
-        root = "Wuhan-Hu-1/2019",
+        root = SARS_COV_2_REFERENCE_STRAIN,
         divergence_units="mutations",
     conda: "../cartography.yml"
     resources:

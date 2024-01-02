@@ -181,7 +181,7 @@ rule seasonal_flu_reassortment_root_and_prune_tree:
         tree = "ha-na-nextstrain/results/rooted_tree_raw_{segment}.nwk",
     conda: "../cartography.yml"
     params:
-        root="A/Beijing/32/1992",
+        root=SEASONAL_FLU_REFERENCE_STRAIN,
         minimum_node_support=1,
     log:
         "logs/seasonal_flu_reassortment_root_and_prune_tree_{segment}.txt"

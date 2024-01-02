@@ -723,7 +723,7 @@ rule seasonal_flu_test_replication_remove_reference_from_alignment:
     output:
         alignment="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/aligned_without_reference.fasta",
     params:
-        reference="A/Beijing/32/1992",
+        reference=SEASONAL_FLU_REFERENCE_STRAIN,
     conda: "../cartography.yml"
     shell:
         """
@@ -860,7 +860,7 @@ rule seasonal_flu_test_replication_root_and_prune_tree:
         tree = "seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{sequences_per_group}/{replicate}/rooted_tree_raw.nwk",
     conda: "../cartography.yml"
     params:
-        root="A/Beijing/32/1992",
+        root=SEASONAL_FLU_REFERENCE_STRAIN,
         minimum_node_support=1,
     shell:
         """
