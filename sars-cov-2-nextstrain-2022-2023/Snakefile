@@ -510,7 +510,7 @@ rule sarscov2_test_cluster_accuracy:
     output:
         dataframe="sars-cov-2-nextstrain-2022-2023/results/cluster_accuracy_{method}_for_{clade_membership}.csv",
     params:
-        ignored_clusters="unassigned",
+        ignored_clusters=["unassigned", "recombinant"],
     conda: "../cartography.yml"
     shell:
         """
