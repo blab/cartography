@@ -344,6 +344,10 @@ H3N2's HA protein evolves rapidly, accumulating amino acid mutations that enable
 These mutations produce distinct phylogenetic clades that represent potentially different antigenic phenotypes.
 The World Health Organization (WHO) Global Influenza Surveillance and Response System (GISRS) regularly sequences genomes of circulating influenza lineages \cite{Hay2018} and submits these sequences to public INSDC databases like NCBI's GenBank \cite{Arita2021}.
 These factors, coupled with HA's relatively short gene size of 1,701 nucleotides, facilitate real-time genomic epidemiology of H3N2 \cite{Neher2015} and rapid analysis by the embedding methods we wanted to evaluate.
+We analyzed H3N2 HA sequences from two consecutive time periods including an ``early'' dataset from 2016--2018 and a ``late'' dataset from 2018--2020.
+For each dataset, we created embeddings with all four methods, identified clusters in the embeddings with HDBSCAN, and calculated the accuracy of clusters relative to expert-defined genetic groups (see Methods).
+We used the early dataset to identify cluster parameters that minimized the distance between clusters and known genetic groups.
+We tested these optimal parameters with the late dataset.
 
 We first applied each embedding method to the early H3N2 HA sequences collected from 2016 through 2018, colored samples by previously defined phylogenetic clades, and inspected the placement of these samples in the embeddings and corresponding phylogeny.
 The early H3N2 dataset represented 12 Nextstrain clades total including 10 clades with at least 10 samples.
