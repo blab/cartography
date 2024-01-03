@@ -11,7 +11,7 @@ rule sarscov2_test:
         expand("manuscript/figures/sarscov2-test-mds-by-{clade_membership}-clade.png", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
         "manuscript/figures/sarscov2-test-euclidean-distance-by-genetic-distance.png",
         "auspice/cartography_ncov-2022-2023.json",
-        "sars-cov-2-nextstrain-2022-2023/results/recombinant_distances.csv",
+        "manuscript/tables/sars-cov-2-recombinant-distances.csv",
         expand("sars-cov-2-nextstrain-2022-2023/results/mutation_table_for_{clade_membership}.csv", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
 
 rule sarscov2_test_download_filtered_metadata:
@@ -718,7 +718,7 @@ rule sarscov2_test_concat_mutation_tables:
 
 rule sarscov2_test_get_distances_between_recombinant_and_parental_lineages:
     input:
-        lineages="sars-cov-2-nextstrain-2022-2023/config/recombinant_and_parental_lineages.csv",
+        lineages="sars-cov-2-nextstrain-2022-2023/data/recombinant_and_parental_lineages.csv",
         metadata="sars-cov-2-nextstrain-2022-2023/data/metadata.tsv",
         embedding="sars-cov-2-nextstrain-2022-2023/results/embed_{method}.csv",
     output:
@@ -743,8 +743,7 @@ rule sarscov2_test_concat_recombinant_distances:
     input:
         distances=expand("sars-cov-2-nextstrain-2022-2023/results/recombinant_distances_for_{method}.csv", method=EMBEDDING_METHODS),
     output:
-        distances="sars-cov-2-nextstrain-2022-2023/results/recombinant_distances.csv",
-        distances_latex="manuscript/tables/sars-cov-2-recombinant-distances.tex",
+        distances="manuscript/tables/sars-cov-2-recombinant-distances.csv",
     conda: "../cartography.yml"
     params:
         latex_precision=2,
@@ -753,9 +752,7 @@ rule sarscov2_test_concat_recombinant_distances:
         python3 notebooks/scripts/concatenate_tables.py \
             --tables {input.distances} \
             --separator ',' \
-            --output {output.distances} \
-            --output-latex {output.distances_latex} \
-            --latex-precision {params.latex_precision}
+            --output {output.distances}
         """
 
 rule sarscov2_test_within_between_stats_clades:
