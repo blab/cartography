@@ -498,6 +498,7 @@ However, multiple expert-based clade definitions exist for SARS-CoV-2, enabling 
 These definitions span from broad genetic groups named by the WHO as ``variants of concern'' (e.g., ``Alpha'', ``Beta'', etc.) \cite{Konings2021} or systematically defined by the Nextstrain team \cite{Hodcroft2020,Bedford2021,Roemer2022} to smaller, emerging genetic clusters defined by Pango curators \cite{OToole2021}.
 As with seasonal influenza, we defined an early SARS-CoV-2 dataset spanning from January 2020 to January 2022, embedded genomes with the same four methods, and identified HDBSCAN clustering parameters that minimized the VI distance between embedding clusters and previously defined genetic groups as defined by Nextstrain clades and Pango lineages (see Methods).
 Using these optimal cluster parameters, we produced clusters from embeddings of a late SARS-CoV-2 dataset spanning from January 2022 to November 2023 and calculated the VI distance between those clusters and known genetic groups.
+Unlike the seasonal influenza analysis, we counted insertion and deletion (``indel'') events in pairwise genetic distances for SARS-CoV-2, to improve the resolution of distance-based embeddings.
 
 The early SARS-CoV-2 dataset represented 24 Nextstrain clades and 35 Pango lineages.
 All embedding methods placed samples from the same Nextstrain clades closer together and closely related Nextstrain clades near each other (Fig.~\ref{fig:sars-cov-2-early-embeddings-by-Nextstrain-clade}).
