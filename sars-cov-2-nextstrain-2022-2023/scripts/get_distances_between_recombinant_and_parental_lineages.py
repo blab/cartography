@@ -11,12 +11,13 @@ if __name__ == '__main__':
     parser.add_argument("--embedding", required=True, help="CSV of an embedding to calculate Euclidean distances from")
     parser.add_argument("--metadata", required=True, help="TSV of metadata containing strain name and lineage information required to find strains from recombinant lineages")
     parser.add_argument("--lineage-column", default="Nextclade_pango", help="name of the metadata column for the lineage information per strain")
+    parser.add_argument("--min-count", default=10, type=int, help="minimum records per lineage required for a recombinant lineage and its parental lineages to be included in the output")
     parser.add_argument("--output", required=True, help="CSV table of lineages with method and average pairwise distances between strains in each lineage")
 
     args = parser.parse_args()
 
     # Load lineages.
-    lineages = pd.read_csv(args.lineages)
+    lineages = pd.read_csv(args.lineages).to_dict(orient="records")
 
     # Load embedding.
     embedding = pd.read_csv(
@@ -37,11 +38,19 @@ if __name__ == '__main__':
 
     # Calculate average pairwise distance between lineages for each set of lineages.
     lineage_distances = []
-    for row_id, (parental_A, parental_B, recombinant_X) in lineages.iterrows():
+    for lineage in lineages:
+        recombinant_X = lineage["recombinant_X"]
+        parental_A = lineage["parental_A"]
+        parental_B = lineage["parental_B"]
+
         # Find strains per lineage.
         parental_A_strains = set(metadata_subset.loc[metadata_subset[args.lineage_column] == parental_A].index.values)
         parental_B_strains = set(metadata_subset.loc[metadata_subset[args.lineage_column] == parental_B].index.values)
         recombinant_X_strains = set(metadata_subset.loc[metadata_subset[args.lineage_column] == recombinant_X].index.values)
+
+        if not all([len(strain_set) >= args.min_count for strain_set in (parental_A_strains, parental_B_strains, recombinant_X_strains)]):
+            print(f"Could not find at least {args.min_count} samples in all three lineages: {parental_A}, {parental_B}, and {recombinant_X}")
+            continue
 
         # Subset embedding to strains of interest.
         embedding_subset = embedding.loc[

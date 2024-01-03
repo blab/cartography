@@ -592,10 +592,10 @@ We reasoned that each recombinant lineage, $X$, should always place closer to it
 Based on this logic, we calculated the average Euclidean distance between pairs of samples in lineages $A$ and $B$, $A$ and $X$, and $B$ and $X$ for each embedding method (see Methods).
 We identified recombinant lineages that mapped closer to both of their parental lineages and those that mapped closer to at least one of the parental lineages.
 
-Seven of the ten recombinant lineages that we inspected had enough samples in both parental and recombinant lineages to calculate average pairwise distances (XD, XE, XF, XG, XBB, XBF, and XBL).
-MDS embeddings consistently placed recombinant lineages between the parental lineages in all seven cases (\nameref{S2_Table}).
-Embeddings from PCA, t-SNE, and UMAP performed nearly as well, placing five of seven recombinant lineages between parentals.
-However, all recombinant lineages mapped closer to at least one parent in all embeddings.
+We identified 66 recombinant lineages for which that lineage and both of its parental lineages had at least 10 genomes (\nameref{S2_Table}).
+MDS embeddings most consistently placed recombinant lineages between the parental lineages with correct placement of 60 lineages (91\%).
+The t-SNE, UMAP, and PCA embeddings correctly placed 55 (83\%), 49 (74\%), and 40 (61\%) lineages, respectively.
+Additionally, all 66 recombinant lineages placed closer to at least one parent in all embeddings except for two lineages in the PCA embeddings.
 
 \section*{Discussion}
 
@@ -727,10 +727,9 @@ For analyses that combined H3N2 HA and NA data, we defined a single dataset betw
 For SARS-CoV-2 data, we defined the early dataset between January 1, 2020 and January 1, 2022 and the late dataset between January 1, 2022 and November 3, 2023.
 For the early dataset, we evenly sampled 1,736 SARS-CoV-2 genomes by geographic region, year, and month, excluding known outliers.
 For the late dataset, we used the same even sampling by space and time to select 1,309 representative genomes.
-In addition to these genomes, we sampled at most 20 genomes per Pango lineage for 10 known recombinant lineages (XAY, XBB, XBC, XBF, XBL, XC, XD, XE, XF, and XG) and their corresponding parental lineages (AY.29, AY.4, AY.45, B.1.1.7, B.1.617, BA.1, BA.2, BA.2.75, BA.4, BA.5, BA.5.2.3, BJ.1, BM.1.1.1, and CJ.1) as defined by \href{https://libguides.mskcc.org/SARS2/recombination}{https://libguides.mskcc.org/SARS2/recombination}.
-\jhc{At this point, we haven't defined ``Pango lineages'' yet, but I don't know that it makes sense to define lineages in this section. Curious what other people think.}
-With these additional genomes, the late SARS-CoV-2 dataset included 1,668 total genomes.
-\tbc{I think of https://github.com/cov-lineages/pango-designation/blob/master/pango\_designation/alias\_key.json as the central source of truth regarding recombinant lineages.}
+In addition to these genomes, we identified all recombinant lineages in the official Pango designations as of November 3, 2023 (\url{https://github.com/cov-lineages/pango-designation/raw/1bf4123/pango_designation/alias_key.json}) for which the recombinant lineage and both of its parental lineages had at least 10 genome records each.
+We sampled at most 10 genomes per lineage for all distinct recombinant and parental lineages for a total of 1,156.
+With these additional genomes, the late SARS-CoV-2 dataset included 2,465 total genomes.
 
 \subsection*{Evaluation of linear relationships between genetic distance and Euclidean distance in embeddings}
 
