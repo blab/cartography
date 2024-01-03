@@ -288,7 +288,7 @@ These methods have been applied to SNPs from human genomes \cite{diaz-papkovich_
 Although these methods are commonly used for qualitative studies of evolutionary relationships, few studies have attempted to quantify patterns observed in the resulting embeddings and no studies have investigated the value of applying these methods to human pathogenic viruses.
 To this end, we tuned and validated the performance of PCA, MDS, t-SNE, and UMAP with genomes from simulated influenza-like and coronavirus-like populations and then applied these methods to natural populations of seasonal influenza virus A/H3N2 and SARS-CoV-2.
 These natural viruses are highly relevant as major causes of global human mortality, common subjects of real-time genomic epidemiology, and representatives of reassortant and recombinant human pathogens.
-For each combination of virus and embedding method, we quantified the relationship between pairwise genetic and Euclidean embedding distances, identified clusters of closely-related genomes in embedding space, and evaluated the accuracy of clusters compared to genetic groups defined by experts and biologically-informed models.
+For each combination of virus and embedding method, we quantified the relationship between pairwise genetic and Euclidean embedding distances, identified clusters of closely-related genomes in embedding space, and evaluated the accuracy of clusters compared to genetic groups defined by experts.
 Finally, we tested the ability of these methods to identify reassortment of seasonal influenza virus hemagglutinin (HA) and neuraminidase (NA) segments and recombination in SARS-CoV-2 genomes.
 These results inform our recommendations for future applications of these methods including which are most effective for specific problems in genomic epidemiology and which parameters researchers should use for each method.
 
@@ -307,7 +307,6 @@ However, beyond 2 and 3 components, respectively, the reduction in error did not
 This result suggests that there were diminishing returns for the increased complexity of additional components.
 Both t-SNE and UMAP embeddings produced a wide range of errors (the majority between 10 and 20 average mismatches) across all parameter values (\nameref{S_Fig_simulated_flu_errors} C and D).
 Embeddings from t-SNE appeared robust to variation in parameters, with a slight improvement in median MAE associated with perplexity of 100 and little benefit to any of the learning rate values (\nameref{S_Fig_simulated_flu_errors} C).
-\jhc{Based on these results, we should consider setting the learning rate to the default for scikit-learn which scales the rate with the input sample size.}
 Similarly, UMAP embeddings were robust across the range of tested parameters, with the greatest benefit coming from setting the nearest neighbors greater than 25 and no benefit from changing the minimum distance between points (\nameref{S_Fig_simulated_flu_errors} D).
 
 The optimal parameters for coronavirus-like populations were nearly the same as those for the influenza-like populations.
@@ -316,7 +315,6 @@ As with influenza-like populations, both PCA and MDS showed diminishing benefits
 Similarly, we observed little improvement in MAEs from varying t-SNE and UMAP parameters (\nameref{S_Fig_simulated_coronavirus_errors} C and D).
 The most noticeable improvement came from setting t-SNE's perplexity to 100 (\nameref{S_Fig_simulated_coronavirus_errors} C).
 These results indicate the limits of t-SNE and UMAP to represent global genetic structure, at least across the parameter regimes considered here.
-\jhc{An obvious follow-up question would be whether we can improve MAEs for these methods by increasing components available to them, too.}
 
 We inspected representative embeddings based on the optimal parameters above for the first four years of influenza- and coronavirus-like populations.
 Simulated sequences collected from the same time period tended to map closer in embedding space, indicating the maintenance of ``local'' genetic structure in the embeddings (Fig.~\ref{fig:simulated-populations-representative-embeddings}).
@@ -443,11 +441,9 @@ The late dataset included 16 Nextclade clades total, but only 10 of these had at
 Although the average pairwise genetic distance within these later clades of 9 was similar to the within-clade distance for early clades of 10, later clades had a greater average between-clade distance of 42 nucleotide variants compared to 27 for early clades  (\nameref{S_Fig_flu_within_between_group_distances}).
 Clusters from all four methods generally captured phylogenetic clades (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters} and \nameref{S_Fig_late_flu_embeddings_by_clade}).
 The MDS clusters most accurately captured expert clades (normalized VI=0.07) with six clusters corresponding to the largest clades (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters} and \nameref{S_Fig_late_flu_mds_embeddings}).
-\tbc{I might be reading the table wrong, but my reading of Table 1 is that t-SNE has the lowest VI at 0.04 and MDS has a VI of 0.10.}
 MDS split A3 samples into two widely separated groups in its Euclidean space, indicating substantial within-clade genetic differences.
 On inspection of this clade, we found recurrent HA1 substitutions of 135K, 142G, and 193S in multiple subclades that MDS could not effectively represent.
 Clusters from t-SNE, UMAP, and PCA followed closely in accuracy (normalized VI=0.08, 0.08, and 0.09) with 5, 7, and 6 clusters, respectively.
-\tbc{Again, VI values here don't match what's in Table 1.}
 We identified 25 cluster-specific mutations for four of the six PCA clusters, 51 for all six MDS clusters, 53 for all five t-SNE clusters, and 30 for five of the seven UMAP clusters (\nameref{S1_Table}).
 Pairwise genetic distances within clusters generally matched the diversity within Nextstrain clades (\nameref{S_Fig_flu_within_between_group_distances}).
 Cluster accuracies remained robust to sampling density and composition (\nameref{S_Fig_late_flu_replication_of_cluster_accuracy}).
@@ -498,7 +494,7 @@ These results suggest that a single embedding of multiple gene segments could id
 \subsection*{SARS-CoV-2 clusters recapitulate broad genetic groups corresponding to Nextstrain clades}
 
 SARS-CoV-2 poses a greater challenge to embedding methods than seasonal influenza, with an unsegmented genome an order of magnitude longer than influenza's HA or NA \cite{Zhu2020}, a mutation rate in the spike surface protein subunit S1 that is four times higher than influenza H3N2's HA rate \cite{Kistler2022}, and increasingly common recombination \cite{Focosi2022,Turakhia2022}.
-However, multiple expert- and model-based clade definitions exist for SARS-CoV-2, enabling comparison between clusters from embeddings and known genetic groups.
+However, multiple expert-based clade definitions exist for SARS-CoV-2, enabling comparison between clusters from embeddings and known genetic groups.
 These definitions span from broad genetic groups named by the WHO as ``variants of concern'' (e.g., ``Alpha'', ``Beta'', etc.) \cite{Konings2021} or systematically defined by the Nextstrain team \cite{Hodcroft2020,Bedford2021,Roemer2022} to smaller, emerging genetic clusters defined by Pango curators \cite{OToole2021}.
 As with seasonal influenza, we defined an early SARS-CoV-2 dataset spanning from January 2020 to January 2022, embedded genomes with the same four methods, and identified HDBSCAN clustering parameters that minimized the VI distance between embedding clusters and previously defined genetic groups as defined by Nextstrain clades and Pango lineages (see Methods).
 Using these optimal cluster parameters, we produced clusters from embeddings of a late SARS-CoV-2 dataset spanning from January 2022 to November 2023 and calculated the VI distance between those clusters and known genetic groups.
