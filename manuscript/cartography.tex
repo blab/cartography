@@ -402,9 +402,11 @@ Since Euclidean distances for MDS correspond directly to genetic distances, thes
 %\begin{adjustwidth}{-2.25in}{0in} % Comment out/remove adjustwidth environment if table fits in text column.
 \centering
 \caption{
-  {\bf Accuracy of embedding methods per human pathogenic virus sorted by normalized variation of information (VI) distance.}
-  Smaller VI values indicate smaller distances between HDBSCAN clusters and known genetic groups with 0 indicating identical clusters and 1 indicating maximally different clusters.
-  Threshold refers to the distance threshold used to assign clusters with HDBSCAN.}
+  {\bf Optimal cluster thresholds per pathogen, known genetic group type, and embedding method based on normalized variation of information (VI) distances calculated from early pathogen datasets.}
+  Smaller VI values indicate fewer differences between HDBSCAN clusters and known genetic groups.
+  VI of 0 indicates identical clusters and 1 indicates maximally different clusters.
+  Threshold refers to the minimum Euclidean distance between initial clusters for HDBSCAN to consider them as distinct clusters.
+  We apply these optimal thresholds per pathogen, known genetic group type, and method to find clusters in corresponding late datasets for each pathogen.}
 \input{tables/accuracy_table.tex}
 \label{table:accuracy}
 %\end{adjustwidth}
