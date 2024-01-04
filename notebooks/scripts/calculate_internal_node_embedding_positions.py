@@ -22,7 +22,11 @@ if __name__ == '__main__':
     tree = read_tree(args.tree)
 
     # Load the embedding.
-    embedding = pd.read_csv(args.embedding, index_col=0)
+    embedding = pd.read_csv(
+        args.embedding,
+        index_col=0,
+        dtype=str,
+    )
 
     # Find embedding position columns, ignoring all labels from clustering.
     embedding_columns = [
@@ -36,10 +40,12 @@ if __name__ == '__main__':
     for node in tree.find_clades(order="postorder"):
         for embedding_column in embedding_columns:
             if node.is_terminal():
-                position_by_node[node.name][embedding_column] = embedding.at[
-                    node.name,
-                    embedding_column
-                ]
+                position_by_node[node.name][embedding_column] = float(
+                    embedding.at[
+                        node.name,
+                        embedding_column
+                    ]
+                )
             else:
                 position_by_node[node.name][embedding_column] = np.mean([
                     position_by_node[child.name][embedding_column]

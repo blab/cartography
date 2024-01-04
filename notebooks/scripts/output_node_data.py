@@ -18,12 +18,13 @@ if __name__ == "__main__":
             args.table,
             sep=args.separator,
             index_col=0,
+            dtype=str,
         )
 
-        # Convert label to strings
+        # Convert columns that aren't strain names or labels to floats.
         for column in embedding.columns:
-            if "label" in column:
-                embedding[column] = embedding[column].astype(str)
+            if column != "strain" and not "label" in column:
+                embedding[column] = embedding[column].astype(float)
 
         embedding_dict = embedding.transpose().to_dict()
         write_json({args.node_name: embedding_dict}, args.output)
