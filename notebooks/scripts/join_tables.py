@@ -15,8 +15,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Read tables.
-    left = pd.read_csv(args.left, sep=None, engine="python")
-    right = pd.read_csv(args.right, sep=None, engine="python")
+    left = pd.read_csv(args.left, sep=None, engine="python", dtype=str)
+    right = pd.read_csv(args.right, sep=None, engine="python", dtype=str)
 
     joined = left.merge(
         right,

@@ -17,8 +17,8 @@ if __name__ == "__main__":
     # Read tables.
     tables = []
     for i in range(0, len(args.tables)):
-        tables.append(pd.read_csv(args.tables[i], sep=args.separator))
-    
+        tables.append(pd.read_csv(args.tables[i], sep=args.separator, dtype=str))
+
     if args.suffixes is not None:
         df = reduce(lambda x, y: pd.merge(x, y, on = 'strain', suffixes=(args.suffixes[0], args.suffixes[1])), tables)
     else:
