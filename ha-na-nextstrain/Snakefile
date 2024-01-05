@@ -28,6 +28,7 @@ rule seasonal_flu_reassortment:
         "manuscript/figures/flu-2016-2018-ha-na-umap-by-cluster.png",
         expand("auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json", segment=SEGMENTS),
         "ha-na-nextstrain/results/mutation_table.csv",
+        "ha-na-nextstrain/results/monophyletic_clusters.csv",
 
 rule seasonal_flu_reassortment_files:
     params:
@@ -478,6 +479,7 @@ rule seasonal_flu_reassortment_export:
         clades = "ha-na-nextstrain/results/clades_ha.json"
     output:
         auspice_tree = "auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort.json",
+        root_sequence = "auspice/cartography_flu-seasonal-h3n2-{segment}-2016-2018-reassort_root-sequence.json",
     conda: "../cartography.yml"
     shell:
         """
@@ -485,8 +487,9 @@ rule seasonal_flu_reassortment_export:
             --tree {input.tree} \
             --metadata {input.metadata} \
             --node-data {input.branch_lengths} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} {input.embeddings_concat} {input.mccs} \
-            --color-by-metadata date \
             --auspice-config {input.auspice_config} \
+            --include-root-sequence \
+            --minify-json \
             --output {output.auspice_tree}
         """
 
@@ -535,6 +538,58 @@ rule seasonal_flu_reassortment_create_distance_dataframe:
             --separator ',' \
             --suffixes {params.suffixes} \
             --output {output.metadata}
+        """
+
+rule seasonal_flu_reassortment_infer_cluster_labels:
+    input:
+        tree="ha-na-nextstrain/results/tree_ha.nwk",
+        metadata="ha-na-nextstrain/results/ha_concatenated_data.csv",
+    output:
+        labels="ha-na-nextstrain/results/ancestral_cluster_labels.json",
+    conda: "../cartography.yml"
+    params:
+        columns=lambda wildcards: [
+            f"{method}_{ha_concatenated}_label"
+            for ha_concatenated in HA_CONCAT
+            for method in EMBEDDING_METHODS
+        ],
+    shell:
+        """
+        augur traits \
+            --tree {input.tree} \
+            --metadata {input.metadata} \
+            --columns {params.columns:q} \
+            --output-node-data {output.labels}
+        """
+
+rule seasonal_flu_reassortment_find_monophyletic_clusters:
+    input:
+        tree="ha-na-nextstrain/results/tree_ha.nwk",
+        ancestral_cluster_labels="ha-na-nextstrain/results/ancestral_cluster_labels.json",
+    output:
+        table="ha-na-nextstrain/results/monophyletic_clusters.csv",
+    conda: "../cartography.yml"
+    params:
+        dataset_name="seasonal-flu-h3n2-ha-na-2016-2018",
+        methods=lambda wildcards: [
+            EMBEDDING_NAME_BY_METHOD[method] + " (" + ("HA only" if ha_concatenated == "ha" else "HA/NA") + ")"
+            for ha_concatenated in HA_CONCAT
+            for method in EMBEDDING_METHODS
+        ],
+        attributes=lambda wildcards: [
+            f"{method}_{ha_concatenated}_label"
+            for ha_concatenated in HA_CONCAT
+            for method in EMBEDDING_METHODS
+        ],
+    shell:
+        """
+        python3 notebooks/scripts/find_monophyletic_clusters.py \
+            --dataset-name {params.dataset_name} \
+            --tree {input.tree} \
+            --labels {input.ancestral_cluster_labels} \
+            --methods {params.methods:q} \
+            --attributes {params.attributes:q} \
+            --output {output.table}
         """
 
 rule seasonal_flu_reassortment_annotate_embeddings:

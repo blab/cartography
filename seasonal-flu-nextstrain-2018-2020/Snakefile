@@ -8,7 +8,8 @@ rule seasonal_flu_test:
         "manuscript/figures/flu-2018-2020-mds-by-clade.png",
         "auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json",
         "seasonal-flu-nextstrain-2018-2020/results/mutation_table.csv",
-        "seasonal-flu-nextstrain-2018-2020/results/full_within_between_stats.csv"
+        "seasonal-flu-nextstrain-2018-2020/results/full_within_between_stats.csv",
+        "seasonal-flu-nextstrain-2018-2020/results/monophyletic_clusters.csv",
 
 rule seasonal_flu_test_files:
     params:
@@ -407,6 +408,7 @@ rule seasonal_flu_test_export:
             --include-root-sequence \
             --colors {input.colors} \
             --validation-mode warn \
+            --minify-json \
             --output {output.auspice_tree}
         """
 
@@ -448,6 +450,46 @@ rule seasonal_flu_test_create_distance_dataframe:
             --tables {input} \
             --separator ',' \
             --output {output.metadata}
+        """
+
+rule seasonal_flu_test_infer_cluster_labels:
+    input:
+        tree="seasonal-flu-nextstrain-2018-2020/results/tree.nwk",
+        metadata="seasonal-flu-nextstrain-2018-2020/results/embedding_data.csv",
+    output:
+        labels="seasonal-flu-nextstrain-2018-2020/results/ancestral_cluster_labels.json",
+    conda: "../cartography.yml"
+    params:
+        columns=lambda wildcards: [f"{method}_label" for method in EMBEDDING_METHODS],
+    shell:
+        """
+        augur traits \
+            --tree {input.tree} \
+            --metadata {input.metadata} \
+            --columns {params.columns:q} \
+            --output-node-data {output.labels}
+        """
+
+rule seasonal_flu_test_find_monophyletic_clusters:
+    input:
+        tree="seasonal-flu-nextstrain-2018-2020/results/tree.nwk",
+        ancestral_cluster_labels="seasonal-flu-nextstrain-2018-2020/results/ancestral_cluster_labels.json",
+    output:
+        table="seasonal-flu-nextstrain-2018-2020/results/monophyletic_clusters.csv",
+    conda: "../cartography.yml"
+    params:
+        dataset_name="seasonal-flu-h3n2-ha-2018-2020",
+        methods=lambda wildcards: [EMBEDDING_NAME_BY_METHOD[method] for method in EMBEDDING_METHODS],
+        attributes=lambda wildcards: [f"{method}_label" for method in EMBEDDING_METHODS],
+    shell:
+        """
+        python3 notebooks/scripts/find_monophyletic_clusters.py \
+            --dataset-name {params.dataset_name} \
+            --tree {input.tree} \
+            --labels {input.ancestral_cluster_labels} \
+            --methods {params.methods:q} \
+            --attributes {params.attributes:q} \
+            --output {output.table}
         """
 
 rule seasonal_flu_test_annotate_embeddings:

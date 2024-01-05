@@ -13,6 +13,7 @@ rule sarscov2_test:
         "auspice/cartography_ncov-2022-2023.json",
         "manuscript/tables/sars-cov-2-recombinant-distances.csv",
         expand("sars-cov-2-nextstrain-2022-2023/results/mutation_table_for_{clade_membership}.csv", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        "sars-cov-2-nextstrain-2022-2023/results/monophyletic_clusters.csv",
 
 rule sarscov2_test_download_filtered_metadata:
     output:
@@ -590,6 +591,66 @@ rule sarscov2_test_create_distance_dataframe:
             --tables {input} \
             --separator ',' \
             --output {output.metadata}
+        """
+
+rule sarscov2_test_infer_cluster_labels:
+    input:
+        tree="sars-cov-2-nextstrain-2022-2023/results/tree.nwk",
+        metadata="sars-cov-2-nextstrain-2022-2023/results/embedding_data_for_{clade_membership}.csv",
+    output:
+        labels="sars-cov-2-nextstrain-2022-2023/results/ancestral_cluster_labels_for_{clade_membership}.json",
+    conda: "../cartography.yml"
+    params:
+        columns=lambda wildcards: [
+            f"{method}_label_for_{wildcards.clade_membership}"
+            for method in EMBEDDING_METHODS
+        ],
+    shell:
+        """
+        augur traits \
+            --tree {input.tree} \
+            --metadata {input.metadata} \
+            --columns {params.columns:q} \
+            --output-node-data {output.labels}
+        """
+
+rule sarscov2_test_find_monophyletic_clusters:
+    input:
+        tree="sars-cov-2-nextstrain-2022-2023/results/tree.nwk",
+        ancestral_cluster_labels="sars-cov-2-nextstrain-2022-2023/results/ancestral_cluster_labels_for_{clade_membership}.json",
+    output:
+        table="sars-cov-2-nextstrain-2022-2023/results/monophyletic_clusters_for_{clade_membership}.csv",
+    conda: "../cartography.yml"
+    params:
+        dataset_name="sars-cov-2-2022-2023",
+        methods=lambda wildcards: [
+            f"{EMBEDDING_NAME_BY_METHOD[method]} ({'Nextstrain clade' if wildcards.clade_membership == 'Nextstrain_clade' else 'Pango'})"
+            for method in EMBEDDING_METHODS
+        ],
+        attributes=lambda wildcards: [
+            f"{method}_label_for_{wildcards.clade_membership}"
+            for method in EMBEDDING_METHODS
+        ],
+    shell:
+        """
+        python3 notebooks/scripts/find_monophyletic_clusters.py \
+            --dataset-name {params.dataset_name} \
+            --tree {input.tree} \
+            --labels {input.ancestral_cluster_labels} \
+            --methods {params.methods:q} \
+            --attributes {params.attributes:q} \
+            --output {output.table}
+        """
+
+rule sarscov2_test_concat_monophyletic_clusters:
+    input:
+        tables=expand("sars-cov-2-nextstrain-2022-2023/results/monophyletic_clusters_for_{clade_membership}.csv", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+    output:
+        table="sars-cov-2-nextstrain-2022-2023/results/monophyletic_clusters.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk concat {input.tables} > {output.table}
         """
 
 rule sarscov2_test_annotate_embeddings:

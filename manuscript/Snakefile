@@ -38,6 +38,28 @@ rule concat_mutation_tables:
             --output {output.csv_table} \
         """
 
+rule concat_monophyletic_clusters:
+    input:
+        tables=[
+            "seasonal-flu-nextstrain/results/monophyletic_clusters.csv",
+            "seasonal-flu-nextstrain-2018-2020/results/monophyletic_clusters.csv",
+            "ha-na-nextstrain/results/monophyletic_clusters.csv",
+            "sars-cov-2-nextstrain/results/monophyletic_clusters_for_Nextstrain_clade.csv",
+            "sars-cov-2-nextstrain/results/monophyletic_clusters_for_Nextclade_pango.csv",
+            "sars-cov-2-nextstrain-2022-2023/results/monophyletic_clusters_for_Nextstrain_clade.csv",
+            "sars-cov-2-nextstrain-2022-2023/results/monophyletic_clusters_for_Nextclade_pango.csv",
+        ]
+    output:
+        csv_table = "manuscript/tables/monophyletic_clusters.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/concatenate_tables.py \
+            --tables {input.tables} \
+            --separator , \
+            --output {output.csv_table} \
+        """
+
 rule concat_HDBSCAN_tables:
     input:
         tables=[
@@ -112,6 +134,7 @@ rule manuscript_pdf:
         bibliography="manuscript/cartography.bib",
         accuracy_table="manuscript/tables/accuracy_table.tex",
         mutation_table="manuscript/tables/mutation_table.csv",
+        monophyletic_clusters="manuscript/tables/monophyletic_clusters.csv",
         within_between_stats_table="manuscript/tables/total_within_between_stats.csv",
         within_between_influenza_figure="manuscript/figures/within_between_influenza.png",
         within_between_sars_figure="manuscript/figures/within_between_sars.png",
