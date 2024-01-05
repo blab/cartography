@@ -40,11 +40,11 @@ if __name__ == '__main__':
             distinct_clusters = set()
             cluster_transitions = []
             for node in tree.find_clades(order="preorder", terminal=False):
-                node_cluster = node_data[node.name][label_attribute]
+                node_cluster = str(int(node_data[node.name][label_attribute]))
                 distinct_clusters.add(node_cluster)
 
                 for child in node.clades:
-                    child_cluster = node_data[child.name][label_attribute]
+                    child_cluster = str(int(node_data[child.name][label_attribute]))
                     distinct_clusters.add(child_cluster)
 
                     if not child.is_terminal() and child_cluster != node_cluster and child_cluster != "-1":
