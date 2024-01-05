@@ -408,6 +408,7 @@ rule seasonal_flu_test_export:
             --include-root-sequence \
             --colors {input.colors} \
             --validation-mode warn \
+            --minify-json \
             --output {output.auspice_tree}
         """
 
