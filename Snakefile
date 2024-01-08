@@ -50,7 +50,8 @@ RANDOM_SEED = 314159
 # Define parameters for replication of cluster accuracy analysis across late
 # pathogen datasets.
 CLUSTER_REPLICATION_REPLICATES = list(range(5))
-CLUSTER_REPLICATION_SEQUENCES_PER_GROUP = [5, 10, 15, 20, 25]
+CLUSTER_REPLICATION_SUBSAMPLE_MAX_SEQUENCES = (500, 1000, 1500, 2000)
+CLUSTER_REPLICATION_SUBSAMPLING_SCHEMES = ("even", "random")
 
 SEASONAL_FLU_REFERENCE_STRAIN = "A/Beijing/32/1992"
 SARS_COV_2_REFERENCE_STRAIN = "Wuhan-Hu-1/2019"
@@ -63,6 +64,7 @@ wildcard_constraints:
     ha_concat="(ha|concatenated)",
     clade_membership="(Nextstrain_clade|Nextclade_pango|Nextclade_pango_collapsed)",
     replicate="\d+",
+    subsampling_scheme="(even|random)",
 
 # Define final outputs for the workflow.
 rule all:
