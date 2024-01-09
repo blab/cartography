@@ -933,60 +933,37 @@ rule sarscov2_test_replication_simplify_metadata:
     shell:
         """
         zstd -c -d {input.metadata} \
+            | tsv-filter -H --regex 'date:^(2022|2023)' \
             | csvtk cut -t -f {params.fields} \
-            | csvtk grep -t -f strain -P {input.outliers} -v \
-            | csvtk mutate -t -f date -n year -p "^(\d{{4}}).*" \
-            | csvtk mutate -t -f date -n month -p "^\d{{4}}-(\d{{2}}).*" \
-            | csvtk filter2 -t -f '$year>2021' \
-            | csvtk filter2 -t -f '$month!=""' > {output.metadata} 2> {log}
-        """
-
-rule sarscov2_test_replication_split_metadata:
-    input:
-        metadata="sars-cov-2-nextstrain-2022-2023/results/replication_analysis_metadata.tsv",
-    output:
-        metadata_dir=directory("sars-cov-2-nextstrain-2022-2023/results/replication_analysis_split_metadata"),
-        metadata_dir_exists="sars-cov-2-nextstrain-2022-2023/results/replication_analysis_split_metadata.txt",
-    params:
-        fields="region,year,month",
-    conda: "../cartography.yml"
-    shell:
-        """
-        csvtk split -t -f {params.fields} -o {output.metadata_dir} {input.metadata} && touch {output.metadata_dir_exists}
+            | csvtk grep -t -f strain -P {input.outliers} -v > {output.metadata} 2> {log}
         """
 
 rule sarscov2_test_replication_subsample_metadata:
     input:
         metadata="sars-cov-2-nextstrain-2022-2023/results/replication_analysis_metadata.tsv",
-        metadata_dir_exists="sars-cov-2-nextstrain-2022-2023/results/replication_analysis_split_metadata.txt",
     output:
-        metadata="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/metadata.tsv",
+        metadata="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/metadata.tsv",
+        strains="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/strains.txt",
     params:
-        metadata_dir="sars-cov-2-nextstrain-2022-2023/results/replication_analysis_split_metadata",
+        group_by_arg=lambda wildcards: "--group-by region year month" if wildcards.subsampling_scheme == "even" else "",
     conda: "../cartography.yml"
     shell:
         """
-        head -n 1 {input.metadata} > {output.metadata}
-        for file in {params.metadata_dir}/*.tsv; do tsv-sample -H -n {wildcards.sequences_per_group} -v {wildcards.replicate} "$file" | sed 1d; done >> {output.metadata}
-        """
-
-rule sarscov2_test_replication_subsample_strains:
-    input:
-        metadata="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/metadata.tsv",
-    output:
-        strains="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/strains.txt",
-    conda: "../cartography.yml"
-    shell:
-        """
-        csvtk cut -t -f strain {input.metadata} | sed 1d | sort -k 1,1 | uniq > {output.strains}
+        augur filter \
+            --metadata {input.metadata} \
+            --output-metadata {output.metadata} \
+            --output-strains {output.strains} \
+            {params.group_by_arg} \
+            --subsample-max-sequences {wildcards.subsample_max_sequences} \
+            --subsample-seed {wildcards.replicate}
         """
 
 rule sarscov2_test_replication_subsample_sequences:
     input:
         alignment="sars-cov-2-nextstrain-2022-2023/data/filtered_aligned.fasta.zst",
-        strains="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/strains.txt",
+        strains="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/strains.txt",
     output:
-        sequences="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/aligned.fasta",
+        sequences="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/aligned.fasta",
     conda: "../cartography.yml"
     shell:
         """
@@ -995,9 +972,9 @@ rule sarscov2_test_replication_subsample_sequences:
 
 rule sarscov2_test_replication_create_distance_matrix:
     input:
-        alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/aligned.fasta",
+        alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/aligned.fasta",
     output:
-        output="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/distance_matrix.csv",
+        output="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/distance_matrix.csv",
     conda: "../cartography.yml"
     shell:
         """
@@ -1009,12 +986,12 @@ rule sarscov2_test_replication_create_distance_matrix:
 
 rule sarscov2_test_replication_clean_alignment_for_pca:
     input:
-        alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/aligned.fasta",
+        alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/aligned.fasta",
     output:
-        alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/cleaned_aligned.fasta",
+        alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/cleaned_aligned.fasta",
     conda: "../cartography.yml"
     log:
-        "logs/sarscov2_test_replication_clean_alignment_for_pca_{sequences_per_group}_{replicate}.txt"
+        "logs/sarscov2_test_replication_clean_alignment_for_pca_{subsampling_scheme}_{subsample_max_sequences}_{replicate}.txt"
     shell:
         """
         python3 notebooks/scripts/clean_alignment.py \
@@ -1024,10 +1001,10 @@ rule sarscov2_test_replication_clean_alignment_for_pca:
 
 rule sarscov2_test_replication_embed_pca:
     input:
-        alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/cleaned_aligned.fasta",
+        alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/cleaned_aligned.fasta",
         parameters="simulations/coronavirus-like/moderate-recombination-rate/pca_parameters.csv",
     output:
-        dataframe="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/embed_pca.csv",
+        dataframe="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/embed_pca.csv",
     conda: "../cartography.yml"
     shell:
         """
@@ -1041,11 +1018,11 @@ rule sarscov2_test_replication_embed_pca:
 
 rule sarscov2_test_replication_embed_mds:
     input:
-        alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/aligned.fasta",
-        distance_matrix="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/distance_matrix.csv",
+        alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/aligned.fasta",
+        distance_matrix="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/distance_matrix.csv",
         parameters="simulations/coronavirus-like/moderate-recombination-rate/mds_parameters.csv",
     output:
-        dataframe="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/embed_mds.csv",
+        dataframe="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/embed_mds.csv",
     conda: "../cartography.yml"
     shell:
         """
@@ -1060,11 +1037,11 @@ rule sarscov2_test_replication_embed_mds:
 
 rule sarscov2_test_replication_embed_tsne:
     input:
-        alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/aligned.fasta",
-        distance_matrix="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/distance_matrix.csv",
+        alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/aligned.fasta",
+        distance_matrix="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/distance_matrix.csv",
         parameters="simulations/coronavirus-like/moderate-recombination-rate/t-sne_parameters.csv",
     output:
-        dataframe="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/embed_t-sne.csv",
+        dataframe="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/embed_t-sne.csv",
     conda: "../cartography.yml"
     shell:
         """
@@ -1079,11 +1056,11 @@ rule sarscov2_test_replication_embed_tsne:
 
 rule sarscov2_test_replication_embed_umap:
     input:
-        alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/aligned.fasta",
-        distance_matrix="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/distance_matrix.csv",
+        alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/aligned.fasta",
+        distance_matrix="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/distance_matrix.csv",
         parameters="simulations/coronavirus-like/moderate-recombination-rate/umap_parameters.csv",
     output:
-        dataframe="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/embed_umap.csv",
+        dataframe="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/embed_umap.csv",
     conda: "../cartography.yml"
     shell:
         """
@@ -1098,10 +1075,10 @@ rule sarscov2_test_replication_embed_umap:
 
 rule sarscov2_test_replication_cluster_with_optimal_parameters:
     input:
-        embedding="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/embed_{method}.csv",
+        embedding="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/embed_{method}.csv",
         parameters="sars-cov-2-nextstrain/results/optimal_cluster_accuracy_and_parameters_for_Nextstrain_clade.csv",
     output:
-        clustered_embedding="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/cluster_embed_{method}.csv",
+        clustered_embedding="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/cluster_embed_{method}.csv",
     conda: "../cartography.yml"
     params:
         min_size=CLUSTER_MIN_SIZE,
@@ -1119,10 +1096,10 @@ rule sarscov2_test_replication_cluster_with_optimal_parameters:
 
 rule sarscov2_test_replication_cluster_accuracy:
     input:
-        metadata="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/metadata.tsv",
-        embedding="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/cluster_embed_{method}.csv",
+        metadata="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/metadata.tsv",
+        embedding="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/cluster_embed_{method}.csv",
     output:
-        dataframe="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/cluster_accuracy_{method}.csv",
+        dataframe="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/cluster_accuracy_{method}.csv",
     conda: "../cartography.yml"
     params:
         clade_column="Nextstrain_clade",
@@ -1135,13 +1112,14 @@ rule sarscov2_test_replication_cluster_accuracy:
             --predicted-clusters {input.embedding} \
             --predicted-clusters-column "{wildcards.method}_label" \
             --output /dev/stdout \
-            | csvtk mutate2 -n "sequences_per_group" -e "'{wildcards.sequences_per_group}'" \
+            | csvtk mutate2 -n "subsampling_scheme" -e "'{wildcards.subsampling_scheme}'" \
+            | csvtk mutate2 -n "subsample_max_sequences" -e "'{wildcards.subsample_max_sequences}'" \
             | csvtk mutate2 -n "replicate" -e "'{wildcards.replicate}'" > {output.dataframe}
         """
 
 rule sarscov2_test_replication_aggregate_cluster_accuracy:
     input:
-        accuracies=expand("sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{sequences_per_group}/{replicate}/cluster_accuracy_{method}.csv", method=EMBEDDING_METHODS, replicate=CLUSTER_REPLICATION_REPLICATES, sequences_per_group=CLUSTER_REPLICATION_SEQUENCES_PER_GROUP),
+        accuracies=expand("sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/cluster_accuracy_{method}.csv", subsampling_scheme=CLUSTER_REPLICATION_SUBSAMPLING_SCHEMES, method=EMBEDDING_METHODS, replicate=CLUSTER_REPLICATION_REPLICATES, subsample_max_sequences=CLUSTER_REPLICATION_SUBSAMPLE_MAX_SEQUENCES),
     output:
         accuracies="sars-cov-2-nextstrain-2022-2023/results/replication_analysis_cluster_accuracy.csv",
     conda: "../cartography.yml"
