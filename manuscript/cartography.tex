@@ -447,7 +447,8 @@ On inspection of this clade, we found recurrent HA1 substitutions of 135K, 142G,
 Clusters from t-SNE, UMAP, and PCA followed closely in accuracy (normalized VI=0.08, 0.08, and 0.09) with 5, 7, and 6 clusters, respectively.
 We identified 25 cluster-specific mutations for four of the six PCA clusters, 51 for all six MDS clusters, 53 for all five t-SNE clusters, and 30 for five of the seven UMAP clusters (\nameref{S_Table_mutations_per_cluster}).
 Pairwise genetic distances within clusters generally matched the diversity within Nextstrain clades (\nameref{S_Fig_flu_within_between_group_distances}).
-Cluster accuracies remained robust to sampling density and composition (\nameref{S_Fig_late_flu_replication_of_cluster_accuracy}).
+Cluster accuracies for most methods remained robust to sampling bias and density (\nameref{S_Fig_late_flu_replication_of_cluster_accuracy}).
+However, t-SNE clusters were less accurate under random sampling conditions where the selected data were biased geographically toward the USA and genetically toward the Nextstrain clade 3c3.A.
 These results show that all four methods can produce well-supported clusters that accurately capture known genetic groups when applied to previously unseen H3N2 HA samples.
 
 \begin{figure}[!h]
@@ -570,10 +571,10 @@ The clusters from embeddings of these more recent SARS-CoV-2 sequences performed
 Clusters from t-SNE most accurately matched Nextstrain clades (normalized VI=0.08) with 22 clusters.
 Clusters from UMAP followed (normalized VI=0.13) with nine clusters and MDS produced 10 clusters (normalized VI=0.15).
 As with the early SARS-CoV-2 data, PCA clusters remained the least accurate (N=6, normalized VI=0.25).
+We observed similar absolute and relative accuracies across methods at different sampling densities under an even geographic and temporal sampling scheme (\nameref{S_Fig_late_sarscov2_replication_of_cluster_accuracy}).
+However, the presence of geographic and genetic bias associated with randomly sampling the late SARS-CoV-2 data produced less accurate t-SNE clusters and more accurate PCA, MDS, and UMAP clusters.
 All of UMAP's clusters and all but one of t-SNE's clusters were monophyletic (\nameref{S_Table_monophyletic_clusters}).
 We found 79 cluster-specific mutations for all six PCA clusters, 75 for nine of 10 MDS clusters, 93 for 16 of 22 t-SNE clusters, and 112 for eight of nine UMAP clusters (\nameref{S_Table_mutations_per_cluster}).
-Clusters from t-SNE remained the most consistently accurate across different random samples of sequences from the same time period and different total samples (\nameref{S_Fig_late_sarscov2_replication_of_cluster_accuracy}).
-UMAP clusters became more accurate and less variable as we added more sequences per group to the embeddings.
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/sarscov2-test-embeddings-by-cluster-vs-Nextstrain_clade.png}
@@ -809,9 +810,15 @@ Finally, we used these optimal distance thresholds to identify clusters in out-o
 \subsection*{Evaluating robustness of embedding cluster accuracy}
 
 The cluster accuracies we estimated for late H3N2 HA and SARS-CoV-2 datasets represented a single VI measurement for a single pathogen dataset.
-To understand how robust these accuracies were across different datasets, we generated alternate random samples from both late pathogen datasets using the same geographic and temporal grouping but with different numbers of sequences per group and different random seeds.
-Specifically, we sampled 5, 10, 15, 20, or 25 sequences per group for five replicates per pathogen (random seeds of 0, 1, 2, 3, and 4), embedded these sequences with each method, identified clusters in embeddings, and calculated the VI distance between those clusters and Nextstrain clade assignments.
-We plotted the distribution of the resulting VI distances, to estimate the variance of these values caused by sampling bias.
+To understand how robust these accuracies were across different datasets, we generated alternate random samples from both late pathogen datasets using two different sampling schemes and a range of total sequences sampled.
+Specifically, we sampled 500, 1000, 1500, or 2000 total sequences for five replicates per pathogen (random seeds of 0, 1, 2, 3, and 4) with either even sampling by geography and time or random sampling.
+For the relatively smaller influenza data, we evenly sampled by country, year, and month.
+For the larger SARS-CoV-2 data, we evenly sampled by region, year, and month.
+Even sampling attempted to minimize geographic and temporal biases in the original data.
+Random sampling uniformly selected samples in a way that reflected the bias in the data.
+Influenza data were heavily biased toward samples from the USA and clade 3c3.A, while SARS-CoV-2 data were biased toward Europe and North America and Nextstrain clades 21K, 21L, and 22B.
+For each replicate from each sampling scheme and total number of sequences, we embedded the corresponding sequences with each method, identified clusters in embeddings, and calculated the VI distance between those clusters and Nextstrain clade assignments.
+We plotted the distribution of the resulting VI distances, to estimate the variance of these values caused by sampling bias and density.
 
 \subsection*{Evaluating the monophyletic nature of embedding clusters}
 
@@ -901,7 +908,10 @@ Line thickness scales by the square root of the number of leaves descending from
 
 \paragraph*{S8 Fig.}
 \label{S_Fig_late_flu_replication_of_cluster_accuracy}
-{\bf Replication of cluster accuracy per embedding method for late (2018--2020) influenza H3N2 HA sequences across different sequences per group sampled from the original dataset and five replicates per sampling density.}
+{\bf Replication of cluster accuracy per embedding method for late (2018--2020) influenza H3N2 HA sequences across different sampling densities (total sequences sampled) and sampling schemes including A) even geographic and temporal sampling and B) random sampling.}
+We measured cluster accuracy across five replicates per sampling density and scheme with the normalized VI distance between clusters from a given embedding and Nextstrain clades for the same samples.
+The even sampling scheme selected sequences evenly across country, year, and month to minimize geographic and temporal bias.
+The random sampling scheme uniformly sampled from the original dataset, reflecting the geographic and genetic bias in those data.
 
 \paragraph*{S9 Fig.}
 \label{S_Fig_full_ha_na_embeddings}
@@ -949,7 +959,10 @@ Line thickness scales by the square root of the number of leaves descending from
 
 \paragraph*{S18 Fig.}
 \label{S_Fig_late_sarscov2_replication_of_cluster_accuracy}
-{\bf Replication of cluster accuracy per embedding method for late (2022--2023) SARS-CoV-2 sequences across different sequences per group sampled from the original dataset and five replicates per sampling density.}
+{\bf Replication of cluster accuracy per embedding method for late (2022--2023) SARS-CoV-2 sequences across different sampling densities (total sequences sampled) and sampling schemes including A) even geographic and temporal sampling and B) random sampling.}
+We measured cluster accuracy across five replicates per sampling density and scheme with the normalized VI distance between clusters from a given embedding and Nextstrain clades for the same samples.
+The even sampling scheme selected sequences evenly across region, year, and month to minimize geographic and temporal bias.
+The random sampling scheme uniformly sampled from the original dataset, reflecting the geographic and genetic bias in those data.
 
 \paragraph*{S19 Fig.}
 \label{S_Fig_sarscov2_late_embeddings_by_cluster_vs_Nextclade_pango}
