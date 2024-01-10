@@ -447,8 +447,9 @@ On inspection of this clade, we found recurrent HA1 substitutions of 135K, 142G,
 Clusters from t-SNE, UMAP, and PCA followed closely in accuracy (normalized VI=0.08, 0.08, and 0.09) with 5, 7, and 6 clusters, respectively.
 We identified 25 cluster-specific mutations for four of the six PCA clusters, 51 for all six MDS clusters, 53 for all five t-SNE clusters, and 30 for five of the seven UMAP clusters (\nameref{S_Table_mutations_per_cluster}).
 Pairwise genetic distances within clusters generally matched the diversity within Nextstrain clades (\nameref{S_Fig_flu_within_between_group_distances}).
-Cluster accuracies for most methods remained robust to sampling bias and density (\nameref{S_Fig_late_flu_replication_of_cluster_accuracy}).
+Cluster accuracies for PCA, MDS, and UMAP remained robust to sampling bias and density (\nameref{S_Fig_late_flu_replication_of_cluster_accuracy}).
 However, t-SNE clusters were less accurate under random sampling conditions where the selected data were biased geographically toward the USA and genetically toward the Nextstrain clade 3c3.A.
+Even under even geographic and temporal sampling, t-SNE cluster accuracy decreased at sampling densities less than 1000 and greater than 1500.
 These results show that all four methods can produce well-supported clusters that accurately capture known genetic groups when applied to previously unseen H3N2 HA samples.
 
 \begin{figure}[!h]
@@ -811,7 +812,7 @@ Finally, we used these optimal distance thresholds to identify clusters in out-o
 
 The cluster accuracies we estimated for late H3N2 HA and SARS-CoV-2 datasets represented a single VI measurement for a single pathogen dataset.
 To understand how robust these accuracies were across different datasets, we generated alternate random samples from both late pathogen datasets using two different sampling schemes and a range of total sequences sampled.
-Specifically, we sampled 500, 1000, 1500, or 2000 total sequences for five replicates per pathogen (random seeds of 0, 1, 2, 3, and 4) with either even sampling by geography and time or random sampling.
+Specifically, we sampled 500, 1000, 1500, 2000, or 2500 total sequences for five replicates per pathogen (random seeds of 0, 1, 2, 3, and 4) with either even sampling by geography and time or random sampling.
 For the relatively smaller influenza data, we evenly sampled by country, year, and month.
 For the larger SARS-CoV-2 data, we evenly sampled by region, year, and month.
 Even sampling attempted to minimize geographic and temporal biases in the original data.
