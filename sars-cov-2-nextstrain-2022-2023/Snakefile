@@ -1103,6 +1103,7 @@ rule sarscov2_test_replication_cluster_accuracy:
     conda: "../cartography.yml"
     params:
         clade_column="Nextstrain_clade",
+        ignored_clusters=["unassigned", "recombinant"],
     shell:
         """
         python3 notebooks/scripts/metadata_HDBSCAN.py \
@@ -1111,6 +1112,7 @@ rule sarscov2_test_replication_cluster_accuracy:
             --true-clusters-column {params.clade_column:q} \
             --predicted-clusters {input.embedding} \
             --predicted-clusters-column "{wildcards.method}_label" \
+            --ignored-clusters {params.ignored_clusters:q} \
             --output /dev/stdout \
             | csvtk mutate2 -n "subsampling_scheme" -e "'{wildcards.subsampling_scheme}'" \
             | csvtk mutate2 -n "subsample_max_sequences" -e "'{wildcards.subsample_max_sequences}'" \
