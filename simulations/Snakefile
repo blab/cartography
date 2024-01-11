@@ -101,7 +101,7 @@ def _get_method_parameters_argument(wildcards):
     return " ".join([
         f"--{key.replace('_', '-')} {value}"
         for key, value in wildcards.items()
-        if value != "nan" and key not in ["virus", "recombination_rate", "replicate", "method", "train_test_split", "training_or_test"]
+        if value != "NA" and key not in ["virus", "recombination_rate", "replicate", "method", "train_test_split", "training_or_test"]
     ])
 
 rule simulations_grid_search_embed:
