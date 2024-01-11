@@ -206,7 +206,7 @@ rule simulations_grid_search_accuracy:
         statistics=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/train_test_{{train_test_split}}/params_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}/embedding_accuracy.csv",
     conda: "../cartography.yml"
     params:
-        method_parameters=SIMULATION_METHOD_PARAMETERS.instance,
+        method_parameters=lambda wildcards: {key: value for key, value in SIMULATION_METHOD_PARAMETERS.instance(wildcards).items() if not pd.isna(value)},
         simulation_parameters=lambda wildcards: {"recombination_rate": wildcards.recombination_rate, "replicate": wildcards.replicate, "train_test_split": wildcards.train_test_split}
     shell:
         """
