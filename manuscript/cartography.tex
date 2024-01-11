@@ -233,7 +233,6 @@ John Huddleston\textsuperscript{2*}
 \end{flushleft}
 % Please keep the abstract below 300 words
 \section*{Abstract}
-\jhc{285 words, limit is 300}
 Public health studies commonly infer phylogenies from viral genome sequences to understand transmission dynamics and identify clusters of genetically-related samples.
 However, viruses that reassort or recombine violate phylogenetic assumptions and require more sophisticated methods.
 Even when phylogenies are appropriate, they can be unnecessary or difficult to interpret without specialty knowledge.
@@ -717,9 +716,7 @@ Since increasing the number of components used by PCA and MDS allows these metho
 This approach follows the same concept from the MDS algorithm itself where optimization occurs iteratively until the algorithm reaches a predefined error threshold \cite{hout_papesh_goldinger_2012}.
 
 With the approach described above, we tested each method across a range of relevant parameters with all combinations of parameter values.
-For PCA, we tested the number of components between 2 and 6.
-For MDS, we tested the number of components between 2 and 10.
-\jhc{The difference in number of components between PCA and MDS sticks out here. We should use the same number for both or justify using different numbers.}
+For PCA and MDS, we tested the number of components between 2 and 10.
 For t-SNE, we tested perplexity values of 15, 30, 100, 200, and 300, and we tested learning rates of 100, 200, and 500.
 For UMAP, we tested nearest neighbor values of 25, 50, and 100, and we tested values for the minimum distance that points can be in an embedding of 0.05, 0.1, and 0.25.
 
