@@ -1,5 +1,6 @@
 use-conda: true
-conda-frontend: mamba
+conda-frontend: conda
 printshellcmds: True
 cores: 8
+rerun-incomplete: True
 resources: mem_mb=12000
