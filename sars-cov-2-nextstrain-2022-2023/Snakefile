@@ -963,7 +963,7 @@ rule sarscov2_test_replication_subsample_sequences:
         alignment="sars-cov-2-nextstrain-2022-2023/data/filtered_aligned.fasta.zst",
         strains="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/strains.txt",
     output:
-        sequences="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/aligned.fasta",
+        sequences=temp("sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/aligned.fasta"),
     conda: "../cartography.yml"
     shell:
         """
@@ -974,7 +974,7 @@ rule sarscov2_test_replication_create_distance_matrix:
     input:
         alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/aligned.fasta",
     output:
-        output="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/distance_matrix.csv",
+        output=temp("sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/distance_matrix.csv"),
     conda: "../cartography.yml"
     shell:
         """
@@ -988,7 +988,7 @@ rule sarscov2_test_replication_clean_alignment_for_pca:
     input:
         alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/aligned.fasta",
     output:
-        alignment="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/cleaned_aligned.fasta",
+        alignment=temp("sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/cleaned_aligned.fasta"),
     conda: "../cartography.yml"
     log:
         "logs/sarscov2_test_replication_clean_alignment_for_pca_{subsampling_scheme}_{subsample_max_sequences}_{replicate}.txt"
