@@ -2,7 +2,7 @@
 
 # Submit a reasonable number of simultaneous jobs, accounting for the number of
 # CPUs alloted to our lab's SLURM account.
-cores: 20
+jobs: 20
 
 # Always let the user know which commands are being executed for each rule and
 # why each rule is being run.
