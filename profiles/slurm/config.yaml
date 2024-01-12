@@ -52,8 +52,8 @@ cluster:
     --mem={resources.mem_mb}
     --cpus-per-task={threads}
     --time={resources.time}
-    --output=slurm_logs/{rule}/{rule}-{wildcards}.out
-    --error=slurm_logs/{rule}/{rule}-{wildcards}.err
+    --output=slurm_logs/{rule}/%j.out
+    --error=slurm_logs/{rule}/%j.err
     --job-name={rule}-{wildcards}
 
 # Tell Snakemake how to cancel jobs on the cluster when user uses Ctrl-C.
