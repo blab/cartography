@@ -250,7 +250,13 @@ Our open source implementation of these methods for analysis of viral genome seq
 % Use first person. PLOS ONE authors please skip this step.
 % Author Summary not valid for PLOS ONE submissions.
 \section*{Author summary}
-TBD.
+To track the progress of viral epidemics, public health researchers often need to identify groups of genetically-related samples.
+A common approach to find these groups involves inferring the complete evolutionary history of virus samples using phylogenetic methods.
+However, these methods assume that new viruses descend from a single parent, while many viruses including seasonal influenza and SARS-CoV-2 produce offspring through a form of sexual reproduction that violates this assumption.
+Additionally, phylogenies may be unnecessarily complex or unintuitive when researchers only need to find and visualize clusters of related samples.
+We tested an alternative approach by applying widely-used statistical methods (PCA, MDS, t-SNE, and UMAP) to create 2- or 3-dimensional maps of virus samples from their pairwise genetic distances and identify clusters of samples that place close together in these maps.
+We found that these statistical methods without an underlying biological model could accurately capture known genetic relationships in populations of seasonal influenza and SARS-CoV-2 even in the presence of sexual reproduction.
+The conceptual and practical simplicity of our open source implementation of these methods enables researchers to visualize and compare human pathogenic virus samples when phylogenetic methods are unnecessary or inappropriate.
 
 \linenumbers
 
