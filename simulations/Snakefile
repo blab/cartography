@@ -232,6 +232,7 @@ rule simulations_aggregate_grid_search:
         """
         python3 notebooks/scripts/concatenate_tables.py \
             --tables {input.tables} \
+            --separator="," \
             --output {output.table}
         """
 
