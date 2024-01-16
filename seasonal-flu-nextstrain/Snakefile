@@ -108,7 +108,7 @@ rule seasonal_flu_training_align:
     threads: 4
     resources:
         mem_mb=16000,
-        time="30m",
+        time="00:30:00",
         partition="campus-new",
         qos="campus-new",
     shell:
