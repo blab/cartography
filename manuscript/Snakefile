@@ -23,9 +23,9 @@ rule concat_mutation_tables:
             "seasonal-flu-nextstrain-2018-2020/results/mutation_table.csv",
             "ha-na-nextstrain/results/mutation_table.csv",
             "sars-cov-2-nextstrain/results/mutation_table_for_Nextstrain_clade.csv",
-            "sars-cov-2-nextstrain/results/mutation_table_for_Nextclade_pango.csv",
+            "sars-cov-2-nextstrain/results/mutation_table_for_Nextclade_pango_collapsed.csv",
             "sars-cov-2-nextstrain-2022-2023/results/mutation_table_for_Nextstrain_clade.csv",
-            "sars-cov-2-nextstrain-2022-2023/results/mutation_table_for_Nextclade_pango.csv",
+            "sars-cov-2-nextstrain-2022-2023/results/mutation_table_for_Nextclade_pango_collapsed.csv",
         ]
     output:
         csv_table = "manuscript/tables/mutation_table.csv",
@@ -44,10 +44,8 @@ rule concat_monophyletic_clusters:
             "seasonal-flu-nextstrain/results/monophyletic_clusters.csv",
             "seasonal-flu-nextstrain-2018-2020/results/monophyletic_clusters.csv",
             "ha-na-nextstrain/results/monophyletic_clusters.csv",
-            "sars-cov-2-nextstrain/results/monophyletic_clusters_for_Nextstrain_clade.csv",
-            "sars-cov-2-nextstrain/results/monophyletic_clusters_for_Nextclade_pango.csv",
-            "sars-cov-2-nextstrain-2022-2023/results/monophyletic_clusters_for_Nextstrain_clade.csv",
-            "sars-cov-2-nextstrain-2022-2023/results/monophyletic_clusters_for_Nextclade_pango.csv",
+            "sars-cov-2-nextstrain/results/monophyletic_clusters.csv",
+            "sars-cov-2-nextstrain-2022-2023/results/monophyletic_clusters.csv",
         ]
     output:
         csv_table = "manuscript/tables/monophyletic_clusters.csv",
