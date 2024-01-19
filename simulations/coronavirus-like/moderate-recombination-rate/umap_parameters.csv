@@ -1,2 +1,2 @@
 method,min_dist,nearest_neighbors,mae,virus,recombination_rate
-umap,0.05,100,16.5577196652984,coronavirus,moderate-recombination-rate
+umap,0.1,50,16.42203819027405,coronavirus,moderate-recombination-rate

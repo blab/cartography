@@ -35,16 +35,16 @@
       "MCC": "MCC_7"
     },
     "A/Alabama/15/2017": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Alabama/16/2016": {
       "MCC": "unassigned"
     },
     "A/Alabama/16/2017": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Alabama/17/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Alabama/18/2017": {
       "MCC": "MCC_14"
@@ -59,7 +59,7 @@
       "MCC": "unassigned"
     },
     "A/Alaska/05/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Alaska/05/2017": {
       "MCC": "MCC_10"
@@ -68,13 +68,13 @@
       "MCC": "MCC_14"
     },
     "A/Alaska/08/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Alaska/09/2017": {
       "MCC": "MCC_14"
     },
     "A/Alaska/12/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Alaska/13/2017": {
       "MCC": "MCC_14"
@@ -83,7 +83,7 @@
       "MCC": "MCC_14"
     },
     "A/Alaska/21/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Alaska/22/2016": {
       "MCC": "MCC_8"
@@ -104,13 +104,13 @@
       "MCC": "unassigned"
     },
     "A/Alaska/29/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Alaska/31/2017": {
       "MCC": "MCC_10"
     },
     "A/Alaska/32/2016": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Alaska/32/2017": {
       "MCC": "MCC_9"
@@ -119,7 +119,7 @@
       "MCC": "unassigned"
     },
     "A/Alaska/37/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Alaska/45/2017": {
       "MCC": "MCC_11"
@@ -140,13 +140,13 @@
       "MCC": "MCC_9"
     },
     "A/Arizona/04/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Arizona/05/2017": {
       "MCC": "MCC_10"
     },
     "A/Arizona/06/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Arizona/11/2016": {
       "MCC": "MCC_8"
@@ -155,28 +155,28 @@
       "MCC": "unassigned"
     },
     "A/Arizona/13/2017": {
-      "MCC": "MCC_2"
+      "MCC": "MCC_3"
     },
     "A/Arizona/14/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Arizona/18/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Arizona/20/2017": {
       "MCC": "unassigned"
     },
     "A/Arizona/24/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Arizona/24/2017": {
       "MCC": "MCC_7"
     },
     "A/Arizona/25/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Arizona/27/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Arizona/27/2017": {
       "MCC": "MCC_14"
@@ -203,19 +203,19 @@
       "MCC": "unassigned"
     },
     "A/Arizona/44/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Arizona/45/2017": {
       "MCC": "unassigned"
     },
     "A/Arizona/48/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Arizona/49/2017": {
       "MCC": "MCC_7"
     },
     "A/Arizona/4965/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Arizona/5053/2016": {
       "MCC": "MCC_8"
@@ -224,31 +224,31 @@
       "MCC": "MCC_10"
     },
     "A/Arizona/5112/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Arizona/5187/2016": {
       "MCC": "MCC_8"
     },
     "A/Arizona/56/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Arizona/57/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Arizona/59/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Arizona/59/2017": {
       "MCC": "MCC_0"
     },
     "A/Arizona/60/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Arizona/62/2017": {
       "MCC": "MCC_11"
     },
     "A/Arizona/65/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_13"
     },
     "A/Arizona/66/2017": {
       "MCC": "MCC_9"
@@ -269,13 +269,13 @@
       "MCC": "MCC_11"
     },
     "A/Arizona/78/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Arizona/80/2016": {
       "MCC": "unassigned"
     },
     "A/Arkansas/01/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Arkansas/02/2016": {
       "MCC": "MCC_14"
@@ -290,16 +290,16 @@
       "MCC": "MCC_14"
     },
     "A/Arkansas/11/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Arkansas/14/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Arkansas/15/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Arkansas/16/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Arkansas/17/2017": {
       "MCC": "MCC_14"
@@ -323,19 +323,19 @@
       "MCC": "MCC_11"
     },
     "A/Baltimore/0148/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Baltimore/0221/2017": {
       "MCC": "unassigned"
     },
     "A/Baltimore/0223/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Baltimore/0227/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Baltimore/0230/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Baltimore/0233/2017": {
       "MCC": "unassigned"
@@ -344,7 +344,7 @@
       "MCC": "MCC_7"
     },
     "A/Baltimore/0239/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Baltimore/0244/2017": {
       "MCC": "MCC_14"
@@ -356,22 +356,22 @@
       "MCC": "unassigned"
     },
     "A/Baltimore/0256/2017": {
-      "MCC": "MCC_13"
+      "MCC": "unassigned"
     },
     "A/Baltimore/0257/2017": {
       "MCC": "MCC_7"
     },
     "A/Baltimore/0261/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Baltimore/0262/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Baltimore/0281/2017": {
-      "MCC": "MCC_9"
+      "MCC": "unassigned"
     },
     "A/Baltimore/0293/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Baltimore/0295/2017": {
       "MCC": "MCC_14"
@@ -380,7 +380,7 @@
       "MCC": "unassigned"
     },
     "A/Baltimore/0306/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Baltimore/0307/2017": {
       "MCC": "unassigned"
@@ -419,31 +419,31 @@
       "MCC": "unassigned"
     },
     "A/Brisbane/1004/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_1"
     },
     "A/Brisbane/1008/2016": {
       "MCC": "unassigned"
     },
     "A/Brisbane/1009/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Brisbane/101/2017": {
       "MCC": "MCC_10"
     },
     "A/Brisbane/1014/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_1"
     },
     "A/Brisbane/105/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Brisbane/113/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Brisbane/122/2016": {
       "MCC": "MCC_14"
     },
     "A/Brisbane/122/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Brisbane/133/2017": {
       "MCC": "unassigned"
@@ -461,7 +461,7 @@
       "MCC": "MCC_10"
     },
     "A/Brisbane/158/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Brisbane/161/2017": {
       "MCC": "unassigned"
@@ -473,28 +473,28 @@
       "MCC": "MCC_10"
     },
     "A/Brisbane/18/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Brisbane/20/2017": {
       "MCC": "MCC_10"
     },
     "A/Brisbane/200/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Brisbane/224/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Brisbane/225/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Brisbane/231/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_1"
     },
     "A/Brisbane/273/2016": {
       "MCC": "unassigned"
     },
     "A/Brisbane/280/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_13"
     },
     "A/Brisbane/285/2016": {
       "MCC": "unassigned"
@@ -503,16 +503,16 @@
       "MCC": "MCC_10"
     },
     "A/Brisbane/291/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Brisbane/296/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_1"
     },
     "A/Brisbane/298/2016": {
       "MCC": "unassigned"
     },
     "A/Brisbane/299/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Brisbane/3/2017": {
       "MCC": "MCC_14"
@@ -521,7 +521,7 @@
       "MCC": "MCC_14"
     },
     "A/Brisbane/302/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_13"
     },
     "A/Brisbane/303/2016": {
       "MCC": "unassigned"
@@ -542,22 +542,22 @@
       "MCC": "unassigned"
     },
     "A/California/02/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/California/03/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/California/05/2016": {
       "MCC": "MCC_14"
     },
     "A/California/08/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/California/101/2016": {
       "MCC": "MCC_14"
     },
     "A/California/105/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/California/106/2017": {
       "MCC": "MCC_14"
@@ -572,7 +572,7 @@
       "MCC": "unassigned"
     },
     "A/California/110/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/California/110/2017": {
       "MCC": "MCC_11"
@@ -593,10 +593,10 @@
       "MCC": "MCC_9"
     },
     "A/California/121/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/California/122/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/California/124/2016": {
       "MCC": "unassigned"
@@ -626,10 +626,10 @@
       "MCC": "MCC_10"
     },
     "A/California/143/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_1"
     },
     "A/California/144/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/California/144/2017": {
       "MCC": "MCC_9"
@@ -644,7 +644,7 @@
       "MCC": "unassigned"
     },
     "A/California/15/2017": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/California/150/2016": {
       "MCC": "unassigned"
@@ -653,10 +653,10 @@
       "MCC": "MCC_11"
     },
     "A/California/156/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/California/157/2016": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/California/176/2016": {
       "MCC": "MCC_10"
@@ -668,10 +668,10 @@
       "MCC": "MCC_10"
     },
     "A/California/18/2017": {
-      "MCC": "MCC_13"
+      "MCC": "unassigned"
     },
     "A/California/182/2016": {
-      "MCC": "MCC_2"
+      "MCC": "MCC_3"
     },
     "A/California/186/2016": {
       "MCC": "unassigned"
@@ -680,25 +680,25 @@
       "MCC": "MCC_14"
     },
     "A/California/195/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/California/196/2016": {
       "MCC": "MCC_14"
     },
     "A/California/198/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/California/20/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/California/203/2016": {
       "MCC": "MCC_7"
     },
     "A/California/208/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/California/209/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/California/21/2016": {
       "MCC": "MCC_14"
@@ -707,7 +707,7 @@
       "MCC": "unassigned"
     },
     "A/California/22/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/California/24/2016": {
       "MCC": "unassigned"
@@ -719,7 +719,7 @@
       "MCC": "MCC_8"
     },
     "A/California/26/2017": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/California/29/2017": {
       "MCC": "MCC_14"
@@ -731,7 +731,7 @@
       "MCC": "MCC_7"
     },
     "A/California/38/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/California/38/2017": {
       "MCC": "unassigned"
@@ -749,7 +749,7 @@
       "MCC": "MCC_8"
     },
     "A/California/52/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/California/54/2016": {
       "MCC": "MCC_14"
@@ -758,7 +758,7 @@
       "MCC": "MCC_10"
     },
     "A/California/60/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/California/61/2016": {
       "MCC": "MCC_14"
@@ -776,7 +776,7 @@
       "MCC": "MCC_8"
     },
     "A/California/69/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/California/72/2017": {
       "MCC": "MCC_11"
@@ -821,31 +821,31 @@
       "MCC": "MCC_11"
     },
     "A/California/NHRC_BRD12446N/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/California/NHRC_BRD41618N/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/California/NHRC_BRD80823N/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/California/NHRC_CG5905/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/California/NHRC_FDX11931/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/California/NHRC_M2369/2017": {
       "MCC": "MCC_11"
     },
     "A/California/NHRC_M2921/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/California/NHRC_MAP4061A/2017": {
       "MCC": "MCC_11"
     },
     "A/California/SAR20953N/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Canberra/1001/2016": {
       "MCC": "unassigned"
@@ -860,10 +860,10 @@
       "MCC": "MCC_10"
     },
     "A/Canberra/4/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Canberra/53/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Canberra/7/2016": {
       "MCC": "unassigned"
@@ -872,7 +872,7 @@
       "MCC": "unassigned"
     },
     "A/China/573/2017": {
-      "MCC": "MCC_6"
+      "MCC": "unassigned"
     },
     "A/China/574/2017": {
       "MCC": "unassigned"
@@ -881,7 +881,7 @@
       "MCC": "MCC_9"
     },
     "A/China/587/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/China/70793/2016": {
       "MCC": "unassigned"
@@ -896,7 +896,7 @@
       "MCC": "unassigned"
     },
     "A/China/79880/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_14"
     },
     "A/China/80241/2016": {
       "MCC": "MCC_14"
@@ -917,7 +917,7 @@
       "MCC": "MCC_14"
     },
     "A/China/940/2016": {
-      "MCC": "MCC_14"
+      "MCC": "unassigned"
     },
     "A/Colorado/01/2017": {
       "MCC": "unassigned"
@@ -926,7 +926,7 @@
       "MCC": "MCC_14"
     },
     "A/Colorado/03/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_14"
     },
     "A/Colorado/04/2016": {
       "MCC": "unassigned"
@@ -941,7 +941,7 @@
       "MCC": "unassigned"
     },
     "A/Colorado/11/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Colorado/12/2017": {
       "MCC": "unassigned"
@@ -950,13 +950,13 @@
       "MCC": "MCC_14"
     },
     "A/Colorado/15/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Colorado/17/2017": {
       "MCC": "unassigned"
     },
     "A/Colorado/22/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Colorado/24/2017": {
       "MCC": "MCC_11"
@@ -965,16 +965,16 @@
       "MCC": "MCC_11"
     },
     "A/Colorado/27/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Colorado/28/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Colorado/31/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Colorado/38/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Colorado/41/2016": {
       "MCC": "MCC_14"
@@ -986,7 +986,7 @@
       "MCC": "MCC_14"
     },
     "A/Colorado/47/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Colorado/49/2016": {
       "MCC": "MCC_10"
@@ -995,10 +995,10 @@
       "MCC": "unassigned"
     },
     "A/Connecticut/04/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Connecticut/04/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Connecticut/06/2016": {
       "MCC": "MCC_14"
@@ -1016,13 +1016,13 @@
       "MCC": "MCC_9"
     },
     "A/Connecticut/11/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Connecticut/12/2017": {
       "MCC": "MCC_14"
     },
     "A/Connecticut/13/2016": {
-      "MCC": "MCC_14"
+      "MCC": "unassigned"
     },
     "A/Connecticut/13/2017": {
       "MCC": "MCC_9"
@@ -1052,7 +1052,7 @@
       "MCC": "unassigned"
     },
     "A/Connecticut/26/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Connecticut/26/2017": {
       "MCC": "MCC_9"
@@ -1067,13 +1067,13 @@
       "MCC": "unassigned"
     },
     "A/Connecticut/34/2016": {
-      "MCC": "MCC_7"
+      "MCC": "unassigned"
     },
     "A/Connecticut/36/2016": {
       "MCC": "MCC_8"
     },
     "A/Connecticut/37/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Connecticut/37/2017": {
       "MCC": "MCC_11"
@@ -1082,10 +1082,10 @@
       "MCC": "unassigned"
     },
     "A/Darwin/1002/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_1"
     },
     "A/Darwin/1005/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Darwin/1006/2016": {
       "MCC": "unassigned"
@@ -1115,10 +1115,10 @@
       "MCC": "MCC_14"
     },
     "A/Delaware/13/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Delaware/15/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Delaware/19/2017": {
       "MCC": "MCC_14"
@@ -1133,7 +1133,7 @@
       "MCC": "MCC_9"
     },
     "A/Delaware/31/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_1"
     },
     "A/Delaware/31/2017": {
       "MCC": "MCC_11"
@@ -1148,7 +1148,7 @@
       "MCC": "MCC_7"
     },
     "A/Delaware/40/2016": {
-      "MCC": "MCC_2"
+      "MCC": "MCC_3"
     },
     "A/Delaware/41/2017": {
       "MCC": "MCC_11"
@@ -1169,7 +1169,7 @@
       "MCC": "unassigned"
     },
     "A/Florida/06/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Florida/07/2016": {
       "MCC": "unassigned"
@@ -1181,7 +1181,7 @@
       "MCC": "MCC_14"
     },
     "A/Florida/10/2017": {
-      "MCC": "MCC_13"
+      "MCC": "unassigned"
     },
     "A/Florida/100/2016": {
       "MCC": "unassigned"
@@ -1202,19 +1202,19 @@
       "MCC": "MCC_14"
     },
     "A/Florida/20/2017": {
-      "MCC": "MCC_14"
+      "MCC": "unassigned"
     },
     "A/Florida/22/2017": {
       "MCC": "MCC_14"
     },
     "A/Florida/23/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Florida/28/2017": {
       "MCC": "unassigned"
     },
     "A/Florida/29/2017": {
-      "MCC": "MCC_14"
+      "MCC": "unassigned"
     },
     "A/Florida/30/2017": {
       "MCC": "MCC_10"
@@ -1226,7 +1226,7 @@
       "MCC": "MCC_8"
     },
     "A/Florida/36/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Florida/37/2017": {
       "MCC": "unassigned"
@@ -1238,10 +1238,10 @@
       "MCC": "unassigned"
     },
     "A/Florida/39/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Florida/40/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Florida/42/2017": {
       "MCC": "MCC_9"
@@ -1259,7 +1259,7 @@
       "MCC": "MCC_14"
     },
     "A/Florida/45/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Florida/46/2017": {
       "MCC": "MCC_14"
@@ -1268,7 +1268,7 @@
       "MCC": "MCC_0"
     },
     "A/Florida/48/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_14"
     },
     "A/Florida/50/2016": {
       "MCC": "unassigned"
@@ -1286,7 +1286,7 @@
       "MCC": "unassigned"
     },
     "A/Florida/60/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Florida/63/2017": {
       "MCC": "MCC_11"
@@ -1298,7 +1298,7 @@
       "MCC": "MCC_11"
     },
     "A/Florida/67/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Florida/68/2016": {
       "MCC": "unassigned"
@@ -1307,7 +1307,7 @@
       "MCC": "MCC_11"
     },
     "A/Florida/74/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Florida/78/2016": {
       "MCC": "MCC_10"
@@ -1316,19 +1316,19 @@
       "MCC": "unassigned"
     },
     "A/Florida/81/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Florida/82/2016": {
       "MCC": "unassigned"
     },
     "A/Florida/83/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Florida/84/2017": {
       "MCC": "MCC_11"
     },
     "A/Florida/86/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Florida/87/2016": {
       "MCC": "MCC_10"
@@ -1343,13 +1343,13 @@
       "MCC": "MCC_10"
     },
     "A/Florida/96/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Florida/97/2017": {
       "MCC": "MCC_11"
     },
     "A/Florida/98/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Gainesville/09/2016": {
       "MCC": "MCC_8"
@@ -1358,13 +1358,13 @@
       "MCC": "MCC_8"
     },
     "A/Gainesville/10/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Gainesville/13/2016": {
       "MCC": "MCC_7"
     },
     "A/Georgia/01/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Georgia/03/2016": {
       "MCC": "unassigned"
@@ -1376,7 +1376,7 @@
       "MCC": "MCC_14"
     },
     "A/Georgia/06/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Georgia/08/2017": {
       "MCC": "MCC_14"
@@ -1385,7 +1385,7 @@
       "MCC": "MCC_9"
     },
     "A/Georgia/11/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Georgia/12/2017": {
       "MCC": "MCC_11"
@@ -1397,25 +1397,25 @@
       "MCC": "MCC_8"
     },
     "A/Georgia/23/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Georgia/37/2016": {
       "MCC": "unassigned"
     },
     "A/Georgia/45/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Georgia/46/2016": {
       "MCC": "MCC_8"
     },
     "A/Georgia/52/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Georgia/54/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Georgia/57/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Georgia/59/2016": {
       "MCC": "unassigned"
@@ -1439,10 +1439,10 @@
       "MCC": "MCC_9"
     },
     "A/Hawaii/01/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Hawaii/02/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Hawaii/03/2016": {
       "MCC": "unassigned"
@@ -1454,7 +1454,7 @@
       "MCC": "MCC_8"
     },
     "A/Hawaii/07/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Hawaii/103/2016": {
       "MCC": "MCC_8"
@@ -1475,7 +1475,7 @@
       "MCC": "MCC_9"
     },
     "A/Hawaii/18/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Hawaii/19/2016": {
       "MCC": "MCC_8"
@@ -1484,7 +1484,7 @@
       "MCC": "unassigned"
     },
     "A/Hawaii/31/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Hawaii/32/2016": {
       "MCC": "MCC_8"
@@ -1493,10 +1493,10 @@
       "MCC": "MCC_8"
     },
     "A/Hawaii/34/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Hawaii/42/2017": {
-      "MCC": "MCC_1"
+      "MCC": "MCC_2"
     },
     "A/Hawaii/45/2017": {
       "MCC": "unassigned"
@@ -1505,7 +1505,7 @@
       "MCC": "MCC_9"
     },
     "A/Hawaii/52/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Hawaii/54/2016": {
       "MCC": "unassigned"
@@ -1526,16 +1526,16 @@
       "MCC": "MCC_8"
     },
     "A/Hawaii/67/2016": {
-      "MCC": "MCC_12"
+      "MCC": "unassigned"
     },
     "A/Hawaii/68/2016": {
-      "MCC": "MCC_2"
+      "MCC": "MCC_3"
     },
     "A/Hawaii/71/2016": {
       "MCC": "unassigned"
     },
     "A/Hawaii/73/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Hawaii/76/2016": {
       "MCC": "unassigned"
@@ -1544,7 +1544,7 @@
       "MCC": "unassigned"
     },
     "A/Hawaii/79/2016": {
-      "MCC": "MCC_2"
+      "MCC": "MCC_3"
     },
     "A/Hawaii/87/2016": {
       "MCC": "unassigned"
@@ -1562,13 +1562,13 @@
       "MCC": "unassigned"
     },
     "A/Idaho/07/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Idaho/14/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Idaho/14/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Idaho/16/2016": {
       "MCC": "MCC_8"
@@ -1580,31 +1580,31 @@
       "MCC": "MCC_14"
     },
     "A/Idaho/23/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Idaho/24/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Idaho/24/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Idaho/27/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Idaho/31/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Idaho/31/2017": {
       "MCC": "MCC_11"
     },
     "A/Idaho/32/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Idaho/33/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Idaho/34/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Idaho/34/2017": {
       "MCC": "MCC_11"
@@ -1613,10 +1613,10 @@
       "MCC": "unassigned"
     },
     "A/Idaho/37/2016": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Idaho/38/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Idaho/40/2016": {
       "MCC": "unassigned"
@@ -1631,13 +1631,13 @@
       "MCC": "unassigned"
     },
     "A/Idaho/43/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Illinois/04/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Illinois/05/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Illinois/06/2017": {
       "MCC": "unassigned"
@@ -1649,7 +1649,7 @@
       "MCC": "unassigned"
     },
     "A/Illinois/08/2017": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Illinois/10/2016": {
       "MCC": "MCC_8"
@@ -1658,16 +1658,16 @@
       "MCC": "MCC_8"
     },
     "A/Illinois/17/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Illinois/19/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Illinois/22/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Illinois/23/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Illinois/24/2017": {
       "MCC": "MCC_14"
@@ -1700,7 +1700,7 @@
       "MCC": "unassigned"
     },
     "A/Illinois/53/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Illinois/58/2016": {
       "MCC": "MCC_14"
@@ -1733,13 +1733,13 @@
       "MCC": "unassigned"
     },
     "A/Indiana/20/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Indiana/22/2017": {
       "MCC": "MCC_14"
     },
     "A/Indiana/23/2017": {
-      "MCC": "MCC_13"
+      "MCC": "unassigned"
     },
     "A/Indiana/24/2017": {
       "MCC": "MCC_14"
@@ -1751,7 +1751,7 @@
       "MCC": "MCC_14"
     },
     "A/Indiana/31/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Indiana/31/2017": {
       "MCC": "MCC_11"
@@ -1766,16 +1766,16 @@
       "MCC": "unassigned"
     },
     "A/Indiana/43/2016": {
-      "MCC": "MCC_2"
+      "MCC": "MCC_3"
     },
     "A/Indiana/44/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Indiana/47/2016": {
       "MCC": "MCC_7"
     },
     "A/Iowa/02/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Iowa/03/2016": {
       "MCC": "MCC_8"
@@ -1787,7 +1787,7 @@
       "MCC": "MCC_7"
     },
     "A/Iowa/14/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Iowa/17/2017": {
       "MCC": "MCC_10"
@@ -1811,19 +1811,19 @@
       "MCC": "unassigned"
     },
     "A/Iowa/24/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Iowa/24/2017": {
       "MCC": "MCC_9"
     },
     "A/Iowa/26/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Iowa/27/2016": {
       "MCC": "unassigned"
     },
     "A/Iowa/27/2017": {
-      "MCC": "MCC_1"
+      "MCC": "MCC_2"
     },
     "A/Iowa/29/2016": {
       "MCC": "unassigned"
@@ -1853,34 +1853,34 @@
       "MCC": "unassigned"
     },
     "A/Kansas/02/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Kansas/03/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Kansas/03/2017": {
       "MCC": "unassigned"
     },
     "A/Kansas/07/2017": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Kansas/08/2017": {
       "MCC": "unassigned"
     },
     "A/Kansas/17/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Kansas/22/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Kansas/25/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Karachay-Cherkess/CRIE-296/2016": {
       "MCC": "unassigned"
     },
     "A/Karachay-Cherkess/CRIE-301/2017": {
-      "MCC": "MCC_10"
+      "MCC": "unassigned"
     },
     "A/Keelung/0023/2016": {
       "MCC": "MCC_14"
@@ -1898,7 +1898,7 @@
       "MCC": "unassigned"
     },
     "A/Keelung/0091/2016": {
-      "MCC": "MCC_2"
+      "MCC": "MCC_3"
     },
     "A/Keelung/0095/2016": {
       "MCC": "unassigned"
@@ -1907,7 +1907,7 @@
       "MCC": "unassigned"
     },
     "A/Keelung/0113/2017": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Keelung/0161/2017": {
       "MCC": "MCC_9"
@@ -1919,34 +1919,34 @@
       "MCC": "MCC_14"
     },
     "A/Kentucky/07/2017": {
-      "MCC": "MCC_13"
+      "MCC": "unassigned"
     },
     "A/Kentucky/11/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Kentucky/13/2017": {
       "MCC": "MCC_14"
     },
     "A/Kentucky/15/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Kentucky/17/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Kentucky/18/2017": {
       "MCC": "MCC_14"
     },
     "A/Kentucky/21/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Kentucky/23/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Kentucky/25/2017": {
       "MCC": "MCC_7"
     },
     "A/Kentucky/26/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Kentucky/28/2017": {
       "MCC": "unassigned"
@@ -1970,19 +1970,19 @@
       "MCC": "MCC_14"
     },
     "A/Kenya/022/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Kenya/023/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Kenya/026/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Kenya/027/2017": {
       "MCC": "MCC_10"
     },
     "A/Kenya/028/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Kenya/029/2017": {
       "MCC": "MCC_9"
@@ -2000,7 +2000,7 @@
       "MCC": "MCC_9"
     },
     "A/Kenya/036/2017": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Khakassia/CRIE-360/2017": {
       "MCC": "unassigned"
@@ -2045,16 +2045,16 @@
       "MCC": "unassigned"
     },
     "A/Linkou/0206/2017": {
-      "MCC": "MCC_2"
+      "MCC": "MCC_3"
     },
     "A/Linkou/0266/2017": {
       "MCC": "MCC_9"
     },
     "A/Linkou/0302/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Linkou/0304/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Linkou/0335/2017": {
       "MCC": "MCC_9"
@@ -2069,22 +2069,22 @@
       "MCC": "unassigned"
     },
     "A/Louisiana/04/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Louisiana/13/2017": {
       "MCC": "MCC_14"
     },
     "A/Louisiana/15/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Louisiana/17/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_14"
     },
     "A/Louisiana/19/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Louisiana/21/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Louisiana/24/2016": {
       "MCC": "MCC_8"
@@ -2093,10 +2093,10 @@
       "MCC": "MCC_14"
     },
     "A/Louisiana/26/2016": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Louisiana/30/2016": {
-      "MCC": "MCC_2"
+      "MCC": "MCC_3"
     },
     "A/Louisiana/35/2017": {
       "MCC": "unassigned"
@@ -2108,7 +2108,7 @@
       "MCC": "unassigned"
     },
     "A/Louisiana/46/2017": {
-      "MCC": "MCC_13"
+      "MCC": "unassigned"
     },
     "A/Louisiana/48/2017": {
       "MCC": "MCC_11"
@@ -2123,13 +2123,13 @@
       "MCC": "MCC_14"
     },
     "A/MUWRP-Uganda/580/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/MUWRP-Uganda/705/2017": {
       "MCC": "MCC_14"
     },
     "A/MUWRP-Uganda/706/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/MUWRP-Uganda/707/2017": {
       "MCC": "unassigned"
@@ -2138,7 +2138,7 @@
       "MCC": "unassigned"
     },
     "A/MUWRP-Uganda/709/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Maine/03/2016": {
       "MCC": "unassigned"
@@ -2147,10 +2147,10 @@
       "MCC": "MCC_14"
     },
     "A/Maine/04/2017": {
-      "MCC": "MCC_1"
+      "MCC": "MCC_2"
     },
     "A/Maine/05/2017": {
-      "MCC": "MCC_1"
+      "MCC": "MCC_2"
     },
     "A/Maine/07/2017": {
       "MCC": "MCC_10"
@@ -2171,7 +2171,7 @@
       "MCC": "unassigned"
     },
     "A/Maine/21/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Maine/24/2016": {
       "MCC": "unassigned"
@@ -2183,16 +2183,16 @@
       "MCC": "MCC_7"
     },
     "A/Maryland/14/2017": {
-      "MCC": "MCC_2"
+      "MCC": "MCC_3"
     },
     "A/Maryland/15/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Maryland/21/2016": {
       "MCC": "unassigned"
     },
     "A/Maryland/24/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Maryland/25/2017": {
       "MCC": "unassigned"
@@ -2231,7 +2231,7 @@
       "MCC": "MCC_9"
     },
     "A/Maryland/53/2017": {
-      "MCC": "MCC_9"
+      "MCC": "unassigned"
     },
     "A/Maryland/82/2017": {
       "MCC": "MCC_9"
@@ -2261,7 +2261,7 @@
       "MCC": "unassigned"
     },
     "A/Massachusetts/05/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Massachusetts/07/2017": {
       "MCC": "MCC_10"
@@ -2270,13 +2270,13 @@
       "MCC": "MCC_14"
     },
     "A/Massachusetts/09/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Massachusetts/11/2017": {
       "MCC": "MCC_14"
     },
     "A/Massachusetts/13/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Massachusetts/14/2017": {
       "MCC": "MCC_9"
@@ -2285,7 +2285,7 @@
       "MCC": "MCC_8"
     },
     "A/Massachusetts/36/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Massachusetts/37/2016": {
       "MCC": "MCC_14"
@@ -2306,10 +2306,10 @@
       "MCC": "MCC_14"
     },
     "A/Mexico/SAR30007N/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Mexico/SAR30012N/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Michigan/05/2017": {
       "MCC": "MCC_14"
@@ -2321,7 +2321,7 @@
       "MCC": "unassigned"
     },
     "A/Michigan/100/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Michigan/104/2016": {
       "MCC": "MCC_10"
@@ -2333,7 +2333,7 @@
       "MCC": "MCC_8"
     },
     "A/Michigan/11/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Michigan/110/2016": {
       "MCC": "MCC_14"
@@ -2348,31 +2348,31 @@
       "MCC": "unassigned"
     },
     "A/Michigan/121/2016": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Michigan/124/2016": {
       "MCC": "unassigned"
     },
     "A/Michigan/13/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Michigan/14/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Michigan/16/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Michigan/18/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Michigan/19/2017": {
       "MCC": "MCC_7"
     },
     "A/Michigan/20/2017": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Michigan/22/2017": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Michigan/26/2017": {
       "MCC": "MCC_7"
@@ -2393,7 +2393,7 @@
       "MCC": "MCC_11"
     },
     "A/Michigan/275/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Michigan/276/2017": {
       "MCC": "MCC_9"
@@ -2402,7 +2402,7 @@
       "MCC": "MCC_9"
     },
     "A/Michigan/28/2017": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Michigan/282/2017": {
       "MCC": "MCC_9"
@@ -2414,7 +2414,7 @@
       "MCC": "MCC_0"
     },
     "A/Michigan/29/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Michigan/296/2017": {
       "MCC": "MCC_11"
@@ -2438,64 +2438,64 @@
       "MCC": "MCC_14"
     },
     "A/Michigan/42/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Michigan/44/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Michigan/44/2017": {
       "MCC": "unassigned"
     },
     "A/Michigan/45/2017": {
-      "MCC": "MCC_13"
-    },
-    "A/Michigan/46/2017": {
-      "MCC": "MCC_13"
-    },
-    "A/Michigan/47/2016": {
       "MCC": "MCC_12"
     },
-    "A/Michigan/48/2017": {
+    "A/Michigan/46/2017": {
+      "MCC": "MCC_12"
+    },
+    "A/Michigan/47/2016": {
       "MCC": "MCC_13"
+    },
+    "A/Michigan/48/2017": {
+      "MCC": "MCC_12"
     },
     "A/Michigan/51/2016": {
       "MCC": "unassigned"
     },
     "A/Michigan/51/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Michigan/52/2017": {
       "MCC": "MCC_7"
     },
     "A/Michigan/53/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Michigan/54/2017": {
       "MCC": "MCC_14"
     },
     "A/Michigan/57/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Michigan/58/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Michigan/59/2016": {
       "MCC": "unassigned"
     },
     "A/Michigan/65/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Michigan/66/2016": {
       "MCC": "unassigned"
     },
     "A/Michigan/70/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Michigan/78/2016": {
       "MCC": "unassigned"
     },
     "A/Michigan/81/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Michigan/98/2016": {
       "MCC": "MCC_14"
@@ -2507,7 +2507,7 @@
       "MCC": "unassigned"
     },
     "A/Minnesota/16/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Minnesota/17/2017": {
       "MCC": "MCC_14"
@@ -2525,7 +2525,7 @@
       "MCC": "unassigned"
     },
     "A/Minnesota/32/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Minnesota/39/2017": {
       "MCC": "MCC_11"
@@ -2537,10 +2537,10 @@
       "MCC": "unassigned"
     },
     "A/Minnesota/59/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Minnesota/65/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Minnesota/69/2016": {
       "MCC": "MCC_8"
@@ -2549,13 +2549,13 @@
       "MCC": "unassigned"
     },
     "A/Minnesota/73/2016": {
-      "MCC": "MCC_12"
+      "MCC": "unassigned"
     },
     "A/Minnesota/74/2016": {
       "MCC": "unassigned"
     },
     "A/Minnesota/75/2016": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Minnesota/79/2016": {
       "MCC": "unassigned"
@@ -2567,13 +2567,13 @@
       "MCC": "MCC_14"
     },
     "A/Mississippi/02/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Mississippi/03/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Mississippi/08/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Mississippi/10/2017": {
       "MCC": "MCC_7"
@@ -2588,13 +2588,13 @@
       "MCC": "unassigned"
     },
     "A/Mississippi/16/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Mississippi/17/2016": {
       "MCC": "unassigned"
     },
     "A/Mississippi/17/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Mississippi/18/2016": {
       "MCC": "MCC_14"
@@ -2615,7 +2615,7 @@
       "MCC": "MCC_14"
     },
     "A/Missouri/06/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Missouri/19/2016": {
       "MCC": "unassigned"
@@ -2648,7 +2648,7 @@
       "MCC": "MCC_11"
     },
     "A/Montana/01/2017": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Montana/05/2017": {
       "MCC": "MCC_14"
@@ -2657,19 +2657,19 @@
       "MCC": "unassigned"
     },
     "A/Montana/07/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Montana/09/2016": {
       "MCC": "MCC_8"
     },
     "A/Montana/10/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Montana/12/2017": {
       "MCC": "unassigned"
     },
     "A/Montana/14/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Montana/19/2017": {
       "MCC": "MCC_9"
@@ -2681,7 +2681,7 @@
       "MCC": "MCC_11"
     },
     "A/Montana/25/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Montana/41/2017": {
       "MCC": "MCC_9"
@@ -2699,16 +2699,16 @@
       "MCC": "MCC_8"
     },
     "A/Montana/67/2016": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Montana/68/2016": {
       "MCC": "MCC_10"
     },
     "A/Montana/70/2016": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Montana/72/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Moscow/CRIE-07/2016": {
       "MCC": "unassigned"
@@ -2720,16 +2720,16 @@
       "MCC": "MCC_14"
     },
     "A/Moscow/CRIE-10/2016": {
-      "MCC": "MCC_10"
+      "MCC": "unassigned"
     },
     "A/Moscow/CRIE-226/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_10"
     },
     "A/Nebraska/02/2017": {
       "MCC": "MCC_14"
     },
     "A/Nebraska/03/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Nebraska/04/2017": {
       "MCC": "unassigned"
@@ -2753,13 +2753,13 @@
       "MCC": "MCC_14"
     },
     "A/Nebraska/21/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Nebraska/23/2016": {
       "MCC": "unassigned"
     },
     "A/Nebraska/27/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Nevada/01/2016": {
       "MCC": "MCC_14"
@@ -2774,7 +2774,7 @@
       "MCC": "MCC_14"
     },
     "A/Nevada/08/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Nevada/09/2017": {
       "MCC": "unassigned"
@@ -2792,22 +2792,22 @@
       "MCC": "MCC_8"
     },
     "A/Nevada/22/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Nevada/30/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Nevada/33/2017": {
       "MCC": "MCC_11"
     },
     "A/Nevada/34/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_13"
     },
     "A/Nevada/37/2016": {
       "MCC": "MCC_8"
     },
     "A/Nevada/41/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Nevada/51/2016": {
       "MCC": "unassigned"
@@ -2816,10 +2816,10 @@
       "MCC": "MCC_14"
     },
     "A/Nevada/56/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Newcastle/1000/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_1"
     },
     "A/Newcastle/102/2016": {
       "MCC": "unassigned"
@@ -2831,13 +2831,13 @@
       "MCC": "MCC_9"
     },
     "A/Newcastle/120/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Newcastle/134/2016": {
       "MCC": "unassigned"
     },
     "A/Newcastle/148/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Newcastle/161/2017": {
       "MCC": "unassigned"
@@ -2858,19 +2858,19 @@
       "MCC": "unassigned"
     },
     "A/Newcastle/180/2017": {
-      "MCC": "MCC_6"
-    },
-    "A/Newcastle/184/2017": {
-      "MCC": "MCC_6"
-    },
-    "A/Newcastle/185/2017": {
-      "MCC": "MCC_6"
-    },
-    "A/Newcastle/186/2017": {
       "MCC": "MCC_5"
     },
+    "A/Newcastle/184/2017": {
+      "MCC": "MCC_5"
+    },
+    "A/Newcastle/185/2017": {
+      "MCC": "MCC_5"
+    },
+    "A/Newcastle/186/2017": {
+      "MCC": "MCC_4"
+    },
     "A/Newcastle/187/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Newcastle/189/2017": {
       "MCC": "MCC_14"
@@ -2882,7 +2882,7 @@
       "MCC": "MCC_14"
     },
     "A/Newcastle/193/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Newcastle/195/2017": {
       "MCC": "unassigned"
@@ -2894,25 +2894,25 @@
       "MCC": "unassigned"
     },
     "A/Newcastle/30/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_1"
     },
     "A/Newcastle/58/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Newcastle/600/2017": {
       "MCC": "MCC_9"
     },
     "A/Newcastle/610/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Newcastle/64/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_1"
     },
     "A/Newcastle/68/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Newcastle/78/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_1"
     },
     "A/Newcastle/91/2016": {
       "MCC": "unassigned"
@@ -2921,7 +2921,7 @@
       "MCC": "MCC_11"
     },
     "A/Nicaragua/4769_05/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Nicaragua/4992_03/2017": {
       "MCC": "MCC_11"
@@ -2951,7 +2951,7 @@
       "MCC": "MCC_11"
     },
     "A/Nicaragua/6268_15/2017": {
-      "MCC": "MCC_11"
+      "MCC": "unassigned"
     },
     "A/Nicaragua/6487_12/2016": {
       "MCC": "unassigned"
@@ -2969,7 +2969,7 @@
       "MCC": "unassigned"
     },
     "A/Nicaragua/7302_15/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_12"
     },
     "A/Nicaragua/7803_01/2017": {
       "MCC": "unassigned"
@@ -2981,7 +2981,7 @@
       "MCC": "unassigned"
     },
     "A/Nicaragua/8156_07/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Nicaragua/8539_09/2017": {
       "MCC": "unassigned"
@@ -2999,19 +2999,19 @@
       "MCC": "unassigned"
     },
     "A/Nicaragua/8765_10/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_11"
     },
     "A/Nicaragua/8774_10/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Nicaragua/8876_07/2017": {
       "MCC": "unassigned"
     },
     "A/Nicaragua/8899_11/2017": {
-      "MCC": "MCC_11"
+      "MCC": "unassigned"
     },
     "A/Nicaragua/9065_11/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_12"
     },
     "A/Nicaragua/9073_02/2016": {
       "MCC": "unassigned"
@@ -3029,10 +3029,10 @@
       "MCC": "unassigned"
     },
     "A/Nicaragua/9452_07/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Nicaragua/9506_04/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_12"
     },
     "A/Nicaragua/9508_06/2017": {
       "MCC": "unassigned"
@@ -3041,13 +3041,13 @@
       "MCC": "unassigned"
     },
     "A/Nicaragua/9693_02/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Nicaragua/9707_02/2017": {
       "MCC": "MCC_11"
     },
     "A/Nicaragua/9852_01/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Ohio/02/2017": {
       "MCC": "unassigned"
@@ -3062,10 +3062,10 @@
       "MCC": "MCC_14"
     },
     "A/Ohio/10/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Ohio/30/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Ohio/31/2016": {
       "MCC": "MCC_8"
@@ -3074,7 +3074,7 @@
       "MCC": "MCC_10"
     },
     "A/Ohio/32/2017": {
-      "MCC": "MCC_1"
+      "MCC": "MCC_2"
     },
     "A/Ohio/34/2016": {
       "MCC": "unassigned"
@@ -3083,7 +3083,7 @@
       "MCC": "MCC_9"
     },
     "A/Ohio/37/2017": {
-      "MCC": "MCC_1"
+      "MCC": "MCC_2"
     },
     "A/Ohio/39/2016": {
       "MCC": "unassigned"
@@ -3104,10 +3104,10 @@
       "MCC": "MCC_11"
     },
     "A/Ohio/5236/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Oklahoma/02/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Oklahoma/02/2017": {
       "MCC": "unassigned"
@@ -3116,19 +3116,19 @@
       "MCC": "unassigned"
     },
     "A/Oklahoma/09/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Oklahoma/09/2017": {
       "MCC": "unassigned"
     },
     "A/Oklahoma/11/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Oklahoma/12/2017": {
       "MCC": "MCC_10"
     },
     "A/Oklahoma/13/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Oklahoma/18/2016": {
       "MCC": "unassigned"
@@ -3137,7 +3137,7 @@
       "MCC": "MCC_14"
     },
     "A/Oklahoma/24/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Oklahoma/26/2017": {
       "MCC": "MCC_0"
@@ -3152,10 +3152,10 @@
       "MCC": "MCC_8"
     },
     "A/Oregon/01/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Oregon/02/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Oregon/02/2017": {
       "MCC": "unassigned"
@@ -3164,31 +3164,31 @@
       "MCC": "MCC_8"
     },
     "A/Oregon/04/2017": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Oregon/05/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Oregon/07/2017": {
       "MCC": "MCC_10"
     },
     "A/Oregon/09/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Oregon/10/2016": {
       "MCC": "MCC_8"
     },
     "A/Oregon/10/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Oregon/11/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Oregon/12/2017": {
-      "MCC": "MCC_13"
+      "MCC": "unassigned"
     },
     "A/Oregon/13/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Oregon/14/2017": {
       "MCC": "MCC_14"
@@ -3197,13 +3197,13 @@
       "MCC": "unassigned"
     },
     "A/Oregon/22/2016": {
-      "MCC": "MCC_4"
-    },
-    "A/Orel/CRIE-06/2016": {
       "MCC": "unassigned"
     },
+    "A/Orel/CRIE-06/2016": {
+      "MCC": "MCC_10"
+    },
     "A/Pennsylvania/01/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Pennsylvania/03/2016": {
       "MCC": "unassigned"
@@ -3218,25 +3218,25 @@
       "MCC": "MCC_14"
     },
     "A/Pennsylvania/105/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Pennsylvania/112/2016": {
       "MCC": "MCC_7"
     },
     "A/Pennsylvania/117/2016": {
-      "MCC": "MCC_9"
+      "MCC": "unassigned"
     },
     "A/Pennsylvania/118/2016": {
       "MCC": "MCC_14"
     },
     "A/Pennsylvania/119/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Pennsylvania/15/2017": {
       "MCC": "MCC_14"
     },
     "A/Pennsylvania/257/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Pennsylvania/262/2017": {
       "MCC": "MCC_10"
@@ -3257,19 +3257,19 @@
       "MCC": "unassigned"
     },
     "A/Pennsylvania/70/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Pennsylvania/73/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Pennsylvania/87/2016": {
       "MCC": "unassigned"
     },
     "A/Pennsylvania/88/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Pennsylvania/90/2016": {
-      "MCC": "MCC_2"
+      "MCC": "MCC_3"
     },
     "A/Pennsylvania/92/2016": {
       "MCC": "MCC_14"
@@ -3284,7 +3284,7 @@
       "MCC": "unassigned"
     },
     "A/Perth/141/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Perth/144/2017": {
       "MCC": "MCC_9"
@@ -3296,7 +3296,7 @@
       "MCC": "unassigned"
     },
     "A/Perth/22/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Perth/352/2017": {
       "MCC": "MCC_9"
@@ -3335,7 +3335,7 @@
       "MCC": "MCC_7"
     },
     "A/Santiago/PUC-MVL_003/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Santiago/PUC-MVL_005/2017": {
       "MCC": "unassigned"
@@ -3353,19 +3353,19 @@
       "MCC": "unassigned"
     },
     "A/Santiago/PUC-MVL_051/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Santiago/PUC-MVL_058/2017": {
       "MCC": "unassigned"
     },
     "A/Santiago/PUC-MVL_145/2017": {
-      "MCC": "MCC_13"
+      "MCC": "unassigned"
     },
     "A/Santiago/PUC-MVL_161/2017": {
       "MCC": "MCC_10"
     },
     "A/Santiago/PUC-MVL_188/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Santiago/RMS_op010d0/2017": {
       "MCC": "MCC_11"
@@ -3374,19 +3374,19 @@
       "MCC": "unassigned"
     },
     "A/Santiago/RMS_p004d0/2017": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Santiago/op002d0/2017": {
       "MCC": "unassigned"
     },
     "A/Santiago/op004d0/2017": {
-      "MCC": "MCC_14"
+      "MCC": "unassigned"
     },
     "A/Santiago/p008d0/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_12"
     },
     "A/Santiago/p010d0/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Santiago/p019d0/2017": {
       "MCC": "unassigned"
@@ -3395,13 +3395,13 @@
       "MCC": "MCC_10"
     },
     "A/Santiago/p024d0/2017": {
-      "MCC": "MCC_1"
+      "MCC": "MCC_2"
     },
     "A/Santiago/p025d0/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Santiago/p027d0/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_7"
     },
     "A/Santiago/p030d0/2017": {
       "MCC": "unassigned"
@@ -3428,7 +3428,7 @@
       "MCC": "unassigned"
     },
     "A/Shandong-Fushan/164/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_14"
     },
     "A/Shandong-Fushan/1721/2016": {
       "MCC": "unassigned"
@@ -3443,7 +3443,7 @@
       "MCC": "unassigned"
     },
     "A/Shandong-Zhifu/1158/2017": {
-      "MCC": "MCC_14"
+      "MCC": "unassigned"
     },
     "A/Shandong-Zhifu/1159/2017": {
       "MCC": "MCC_14"
@@ -3473,7 +3473,7 @@
       "MCC": "unassigned"
     },
     "A/Shanghai/12/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_14"
     },
     "A/Shanghai/16/2017": {
       "MCC": "unassigned"
@@ -3482,7 +3482,7 @@
       "MCC": "unassigned"
     },
     "A/Shanghai/26/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_14"
     },
     "A/Shanghai/28/2017": {
       "MCC": "unassigned"
@@ -3560,28 +3560,28 @@
       "MCC": "unassigned"
     },
     "A/Sydney/152/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Sydney/155/2017": {
       "MCC": "unassigned"
     },
     "A/Sydney/156/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_5"
     },
     "A/Sydney/158/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Sydney/18/2017": {
       "MCC": "MCC_10"
     },
     "A/Sydney/180/2017": {
-      "MCC": "MCC_6"
-    },
-    "A/Sydney/183/2017": {
       "MCC": "MCC_5"
     },
+    "A/Sydney/183/2017": {
+      "MCC": "MCC_4"
+    },
     "A/Sydney/185/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Sydney/189/2017": {
       "MCC": "unassigned"
@@ -3590,22 +3590,22 @@
       "MCC": "unassigned"
     },
     "A/Sydney/195/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Sydney/197/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Sydney/2/2017": {
       "MCC": "unassigned"
     },
     "A/Sydney/21/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Sydney/212/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Sydney/226/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Sydney/228/2017": {
       "MCC": "MCC_10"
@@ -3614,16 +3614,16 @@
       "MCC": "unassigned"
     },
     "A/Sydney/230/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Sydney/233/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Sydney/25/2017": {
       "MCC": "unassigned"
     },
     "A/Sydney/266/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Sydney/27/2017": {
       "MCC": "MCC_10"
@@ -3632,7 +3632,7 @@
       "MCC": "MCC_14"
     },
     "A/Sydney/32/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Sydney/33/2017": {
       "MCC": "unassigned"
@@ -3650,7 +3650,7 @@
       "MCC": "unassigned"
     },
     "A/Sydney/38/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Sydney/40/2017": {
       "MCC": "MCC_14"
@@ -3659,31 +3659,31 @@
       "MCC": "MCC_14"
     },
     "A/Sydney/507/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Sydney/514/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Sydney/517/2017": {
       "MCC": "unassigned"
     },
     "A/Sydney/531/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Sydney/532/2017": {
-      "MCC": "MCC_6"
-    },
-    "A/Sydney/534/2017": {
       "MCC": "MCC_5"
     },
+    "A/Sydney/534/2017": {
+      "MCC": "MCC_4"
+    },
     "A/Sydney/536/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Sydney/540/2017": {
       "MCC": "MCC_9"
     },
     "A/Sydney/554/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Sydney/561/2017": {
       "MCC": "unassigned"
@@ -3692,7 +3692,7 @@
       "MCC": "unassigned"
     },
     "A/Sydney/706/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Sydney/71/2017": {
       "MCC": "MCC_10"
@@ -3701,7 +3701,7 @@
       "MCC": "MCC_9"
     },
     "A/Sydney/711/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Sydney/712/2017": {
       "MCC": "unassigned"
@@ -3710,7 +3710,7 @@
       "MCC": "MCC_9"
     },
     "A/Sydney/718/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Sydney/72/2017": {
       "MCC": "MCC_10"
@@ -3752,7 +3752,7 @@
       "MCC": "unassigned"
     },
     "A/Tasmania/21/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Tasmania/213/2016": {
       "MCC": "unassigned"
@@ -3779,25 +3779,25 @@
       "MCC": "MCC_14"
     },
     "A/Tennessee/02/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Tennessee/03/2016": {
       "MCC": "MCC_14"
     },
     "A/Tennessee/04/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Tennessee/06/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Tennessee/07/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Tennessee/12/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Tennessee/13/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Tennessee/16/2017": {
       "MCC": "MCC_14"
@@ -3809,7 +3809,7 @@
       "MCC": "MCC_14"
     },
     "A/Tennessee/23/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Tennessee/28/2017": {
       "MCC": "unassigned"
@@ -3827,16 +3827,16 @@
       "MCC": "MCC_10"
     },
     "A/Tennessee/33/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Tennessee/35/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Tennessee/35/2017": {
       "MCC": "MCC_7"
     },
     "A/Tennessee/37/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Tennessee/37/2017": {
       "MCC": "MCC_10"
@@ -3848,7 +3848,7 @@
       "MCC": "unassigned"
     },
     "A/Tennessee/39/2016": {
-      "MCC": "MCC_13"
+      "MCC": "unassigned"
     },
     "A/Tennessee/40/2016": {
       "MCC": "MCC_14"
@@ -3863,7 +3863,7 @@
       "MCC": "MCC_11"
     },
     "A/Tennessee/58/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Tennessee/59/2017": {
       "MCC": "MCC_9"
@@ -3878,82 +3878,82 @@
       "MCC": "unassigned"
     },
     "A/Texas/10/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Texas/104/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Texas/106/2017": {
       "MCC": "MCC_14"
     },
     "A/Texas/107/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Texas/11/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/119/2016": {
-      "MCC": "unassigned"
+      "MCC": "MCC_13"
     },
     "A/Texas/12/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/120/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/121/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/130/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/133/2016": {
       "MCC": "MCC_14"
     },
     "A/Texas/136/2016": {
-      "MCC": "MCC_12"
-    },
-    "A/Texas/14/2016": {
       "MCC": "unassigned"
     },
+    "A/Texas/14/2016": {
+      "MCC": "MCC_13"
+    },
     "A/Texas/15/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/15/2017": {
       "MCC": "MCC_14"
     },
     "A/Texas/158/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/16/2017": {
       "MCC": "unassigned"
     },
     "A/Texas/166/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/170/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/171/2016": {
-      "MCC": "MCC_12"
-    },
-    "A/Texas/173/2016": {
       "MCC": "unassigned"
     },
+    "A/Texas/173/2016": {
+      "MCC": "MCC_13"
+    },
     "A/Texas/174/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/175/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/176/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/177/2016": {
       "MCC": "unassigned"
     },
     "A/Texas/178/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/179/2016": {
       "MCC": "unassigned"
@@ -3968,13 +3968,13 @@
       "MCC": "MCC_8"
     },
     "A/Texas/191/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Texas/193/2016": {
       "MCC": "unassigned"
     },
     "A/Texas/196/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Texas/20/2017": {
       "MCC": "unassigned"
@@ -3998,40 +3998,40 @@
       "MCC": "MCC_10"
     },
     "A/Texas/209/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Texas/211/2016": {
-      "MCC": "MCC_1"
+      "MCC": "MCC_2"
     },
     "A/Texas/213/2016": {
       "MCC": "MCC_14"
     },
     "A/Texas/22/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/23/2017": {
       "MCC": "unassigned"
     },
     "A/Texas/26/2017": {
-      "MCC": "MCC_1"
+      "MCC": "MCC_2"
     },
     "A/Texas/27/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Texas/274/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Texas/275/2017": {
       "MCC": "MCC_10"
     },
     "A/Texas/278/2017": {
-      "MCC": "MCC_1"
+      "MCC": "MCC_2"
     },
     "A/Texas/28/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Texas/280/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Texas/284/2017": {
       "MCC": "MCC_11"
@@ -4040,13 +4040,13 @@
       "MCC": "unassigned"
     },
     "A/Texas/29/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/29/2017": {
-      "MCC": "MCC_2"
+      "MCC": "MCC_3"
     },
     "A/Texas/290/2017": {
-      "MCC": "MCC_9"
+      "MCC": "unassigned"
     },
     "A/Texas/291/2017": {
       "MCC": "MCC_9"
@@ -4067,7 +4067,7 @@
       "MCC": "unassigned"
     },
     "A/Texas/305/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_14"
     },
     "A/Texas/306/2017": {
       "MCC": "MCC_11"
@@ -4085,22 +4085,22 @@
       "MCC": "unassigned"
     },
     "A/Texas/46/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Texas/48/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/48/2017": {
       "MCC": "MCC_7"
     },
     "A/Texas/4945/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/50/2017": {
       "MCC": "unassigned"
     },
     "A/Texas/52/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/52/2017": {
       "MCC": "unassigned"
@@ -4109,10 +4109,10 @@
       "MCC": "MCC_10"
     },
     "A/Texas/57/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/58/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/59/2016": {
       "MCC": "unassigned"
@@ -4121,19 +4121,19 @@
       "MCC": "unassigned"
     },
     "A/Texas/62/2017": {
-      "MCC": "MCC_2"
+      "MCC": "MCC_3"
     },
     "A/Texas/64/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Texas/65/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Texas/66/2016": {
       "MCC": "MCC_14"
     },
     "A/Texas/67/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/70/2017": {
       "MCC": "MCC_14"
@@ -4148,19 +4148,19 @@
       "MCC": "unassigned"
     },
     "A/Texas/74/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/78/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/79/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/80/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Texas/80/2017": {
-      "MCC": "MCC_1"
+      "MCC": "MCC_2"
     },
     "A/Texas/85/2017": {
       "MCC": "unassigned"
@@ -4169,22 +4169,22 @@
       "MCC": "MCC_14"
     },
     "A/Texas/95/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Texas/99/2017": {
       "MCC": "MCC_14"
     },
     "A/Townsville/1003/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Townsville/17/2017": {
-      "MCC": "MCC_6"
-    },
-    "A/Townsville/2/2017": {
       "MCC": "MCC_5"
     },
+    "A/Townsville/2/2017": {
+      "MCC": "MCC_4"
+    },
     "A/Townsville/51/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Utah/03/2016": {
       "MCC": "MCC_14"
@@ -4193,34 +4193,34 @@
       "MCC": "MCC_7"
     },
     "A/Utah/09/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Utah/14/2016": {
       "MCC": "unassigned"
     },
     "A/Utah/17/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Utah/17/2017": {
       "MCC": "unassigned"
     },
     "A/Utah/18/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Utah/18/2017": {
       "MCC": "MCC_14"
     },
     "A/Utah/20/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Utah/21/2016": {
       "MCC": "MCC_8"
     },
     "A/Utah/21/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Utah/23/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Utah/23/2017": {
       "MCC": "MCC_14"
@@ -4238,7 +4238,7 @@
       "MCC": "MCC_14"
     },
     "A/Utah/32/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Utah/33/2016": {
       "MCC": "MCC_8"
@@ -4265,10 +4265,10 @@
       "MCC": "unassigned"
     },
     "A/Utah/44/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_9"
     },
     "A/Utah/48/2016": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Utah/52/2016": {
       "MCC": "unassigned"
@@ -4283,13 +4283,13 @@
       "MCC": "unassigned"
     },
     "A/Vermont/04/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Vermont/06/2017": {
       "MCC": "MCC_7"
     },
     "A/Vermont/08/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Vermont/10/2017": {
       "MCC": "unassigned"
@@ -4298,16 +4298,16 @@
       "MCC": "MCC_7"
     },
     "A/Vermont/13/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Vermont/14/2017": {
       "MCC": "MCC_14"
     },
     "A/Vermont/20/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Vermont/21/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Vermont/27/2016": {
       "MCC": "unassigned"
@@ -4337,7 +4337,7 @@
       "MCC": "unassigned"
     },
     "A/Victoria/142/2017": {
-      "MCC": "MCC_6"
+      "MCC": "unassigned"
     },
     "A/Victoria/174/2017": {
       "MCC": "MCC_9"
@@ -4349,7 +4349,7 @@
       "MCC": "unassigned"
     },
     "A/Victoria/2002/2017": {
-      "MCC": "MCC_2"
+      "MCC": "MCC_3"
     },
     "A/Victoria/2004/2017": {
       "MCC": "unassigned"
@@ -4361,10 +4361,10 @@
       "MCC": "unassigned"
     },
     "A/Victoria/2049/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Victoria/2073/2016": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Victoria/2074/2016": {
       "MCC": "unassigned"
@@ -4376,13 +4376,13 @@
       "MCC": "unassigned"
     },
     "A/Victoria/24/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Victoria/52/2016": {
       "MCC": "unassigned"
     },
     "A/Victoria/539/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Victoria/542/2016": {
       "MCC": "unassigned"
@@ -4409,10 +4409,10 @@
       "MCC": "MCC_9"
     },
     "A/Victoria/614/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Victoria/623/2017": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Victoria/624/2016": {
       "MCC": "unassigned"
@@ -4433,10 +4433,10 @@
       "MCC": "MCC_10"
     },
     "A/Victoria/677/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Victoria/682/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Victoria/685/2017": {
       "MCC": "MCC_14"
@@ -4445,7 +4445,7 @@
       "MCC": "unassigned"
     },
     "A/Victoria/691/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Victoria/692/2017": {
       "MCC": "unassigned"
@@ -4460,7 +4460,7 @@
       "MCC": "unassigned"
     },
     "A/Victoria/716/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Victoria/72/2016": {
       "MCC": "unassigned"
@@ -4469,7 +4469,7 @@
       "MCC": "MCC_10"
     },
     "A/Victoria/804/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Victoria/822/2017": {
       "MCC": "unassigned"
@@ -4478,13 +4478,13 @@
       "MCC": "unassigned"
     },
     "A/Victoria/89/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Victoria/909/2016": {
       "MCC": "unassigned"
     },
     "A/Victoria/941/2017": {
-      "MCC": "MCC_5"
+      "MCC": "MCC_4"
     },
     "A/Virginia/07/2017": {
       "MCC": "MCC_7"
@@ -4502,7 +4502,7 @@
       "MCC": "MCC_9"
     },
     "A/Virginia/32/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Virginia/34/2017": {
       "MCC": "MCC_9"
@@ -4511,25 +4511,25 @@
       "MCC": "MCC_9"
     },
     "A/Virginia/43/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Virginia/52/2016": {
       "MCC": "unassigned"
     },
     "A/Virginia/61/2016": {
-      "MCC": "MCC_12"
-    },
-    "A/Virginia/63/2016": {
       "MCC": "MCC_13"
     },
+    "A/Virginia/63/2016": {
+      "MCC": "MCC_12"
+    },
     "A/Virginia/64/2016": {
-      "MCC": "MCC_2"
+      "MCC": "MCC_3"
     },
     "A/Washington/02/2017": {
       "MCC": "MCC_10"
     },
     "A/Washington/04/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Washington/05/2016": {
       "MCC": "MCC_14"
@@ -4541,7 +4541,7 @@
       "MCC": "MCC_14"
     },
     "A/Washington/09/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Washington/101/2016": {
       "MCC": "MCC_7"
@@ -4553,7 +4553,7 @@
       "MCC": "MCC_7"
     },
     "A/Washington/15/2017": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Washington/16/2017": {
       "MCC": "MCC_14"
@@ -4568,7 +4568,7 @@
       "MCC": "unassigned"
     },
     "A/Washington/25/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Washington/289/2017": {
       "MCC": "MCC_14"
@@ -4580,7 +4580,7 @@
       "MCC": "unassigned"
     },
     "A/Washington/292/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Washington/298/2017": {
       "MCC": "MCC_11"
@@ -4601,55 +4601,55 @@
       "MCC": "MCC_9"
     },
     "A/Washington/33/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Washington/35/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Washington/37/2017": {
       "MCC": "unassigned"
     },
     "A/Washington/40/2017": {
-      "MCC": "MCC_13"
+      "MCC": "unassigned"
     },
     "A/Washington/41/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Washington/50/2016": {
       "MCC": "MCC_8"
     },
     "A/Washington/52/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Washington/56/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Washington/63/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Washington/65/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Washington/75/2016": {
       "MCC": "MCC_8"
     },
     "A/Washington/77/2016": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Washington/80/2016": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Washington/87/2016": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Washington/94/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Washington/98/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Washington/99/2016": {
-      "MCC": "MCC_4"
+      "MCC": "unassigned"
     },
     "A/Wisconsin/01/2017": {
       "MCC": "unassigned"
@@ -4661,7 +4661,7 @@
       "MCC": "MCC_14"
     },
     "A/Wisconsin/07/2017": {
-      "MCC": "MCC_3"
+      "MCC": "unassigned"
     },
     "A/Wisconsin/15/2017": {
       "MCC": "MCC_7"
@@ -4673,13 +4673,13 @@
       "MCC": "unassigned"
     },
     "A/Wisconsin/27/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Wisconsin/27/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Wisconsin/28/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Wisconsin/29/2016": {
       "MCC": "unassigned"
@@ -4703,7 +4703,7 @@
       "MCC": "unassigned"
     },
     "A/Wisconsin/320/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Wisconsin/322/2017": {
       "MCC": "MCC_10"
@@ -4715,7 +4715,7 @@
       "MCC": "unassigned"
     },
     "A/Wisconsin/326/2017": {
-      "MCC": "MCC_6"
+      "MCC": "MCC_5"
     },
     "A/Wisconsin/327/2017": {
       "MCC": "unassigned"
@@ -4727,7 +4727,7 @@
       "MCC": "MCC_9"
     },
     "A/Wisconsin/331/2017": {
-      "MCC": "MCC_1"
+      "MCC": "MCC_2"
     },
     "A/Wisconsin/337/2017": {
       "MCC": "MCC_11"
@@ -4736,7 +4736,7 @@
       "MCC": "MCC_11"
     },
     "A/Wisconsin/34/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Wisconsin/340/2017": {
       "MCC": "MCC_9"
@@ -4745,7 +4745,7 @@
       "MCC": "MCC_7"
     },
     "A/Wisconsin/37/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Wisconsin/37/2017": {
       "MCC": "MCC_14"
@@ -4757,10 +4757,10 @@
       "MCC": "MCC_9"
     },
     "A/Wisconsin/52/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Wisconsin/62/2016": {
-      "MCC": "MCC_12"
+      "MCC": "MCC_13"
     },
     "A/Wisconsin/72/2016": {
       "MCC": "unassigned"
@@ -4790,7 +4790,7 @@
       "MCC": "MCC_14"
     },
     "A/Wisconsin/98/2016": {
-      "MCC": "MCC_13"
+      "MCC": "MCC_12"
     },
     "A/Wyoming/01/2017": {
       "MCC": "MCC_14"
@@ -4814,7 +4814,7 @@
       "MCC": "unassigned"
     },
     "A/Wyoming/17/2017": {
-      "MCC": "unassigned"
+      "MCC": "MCC_6"
     },
     "A/Wyoming/21/2017": {
       "MCC": "MCC_11"
