@@ -561,7 +561,7 @@ However, we observed greater pairwise genetic distances within Pango lineages th
 To test the optimal cluster parameters identified above, we applied embedding methods to late SARS-CoV-2 data and compared clusters from these embeddings to known genetic groups.
 Of the 18 Nextstrain clades defined during this time period, 14 (78\%) descended from Omicron and represented 1,778 (72\%) of all samples in the dataset.
 Late SARS-CoV-2 embeddings produced clusters that were similarly close to Nextstrain clades as early SARS-CoV-2 embeddings with UMAP and t-SNE producing the most accurate clusters (Fig.~\ref{fig:sars-cov-2-2022-2023-clusters-vs-Nextstrain-clade}).
-Notably, t-SNE produced far more clusters in the late SARS-CoV-2 data with 69 compared to 20 in the early data.
+We found that t-SNE produced far more clusters in the late SARS-CoV-2 data with 69 compared to 20 in the early data.
 We attributed these additional clusters to distinct recombinant groups that all received the same Nextstrain clade label of ``recombinant''.
 We observed similar absolute and relative accuracies across methods at different sampling densities under an even geographic and temporal sampling scheme (\nameref{S_Fig_late_sarscov2_replication_of_cluster_accuracy}).
 However, the presence of geographic and genetic bias associated with randomly sampling the late SARS-CoV-2 data produced less accurate t-SNE clusters and more accurate PCA, MDS, and UMAP clusters.
@@ -605,7 +605,7 @@ Of the four methods, MDS most accurately reflected pairwise genetic distances be
 From our analysis of natural populations of seasonal influenza H3N2 HA and SARS-CoV-2 sequences, we confirmed that MDS most reliably reflected pairwise genetic distances.
 We found that clusters from t-SNE embeddings most accurately recapitulated previously defined genetic groups at the resolution of WHO variants and Nextstrain clades and consistently produced clusters that corresponded to monophyletic groups in phylogenies.
 These differences highlight that embedding selection should be informed by the question under investigation.
-Notably, in some applications the amount of genetic distance separating samples provides important proxy information about epidemiologic dynamics.
+In some applications, the amount of genetic distance separating samples provides important proxy information about epidemiological dynamics.
 In such cases, an embedding such as MDS that not only clusters similar samples, but meaningfully communicates the relative difference between clusters, may be most appropriate.
 In other scenarios, the clear assignment of samples into high-level, easily differentiable groups may be the primary task, and an embedding such as t-SNE may be preferable.
 Clusters from both MDS and t-SNE embeddings of H3N2 HA and NA sequences accurately matched reassortment clades identified by a biologically-informed model based on ancestral reassortment graphs.
