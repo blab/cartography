@@ -35,7 +35,7 @@ if __name__ == "__main__":
     parser.add_argument("--distance-matrix", required=True, help="the path to a CSV genetic distance matrix")
     parser.add_argument("--metadata", required=True, help="a CSV/TSV path to a metadata table with the group status of the different strains in the build")
     parser.add_argument("--group-column", required=True, help="the column corresponding to grouping status")
-    parser.add_argument("--ignored-group-labels", nargs="+", default=["-1", "unassigned"], help="group labels from group-column to ignore")
+    parser.add_argument("--ignored-group-labels", nargs="+", default=["-1", "unassigned", "recombinant"], help="group labels from group-column to ignore")
     parser.add_argument("--output", required=True,  help="path for outputting as a dataframe")
 
     args = parser.parse_args()
