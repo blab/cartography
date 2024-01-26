@@ -1,0 +1,86 @@
+\documentclass[11pt]{article}
+
+\usepackage{geometry}
+\geometry{left=1.1in, right=1.1in, top=1.0in, bottom=0.95in}
+
+% graphicx package, useful for including eps and pdf graphics
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+
+% basic packages
+\usepackage{color}
+\usepackage{parskip}
+\setlength{\parskip}{0.16cm}
+\usepackage{float}
+\usepackage{todonotes}
+\usepackage{enumitem}
+\usepackage{microtype}
+
+\definecolor{green}{rgb}{0.20,0.50,0.48}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=green}
+
+\setlength{\parindent}{0pt} % Remove paragraph indent
+
+\definecolor{brown}{rgb}{0.700,0.150,0.150}
+\def\mfc#1{\textcolor{brown}{[#1]}}
+
+\begin{document}
+
+\thispagestyle{empty} % Remove page headers/footers
+
+\mbox{}\hfill
+\begin{tabular}{l @{}}
+	\includegraphics[width=6.5cm]{fhcc_logo} \\
+	Vaccine and Infectious Disease Division \\
+	Fred Hutchinson Cancer Center \\
+	1100 Fairview Ave N \\
+	Seattle, WA 98109, USA \\
+	Email: \href{mailto:jhuddles@fredhutch.org}{jhuddles@fredhutch.org} \\
+\end{tabular}
+
+\vspace{0.1in} % Vertical skip between sender/receiver address
+
+\begin{tabular}{@{} l}
+  \today
+\end{tabular}
+
+\vspace{0.1in} % Vertical skip between receive address and letter opening
+
+Dear Editors,
+
+\medskip % Vertical skip between letter opening and letter body
+
+Please find attached our manuscript entitled ``Genetic cartography reveals ancestral relationships of human pathogenic viruses''.
+We would be grateful if you considered it for publication in PLOS Computational Biology.
+
+As public health practitioners increasingly rely on genomic epidemiology to understand outbreaks of human pathogenic viruses, phylogenetic methods have emerged as a common tool to infer the evolutionary dynamics of viruses, identify groups of related virus samples, and visualize virus evolution.
+However, viruses that cause substantial human disease like seasonal influenza and SARS-CoV-2 evolve through processes of reassortment and recombination that violate the assumption of shared evolutionary history at the core of phylogenetics.
+Just as importantly, public health officials and decision makers often struggle to correctly interpret the meaning of phylogenetic trees without expert guidance.
+Given that public health responses to outbreaks often require identification of closely related viral samples or placement of new samples into existing clusters, phylogenetic methods that infer the complete evolutionary history of samples are unnecessarily complex.
+
+We present an alternative approach to phylogenetics where we apply standard dimensionality reduction methods (PCA, MDS, t-SNE, and UMAP) to viral genome sequences and use an unsupervised learning algorithm (HDBSCAN) to find clusters of related sequences in the resulting low-dimensional embeddings.
+After first identifying optimal parameters for each embedding method with simulated populations, we applied these methods to recent seasonal influenza A/H3N2 hemagglutinin and SARS-CoV-2 sequences and identified clusters of closely related samples in each embedding.
+We measured how well the embeddings represented pairwise genetic relationships and how well the clusters corresponded to expert clade definitions.
+Finally, we quantified the ability of these embeddings and clusters to capture reassortment events between A/H3N2 hemagglutinin and neuraminidase genes and recombinant lineages in SARS-CoV-2.
+
+We find that these biologically-uninformed statistical methods can accurately represent known genetic relationships for both influenza and SARS-CoV-2 including reassortant and recombinant lineages.
+The resulting embeddings produce biologically relevant clusters in a readily interpretable 2- or 3-dimensional visualization.
+Given the robust performance of these methods across simulated and natural virus populations, distinct evolutionary time periods, and a wide range of method parameters, researchers and practitioners could immediately apply these methods to other viral pathogens.
+Our open source implementation of these methods integrates easily with existing workflows for genomic epidemiology.
+We expect this general approach to provide the foundation for future methods that formally identify reassortant or recombinant lineages.
+
+This work builds on a long history of past PLOS Computational Biology publications that have applied dimensionality reduction methods to biological systems and rigorously evaluated the accuracy and interpretability of such methods.
+Our findings highlight the value of continuing this line of research and should be relevant to an audience of evolutionary biologists, infectious disease researchers, and computational biologists as well as public health practitioners.
+For these reasons, we would appreciate your consideration for publication in PLOS Computational Biology.
+
+\vspace{0.3in} % Vertical skip between letter closing and signature start
+
+Sincerely, \newline
+\vspace{0.05in} \newline
+John Huddleston, PhD \newline
+Staff Scientist \newline
+Vaccine and Infectious Disease Division \newline
+Fred Hutchinson Cancer Center
+
+\end{document}
