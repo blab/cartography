@@ -54,14 +54,14 @@ Dear Editors,
 Please find attached our manuscript entitled ``Genetic cartography reveals ancestral relationships of human pathogenic viruses''.
 We would be grateful if you considered it for publication in PLOS Computational Biology.
 
-As public health practitioners increasingly rely on genomic epidemiology to understand outbreaks of human pathogenic viruses, phylogenetic methods have emerged as a common tool to infer the evolutionary dynamics of viruses, identify groups of related virus samples, and visualize virus evolution.
+Phylogenetic approaches are now common tools for public health practitioners who seek to understand transmission dynamics and viral evolution during outbreaks, epidemics, and pandemics.
 However, viruses that cause substantial human disease like seasonal influenza and SARS-CoV-2 evolve through processes of reassortment and recombination that violate the assumption of shared evolutionary history at the core of phylogenetics.
-Just as importantly, public health officials and decision makers often struggle to correctly interpret the meaning of phylogenetic trees without expert guidance.
-Given that public health responses to outbreaks often require identification of closely related viral samples or placement of new samples into existing clusters, phylogenetic methods that infer the complete evolutionary history of samples are unnecessarily complex.
+Just as importantly, phylogenies can be ineffective visualizations of genetic relationships for an audience that isn't already familiar with how to interpret them.
+For public health responses that rely on measuring and visualizing pairwise genetic distances between viral samples, phylogenetic methods that infer the complete evolutionary history of samples are unnecessarily complex.
 
-We present an alternative approach to phylogenetics where we apply standard dimensionality reduction methods (PCA, MDS, t-SNE, and UMAP) to viral genome sequences and use an unsupervised learning algorithm (HDBSCAN) to find clusters of related sequences in the resulting low-dimensional embeddings.
-After first identifying optimal parameters for each embedding method with simulated populations, we applied these methods to recent seasonal influenza A/H3N2 hemagglutinin and SARS-CoV-2 sequences and identified clusters of closely related samples in each embedding.
-We measured how well the embeddings represented pairwise genetic relationships and how well the clusters corresponded to expert clade definitions.
+We present an alternative approach to phylogenetics where we apply standard dimensionality reduction methods (PCA, MDS, t-SNE, and UMAP) to viral genome sequences and evaluate the ability of the resulting low-dimensional embeddings to represent genetic distances.
+After first identifying optimal parameters for each embedding method with simulated populations, we applied these methods to recent seasonal influenza A/H3N2 hemagglutinin and SARS-CoV-2 sequences.
+We measured how well the embeddings represented pairwise genetic relationships and how well the clusters that we discovered in the embeddings with an unsupervised learning algorithm (HDBSCAN) corresponded to expert clade definitions.
 Finally, we quantified the ability of these embeddings and clusters to capture reassortment events between A/H3N2 hemagglutinin and neuraminidase genes and recombinant lineages in SARS-CoV-2.
 
 We find that these biologically-uninformed statistical methods can accurately represent known genetic relationships for both influenza and SARS-CoV-2 including reassortant and recombinant lineages.
