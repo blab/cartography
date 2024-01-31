@@ -1,4 +1,4 @@
-# Genetic cartography reveals ancestral relationships of human pathogenic viruses
+# Dimensionality reduction distills complex evolutionary relationships in seasonal influenza and SARS-CoV-2
 
 **Sravani Nanduri<sup>1</sup>, Allison Black<sup>2</sup>, Trevor Bedford<sup>2,3</sup>, John Huddleston<sup>2,4</sup>**
 
