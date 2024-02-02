@@ -315,6 +315,15 @@ rule seasonal_flu_training_concat_cluster_accuracy:
             --output {output.metadata}
         """
 
+rule seasonal_flu_training_plot_cluster_accuracy_by_parameter:
+    input:
+        accuracies="seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv",
+    output:
+        accuracies="manuscript/figures/flu-2016-2018-cluster-accuracy-by-parameter.png",
+    conda: "../cartography.yml"
+    notebook:
+        "../notebooks/plot-cluster-accuracy-by-parameter.py.ipynb"
+
 rule seasonal_flu_training_get_optimal_cluster_parameters_and_accuracies:
     input:
         accuracies="seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv",

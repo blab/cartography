@@ -473,6 +473,15 @@ rule sarscov2_concat_cluster_accuracy:
             --output {output.metadata}
         """
 
+rule sarscov2_plot_cluster_accuracy_by_parameter:
+    input:
+        accuracies="sars-cov-2-nextstrain/results/full_HDBSCAN_metadata_for_{clade_membership}.csv",
+    output:
+        accuracies="manuscript/figures/sarscov2-cluster-accuracy-by-parameter-for-{clade_membership}.png",
+    conda: "../cartography.yml"
+    notebook:
+        "../notebooks/plot-cluster-accuracy-by-parameter.py.ipynb"
+
 rule sarscov2_get_optimal_cluster_parameters_and_accuracies:
     input:
         accuracies="sars-cov-2-nextstrain/results/full_HDBSCAN_metadata_for_{clade_membership}.csv",
