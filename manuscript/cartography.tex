@@ -269,7 +269,7 @@ Given that these common use cases rely on genetic distances between samples, tre
 As these tree-free methods lack a formal biological model of evolutionary relationships, they make weak assumptions about the input data and therefore should be applicable to pathogen genomes that violate phylogenetic assumptions.
 Furthermore, methods that describe pathogen genetic relationships with cluster-based visualizations may feel more familiar to public health practitioners, and therefore more easily applied for public health action.
 
-Common statistical approaches to analyzing variation from genome alignments start by transforming alignments into a matrix that codes each distinct nucleotide character as an integer or a distance matrix representing the pairwise distances between sequences.
+Common statistical approaches to analyzing variation from genome alignments start by transforming alignments into either a matrix that codes each distinct nucleotide character as an integer or a distance matrix representing the pairwise distances between sequences.
 The first of these transformations is the first step prior to performing a principal component analysis (PCA) to find orthogonal representations of the inputs that explain the most variance \cite{jolliffe_cadima_2016}.
 The second transformation calculates the number of mismatches between each pair of aligned genome sequences, also known as the Hamming distance, to create a distance matrix.
 Most phylogenetic methods begin by building a distance matrix for all sequences in a given multiple sequence alignment.
@@ -280,7 +280,7 @@ Additionally, distance-based methods can reflect the presence or absence of inse
 Each of the embedding methods mentioned above has been applied previously to genomic data to identify clusters of related genomes and visualize relationships between individuals.
 Although PCA is a generic linear algebra algorithm that optimizes for an orthogonal embedding of the data, the principal components from single nucleotide polymorphisms (SNPs) represent mean coalescent times and therefore recapitulate broad phylogenetic relationships \cite{mcvean_2009}.
 PCA has been applied to SNPs of human genomes \cite{novembre_2008,alexander_2009,mcvean_2009,auton_2015} and to multiple sequence alignments of viral genomes \cite{metsky_2017}.
-MDS attempts to embed input data into a lower-dimensional representation such that each pair of data points are as far apart in the embedding as they are in the original data.
+MDS attempts to embed input data into a lower-dimensional representation such that each pair of data points are as close in the embedding as they are in the original high-dimensional space.
 MDS has been applied to multiple gene segments of seasonal influenza viruses to visualize evolutionary relationships between segments \cite{rambaut_2008} and to individual influenza gene segments to reveal low-dimensional trajectories of genetic clusters \cite{He2010,Ito2011}.
 Both t-SNE and UMAP build on manifold learning methods like MDS to find low-dimensional embeddings of data that place similar points close together and dissimilar points far apart \cite{kobak_2021}.
 These methods have been applied to SNPs from human genomes \cite{diaz-papkovich_2019} and single-cell transcriptomes \cite{becht_2018,kobak_2019}.
