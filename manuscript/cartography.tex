@@ -331,7 +331,6 @@ These qualitative results matched our expectations based on how well each method
 \caption{{\bf Representative embeddings for simulated populations using optimal parameters per pathogen (rows) and embedding method (columns).}
   Each panel shows the embedding for sequences from the first four years of a single replicate population for the corresponding pathogen type.
   Each point represents a simulated viral sequence colored by its generation with darker values representing later generations.
-  The MDS embedding shows the first two of three total components.
   \nameref{S_Fig_simulated_representative_mds_embeddings} shows the full MDS embedding for all components.}
 \label{fig:simulated-populations-representative-embeddings}
 \end{figure}
@@ -378,7 +377,6 @@ These results qualitatively replicate the patterns we observed in embeddings for
 To quantify the apparent maintenance of local and global structure by all four embedding methods, we calculated the relationship between pairwise genetic and Euclidean distance of samples in each embedding.
 All four methods maintained a linear relationship between genetic and Euclidean distances for samples that differed by no more than $\approx$10 nucleotides (Fig~\ref{fig:seasonal-influenza-h3n2-ha-pairwise-distances}).
 However, only MDS consistently maintained that linearity as genetic distance increased (Pearson's $R^{2} = 0.94$).
-Values of Euclidean distances in MDS corresponded nearly perfectly with values of genetic distances.
 In contrast, we observed a less linear relationship for samples with more genetic differences in PCA (Pearson's $R^{2} = 0.67$), t-SNE (Pearson's $R^{2} = 0.34$), and UMAP (Pearson's $R^{2} = 0.68$) embeddings.
 While PCA and UMAP Euclidean distances increased monotonically with genetic distance, t-SNE embeddings placed some pairs of samples with intermediate distances of 30-40 nucleotides farther apart than pairs of samples with much greater genetic distances.
 
@@ -488,7 +486,7 @@ These results suggest that a single embedding of multiple gene segments could id
   Tips in the tree and embeddings are colored by their TreeKnit Maximally Compatible Clades (MCCs) label which represents putative HA/NA reassortment groups.
   The first normalized VI values per embedding reflect the distance between HA/NA clusters and known genetic groups (MCCs).
   VI values in parentheses reflect the distance between HA-only clusters and known genetic groups.
-  Text labels of ``A2'' and ``A2/re'' indicate the ancestral Nextstrain clade and its known reassortment subclade, respectively.
+  ``A2'' and ``A2/re'' labels indicate a known reassortment event \cite{Potter2019}.
 }
 \label{fig:seasonal-influenza-h3n2-ha-na-2016-2018-embeddings}
 \end{figure}
