@@ -369,6 +369,20 @@ John Huddleston\textsuperscript{2*}
 }
 \end{figure}
 
+% Place tables after the first paragraph in which they are cited.
+\begin{table}[!ht]
+%\begin{adjustwidth}{-2.25in}{0in} % Comment out/remove adjustwidth environment if table fits in text column.
+\centering
+\caption*{
+  {\bf S1 Table. Optimal cluster thresholds per pathogen, known genetic group type, and embedding method based on normalized variation of information (VI) distances calculated from early pathogen datasets.}
+  Smaller VI values indicate fewer differences between HDBSCAN clusters and known genetic groups.
+  VI of 0 indicates identical clusters and 1 indicates maximally different clusters.
+  Threshold refers to the minimum Euclidean distance between initial clusters for HDBSCAN to consider them as distinct clusters.
+  We apply these optimal thresholds per pathogen, known genetic group type, and method to find clusters in corresponding late datasets for each pathogen.}
+\input{tables/accuracy_table.tex}
+%\end{adjustwidth}
+\end{table}
+
 \nolinenumbers
 
 % Either type in your references using

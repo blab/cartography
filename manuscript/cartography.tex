@@ -316,7 +316,7 @@ The optimal parameters were 2 components for PCA, 3 for MDS, perplexity of 100 a
 As with influenza-like populations, both PCA and MDS showed diminishing benefits of increasing the number of components (\nameref{S_Fig_simulated_coronavirus_errors} A and B).
 Similarly, we observed little improvement in MAEs from varying t-SNE and UMAP parameters (\nameref{S_Fig_simulated_coronavirus_errors} C and D).
 The most noticeable improvement came from setting t-SNE's perplexity to 100 (\nameref{S_Fig_simulated_coronavirus_errors} C).
-These results indicate the limits of t-SNE and UMAP to represent global genetic structure, at least across the parameter regimes considered here.
+These results indicate the limits of t-SNE and UMAP to represent global genetic structure from these data.
 
 We inspected representative embeddings based on the optimal parameters above for the first four years of influenza- and coronavirus-like populations.
 Simulated sequences collected from the same time period tended to map closer in embedding space, indicating the maintenance of ``local'' genetic structure in the embeddings (Fig.~\ref{fig:simulated-populations-representative-embeddings}).
@@ -348,11 +348,11 @@ We used the early dataset to identify cluster parameters that minimized the dist
 We tested these optimal parameters with the late dataset.
 This approach allowed us to maximize cluster accuracy against the background of embedding method parameters that we already optimized to maximize interpretability of visualizations.
 
-We first applied each embedding method to the early H3N2 HA sequences collected from 2016 through 2018, colored samples by previously defined phylogenetic clades, and inspected the placement of these samples in the embeddings and corresponding phylogeny.
+We first applied each embedding method to the early H3N2 HA sequences (2016--2018) and compared the placement of these sequences in the embeddings to their corresponding clades in the phylogeny.
 The early H3N2 dataset represented 11 Nextstrain clades total including 10 clades with at least 10 samples.
 All four embedding methods qualitatively recapitulated clade-level groupings observed in the phylogeny (Fig~\ref{fig:seasonal-influenza-h3n2-ha-embeddings} and \nameref{S_Fig_early_flu_mds_embeddings}).
 Samples from the same clade generally grouped tightly together.
-Most embedding methods also clearly delineated larger phylogenetic clades, placing clades A1, A2, A3, A4, and 3c3.A into separate locations in the embeddings.
+Most embedding methods also delineated larger phylogenetic clades, placing clades A1, A2, A3, A4, and 3c3.A into separate locations in the embeddings.
 Despite maintaining local and broader global structure, not all embeddings captured intermediate genetic structure.
 For example, clade A1b descended from clade A1 and diversified into the smaller subclades A1b/135K and A1b/135N.
 All methods placed A1b far from its ancestor A1, but all methods also placed descendants of A1b into tight clusters together.
@@ -375,9 +375,9 @@ These results qualitatively replicate the patterns we observed in embeddings for
 \end{figure}
 
 To quantify the apparent maintenance of local and global structure by all four embedding methods, we calculated the relationship between pairwise genetic and Euclidean distance of samples in each embedding.
-All four methods maintained a linear relationship between genetic and Euclidean distances for samples that differed by no more than $\approx$10 nucleotides (Fig~\ref{fig:seasonal-influenza-h3n2-ha-pairwise-distances}).
-However, only MDS consistently maintained that linearity as genetic distance increased (Pearson's $R^{2} = 0.94$).
-In contrast, we observed a less linear relationship for samples with more genetic differences in PCA (Pearson's $R^{2} = 0.67$), t-SNE (Pearson's $R^{2} = 0.34$), and UMAP (Pearson's $R^{2} = 0.68$) embeddings.
+All methods maintained a linear pairwise relationship for samples that differed by no more than $\approx$10 nucleotides (Fig~\ref{fig:seasonal-influenza-h3n2-ha-pairwise-distances}).
+Only MDS consistently maintained that linearity as genetic distance increased (Pearson's $R^{2} = 0.94$).
+We observed a less linear relationship for samples with more genetic differences in PCA (Pearson's $R^{2} = 0.67$), t-SNE (Pearson's $R^{2} = 0.34$), and UMAP (Pearson's $R^{2} = 0.68$) embeddings.
 While PCA and UMAP Euclidean distances increased monotonically with genetic distance, t-SNE embeddings placed some pairs of samples with intermediate distances of 30-40 nucleotides farther apart than pairs of samples with much greater genetic distances.
 
 \begin{figure}[!h]
@@ -389,40 +389,15 @@ While PCA and UMAP Euclidean distances increased monotonically with genetic dist
 \end{figure}
 
 Next, we found clusters in embeddings of early H3N2 HA data and calculated their distance to previously defined genetic groups.
-For each embedding, we assigned cluster labels to each sample with the hierarchical clustering algorithm, HDBSCAN, which does not require an expected number of clusters as input \cite{campello2015hierarchical}.
-HDBSCAN does require definition of a minimum distance that its initial clusters must be from each other to avoid being merged into the same cluster.
-This distance corresponds to the Euclidean distance between clusters in embedding space which varies by method (Fig~\ref{fig:seasonal-influenza-h3n2-ha-pairwise-distances}).
-To find the optimal minimum distance for HDBSCAN clusters of H3N2 HA data, we assigned clusters to each embedding for a range of distance values (0-7) with a step size of 0.5 and calculated the accuracy of clusters at each distance value compared to the Nextstrain clade assignments shown in Fig~\ref{fig:seasonal-influenza-h3n2-ha-embeddings}.
-We selected the minimum distance value per method that minimized the difference between HDBSCAN clusters and clade assignments as measured by the normalized variation of information (VI) metric \cite{meilua2003comparing} (see Methods).
-The optimal minimum distances were 0.5 for PCA, 3.5 for MDS, 2.0 for t-SNE, and 1.0 for UMAP (Table~\ref{table:accuracy}).
-Since Euclidean distances for MDS correspond directly to genetic distances, these results show that clusters must be at least 3.5 nucleotides apart to be considered distinct.
-
-% Place tables after the first paragraph in which they are cited.
-\begin{table}[!ht]
-%\begin{adjustwidth}{-2.25in}{0in} % Comment out/remove adjustwidth environment if table fits in text column.
-\centering
-\caption{
-  {\bf Optimal cluster thresholds per pathogen, known genetic group type, and embedding method based on normalized variation of information (VI) distances calculated from early pathogen datasets.}
-  Smaller VI values indicate fewer differences between HDBSCAN clusters and known genetic groups.
-  VI of 0 indicates identical clusters and 1 indicates maximally different clusters.
-  Threshold refers to the minimum Euclidean distance between initial clusters for HDBSCAN to consider them as distinct clusters.
-  We apply these optimal thresholds per pathogen, known genetic group type, and method to find clusters in corresponding late datasets for each pathogen.}
-\input{tables/accuracy_table.tex}
-\label{table:accuracy}
-%\end{adjustwidth}
-\end{table}
-
-The clusters for each method generally corresponded to larger phylogenetic clades (Fig~\ref{fig:seasonal-influenza-h3n2-ha-2016-2018-clusters}).
-All PCA and MDS clusters corresponded to monophyletic groups, while 8 of 9 t-SNE clusters and 5 of 7 UMAP clusters were monophyletic (\nameref{S_Table_monophyletic_clusters}).
-Clusters from t-SNE most accurately captured expert clade assignments (normalized VI=0.04) with 8 clusters.
-These clusters captured broader phylogenetic clades (A1, A1b, A2, A3, A4, 3c2.A, and 3c3.A) but failed to distinguish between A1b and its descendants.
-The 7 clusters from UMAP were twice as far from expert clades as t-SNE (normalized VI=0.09).
-UMAP clusters captured broader clades, but they failed to distinguish among A1 and A1a, A1b and its subclades, and 3c2.A and A4.
-The 9 MDS clusters were almost three times as far from expert clades as t-SNE clusters (normalized VI=0.11), but this difference in accuracy appeared to be driven primarily by the cost of more samples that HDBSCAN failed to assign to clusters in the MDS embedding.
-MDS clusters captured most of the larger clades (A1, A2, A3, A4, 3c2.A, and 3c3.A), but they also collected A1 and its descendants into two large clusters.
-The 3 PCA clusters were the least accurate (normalized VI=0.19) and corresponded to the most distantly-related and ancestral clades (3c2.A, 3c3.A, and A2).
-We identified 30 cluster-specific mutations for all 3 PCA clusters, 34 for 7 of the 9 MDS clusters, 35 for 6 of 8 t-SNE clusters, and 27 for 5 of the 7 UMAP clusters (\nameref{S_Table_mutations_per_cluster}).
-We also found that pairwise genetic distances between sequences in the same MDS, t-SNE, or UMAP clusters matched the genetic distances between sequences in the same Nextstrain clades (\nameref{S_Fig_flu_within_between_group_distances}).
+We assigned cluster labels to each sample with the hierarchical clustering algorithm, HDBSCAN \cite{campello2015hierarchical}.
+We calculated distances between clusters and known genetic groups with the normalized variation of information (VI) metric \cite{meilua2003comparing} which produces a value of 0 for identical groups and 1 for maximally different groups (see Methods).
+HDBSCAN does not require an expected number of clusters as input, but it does provide a parameter for the minimum distance required between clusters.
+We optimized this minimum distance threshold by minimizing the VI distance between known genetic groups and clusters produced with different threshold values (\nameref{S_Table_optimal_cluster_parameters}).
+Clusters produced with the optimal distance threshold were generally monophyletic (\nameref{S_Table_monophyletic_clusters}), supported by cluster-specific mutations (\nameref{S_Table_mutations_per_cluster}), and corresponded to larger phylogenetic clades (Fig~\ref{fig:seasonal-influenza-h3n2-ha-2016-2018-clusters}).
+Pairwise genetic distances between sequences in the same MDS, t-SNE, or UMAP clusters matched the distances between sequences within Nextstrain clades (\nameref{S_Fig_flu_within_between_group_distances}).
+The 8 clusters from t-SNE most accurately captured expert clade assignments (normalized VI=0.04) followed by UMAP's 7 clusters (normalized VI=0.09), MDS's 9 clusters (normalized VI=0.11), and PCA's 3 clusters (normalized VI=0.19).
+Clusters from t-SNE, MDS, and UMAP captured broader phylogenetic clades (A1, A1b, A2, A3, A4, 3c2.A, and 3c3.A) but failed to distinguish between A1b and its descendants.
+PCA clusters corresponded to the most distantly-related and ancestral clades (3c2.A, 3c3.A, and A2).
 These results indicate that nonlinear t-SNE embeddings could be better-suited for clustering and classification than the more linear embeddings from PCA, MDS, and UMAP.
 
 \begin{figure}[!h]
@@ -434,19 +409,17 @@ These results indicate that nonlinear t-SNE embeddings could be better-suited fo
 \label{fig:seasonal-influenza-h3n2-ha-2016-2018-clusters}
 \end{figure}
 
-To understand whether these embedding methods and optimal cluster parameters could effectively cluster previously unseen sequences, we applied each method to the late H3N2 HA dataset (2018--2020), clustered sequences in the embedding space with HDBSCAN using the optimal minimum distance threshold from the early dataset, and calculated the accuracy of the cluster assignments based on previously defined clades.
-The late dataset included 17 Nextclade clades total, but only 9 of these had at least 10 samples (\nameref{S_Fig_late_flu_embeddings_by_clade}).
-Although the average pairwise genetic distance within these later clades of 9 was similar to the within-clade distance for early clades of 10, later clades had a greater average between-clade distance of 42 nucleotide variants compared to 27 for early clades  (\nameref{S_Fig_flu_within_between_group_distances}).
-
-Clusters from all four methods generally captured phylogenetic clades (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters} and \nameref{S_Fig_late_flu_embeddings_by_clade}) and all but 3 clusters represented monophyletic groups (\nameref{S_Table_monophyletic_clusters}).
+To understand whether these embedding methods and optimal cluster parameters could effectively cluster previously unseen sequences, we applied each method to the late H3N2 HA dataset (2018--2020), identified clusters per embedding, and calculated the VI distance between clusters and previously defined clades.
+The late dataset included 9 clades with at least 10 samples (\nameref{S_Fig_late_flu_embeddings_by_clade}).
+These clades had a greater average between-clade distance than clades in the early dataset (\nameref{S_Fig_flu_within_between_group_distances}).
+As with the early dataset, clusters from the late dataset were largely monophyletic (\nameref{S_Table_monophyletic_clusters}), supported by cluster-specific mutations (\nameref{S_Table_mutations_per_cluster}), and corresponded to larger phylogenetic clades (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters} and \nameref{S_Fig_late_flu_embeddings_by_clade})
 Pairwise genetic distances within clusters generally matched the diversity within Nextstrain clades (\nameref{S_Fig_flu_within_between_group_distances}).
 Clusters from PCA (N=6), MDS (N=6), t-SNE (N=5), and UMAP (N=8) were similarly accurate, with normalized VI distances of 0.09, 0.07, 0.08, and 0.06, respectively (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters} and \nameref{S_Fig_late_flu_mds_embeddings}).
 MDS split A3 samples into two widely separated groups in its Euclidean space, indicating substantial within-clade genetic differences.
-On inspection of this clade, we found recurrent HA1 substitutions of 135K, 142G, and 193S in multiple subclades that MDS could not effectively represent.
-Cluster accuracies from all methods remained robust to changes in sampling density under the same even geographic and temporal sampling scheme, with PCA and MDS clusters producing the lowest median distance to Nextstrain clades (\nameref{S_Fig_late_flu_replication_of_cluster_accuracy} A).
-However, t-SNE and UMAP clusters suffered decreased accuracy when sampling was biased geographically toward the USA and genetically toward clade 3c3.A, while PCA and MDS remained similarly accurate under biased sampling (\nameref{S_Fig_late_flu_replication_of_cluster_accuracy} B).
-We identified 25 cluster-specific mutations for 4 of the 6 PCA clusters, 51 for all 6 MDS clusters, 53 for all 5 t-SNE clusters, and 29 for 5 of the 8 UMAP clusters (\nameref{S_Table_mutations_per_cluster}).
-These results show that all four methods can produce well-supported clusters that accurately capture known genetic groups when applied to previously unseen H3N2 HA samples.
+We found recurrent HA1 substitutions of 135K, 142G, and 193S in multiple subclades of A3 that MDS could not effectively represent.
+Cluster accuracies were robust to changes in sampling density under the same even geographic and temporal sampling scheme, with PCA and MDS clusters producing the lowest median distance to Nextstrain clades (\nameref{S_Fig_late_flu_replication_of_cluster_accuracy} A).
+However, biased sampling toward the USA and clade 3c3.A decreased cluster accuracy for t-SNE and UMAP (\nameref{S_Fig_late_flu_replication_of_cluster_accuracy} B).
+These results show that all four methods can produce clusters that accurately capture known genetic groups when applied to previously unseen H3N2 HA samples with unbiased sampling.
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/flu-2018-2020-ha-embeddings-by-cluster.png}
@@ -536,7 +509,7 @@ The linear relationship for genetically similar samples in t-SNE and UMAP remain
 
 We identified clusters in embeddings from early SARS-CoV-2 data using cluster parameters that minimized the normalized VI distance between clusters and known genetic groups.
 Since Nextstrain clades and Pango lineages represented different resolutions of genetic diversity, we identified separate optimal parameters for clusters compared to each of these known genetic groups.
-When comparing clusters to Nextstrain clades, the t-SNE embedding produced the most accurate clusters with a normalized VI of 0.07 (N=19 clusters, minimum distance of 1.0) (Fig.~\ref{fig:sars-cov-2-2020-2022-clusters-vs-Nextstrain-clade}, Table~\ref{table:accuracy}).
+When comparing clusters to Nextstrain clades, the t-SNE embedding produced the most accurate clusters with a normalized VI of 0.07 (N=19 clusters, minimum distance of 1.0) (Fig.~\ref{fig:sars-cov-2-2020-2022-clusters-vs-Nextstrain-clade}, \nameref{S_Table_optimal_cluster_parameters}).
 MDS and UMAP produced similarly accurate clusters with normalized VIs of 0.15 (N=16) and 0.16 (N=6) at minimum distances of 0 and 0.5, respectively.
 PCA produced the least accurate clusters with a normalized VI of 0.22 (N=4, minimum distance of 0.5).
 We found 152 cluster-specific mutations for 3 of the 4 PCA clusters, 232 for 9 of 16 MDS clusters, 363 for 15 of 19 t-SNE clusters, and 155 for 5 of 6 UMAP clusters (\nameref{S_Table_mutations_per_cluster}).
@@ -555,7 +528,7 @@ Only clusters from t-SNE and UMAP represented completely monophyletic groups (\n
 
 When comparing clusters to Pango lineages, all four methods produced less accurate clusters (\nameref{S_Fig_sarscov2_early_embeddings_by_cluster_vs_Nextclade_pango}).
 Clusters from t-SNE were the most accurate with a normalized VI of 0.12 followed by MDS (normalized VI=0.23), UMAP (normalized VI=0.25), and PCA (normalized VI=0.31).
-The optimal minimum distances for all four methods remained the same with Pango lineages as when trained with Nextstrain clades (Table~\ref{table:accuracy}), so the clusters also remained the same for this analysis.
+The optimal minimum distances for all four methods remained the same with Pango lineages as when trained with Nextstrain clades (\nameref{S_Table_optimal_cluster_parameters}), so the clusters also remained the same for this analysis.
 These results confirm quantitatively that these embeddings methods can accurately capture broader genetic diversity of SARS-CoV-2, but most methods cannot distinguish between fine resolution genetic groups defined by Pango lineage nomenclature.
 However, we observed greater pairwise genetic distances within Pango lineages than within Nextstrain clades, suggesting that Pango lineages were not as tightly scoped as we originally expected (\nameref{S_Fig_sarscov2_within_between_group_distances}).
 
@@ -965,23 +938,32 @@ The random sampling scheme uniformly sampled from the original dataset, reflecti
 Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Pango lineages).
 
 \paragraph*{S1 Table.}
+\label{S_Table_optimal_cluster_parameters}
+{\bf Optimal cluster thresholds per pathogen, known genetic group type, and embedding method based on normalized variation of information (VI) distances calculated from early pathogen datasets.}
+Smaller VI values indicate fewer differences between HDBSCAN clusters and known genetic groups.
+VI of 0 indicates identical clusters and 1 indicates maximally different clusters.
+Threshold refers to the minimum Euclidean distance between initial clusters for HDBSCAN to consider them as distinct clusters.
+We apply these optimal thresholds per pathogen, known genetic group type, and method to find clusters in corresponding late datasets for each pathogen.
+
+\paragraph*{S2 Table.}
 \label{S_Table_monophyletic_clusters}
 {\bf Number of clusters, transitions between clusters in the phylogeny, and excess transitions indicating non-monophyletic groups per pathogen and embedding.}
 Embeddings without any excess transitions reflect monophyletic groups in the corresponding pathogen phylogeny.
 
-\paragraph*{S2 Table.}
+\paragraph*{S3 Table.}
 \label{S_Table_mutations_per_cluster}
 {\bf Mutations observed per embedding cluster relative to a reference genome sequence for each pathogen.}
 Each row reflects the alternate allele identified at a specific position of the given pathogen genome or gene sequence, the pathogen dataset, the embedding method, the number of clusters in the embedding with the observed mutation, and the list of distinct cluster labels with the mutation.
 Mutations must have occurred in at least 10 samples of the given dataset with an allele frequency of at least 50\%.
+Cluster-specific mutations appear in rows with a \textit{cluster\_count} value of 1.
 
-\paragraph*{S3 Table.}
+\paragraph*{S4 Table.}
 \label{S_Table_recombinant_distances}
 {\bf Average Euclidean distances between each known recombinant, $X$, and its parental lineages $A$ and $B$ per embedding method.}
 Distances include average pairwise comparisons between $A$ and $B$, $A$ and $X$, and $B$ and $X$.
 Additional columns indicate whether each recombinant lineage maps closer to both parental lineages (or at least one) than those parents map to each other.
 
-\paragraph*{S4 Table.}
+\paragraph*{S5 Table.}
 \label{S_Table_accessions}
 {\bf Accessions and authors from originating and submitting laboratories of seasonal influenza and SARS-CoV-2 sequences from INSDC databases.}
 
