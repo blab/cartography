@@ -319,7 +319,7 @@ The most noticeable improvement came from setting t-SNE's perplexity to 100 (\na
 These results indicate the limits of t-SNE and UMAP to represent global genetic structure from these data.
 
 We inspected representative embeddings based on the optimal parameters above for the first four years of influenza- and coronavirus-like populations.
-Simulated sequences collected from the same time period tended to map closer in embedding space, indicating the maintenance of ``local'' genetic structure in the embeddings (Fig.~\ref{fig:simulated-populations-representative-embeddings}).
+Simulated sequences from the same time period tended to map closer in embedding space, indicating the maintenance of ``local'' genetic structure in the embeddings (Fig.~\ref{fig:simulated-populations-representative-embeddings}).
 Most embeddings also represented some form of global structure, with later generations mapping closer to intermediate generations than earlier generations.
 MDS maintained the greatest continuity between generations for both population types (\nameref{S_Fig_simulated_representative_mds_embeddings}).
 In contrast, PCA, t-SNE, and UMAP all demonstrated tighter clusters of samples separated by potentially arbitrary space.
@@ -349,14 +349,12 @@ We tested these optimal parameters with the late dataset.
 This approach allowed us to maximize cluster accuracy against the background of embedding method parameters that we already optimized to maximize interpretability of visualizations.
 
 We first applied each embedding method to the early H3N2 HA sequences (2016--2018) and compared the placement of these sequences in the embeddings to their corresponding clades in the phylogeny.
-The early H3N2 dataset represented 11 Nextstrain clades total including 10 clades with at least 10 samples.
-All four embedding methods qualitatively recapitulated clade-level groupings observed in the phylogeny (Fig~\ref{fig:seasonal-influenza-h3n2-ha-embeddings} and \nameref{S_Fig_early_flu_mds_embeddings}).
+All four embedding methods qualitatively recapitulated the 10 Nextstrain clades observed in the phylogeny (Fig~\ref{fig:seasonal-influenza-h3n2-ha-embeddings} and \nameref{S_Fig_early_flu_mds_embeddings}).
 Samples from the same clade generally grouped tightly together.
 Most embedding methods also delineated larger phylogenetic clades, placing clades A1, A2, A3, A4, and 3c3.A into separate locations in the embeddings.
 Despite maintaining local and broader global structure, not all embeddings captured intermediate genetic structure.
-For example, clade A1b descended from clade A1 and diversified into the smaller subclades A1b/135K and A1b/135N.
-All methods placed A1b far from its ancestor A1, but all methods also placed descendants of A1b into tight clusters together.
-The t-SNE embedding created separate clusters of the smaller descendant clades, but these clusters all placed so close together in the embedding space that, without previously defined clade labels, we would have visually grouped these samples into a single cluster.
+For example, all methods placed A1b and its descendant clades, A1b/135K and A1b/135N, into tight clusters together.
+The t-SNE embedding created separate clusters for each of these clades, but these clusters all placed so close together in the embedding space that, without previously defined clade labels, we would have visually grouped these samples into a single cluster.
 These results qualitatively replicate the patterns we observed in embeddings for simulated influenza-like populations (Fig~\ref{fig:simulated-populations-representative-embeddings}).
 
 % For figure citations, please use "Fig" instead of "Figure".
@@ -384,6 +382,7 @@ While PCA and UMAP Euclidean distances increased monotonically with genetic dist
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png}
 \caption{{\bf Relationship between pairwise genetic and Euclidean distances in embeddings of early (2016--2018) influenza H3N2 HA sequences by PCA (upper left), MDS (upper right), t-SNE (lower left), and UMAP (lower right).}
   Each boxplot represents the distribution of pairwise Euclidean distances at a given genetic distance.
+  Panel titles include Pearson's $R^{2}$ values and linear regression coefficients between the plotted distances.
 }
 \label{fig:seasonal-influenza-h3n2-ha-pairwise-distances}
 \end{figure}
@@ -435,7 +434,7 @@ These results show that all four methods can produce clusters that accurately ca
 Given that clusters from embedding methods could recapitulate expert-defined clades, we measured how well the same methods could capture reassortment events between multiple gene segments as detected by biologically-informed computational models.
 Evolution of HA and NA surface proteins contributes to the ability of influenza viruses to escape existing immunity \cite{Petrova2018} and HA and NA genes frequently reassort \cite{Nelson2008,Marshall2013,Potter2019}.
 Therefore, we focused our reassortment analysis on HA and NA sequences, sampling 1,607 viruses collected between January 2016 and January 2018 with sequences for both genes.
-We aligned these sequences to a common reference (A/Beijing/32/1992), inferred HA and NA phylogenies, and applied TreeKnit to both trees to identify maximally compatible clades (MCCs) that represent reassortment events \cite{Barrat-Charlaix2022}.
+We inferred HA and NA phylogenies from these sequences and applied TreeKnit to both trees to identify maximally compatible clades (MCCs) that represent reassortment events \cite{Barrat-Charlaix2022}.
 Of the 208 reassortment events identified by TreeKnit, 15 (7\%) contained at least 10 samples representing 1,049 samples (65\%).
 
 We created PCA, MDS, t-SNE, and UMAP embeddings from the HA alignments and from merged HA and NA alignments.
@@ -502,6 +501,7 @@ The linear relationship for genetically similar samples in t-SNE and UMAP remain
 \includegraphics[width=\columnwidth]{figures/sarscov2-euclidean-distance-by-genetic-distance.png}
 \caption{{\bf Relationship between pairwise genetic and Euclidean distances in embeddings for early (2020--2022) SARS-CoV-2 sequences by PCA (upper left), MDS (upper right), t-SNE (lower left), and UMAP (lower right).}
   Each boxplot represents the distribution of pairwise Euclidean distances at a given genetic distance.
+  Panel titles include Pearson's $R^{2}$ values and linear regression coefficients between the plotted distances.
 }
 \label{fig:sars-cov-2-pairwise-distances}
 \end{figure}
