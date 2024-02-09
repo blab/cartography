@@ -7,6 +7,8 @@
 1. Howard Hughes Medical Institute, Seattle, WA, USA
 1. Corresponding author (jhuddles@fredhutch.org)
 
+Preprint: https://doi.org/10.1101/2024.02.07.579374
+
 ## Abstract
 
 Public health researchers and practitioners commonly infer phylogenies from viral genome sequences to understand transmission dynamics and identify clusters of genetically-related samples.
