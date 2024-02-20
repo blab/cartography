@@ -110,8 +110,10 @@ placement of reassortment events detected by TreeKnit (MCCs).**](https://blab.gi
 
 ### Installation
 
-First, [install conda](https://docs.conda.io/en/latest/miniconda.html).
-Create the environment for this project.
+First, [install Conda with the Miniconda distribution](https://docs.conda.io/en/latest/miniconda.html).
+Until Bioconda supports modern Mac CPUs, Mac users with M1/M2 CPUs (the ARM64 architecture) need to install the Mac Intel x86 Miniconda distribution and [install Rosetta](https://support.apple.com/en-us/HT211861), so the workflow can run under Mac's emulation mode.
+
+After installing Conda, create the environment for this project.
 
 ```bash
 conda env create -f cartography.yml
