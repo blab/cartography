@@ -567,7 +567,8 @@ Additionally, all 66 recombinant lineages placed closer to at least one parent i
 
 \section*{Discussion}
 
-% What we learned and pros of methods
+\subsection*{Tree-free dimensionality reduction methods can provide valuable biological insights}
+
 We applied four standard dimensionality reduction methods to simulated and natural genome sequences of two relevant human pathogenic viruses and found that the resulting embeddings could reflect pairwise genetic relationships between samples and capture previously identified genetic groups.
 From our analysis of simulated influenza- and coronavirus-like sequences, we found that each method produced consistent embeddings of genetic sequences for two distinct pathogens, more than 55 years of evolution, and a wide range of practical method parameters.
 Of the four methods, MDS most accurately reflected pairwise genetic distances between simulated samples in its embeddings.
@@ -577,7 +578,8 @@ Clusters from both MDS and t-SNE embeddings of H3N2 HA and NA sequences accurate
 MDS embeddings consistently placed known recombinant lineages of SARS-CoV-2 between their parental lineages, while t-SNE clusters most accurately captured recombinant lineages.
 These results show that tree-free dimensionality reduction methods can provide valuable biological insights for human pathogenic viruses through easily interpretable visualizations of genetic relationships and the ability to account for genetic variation that phylogenetic methods cannot use, including indels, reassortment, and recombination.
 
-% Recommendations for application to new pathogens
+\subsection*{Recommendations for application of methods to new pathogens}
+
 From these results, we can also make the following recommendations about how to apply these methods to other viral pathogens.
 First, evenly sample the available genome sequences across time and geography, to minimize bias in embeddings.
 Then, choose which embedding method to use based on the question under investigation.
@@ -588,7 +590,8 @@ These plots reveal the range of genetic distances that an embedding can represen
 Before finding clusters in the t-SNE embedding, determine the minimum genetic distance desired between clusters, and use the pairwise genetic and Euclidean distance plot to find the corresponding Euclidean distance to use as a threshold for HDBSCAN.
 While HDBSCAN clusters require this pathogen-specific tuning, the linear relationship between Euclidean and genetic distance remains robust to changes in method parameters.
 
-% Limitations of methods and analysis
+\subsection*{Limitations of methods and analysis}
+
 Despite the promise of these simple methods to answer important public health questions about human pathogenic viruses, these methods and our analyses suffer from inherent limitations.
 The lack of an underlying biological model is both a strength and the clearest limitation of the dimensionality reduction methods we considered here.
 For example, embeddings of SARS-CoV-2 genomes cannot capture the same fine-grained genetic resolution as Pango lineage annotations.
@@ -607,7 +610,8 @@ For example, HIV represents a canonical example of a highly recombinant and bloo
 Similarly, we selected only four dimensionality reduction methods from myriad options that are commonly applied to genetic data \cite{Armstrong2022}.
 We chose these methods based on their wide use and availability in tools like scikit-learn \cite{Pedregosa2011} and to limit the dimensionality of our analyses.
 
-% Future directions and use of methods
+\subsection*{Future directions for applying dimensionality reduction methods to viral pathogens}
+
 Some limitations noted above suggest future directions for this line of research.
 We provide optimal settings for each pathogen and embedding method in this study and open source tools to apply these methods to other pathogens.
 Researchers can easily integrate these tools into existing workflows for the genomic epidemiology of viruses and visualize the results with Nextstrain.
