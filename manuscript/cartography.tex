@@ -590,17 +590,21 @@ These plots reveal the range of genetic distances that an embedding can represen
 Before finding clusters in the t-SNE embedding, determine the minimum genetic distance desired between clusters, and use the pairwise genetic and Euclidean distance plot to find the corresponding Euclidean distance to use as a threshold for HDBSCAN.
 While HDBSCAN clusters require this pathogen-specific tuning, the linear relationship between Euclidean and genetic distance remains robust to changes in method parameters.
 
+The computational complexity of the original MDS and t-SNE algorithms scales by the cube and square of the number of input samples ($N$), respectively \cite{Yang2006,maaten2008visualizing}.
+However, more efficient alternate implementations exist for both methods that can scale by $N\log{N}$ and operate on millions of samples \cite{Yang2006,Delicado2024,Yang2013,vandermaaten2013,vandermaaten2014}.
+For this reason, the primary practical limitation to applying MDS and t-SNE to tens of thousands or more pathogen sequences is the time required to calculate pairwise genetic distances for all samples.
+Implementing more efficient pairwise distance calculations remains a future direction for this area of research.
+
 \subsection*{Limitations of methods and analysis}
 
 Despite the promise of these simple methods to answer important public health questions about human pathogenic viruses, these methods and our analyses suffer from inherent limitations.
 The lack of an underlying biological model is both a strength and the clearest limitation of the dimensionality reduction methods we considered here.
 For example, embeddings of SARS-CoV-2 genomes cannot capture the same fine-grained genetic resolution as Pango lineage annotations.
 Each method provides only a few parameters to tune its embeddings and these parameters have little effect on the qualitative outcome.
-Each method also suffers from specific issues explored in our analyses.
-PCA performs poorly with missing data and requires researchers to either ignore columns with missing values or impute the missing values prior to analysis, as previously shown for Zika virus \cite{metsky_2017}.
+PCA performs poorly with missing or noisy data \cite{jolliffe_cadima_2016} and requires researchers to either ignore columns with missing values or impute the missing values prior to analysis, as previously shown for Zika virus \cite{metsky_2017}.
+In maintaining a linear relationship between Euclidean and genetic distances, MDS sacrifices the ability to form more accurate genetic clusters for viruses with large genomes like SARS-CoV-2.
 Neither t-SNE nor UMAP maintain a linear relationship between pairwise Euclidean and genetic distances across the observed range of genetic distances.
 As a result, viewers cannot know that samples mapping far apart in a t-SNE or UMAP embedding are as genetically distant as they appear.
-In maintaining a linear relationship between Euclidean and genetic distances, MDS sacrifices the ability to form more accurate genetic clusters for viruses with large genomes like SARS-CoV-2.
 Given these limitations of these methods, we do not expect them to replace biologically-informed methods that provide more meaningful parameters to tune their algorithms.
 Instead, these methods provide an easy first step to produce interpretable visualizations and clusters of genome sequences, prior to analysis with more sophisticated methods with biological models.
 
