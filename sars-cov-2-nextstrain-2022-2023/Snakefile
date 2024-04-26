@@ -908,6 +908,7 @@ rule sarscov2_test_create_notebook_docs:
         PCA_Supplement_PNG="manuscript/figures/sarscov2-test-pca-by-{clade_membership}-clade.png",
         MDS_Supplement="manuscript/figures/sarscov2-test-mds-by-{clade_membership}-clade.html",
         MDS_Supplement_PNG="manuscript/figures/sarscov2-test-mds-by-{clade_membership}-clade.png",
+        tsne_recombinant_counts="manuscript/figures/sarscov2-test-tsne-recombinant-counts-{clade_membership}.png",
     params:
         clade_membership=lambda wildcards: wildcards.clade_membership,
         pca_label=lambda wildcards: f"pca_label_for_{wildcards.clade_membership}",
