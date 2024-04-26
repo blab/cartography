@@ -313,14 +313,20 @@ John Huddleston\textsuperscript{2*}
 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
+\includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-tsne-mcc-counts.png}
+\caption*{{\bf S13 Fig. Number of H3N2 strains per combination of reassortment group identified with TreeKnit (MCCs) and cluster identified from joint t-SNE embeddings of HA and NA where the count was at least 10 strains.}}
+\end{figure}
+
+\begin{figure}[!h]
+% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-umap-by-cluster.png}
-\caption*{{\bf S13 Fig. UMAP embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}
+\caption*{{\bf S14 Fig. UMAP embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}
 \end{figure}
 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/sarscov2-mds-by-Nextstrain_clade-clade.png}
-\caption*{{\bf S14 Fig. MDS embeddings for early SARS-CoV-2 sequences showing all three components.}
+\caption*{{\bf S15 Fig. MDS embeddings for early SARS-CoV-2 sequences showing all three components.}
   Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
   Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.}
 \end{figure}
@@ -328,7 +334,7 @@ John Huddleston\textsuperscript{2*}
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/sarscov2-embeddings-by-Nextclade_pango_collapsed-clade.png}
-\caption*{{\bf S15 Fig. Phylogeny of early (2020--2022) SARS-CoV-2 sequences plotted by number of nucleotide substitutions from the most recent common ancestor on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
+\caption*{{\bf S16 Fig. Phylogeny of early (2020--2022) SARS-CoV-2 sequences plotted by number of nucleotide substitutions from the most recent common ancestor on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
   Tips in the tree and embeddings are colored by their Pango lineage assignment.
   Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
   Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.
@@ -338,13 +344,13 @@ John Huddleston\textsuperscript{2*}
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/within_between_sars.png}
-\caption*{{\bf S16 Fig. Pairwise nucleotide distances for early (2020-2022) and late (2022-2023) SARS-CoV-2 sequences within and between genetic groups defined by Nextstrain clades, Pango lineages, and clusters from PCA, MDS, t-SNE, and UMAP embeddings.}}
+\caption*{{\bf S17 Fig. Pairwise nucleotide distances for early (2020-2022) and late (2022-2023) SARS-CoV-2 sequences within and between genetic groups defined by Nextstrain clades, Pango lineages, and clusters from PCA, MDS, t-SNE, and UMAP embeddings.}}
 \end{figure}
 
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/sarscov2-embeddings-by-cluster-vs-Nextclade_pango_collapsed.png}
-\caption*{{\bf S17 Fig. Phylogenetic trees (left) and embeddings (right) of early (2020--2022) SARS-CoV-2 sequences colored by HDBSCAN cluster.}
+\caption*{{\bf S18 Fig. Phylogenetic trees (left) and embeddings (right) of early (2020--2022) SARS-CoV-2 sequences colored by HDBSCAN cluster.}
   Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Pango lineages).
   Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
   Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.
@@ -354,7 +360,7 @@ John Huddleston\textsuperscript{2*}
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/sarscov2-test-replication-of-cluster-accuracy.png}
-\caption*{{\bf S18 Fig. Replication of cluster accuracy per embedding method for late (2022--2023) SARS-CoV-2 sequences across different sampling densities (total sequences sampled) and sampling schemes including A) even geographic and temporal sampling and B) random sampling.}
+\caption*{{\bf S19 Fig. Replication of cluster accuracy per embedding method for late (2022--2023) SARS-CoV-2 sequences across different sampling densities (total sequences sampled) and sampling schemes including A) even geographic and temporal sampling and B) random sampling.}
   We measured cluster accuracy across five replicates per sampling density and scheme with the normalized VI distance between clusters from a given embedding and Nextstrain clades for the same samples.
   The even sampling scheme selected sequences evenly across region, year, and month to minimize geographic and temporal bias.
   The random sampling scheme uniformly sampled from the original dataset, reflecting the geographic and genetic bias in those data.
@@ -364,8 +370,15 @@ John Huddleston\textsuperscript{2*}
 \begin{figure}[!h]
 % TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
 \includegraphics[width=\columnwidth]{figures/sarscov2-test-embeddings-by-cluster-vs-Nextclade_pango_collapsed.png}
-\caption*{{\bf S19 Fig. Phylogenetic trees (left) and embeddings (right) of late (2022--2023) SARS-CoV-2 sequences colored by HDBSCAN cluster.}
+\caption*{{\bf S20 Fig. Phylogenetic trees (left) and embeddings (right) of late (2022--2023) SARS-CoV-2 sequences colored by HDBSCAN cluster.}
   Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Pango lineages).
+}
+\end{figure}
+
+\begin{figure}[!h]
+% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
+\includegraphics[width=\columnwidth]{figures/sarscov2-test-tsne-recombinant-counts-Nextstrain_clade.png}
+\caption*{{\bf S21 Fig. Number of late SARS-CoV-2 strains per combination of recombinant Pango lineage and t-SNE cluster where the count was at least 10 strains.}
 }
 \end{figure}
 
