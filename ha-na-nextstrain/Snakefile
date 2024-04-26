@@ -758,6 +758,7 @@ rule seasonal_flu_reassortment_create_notebook_docs:
         HANAFullChartBrushableMDSPNG = "manuscript/figures/flu-2016-2018-ha-na-mds-by-cluster.png",
         HANAFullChartBrushableTSNEHTML = "manuscript/figures/flu-2016-2018-ha-na-tsne-by-cluster.html",
         HANAFullChartBrushableTSNEPNG = "manuscript/figures/flu-2016-2018-ha-na-tsne-by-cluster.png",
+        tsne_mcc_counts = "manuscript/figures/flu-2016-2018-ha-na-tsne-mcc-counts.png",
         HANAFullChartBrushableUMAPHTML = "manuscript/figures/flu-2016-2018-ha-na-umap-by-cluster.html",
         HANAFullChartBrushableUMAPPNG = "manuscript/figures/flu-2016-2018-ha-na-umap-by-cluster.png",
     params:
