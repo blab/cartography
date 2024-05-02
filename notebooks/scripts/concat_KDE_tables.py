@@ -41,9 +41,12 @@ if __name__ == "__main__":
         df.to_csv(args.output_csv, sep=args.separator, header=True)
 
     if args.output_table:
-        df.reset_index().to_latex(
-            args.output_table,
+        latex_table = df.reset_index().to_latex(
             bold_rows=True,
             index=False,
             columns=["Pathogen", "Genetic Group Type", "Method", "VI", "Threshold"],
         )
+        latex_table = latex_table.replace("bottomrule", "botrule")
+
+        with open(args.output_table, "w", encoding="utf-8") as oh:
+            oh.write(latex_table)
