@@ -84,51 +84,12 @@ rule simulations_filter:
             --output-metadata {output.metadata} 2>&1 | tee {log}
         """
 
-rule simulations_create_distance_matrix:
-    input:
-        alignment="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/filtered.fasta",
-    output:
-        output="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/distance_matrix.csv",
-    conda: "../cartography.yml"
-    shell:
-        """
-        pathogen-distance \
-            --alignment {input.alignment} \
-            --output {output.output}
-        """
-
 def _get_method_parameters_argument(wildcards):
     return " ".join([
         f"--{key.replace('_', '-')} {value}"
         for key, value in wildcards.items()
         if value != "NA" and key not in ["virus", "recombination_rate", "replicate", "method", "train_test_split", "training_or_test"]
     ])
-
-rule simulations_grid_search_embed:
-    input:
-        alignment="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/filtered.fasta",
-        distance_matrix="simulations/{virus}-like/{recombination_rate}/replicate-{replicate}/distance_matrix.csv",
-    output:
-        embedding=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/embedding_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.csv",
-        figure=f"simulations/{{virus}}-like/{{recombination_rate}}/replicate-{{replicate}}/gridsearch/embedding_{SIMULATION_METHOD_PARAMETERS.wildcard_pattern}.pdf",
-    params:
-        random_seed=RANDOM_SEED,
-        method_parameters_arg=_get_method_parameters_argument,
-    resources:
-        time="00:30:00",
-        mem_mb=2000,
-    conda: "../cartography.yml"
-    shell:
-        """
-        pathogen-embed \
-            --alignment {input.alignment} \
-            --distance-matrix {input.distance_matrix} \
-            --random-seed {params.random_seed} \
-            --output-dataframe {output.embedding} \
-            --output-figure {output.figure} \
-            {wildcards.method} \
-            {params.method_parameters_arg}
-        """
 
 rule simulations_grid_search_create_train_test_split:
     input:
