@@ -338,7 +338,8 @@ rule simulations_representative_embed_pca:
             --embedding-parameters {input.parameters} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
-            pca
+            pca \
+                --encoding simplex
         """
 
 rule simulations_representative_create_distance_matrix:
@@ -393,7 +394,8 @@ rule simulations_representative_embed_tsne:
             --embedding-parameters {input.parameters} \
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
-            t-sne
+            t-sne \
+                --pca-encoding simplex
         """
 
 rule simulations_representative_embed_umap:
