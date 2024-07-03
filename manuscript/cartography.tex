@@ -479,17 +479,27 @@ For example, HIV represents a canonical example of a highly recombinant and bloo
 Similarly, we selected only four dimensionality reduction methods from myriad options that are commonly applied to genetic data \citep{Armstrong2022}.
 We chose these methods based on their wide use and availability in tools like scikit-learn \citep{Pedregosa2011} and to limit the dimensionality of our analyses.
 
-\subsection{Future directions for applying dimensionality reduction methods to viral pathogens}
+\subsection{Current applications and future directions for applying dimensionality reduction methods to viral pathogens}
+
+Following the recommendations we outlined above, researchers can immediately put these methods into practice with viral pathogens.
+We provide optimal settings for each pathogen and embedding method in this study and open source tools to apply these methods to other pathogens through the \textit{pathogen-embed} toolkit.
+We provide this toolkit through the standard Python package repository PyPI, Bioconda, and Nextstrain-managed Docker and Conda environments.
+These tools integrate easily into existing workflows for the genomic epidemiology of viruses and their results can be visualized with Nextstrain.
+Alternately, researchers may choose to apply similar existing tools developed for analysis of metagenomic or bacterial populations \citep{Schloss2009,Schloss2020,Bolyen2019,McMurdie2013,Lees2019} to the analysis of viral populations.
+
+In the short term, these methods can identify biologically-relevant clusters from viral sequence alignments.
+For example, researchers can apply t-SNE and HDBSCAN clustering to alignments of unsegmented viruses like Zika or Ebola that lack existing clade definitions to identify candidate phylogenetic groups.
+Similarly, researchers can jointly build embeddings from alignments of segmented viruses like influenza and identify clusters corresponding to putative reassortment groups.
+This application benefits routine surveillance efforts for seasonal influenza performed by Nextstrain where identification of HA and NA reassortment may indicate important fitness or transmission patterns \citep{Huddleston2024}.
+Researchers can also quickly apply these methods in response to outbreaks like the recent H5N1 avian influenza outbreak in cattle in the United States \citep{Nguyen2024}.
+As a proof of concept, we applied t-SNE to all eight gene segments of recent H5N1 sequences, identified clusters with HDBSCAN, and confirmed the previously reported reassortment groups with PB2/NP and the other gene segments in the cattle outbreak.
 
 Some limitations noted above suggest future directions for this line of research.
-We provide optimal settings for each pathogen and embedding method in this study and open source tools to apply these methods to other pathogens.
-Researchers can easily integrate these tools into existing workflows for the genomic epidemiology of viruses and visualize the results with Nextstrain.
-Alternately, researchers may choose to apply similar existing tools developed for analysis of metagenomic or bacterial populations \citep{Schloss2009,Schloss2020,Bolyen2019,McMurdie2013,Lees2019} to the analysis of viral populations.
-In the short term, researchers can immediately apply the methods we describe here to seasonal influenza and SARS-CoV-2 genomes to identify biologically relevant clusters.
-Researchers can also apply these methods to find relevant clusters for other viruses by evaluating the pairwise Euclidean and genetic distances for each virus and tuning the Euclidean distance thresholds for HDBSCAN to capture the desired granularity of genetic clusters.
 In the long term, researchers may benefit from analyzing viral genomes with a broader range of dimensionality reduction methods including neural network models \citep{Kupperman2022,Chari2023}.
-We also expect that researchers will benefit from applying the methods we describe here to a broader range of virus families.
+Biologically-informed versions of these methods could support finer-grained cluster identification and more intuitive parameters for users to adjust to suit their pathogens.
+We also expect that researchers will benefit from applying the methods we describe here to a broader range of virus families including those that lack standard phylogenetic clade definitions or that undergo too much recombination to be appropriately analyzed with standard phylogenetic methods.
 Finally, the combination of dimensionality reduction methods and clustering with HDBSCAN provides the foundation for future methods to automatically identify reassortant and recombinant lineages.
+For example, representing viral genomes with low-dimensional MDS embeddings could simplify the problem of identifying recombinant lineages to a matter of classifying groups by their Euclidean distances.
 
 In conclusion, we showed that simple dimensionality reduction methods operating on pairwise genetic differences can capture biologically-relevant clusters of phylogenetic clades, reassortment events, and patterns of recombining lineages for human pathogenic viruses.
 The conceptual and practical simplicity of these tools should enable researchers and public health practitioners to more readily visualize and compare samples for human pathogenic viruses when phylogenetic methods are either unnecessary or inappropriate.
