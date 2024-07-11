@@ -12,9 +12,10 @@ RUN pip3 install \
     statsmodels \
  && rm -rf ~/.cache
 
-# Install Java.
+# Install Java and C compiler.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    default-jre && \
+    default-jre \
+    clang && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
