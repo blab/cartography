@@ -1,2 +1,2 @@
 method,min_dist,nearest_neighbors,mae,virus,recombination_rate
-umap,0.1,100,11.650496674754542,influenza,no-reassortment
+umap,0.1,100.0,11.657600238024816,influenza,no-reassortment

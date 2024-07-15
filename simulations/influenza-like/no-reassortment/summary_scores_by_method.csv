@@ -1,5 +1,5 @@
 virus,recombination_rate,method,components,perplexity,learning_rate,nearest_neighbors,min_dist,mae
-influenza,no-reassortment,pca,2.0,,,,,9.48598090667729
-influenza,no-reassortment,mds,3.0,,,,,4.24093729299193
-influenza,no-reassortment,t-sne,,100.0,100.0,,,10.232042200393089
-influenza,no-reassortment,umap,,,,100.0,0.1,11.650496674754542
+influenza,no-reassortment,pca,2.0,,,,,8.780306877355029
+influenza,no-reassortment,mds,3.0,,,,,4.268580381344435
+influenza,no-reassortment,t-sne,,200.0,100.0,,,10.076620452812598
+influenza,no-reassortment,umap,,,,100.0,0.1,11.657600238024816
