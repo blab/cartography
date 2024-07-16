@@ -37,8 +37,8 @@ if __name__ == "__main__":
 
     # reading in the distance matrix and embedding csv files, checking to make sure the format is correct
 
-    distance_matrix = pd.read_csv(args.distance, index_col=0)
-    embedding_df = pd.read_csv(args.embedding, index_col=0)
+    distance_matrix = pd.read_csv(args.distance, index_col=0).sort_index(axis=0).sort_index(axis=1)
+    embedding_df = pd.read_csv(args.embedding, index_col=0).sort_index(axis=0)
     assert np.array_equal(distance_matrix.index, embedding_df.index)
 
     #calling Helpers.py scatterplot_xyvalues on the data
