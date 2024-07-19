@@ -260,7 +260,8 @@ rule seasonal_flu_test_embed_pca:
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             pca \
-            --explained-variance {output.explained_variance}
+            --explained-variance {output.explained_variance} \
+            --encoding simplex
         """
 
 rule seasonal_flu_test_embed_mds:
@@ -306,7 +307,8 @@ rule seasonal_flu_test_embed_tsne:
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            t-sne
+            t-sne \
+                --pca-encoding simplex
         """
 
 rule seasonal_flu_test_embed_umap:
@@ -799,7 +801,8 @@ rule seasonal_flu_test_replication_embed_pca:
             --embedding-parameters {input.parameters} \
             --random-seed {wildcards.replicate} \
             --output-dataframe {output.dataframe} \
-            pca
+            pca \
+                --encoding simplex
         """
 
 rule seasonal_flu_test_replication_embed_mds:
@@ -837,7 +840,8 @@ rule seasonal_flu_test_replication_embed_tsne:
             --embedding-parameters {input.parameters} \
             --random-seed {wildcards.replicate} \
             --output-dataframe {output.dataframe} \
-            t-sne
+            t-sne \
+                --pca-encoding simplex
         """
 
 rule seasonal_flu_test_replication_embed_umap:

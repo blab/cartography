@@ -21,24 +21,24 @@ if __name__ == '__main__':
     training_genetic_distances = pd.read_csv(
         args.training_genetic_distances,
         index_col=0,
-    )
+    ).sort_index(axis=0).sort_index(axis=1)
 
     test_genetic_distances = pd.read_csv(
         args.test_genetic_distances,
         index_col=0,
-    )
+    ).sort_index(axis=0).sort_index(axis=1)
 
     # Load training embedding.
     training_embedding = pd.read_csv(
         args.training_embedding,
         index_col=0,
-    )
+    ).sort_index(axis=0)
 
     # Load test embedding.
     test_embedding = pd.read_csv(
         args.test_embedding,
         index_col=0,
-    )
+    ).sort_index(axis=0)
 
     # Fit a linear model between genetic and embedding distances.
     training_embedding_distances = pdist(training_embedding.values)

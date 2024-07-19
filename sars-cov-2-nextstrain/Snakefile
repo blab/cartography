@@ -147,7 +147,8 @@ rule sarscov2_embed_pca_before:
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             pca \
-            --components {params.components}
+            --components {params.components} \
+            --encoding simplex
         """
 
 rule sarscov2_bases_missing_vs_pc1:
@@ -341,7 +342,8 @@ rule sarscov2_embed_pca:
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             pca \
-            --explained-variance {output.explained_variance}
+            --explained-variance {output.explained_variance} \
+            --encoding simplex
         """
 
 rule sarscov2_embed_mds:
@@ -387,7 +389,8 @@ rule sarscov2_embed_tsne:
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            t-sne
+            t-sne \
+                --pca-encoding simplex
         """
 
 rule sarscov2_embed_umap:

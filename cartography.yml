@@ -34,14 +34,13 @@ dependencies:
   - tsv-utils=2.2.0
   - csvtk=0.25.0
   - seqkit=2.5.1
-  - joblib=1.1.0 # required for hdbscan to work
-  - hdbscan=0.8.28
+  - hdbscan=0.8.37
   - numpy=1.24.4
   - statsmodels=0.14.0
   - zstd=1.5.2
   - tabulate=0.8.9
   - ncbi-datasets-cli=15.26.0
   - pip:
-    - pathogen-embed==1.0.0
+    - pathogen-embed==2.2.0
     - statistics==1.0.3.5
     - svglib==1.1.0

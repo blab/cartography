@@ -1,13 +1,13 @@
 ,VI,Method,predicted_clusters_column,n_predicted_clusters,n_ignored_predicted_clusters,n_true_clusters,n_ignored_true_clusters,n_vi_clusters,Threshold,Pathogen,Genetic Group Type
-0,0.04,t-SNE,t-sne_cluster_at_2.0,1523,0,1523,0,1523,2.0,Influenza H3N2,Nextstrain clade
+0,0.09,t-SNE,t-sne_cluster_at_1.0,1523,0,1523,0,1523,1.0,Influenza H3N2,Nextstrain clade
 1,0.09,UMAP,umap_cluster_at_1.0,1523,0,1523,0,1523,1.0,,
-2,0.11,MDS,mds_cluster_at_3.5,1523,0,1523,0,1523,3.5,,
-3,0.19,PCA,pca_cluster_at_0.5,1523,0,1523,0,1523,0.5,,
-4,0.07,t-SNE,t-sne_cluster_at_1.0,1736,0,1736,0,1736,1.0,SARS-CoV-2,Nextstrain clade
+2,0.1,PCA,pca_cluster_at_0.5,1523,0,1523,0,1523,0.5,,
+3,0.11,MDS,mds_cluster_at_3.5,1523,0,1523,0,1523,3.5,,
+4,0.06,t-SNE,t-sne_cluster_at_1.5,1736,0,1736,0,1736,1.5,SARS-CoV-2,Nextstrain clade
 5,0.15,MDS,mds_cluster_at_0.0,1736,0,1736,0,1736,0.0,,
 6,0.16,UMAP,umap_cluster_at_0.5,1736,0,1736,0,1736,0.5,,
-7,0.22,PCA,pca_cluster_at_0.5,1736,0,1736,0,1736,0.5,,
-8,0.12,t-SNE,t-sne_cluster_at_1.0,1736,0,1736,0,1736,1.0,SARS-CoV-2,Pango
+7,0.23,PCA,pca_cluster_at_0.5,1736,0,1736,0,1736,0.5,,
+8,0.13,t-SNE,t-sne_cluster_at_1.0,1736,0,1736,0,1736,1.0,SARS-CoV-2,Pango
 9,0.23,MDS,mds_cluster_at_0.0,1736,0,1736,0,1736,0.0,,
 10,0.25,UMAP,umap_cluster_at_0.5,1736,0,1736,0,1736,0.5,,
-11,0.31,PCA,pca_cluster_at_0.5,1736,0,1736,0,1736,0.5,,
+11,0.32,PCA,pca_cluster_at_0.5,1736,0,1736,0,1736,0.5,,

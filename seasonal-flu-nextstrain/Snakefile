@@ -168,7 +168,8 @@ rule seasonal_flu_training_embed_pca:
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
             pca \
-            --explained-variance {output.explained_variance}
+            --explained-variance {output.explained_variance} \
+            --encoding simplex
         """
 
 rule seasonal_flu_training_embed_mds:
@@ -216,7 +217,8 @@ rule seasonal_flu_training_embed_tsne:
             --random-seed {params.random_seed} \
             --output-dataframe {output.dataframe} \
             --output-figure {output.figure} \
-            t-sne
+            t-sne \
+                --pca-encoding simplex
         """
 
 rule seasonal_flu_training_embed_umap:
