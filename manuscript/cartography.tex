@@ -162,7 +162,12 @@ These results demonstrate the interpretability of embeddings from each method an
 
 \subsection{The ability of embedding methods to produce global structures for simulated viral populations varies little across method parameters}
 
-To understand how well PCA, MDS, t-SNE, and UMAP could represent genetic relationships between samples of human pathogenic viruses under well-defined evolutionary conditions, we simulated influenza-like and coronavirus-like populations and created embeddings for each population across a range of method parameters.
+To understand how well PCA, MDS, t-SNE, and UMAP could represent genetic relationships between samples of human pathogenic viruses under well-defined evolutionary conditions, we simulated influenza-like and coronavirus-like populations as previously described \citep{Huddleston2020,Muller2022} and created embeddings for each population across a range of method parameters.
+For both influenza- and coronavirus-like population types, we simulated five independent replicates for over 55 years, filtered out the first 10 years of each population as a burn-in period, and analyzed the remaining years.
+We simulated influenza-like populations with a mutation rate of 0.00382 substitutions per site per year to match the natural H3N2 HA rate \citep{Huddleston2020}, and we sampled 10 HA sequences per week.
+We simulated coronavirus-like populations with a mutation rate of 0.0008 substitutions per site per year \citep{Rambaut2020} and a recombination rate of $10^{-5}$ events per site per year \citep{Muller2022}.
+We sampled 15 full-length coronavirus sequences approximately every two weeks.
+
 We maximized the local and global interpretability of each method's embeddings by identifying parameters that maximized a linear relationship between genetic distance and Euclidean distance in low-dimensional space (see Methods).
 Specifically, we selected parameters that minimized the median of the mean absolute error (MAE) between observed pairwise genetic distances of simulated genomes and predicted genetic distances for those genomes based on their Euclidean distances in each embedding.
 For methods like PCA and MDS where increasing the number of components available to the embedding could lead to overfitting, we selected the maximum number of components beyond which the median MAE did not decrease by more than 1 nucleotide.
