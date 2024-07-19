@@ -12,12 +12,15 @@
   Smaller VI values indicate fewer differences between HDBSCAN clusters and known genetic groups.
   VI of 0 indicates identical clusters and 1 indicates maximally different clusters.
   Threshold refers to the minimum Euclidean distance between initial clusters for HDBSCAN to consider them as distinct clusters.
-  We apply these optimal thresholds per pathogen, known genetic group type, and method to find clusters in corresponding late datasets for each pathogen.}\label{S_Table_optimal_cluster_parameters}
+  We apply these optimal thresholds per pathogen, known genetic group type, and method to find clusters in corresponding late datasets for each pathogen.
+  Rows appear in ascending order of VI values per method within each combination of pathogen and genetic group type.}\label{S_Table_optimal_cluster_parameters}
 \input{tables/accuracy_table.tex}
 \end{table}
 
 \begin{table}
-\caption{{\bf Number of clusters, transitions between clusters in the phylogeny, and excess transitions indicating non-monophyletic groups per pathogen and embedding.}
+\caption{{\bf Number of clusters (\textit{n_clusters}) identified by HDBSCAN, transitions between clusters in the phylogeny, and excess transitions indicating non-monophyletic groups per pathogen dataset and embedding method.}
+  This table reports the list of specific clusters per dataset and method (\textit{clusters}), the number of transitions between different cluster labels on the phylogeny (\textit{n_cluster_transitions}), and the list of observed transitions for pairs of clusters (\textit{transitions}).
+  The number of excess transitions between clusters (\textit{n_extra_transitions}) reflects the number of times that we observed a transition from one source cluster to another beyond the one expected transition.
   Embeddings without any excess transitions reflect monophyletic groups in the corresponding pathogen phylogeny.
   Data available at \href{https://zenodo.org/records/11111453/files/S2_Table.csv}{https://zenodo.org/records/11111453/files/S2\_Table.csv}.}\label{S_Table_monophyletic_clusters}
 \end{table}
@@ -25,15 +28,16 @@
 \begin{table}
 \caption{{\bf Mutations observed per embedding cluster relative to a reference genome sequence for each pathogen.}
 Each row reflects the alternate allele identified at a specific position of the given pathogen genome or gene sequence, the pathogen dataset, the embedding method, the number of clusters in the embedding with the observed mutation, and the list of distinct cluster labels with the mutation.
-Mutations must have occurred in at least 10 samples of the given dataset with an allele frequency of at least 50\%.
+Mutations must have occurred in at least 10 samples of the given dataset with an allele frequency of at least 50\% to be reported in the table.
 Cluster-specific mutations appear in rows with a \emph{cluster\_count} value of 1.
 Data available at \href{https://zenodo.org/records/11111453/files/S3_Table.csv}{https://zenodo.org/records/11111453/files/S3\_Table.csv}.}\label{S_Table_mutations_per_cluster}
 \end{table}
 
 \begin{table}
 \caption{{\bf Average Euclidean distances between each known recombinant, $X$, and its parental lineages $A$ and $B$ per embedding method.}
-Distances include average pairwise comparisons between $A$ and $B$, $A$ and $X$, and $B$ and $X$.
-Additional columns indicate whether each recombinant lineage maps closer to both parental lineages (or at least one) than those parents map to each other.
+Distances include average pairwise comparisons between $A$ and $B$ (\textit{distance_A_B}), $A$ and $X$ (\textit{distance_A_X}), and $B$ and $X$ (\textit{distance_B_X}).
+Additional columns indicate whether each recombinant lineage maps closer to both parental lineages (or at least one) than those parents map to each other (\textit{X_maps_closer_to_both_parentals} and \textit{X_maps_closer_to_any_parental}, respectively).
+Records with values of ``True'' in the column \textit{X_maps_closer_to_both_parentals} represent the expected placement of the recombinant lineage between its two parental lineages.
 Data available at \href{https://zenodo.org/records/11111453/files/S4_Table.csv}{https://zenodo.org/records/11111453/files/S4\_Table.csv}.}\label{S_Table_recombinant_distances}
 \end{table}
 
