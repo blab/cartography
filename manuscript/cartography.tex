@@ -132,7 +132,8 @@ However, several key questions in genomic epidemiology do not require inference 
 For example, genomic epidemiologists commonly need to 1) visualize the genetic relationships among closely related virus samples \citep{Argimon2016,Campbell2021}, 2) identify clusters of closely-related genomes that represent regional outbreaks or new variants of concern \citep{OToole2022,McBroome2022,Stoddard2022,Tran-Kiem2023}, 3) place newly sequenced viral genomes in the evolutionary context of other circulating samples \citep{OToole2021,Turakhia2021,Aksamentov2021}.
 Given that these common use cases rely on genetic distances between samples, tree-free statistical methods that operate on pairwise distances could be sufficient to address each case.
 As these tree-free methods lack a formal biological model of evolutionary relationships, they make weak assumptions about the input data and therefore should be applicable to pathogen genomes that violate phylogenetic assumptions.
-Furthermore, methods that describe genetic relationships with map-like visualizations may feel more familiar to public health practitioners, and therefore more easily applied for public health action.
+Furthermore, methods that describe genetic relationships with network-like visualizations may feel more familiar to public health practitioners who are accustomed to viewing contact tracing networks alongside genomic information in tools like MicrobeTrace \citep{Campbell2021} or MicroReact \citep{Argimon2016} and for viral pathogens like HIV \citep{Wertheim2017,Campbell2020} and SARS-CoV-2 \citep{Kirbiyik2020,Vang2021}.
+For this reason, reduced dimensionality representations of genomic relationships may be more easily applied for public health action.
 
 Common statistical approaches to analyzing variation from genome alignments start by transforming alignments into either a matrix that codes each distinct nucleotide character as an integer or a distance matrix representing the pairwise distances between sequences.
 The first of these transformations is the first step prior to performing a principal component analysis (PCA) to find orthogonal representations of the inputs that explain the most variance \citep{jolliffe_cadima_2016}.
@@ -498,6 +499,7 @@ Similarly, researchers can jointly build embeddings from alignments of segmented
 This application benefits routine surveillance efforts for seasonal influenza performed by Nextstrain where identification of HA and NA reassortment may indicate important fitness or transmission patterns \citep{Huddleston2024}.
 Researchers can also quickly apply these methods in response to outbreaks like the recent H5N1 avian influenza outbreak in cattle in the United States \citep{Nguyen2024}.
 As a proof of concept, we applied t-SNE to all eight gene segments of recent H5N1 sequences, identified clusters with HDBSCAN, and confirmed the previously reported reassortment groups with PB2/NP and the other gene segments in the cattle outbreak.
+Researchers can easily visualize their embeddings in standard visualization tools for genomic epidemiology including Nextstrain's Auspice \citep{Hadfield2018}, MicrobeTrace \citep{Campbell2021}, or MicroReact \citep{Argimon2016}.
 
 Some limitations noted above suggest future directions for this line of research.
 In the long term, researchers may benefit from analyzing viral genomes with a broader range of dimensionality reduction methods including neural network models \citep{Kupperman2022,Chari2023}.
