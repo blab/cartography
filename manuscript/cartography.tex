@@ -132,7 +132,8 @@ However, several key questions in genomic epidemiology do not require inference 
 For example, genomic epidemiologists commonly need to 1) visualize the genetic relationships among closely related virus samples \citep{Argimon2016,Campbell2021}, 2) identify clusters of closely-related genomes that represent regional outbreaks or new variants of concern \citep{OToole2022,McBroome2022,Stoddard2022,Tran-Kiem2023}, 3) place newly sequenced viral genomes in the evolutionary context of other circulating samples \citep{OToole2021,Turakhia2021,Aksamentov2021}.
 Given that these common use cases rely on genetic distances between samples, tree-free statistical methods that operate on pairwise distances could be sufficient to address each case.
 As these tree-free methods lack a formal biological model of evolutionary relationships, they make weak assumptions about the input data and therefore should be applicable to pathogen genomes that violate phylogenetic assumptions.
-Furthermore, methods that describe genetic relationships with map-like visualizations may feel more familiar to public health practitioners, and therefore more easily applied for public health action.
+Furthermore, methods that describe genetic relationships with network-like visualizations may feel more familiar to public health practitioners who are accustomed to viewing contact tracing networks alongside genomic information in tools like MicrobeTrace \citep{Campbell2021} or MicroReact \citep{Argimon2016} and for viral pathogens like HIV \citep{Wertheim2017,Campbell2020} and SARS-CoV-2 \citep{Kirbiyik2020,Vang2021}.
+For this reason, reduced dimensionality representations of genomic relationships may be more easily applied for public health action.
 
 Common statistical approaches to analyzing variation from genome alignments start by transforming alignments into either a matrix that codes each distinct nucleotide character as an integer or a distance matrix representing the pairwise distances between sequences.
 The first of these transformations is the first step prior to performing a principal component analysis (PCA) to find orthogonal representations of the inputs that explain the most variance \citep{jolliffe_cadima_2016}.
@@ -162,7 +163,12 @@ These results demonstrate the interpretability of embeddings from each method an
 
 \subsection{The ability of embedding methods to produce global structures for simulated viral populations varies little across method parameters}
 
-To understand how well PCA, MDS, t-SNE, and UMAP could represent genetic relationships between samples of human pathogenic viruses under well-defined evolutionary conditions, we simulated influenza-like and coronavirus-like populations and created embeddings for each population across a range of method parameters.
+To understand how well PCA, MDS, t-SNE, and UMAP could represent genetic relationships between samples of human pathogenic viruses under well-defined evolutionary conditions, we simulated influenza-like and coronavirus-like populations as previously described \citep{Huddleston2020,Muller2022} and created embeddings for each population across a range of method parameters.
+For both influenza- and coronavirus-like population types, we simulated five independent replicates for over 55 years, filtered out the first 10 years of each population as a burn-in period, and analyzed the remaining years.
+We simulated influenza-like populations with a mutation rate of 0.00382 substitutions per site per year to match the natural H3N2 HA rate \citep{Huddleston2020}, and we sampled 10 HA sequences per week.
+We simulated coronavirus-like populations with a mutation rate of 0.0008 substitutions per site per year \citep{Rambaut2020} and a recombination rate of $10^{-5}$ events per site per year \citep{Muller2022}.
+We sampled 15 full-length coronavirus sequences approximately every two weeks.
+
 We maximized the local and global interpretability of each method's embeddings by identifying parameters that maximized a linear relationship between genetic distance and Euclidean distance in low-dimensional space (see Methods).
 Specifically, we selected parameters that minimized the median of the mean absolute error (MAE) between observed pairwise genetic distances of simulated genomes and predicted genetic distances for those genomes based on their Euclidean distances in each embedding.
 For methods like PCA and MDS where increasing the number of components available to the embedding could lead to overfitting, we selected the maximum number of components beyond which the median MAE did not decrease by more than 1 nucleotide.
@@ -479,17 +485,28 @@ For example, HIV represents a canonical example of a highly recombinant and bloo
 Similarly, we selected only four dimensionality reduction methods from myriad options that are commonly applied to genetic data \citep{Armstrong2022}.
 We chose these methods based on their wide use and availability in tools like scikit-learn \citep{Pedregosa2011} and to limit the dimensionality of our analyses.
 
-\subsection{Future directions for applying dimensionality reduction methods to viral pathogens}
+\subsection{Current applications and future directions for applying dimensionality reduction methods to viral pathogens}
+
+Following the recommendations we outlined above, researchers can immediately put these methods into practice with viral pathogens.
+We provide optimal settings for each pathogen and embedding method in this study and open source tools to apply these methods to other pathogens through the \textit{pathogen-embed} toolkit.
+We provide this toolkit through the standard Python package repository PyPI, Bioconda, and Nextstrain-managed Docker and Conda environments.
+These tools integrate easily into existing workflows for the genomic epidemiology of viruses and their results can be visualized with Nextstrain.
+Alternately, researchers may choose to apply similar existing tools developed for analysis of metagenomic or bacterial populations \citep{Schloss2009,Schloss2020,Bolyen2019,McMurdie2013,Lees2019} to the analysis of viral populations.
+
+In the short term, these methods can identify biologically-relevant clusters from viral sequence alignments.
+For example, researchers can apply t-SNE and HDBSCAN clustering to alignments of unsegmented viruses like Zika or Ebola that lack existing clade definitions to identify candidate phylogenetic groups.
+Similarly, researchers can jointly build embeddings from alignments of segmented viruses like influenza and identify clusters corresponding to putative reassortment groups.
+This application benefits routine surveillance efforts for seasonal influenza performed by Nextstrain where identification of HA and NA reassortment may indicate important fitness or transmission patterns \citep{Huddleston2024}.
+Researchers can also quickly apply these methods in response to outbreaks like the recent H5N1 avian influenza outbreak in cattle in the United States \citep{Nguyen2024}.
+As a proof of concept, we applied t-SNE to all eight gene segments of recent H5N1 sequences, identified clusters with HDBSCAN, and confirmed the previously reported reassortment groups with PB2/NP and the other gene segments in the cattle outbreak.
+Researchers can easily visualize their embeddings in standard visualization tools for genomic epidemiology including Nextstrain's Auspice \citep{Hadfield2018}, MicrobeTrace \citep{Campbell2021}, or MicroReact \citep{Argimon2016}.
 
 Some limitations noted above suggest future directions for this line of research.
-We provide optimal settings for each pathogen and embedding method in this study and open source tools to apply these methods to other pathogens.
-Researchers can easily integrate these tools into existing workflows for the genomic epidemiology of viruses and visualize the results with Nextstrain.
-Alternately, researchers may choose to apply similar existing tools developed for analysis of metagenomic or bacterial populations \citep{Schloss2009,Schloss2020,Bolyen2019,McMurdie2013,Lees2019} to the analysis of viral populations.
-In the short term, researchers can immediately apply the methods we describe here to seasonal influenza and SARS-CoV-2 genomes to identify biologically relevant clusters.
-Researchers can also apply these methods to find relevant clusters for other viruses by evaluating the pairwise Euclidean and genetic distances for each virus and tuning the Euclidean distance thresholds for HDBSCAN to capture the desired granularity of genetic clusters.
 In the long term, researchers may benefit from analyzing viral genomes with a broader range of dimensionality reduction methods including neural network models \citep{Kupperman2022,Chari2023}.
-We also expect that researchers will benefit from applying the methods we describe here to a broader range of virus families.
+Biologically-informed versions of these methods could support finer-grained cluster identification and more intuitive parameters for users to adjust to suit their pathogens.
+We also expect that researchers will benefit from applying the methods we describe here to a broader range of virus families including those that lack standard phylogenetic clade definitions or that undergo too much recombination to be appropriately analyzed with standard phylogenetic methods.
 Finally, the combination of dimensionality reduction methods and clustering with HDBSCAN provides the foundation for future methods to automatically identify reassortant and recombinant lineages.
+For example, representing viral genomes with low-dimensional MDS embeddings could simplify the problem of identifying recombinant lineages to a matter of classifying groups by their Euclidean distances.
 
 In conclusion, we showed that simple dimensionality reduction methods operating on pairwise genetic differences can capture biologically-relevant clusters of phylogenetic clades, reassortment events, and patterns of recombining lineages for human pathogenic viruses.
 The conceptual and practical simplicity of these tools should enable researchers and public health practitioners to more readily visualize and compare samples for human pathogenic viruses when phylogenetic methods are either unnecessary or inappropriate.
@@ -591,7 +608,9 @@ The distance plots provide a qualitative assessment of each embedding's local an
 For each natural population described above, we created an annotated phylogenetic tree.
 For seasonal influenza H3N2 HA and NA sequences, we aligned sequences with MAAFT (version 7.486) \citep{Katoh2002,Katoh2013} using the \emph{augur align} command (version 22.0.3) \citep{Huddleston2021}.
 For SARS-CoV-2 sequences, we used existing reference-based alignments provided by the Nextstrain team (\href{https://docs.nextstrain.org/projects/ncov/en/latest/reference/remote_inputs.html#summary-of-available-genbank-open-files}{https://docs.nextstrain.org/projects/ncov/en/latest/reference/remote\_inputs.html}) and generated with Nextalign (version 2.14.0) \citep{Aksamentov2021}.
-We inferred a phylogeny with IQ-TREE (version 2.1.4-beta) \citep{Nguyen2014} using the \emph{augur tree} command and named internal nodes of the resulting divergence tree with TreeTime (version 0.10.1) \citep{Sagulenko2018} using the \emph{augur refine} command.
+We inferred each phylogeny with IQ-TREE (version 2.1.4-beta) \citep{Nguyen2014} using the \emph{augur tree} command with its default IQ-TREE parameters of \textit{-ninit 2 -n 2 -me 0.05} and a general time reversible (GTR) model.
+These are the same parameters we use to build SARS-CoV-2 and seasonal influenza phylogenies for \href{nextstrain.org}{https://nextstrain.org}.
+We named internal nodes of the resulting divergence tree with TreeTime (version 0.10.1) \citep{Sagulenko2018} using the \emph{augur refine} command.
 We visualized phylogenies with Auspice \citep{Hadfield2018}, after first converting the trees to Auspice JSON format with \emph{augur export}.
 To visualize phylogenetic relationships in the context of each pathogen embedding, we calculated the mean Euclidean position of each internal node in each dimension of a given embedding (e.g., MDS 1) based on the Euclidean positions of that node's immediate descendants and plotted line segments on the embedding connecting each node of the tree with its immediate parent to represent branches in the phylogeny.
 We only plotted these phylogenetic relationships on embeddings for pathogen datasets that lacked reassortment and recombination including early and late H3N2 HA and early SARS-CoV-2 datasets.
