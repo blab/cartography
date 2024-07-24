@@ -18,11 +18,11 @@
 \end{table}
 
 \begin{table}
-\caption{{\bf Number of clusters (\textit{n_clusters}) identified by HDBSCAN, transitions between clusters in the phylogeny, and excess transitions indicating non-monophyletic groups per pathogen dataset and embedding method.}
-  This table reports the list of specific clusters per dataset and method (\textit{clusters}), the number of transitions between different cluster labels on the phylogeny (\textit{n_cluster_transitions}), and the list of observed transitions for pairs of clusters (\textit{transitions}).
-  The number of excess transitions between clusters (\textit{n_extra_transitions}) reflects the number of times that we observed a transition from one source cluster to another beyond the one expected transition.
+\caption{{\bf Number of clusters (\emph{n\_clusters}) identified by HDBSCAN, transitions between clusters in the phylogeny, and excess transitions indicating non-monophyletic groups per pathogen dataset and embedding method.}
+  This table reports the list of specific clusters per dataset and method (\emph{clusters}), the number of transitions between different cluster labels on the phylogeny (\emph{n\_cluster\_transitions}), and the list of observed transitions for pairs of clusters (\emph{transitions}).
+  The number of excess transitions between clusters (\emph{n\_extra\_transitions}) reflects the number of times that we observed a transition from one source cluster to another beyond the one expected transition.
   Embeddings without any excess transitions reflect monophyletic groups in the corresponding pathogen phylogeny.
-  Data available at \href{https://zenodo.org/records/11111453/files/S2_Table.csv}{https://zenodo.org/records/11111453/files/S2\_Table.csv}.}\label{S_Table_monophyletic_clusters}
+  Data available at \url{https://zenodo.org/records/11111453/files/S2_Table.csv}.}\label{S_Table_monophyletic_clusters}
 \end{table}
 
 \begin{table}
@@ -30,35 +30,49 @@
 Each row reflects the alternate allele identified at a specific position of the given pathogen genome or gene sequence, the pathogen dataset, the embedding method, the number of clusters in the embedding with the observed mutation, and the list of distinct cluster labels with the mutation.
 Mutations must have occurred in at least 10 samples of the given dataset with an allele frequency of at least 50\% to be reported in the table.
 Cluster-specific mutations appear in rows with a \emph{cluster\_count} value of 1.
-Data available at \href{https://zenodo.org/records/11111453/files/S3_Table.csv}{https://zenodo.org/records/11111453/files/S3\_Table.csv}.}\label{S_Table_mutations_per_cluster}
+Data available at \url{https://zenodo.org/records/11111453/files/S3_Table.csv}.}\label{S_Table_mutations_per_cluster}
 \end{table}
 
 \begin{table}
 \caption{{\bf Average Euclidean distances between each known recombinant, $X$, and its parental lineages $A$ and $B$ per embedding method.}
-Distances include average pairwise comparisons between $A$ and $B$ (\textit{distance_A_B}), $A$ and $X$ (\textit{distance_A_X}), and $B$ and $X$ (\textit{distance_B_X}).
-Additional columns indicate whether each recombinant lineage maps closer to both parental lineages (or at least one) than those parents map to each other (\textit{X_maps_closer_to_both_parentals} and \textit{X_maps_closer_to_any_parental}, respectively).
-Records with values of ``True'' in the column \textit{X_maps_closer_to_both_parentals} represent the expected placement of the recombinant lineage between its two parental lineages.
-Data available at \href{https://zenodo.org/records/11111453/files/S4_Table.csv}{https://zenodo.org/records/11111453/files/S4\_Table.csv}.}\label{S_Table_recombinant_distances}
+Distances include average pairwise comparisons between $A$ and $B$ (\emph{distance\_A\_B}), $A$ and $X$ (\emph{distance\_A\_X}), and $B$ and $X$ (\emph{distance\_B\_X}).
+Additional columns indicate whether each recombinant lineage maps closer to both parental lineages (or at least one) than those parents map to each other (\emph{X\_maps\_closer\_to\_both\_parentals} and \emph{X\_maps\_closer\_to\_any\_parental}, respectively).
+Records with values of ``True'' in the column \emph{X\_maps\_closer\_to\_both\_parentals} represent the expected placement of the recombinant lineage between its two parental lineages.
+Data available at \url{https://zenodo.org/records/11111453/files/S4_Table.csv}.}\label{S_Table_recombinant_distances}
 \end{table}
 
 \begin{table}
 \caption{{\bf Accessions and authors from originating and submitting laboratories of seasonal influenza and SARS-CoV-2 sequences from INSDC databases.}
-Data available at \href{https://zenodo.org/records/11111453/files/S5_Table.tsv}{https://zenodo.org/records/11111453/files/S5\_Table.tsv}.}\label{S_Table_accessions}
+Data available at \url{https://zenodo.org/records/11111453/files/S5_Table.tsv}.}\label{S_Table_accessions}
 \end{table}
 
 \begin{figure}[!h]
   \includegraphics[width=0.9\columnwidth]{figures/simulated-influenza-like-with-no-reassortment-scores-by-parameters.png}
-  \caption{{\bf Distribution of mean absolute errors (MAE) between observed and predicted pairwise genetic distances per embedding method parameters for simulated influenza-like populations.}}\label{S_Fig_simulated_flu_errors}
+  \caption{{\bf Distribution of mean absolute errors (MAE) between observed and predicted pairwise genetic distances per embedding method parameters for simulated influenza-like populations.}
+    For each method and combination of parameters, we created 10 training and test datasets with four years of training data and four years of test data.
+    We created an embedding for each combination of method, parameters, and training/test data, fit a linear model to estimate pairwise genetic distance from pairwise Euclidean distance in the training embedding, estimated the pairwise genetic distance for genomes in the test data based on their Euclidean distances and the linear model fit to the training data, and calculated the mean absolute error (MAE) between estimated and observed genetic distances in the test data.
+    Box plots represent the distribution of MAEs for each combination of method parameters across all training/test datasets.
+    We identified optimal embedding parameters for t-SNE and UMAP as those that minimized the median MAE.
+    Optimal PCA and MDS parameters were the number of components beyond which the median MAE did not descrease by at least 1 nucleotide.
+  }\label{S_Fig_simulated_flu_errors}
 \end{figure}
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/simulated-coronavirus-like-with-moderate-recombination-rate-scores-by-parameters.png}
-\caption{{\bf Distribution of mean absolute errors (MAE) between observed and predicted pairwise genetic distances per embedding method parameters for simulated coronavirus-like populations.}}\label{S_Fig_simulated_coronavirus_errors}
+\caption{{\bf Distribution of mean absolute errors (MAE) between observed and predicted pairwise genetic distances per embedding method parameters for simulated coronavirus-like populations.}
+  For each method and combination of parameters, we created 10 training and test datasets with four years of training data and four years of test data.
+  We created an embedding for each combination of method, parameters, and training/test data, fit a linear model to estimate pairwise genetic distance from pairwise Euclidean distance in the training embedding, estimated the pairwise genetic distance for genomes in the test data based on their Euclidean distances and the linear model fit to the training data, and calculated the mean absolute error (MAE) between estimated and observed genetic distances in the test data.
+  Box plots represent the distribution of MAEs for each combination of method parameters across all training/test datasets.
+  We identified optimal embedding parameters for t-SNE and UMAP as those that minimized the median MAE.
+  Optimal PCA and MDS parameters were the number of components beyond which the median MAE did not descrease by at least 1 nucleotide.
+}\label{S_Fig_simulated_coronavirus_errors}
 \end{figure}
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/simulated-populations-representative-mds-embeddings.png}
-\caption{{\bf Representative MDS embeddings for simulated populations using optimal parameters per pathogen (rows) and showing all three components.}}\label{S_Fig_simulated_representative_mds_embeddings}
+\caption{{\bf Representative MDS embeddings for simulated populations using optimal parameters per pathogen (rows) and showing all three components.}
+  Each panel shows the embedding for sequences from the first four years of a single replicate population for the corresponding pathogen type.
+  Each point represents a simulated viral sequence colored by its generation with darker values representing later generations.}\label{S_Fig_simulated_representative_mds_embeddings}
 \end{figure}
 
 \begin{figure}[!h]
@@ -71,7 +85,9 @@ Line thickness scales by the square root of the number of leaves descending from
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/within_between_influenza.png}
-\caption{{\bf Pairwise nucleotide distances for early (2016--2018) and late (2018--2020) influenza H3N2 HA sequences within and between genetic groups defined by Nextstrain clades and clusters from PCA, MDS, t-SNE, and UMAP embeddings.}}\label{S_Fig_flu_within_between_group_distances}
+\caption{{\bf Pairwise nucleotide distances for early (2016--2018, left) and late (2018--2020, right) influenza H3N2 HA sequences within and between genetic groups defined by Nextstrain clades and clusters from PCA, MDS, t-SNE, and UMAP embeddings.}
+  Each point represents the mean nucleotide distance for pairs of sequences within or between the genetic group in each row.
+  Error bars represent the corresponding standard deviation.}\label{S_Fig_flu_within_between_group_distances}
 \end{figure}
 
 \begin{figure}[!h]
@@ -101,22 +117,26 @@ Line thickness scales by the square root of the number of leaves descending from
 
 \begin{figure}[!h]
 \includegraphics[width=0.75\columnwidth]{figures/flu-2016-2018-ha-na-all-embeddings-by-mcc.png}
-\caption{{\bf Embeddings influenza H3N2 HA-only (left) and combined HA/NA (right) showing the effects of additional NA genetic information on the placement of reassortment events detected by TreeKnit (MCCs).}}\label{S_Fig_full_ha_na_embeddings}
+\caption{{\bf Embeddings influenza H3N2 HA-only (left) and combined HA/NA (right) showing the effects of additional NA genetic information on the placement of reassortment events detected by TreeKnit (MCCs).}
+  Normalized VI values quantify the degree to which the combination of HA and NA sequences in an embedding reduces the distance of embedding clusters to TreeKnit reassortment groups represented by MCCs.}\label{S_Fig_full_ha_na_embeddings}
 \end{figure}
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-pca-by-cluster.png}
-\caption{{\bf PCA embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}\label{S_Fig_flu_ha_na_pca_embeddings}
+\caption{{\bf PCA embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}
+  Normalized VI values quantify the degree to which the combination of HA and NA sequences in an embedding reduces the distance of embedding clusters to TreeKnit reassortment groups represented by MCCs.}\label{S_Fig_flu_ha_na_pca_embeddings}
 \end{figure}
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-mds-by-cluster.png}
-\caption{{\bf MDS embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}\label{S_Fig_flu_ha_na_mds_embeddings}
+\caption{{\bf MDS embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}
+  Normalized VI values quantify the degree to which the combination of HA and NA sequences in an embedding reduces the distance of embedding clusters to TreeKnit reassortment groups represented by MCCs.}\label{S_Fig_flu_ha_na_mds_embeddings}
 \end{figure}
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-tsne-by-cluster.png}
-\caption{{\bf t-SNE embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}\label{S_Fig_flu_ha_na_tsne_embeddings}
+\caption{{\bf t-SNE embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}
+  Normalized VI values quantify the degree to which the combination of HA and NA sequences in an embedding reduces the distance of embedding clusters to TreeKnit reassortment groups represented by MCCs.}\label{S_Fig_flu_ha_na_tsne_embeddings}
 \end{figure}
 
 \begin{figure}[!h]
@@ -126,7 +146,8 @@ Line thickness scales by the square root of the number of leaves descending from
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/flu-2016-2018-ha-na-umap-by-cluster.png}
-\caption{{\bf UMAP embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}}\label{S_Fig_flu_ha_na_umap_embeddings}
+\caption{{\bf UMAP embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}
+  Normalized VI values quantify the degree to which the combination of HA and NA sequences in an embedding reduces the distance of embedding clusters to TreeKnit reassortment groups represented by MCCs.}\label{S_Fig_flu_ha_na_umap_embeddings}
 \end{figure}
 
 \begin{figure}[!h]
@@ -147,7 +168,9 @@ Line thickness scales by the square root of the number of leaves descending from
 
 \begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/within_between_sars.png}
-\caption{{\bf Pairwise nucleotide distances for early (2020-2022) and late (2022-2023) SARS-CoV-2 sequences within and between genetic groups defined by Nextstrain clades, Pango lineages, and clusters from PCA, MDS, t-SNE, and UMAP embeddings.}}\label{S_Fig_sarscov2_within_between_group_distances}
+\caption{{\bf Pairwise nucleotide distances for early (2020-2022, left) and late (2022-2023, right) SARS-CoV-2 sequences within and between genetic groups defined by Nextstrain clades, Pango lineages, and clusters from PCA, MDS, t-SNE, and UMAP embeddings.}
+  Each point represents the mean nucleotide distance for pairs of sequences within or between the genetic group in each row.
+  Error bars represent the corresponding standard deviation.}\label{S_Fig_sarscov2_within_between_group_distances}
 \end{figure}
 
 \begin{figure}[!h]
