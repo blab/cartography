@@ -267,6 +267,28 @@ rule seasonal_flu_training_cluster:
             --output-figure {output.figure}
         """
 
+rule seasonal_flu_training_cluster_distances:
+    input:
+        distances="seasonal-flu-nextstrain/results/distance_matrix_sequences.csv",
+    output:
+        dataframe="seasonal-flu-nextstrain/results/cluster/genetic/{distance_threshold}.csv",
+        figure="seasonal-flu-nextstrain/results/cluster/genetic/{distance_threshold}.pdf",
+    params:
+        min_size=CLUSTER_MIN_SIZE,
+        min_samples=CLUSTER_MIN_SAMPLES,
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-cluster \
+            --embedding {input.distances} \
+            --min-size {params.min_size} \
+            --min-samples {params.min_samples} \
+            --distance-threshold {wildcards.distance_threshold} \
+            --label-attribute "genetic_cluster_at_{wildcards.distance_threshold}" \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure}
+        """
+
 rule seasonal_flu_training_get_table_of_tips:
     input:
         metadata="seasonal-flu-nextstrain/results/table.tsv",
@@ -302,7 +324,7 @@ rule seasonal_flu_training_cluster_accuracy:
 
 rule seasonal_flu_training_concat_cluster_accuracy:
     input:
-        accuracies=expand("seasonal-flu-nextstrain/results/cluster_accuracy/{method}/{distance_threshold}.csv", method=EMBEDDING_METHODS, distance_threshold=DISTANCE_THRESHOLDS)
+        accuracies=expand("seasonal-flu-nextstrain/results/cluster_accuracy/{method}/{distance_threshold}.csv", method=EMBEDDING_METHODS + ["genetic"], distance_threshold=DISTANCE_THRESHOLDS)
     output:
         metadata = "seasonal-flu-nextstrain/results/full_HDBSCAN_metadata.csv"
     params:
@@ -334,7 +356,7 @@ rule seasonal_flu_training_get_optimal_cluster_parameters_and_accuracies:
     conda: "../cartography.yml"
     shell:
         """
-        csvtk mutate -f predicted_clusters_column -n distance_threshold -p "[pca|mds|t\-sne|umap]_cluster_at_(.*)" {input.accuracies} \
+        csvtk mutate -f predicted_clusters_column -n distance_threshold -p "[pca|mds|t\-sne|umap|genetic]_cluster_at_(.*)" {input.accuracies} \
             | csvtk sort -k normalized_vi -k method -k distance_threshold \
             | csvtk uniq -f method -n 1 > {output.accuracies}
         """
