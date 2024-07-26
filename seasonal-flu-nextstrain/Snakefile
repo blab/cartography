@@ -280,7 +280,7 @@ rule seasonal_flu_training_cluster_distances:
     shell:
         """
         pathogen-cluster \
-            --embedding {input.distances} \
+            --distance-matrix {input.distances} \
             --min-size {params.min_size} \
             --min-samples {params.min_samples} \
             --distance-threshold {wildcards.distance_threshold} \
