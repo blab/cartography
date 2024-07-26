@@ -3,3 +3,4 @@ normalized_vi,method,predicted_clusters_column,n_predicted_clusters,n_ignored_pr
 0.23,mds,mds_cluster_at_0.0,1736,0,1736,0,1736,0.0
 0.25,umap,umap_cluster_at_0.5,1736,0,1736,0,1736,0.5
 0.32,pca,pca_cluster_at_0.5,1736,0,1736,0,1736,0.5
+0.35,genetic,genetic_cluster_at_6.5,1736,0,1736,0,1736,6.5

@@ -438,6 +438,28 @@ rule sarscov2_cluster:
             --output-figure {output.figure}
         """
 
+rule sarscov2_cluster_distances:
+    input:
+        distances="sars-cov-2-nextstrain/results/distance_matrix.csv",
+    output:
+        dataframe="sars-cov-2-nextstrain/results/cluster/genetic/{distance_threshold}.csv",
+        figure="sars-cov-2-nextstrain/results/cluster/genetic/{distance_threshold}.pdf",
+    params:
+        min_size=CLUSTER_MIN_SIZE,
+        min_samples=CLUSTER_MIN_SAMPLES,
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-cluster \
+            --distance-matrix {input.distances} \
+            --min-size {params.min_size} \
+            --min-samples {params.min_samples} \
+            --distance-threshold {wildcards.distance_threshold} \
+            --label-attribute "genetic_cluster_at_{wildcards.distance_threshold}" \
+            --output-dataframe {output.dataframe} \
+            --output-figure {output.figure}
+        """
+
 rule sarscov2_cluster_accuracy:
     input:
         metadata = "sars-cov-2-nextstrain/data/metadata.tsv",
@@ -461,7 +483,7 @@ rule sarscov2_cluster_accuracy:
 
 rule sarscov2_concat_cluster_accuracy:
     input:
-        accuracies=expand("sars-cov-2-nextstrain/results/cluster_accuracy/{{clade_membership}}/{method}/{distance_threshold}.csv", method=EMBEDDING_METHODS, distance_threshold=DISTANCE_THRESHOLDS)
+        accuracies=expand("sars-cov-2-nextstrain/results/cluster_accuracy/{{clade_membership}}/{method}/{distance_threshold}.csv", method=EMBEDDING_METHODS + ["genetic"], distance_threshold=DISTANCE_THRESHOLDS)
     output:
         metadata = "sars-cov-2-nextstrain/results/full_HDBSCAN_metadata_for_{clade_membership}.csv"
     params:

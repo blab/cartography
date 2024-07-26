@@ -29,6 +29,7 @@ if __name__ == "__main__":
         "mds": "MDS",
         "t-sne": "t-SNE",
         "umap": "UMAP",
+        "genetic": "genetic",
     }
     df["method"] = df["method"].map(embedding_name_by_abbreviation)
     df = df.rename(columns={
