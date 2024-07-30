@@ -63,7 +63,7 @@ wildcard_constraints:
     ha_concatenated="(ha|na|concatenated)",
     ha_concat="(ha|concatenated)",
     clade_membership="(Nextstrain_clade|Nextclade_pango|Nextclade_pango_collapsed)",
-    replicate="\d+",
+    replicate="[0-9]+",
     subsampling_scheme="(even|random)",
 
 # Define final outputs for the workflow.
