@@ -141,7 +141,7 @@ The second transformation calculates the number of mismatches between each pair 
 Most phylogenetic methods begin by building a distance matrix for all sequences in a given multiple sequence alignment.
 Dimensionality reduction algorithms such as multidimensional scaling (MDS) \citep{hout_papesh_goldinger_2012}, t-distributed stochastic neighbor embedding (t-SNE) \citep{maaten2008visualizing}, and uniform manifold approximation and projection (UMAP) \citep{lel2018umap} accept such distance matrices as an input and produce a corresponding low-dimensional representation or ``embedding'' of those data.
 Both types of transformation allow us to reduce high-dimensional genome alignments ($M \times N$ values for $M$ genomes of length $N$) to low-dimensional embeddings where clustering algorithms and visualization are more tractable.
-Additionally, distance-based methods can reflect the presence or absence of insertions and deletions in an alignment that phylogenetic methods ignore.
+Additionally, distance-based methods can reflect the presence or absence of insertions and deletions in an alignment that many phylogenetic methods ignore.
 
 Each of the embedding methods mentioned above has been applied previously to genomic data to visualize relationships between individuals and identify clusters of related genomes.
 Although PCA is a generic linear algebra algorithm that optimizes for an orthogonal embedding of the data, the principal components from single nucleotide polymorphisms (SNPs) represent mean coalescent times and therefore recapitulate broad phylogenetic relationships \citep{mcvean_2009}.
