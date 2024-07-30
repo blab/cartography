@@ -164,7 +164,7 @@ These results demonstrate the interpretability of embeddings from each method an
 \subsection{The ability of embedding methods to produce global structures for simulated viral populations varies little across method parameters}
 
 To understand how well PCA, MDS, t-SNE, and UMAP could represent genetic relationships between samples of human pathogenic viruses under well-defined evolutionary conditions, we simulated influenza-like and coronavirus-like populations as previously described \citep{Huddleston2020,Muller2022} and created embeddings for each population across a range of method parameters.
-For both influenza- and coronavirus-like population types, we simulated five independent replicates for over 55 years, filtered out the first 10 years of each population as a burn-in period, and analyzed the remaining years.
+For both influenza- and coronavirus-like population types, we simulated five independent replicates for 60 years, filtered out the first 10 years of each population as a burn-in period, and analyzed the remaining 50 years.
 We simulated influenza-like populations with a mutation rate of 0.00382 substitutions per site per year to match the natural H3N2 HA rate \citep{Huddleston2020}, and we sampled 10 HA sequences per week.
 We simulated coronavirus-like populations with a mutation rate of 0.0008 substitutions per site per year \citep{Rambaut2020} and a recombination rate of $10^{-5}$ events per site per year \citep{Muller2022}.
 We sampled 15 full-length coronavirus sequences approximately every two weeks.
@@ -442,7 +442,7 @@ Additionally, all 66 recombinant lineages placed closer to at least one parent i
 \subsection{Tree-free dimensionality reduction methods can provide valuable biological insights}
 
 We applied four standard dimensionality reduction methods to simulated and natural genome sequences of two relevant human pathogenic viruses and found that the resulting embeddings could reflect pairwise genetic relationships between samples and capture previously identified genetic groups.
-From our analysis of simulated influenza- and coronavirus-like sequences, we found that each method produced consistent embeddings of genetic sequences for two distinct pathogens, more than 55 years of evolution, and a wide range of practical method parameters.
+From our analysis of simulated influenza- and coronavirus-like sequences, we found that each method produced consistent embeddings of genetic sequences for two distinct pathogens, 50 years of evolution, and a wide range of practical method parameters.
 Of the four methods, MDS most accurately reflected pairwise genetic distances between simulated samples in its embeddings.
 From our analysis of natural populations of seasonal influenza H3N2 HA and SARS-CoV-2 sequences, we confirmed that MDS most reliably reflected pairwise genetic distances.
 We found that clusters from t-SNE embeddings most accurately recapitulated previously defined genetic groups at the resolution of WHO variants and Nextstrain clades and consistently produced clusters that corresponded to monophyletic groups in phylogenies.
@@ -545,10 +545,10 @@ For both t-SNE and UMAP, we used the default number of components of 2.
 Given the relative lack of prior application of dimensionality reduction methods to human pathogenic viruses, we first attempted to understand the behavior and optimal parameter values for these methods when applied to simulated viral populations with well-defined evolutionary parameters.
 To this end, we simulated populations of influenza-like and coronavirus-like viruses using SANTA-SIM \citep{Jariani2019}.
 These simulated populations allowed us to identify optimal parameters for each embedding method, without overfitting to the limited data available for natural viral populations.
-For each population type described below, we simulated five independent replicates with fixed random seeds for over 55 years, filtered out the first 10 years of each population as a burn-in period, and analyzed the remaining years.
+For each population type described below, we simulated five independent replicates with fixed random seeds for 60 years, filtered out the first 10 years of each population as a burn-in period, and analyzed the remaining years.
 
 We simulated influenza-like populations as previously described with 1,700 bp hemagglutinin sequences \citep{Huddleston2020}.
-As in that previous study, we scaled the number of simulated generations per real year to 200 per year to match the observed mutation rate for natural H3N2 HA sequences, and we sampled 10 genomes every 4 generations for 12,000 generations (or 60 years of real time).
+As in that previous study, we scaled the number of simulated generations per real year to 200 per year to match the observed mutation rate for natural H3N2 HA sequences, we sampled 10 genomes every 4 generations for 12,000 generations (or 60 years of real time), and filtered out the first 10 years of each simulation's data as a burn-in period.
 
 We simulated coronavirus-like populations as previously described for human seasonal coronaviruses with genomes of 21,285 bp \citep{Muller2022}.
 For the current study, we assigned 30 generations per real year to obtain mutation rates similar to the $8 \times 10^{-4}$ substitutions per site per year estimated for SARS-CoV-2 \citep{Rambaut2020}.
@@ -556,7 +556,7 @@ To account for the effect of recombination on optimal method parameters, we simu
 We calibrated the overall recombination probability in SANTA-SIM such that the number of observed recombination events per year matched the expected number for human seasonal coronaviruses (0.3 per year) \citep{Muller2022}.
 To assist with this calibration of recombination events per year, we modified the SANTA-SIM source code to emit a boolean status of ``is recombinant'' for each sampled genome.
 This change allowed us to identify recombinant genomes by their metadata in downstream analyses and calculate the number of recombination events observed per year.
-For each replicate population, we sampled 15 genomes every generation for 1,700 generations (or approximately 56 years of real time).
+For each replicate population, we sampled 15 genomes every generation for 1,800 generations (or 60 years of real time) and filtered out the first 10 years of each simulation's data as a burn-in period.
 
 \subsection{Optimization of embedding method parameters}
 
