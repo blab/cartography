@@ -448,7 +448,7 @@ From our analysis of natural populations of seasonal influenza H3N2 HA and SARS-
 We found that clusters from t-SNE embeddings most accurately recapitulated previously defined genetic groups at the resolution of WHO variants and Nextstrain clades and consistently produced clusters that corresponded to monophyletic groups in phylogenies.
 Clusters from both MDS and t-SNE embeddings of H3N2 HA and NA sequences accurately matched reassortment clades identified by a biologically-informed model based on ancestral reassortment graphs.
 MDS embeddings consistently placed known recombinant lineages of SARS-CoV-2 between their parental lineages, while t-SNE clusters most accurately captured recombinant lineages.
-These results show that tree-free dimensionality reduction methods can provide valuable biological insights for human pathogenic viruses through easily interpretable visualizations of genetic relationships and the ability to account for genetic variation that phylogenetic methods cannot use, including indels, reassortment, and recombination.
+These results show that tree-free dimensionality reduction methods can provide valuable biological insights for human pathogenic viruses through easily interpretable visualizations of genetic relationships and the ability to account for genetic variation that tree-based phylogenetic methods cannot use, including indels, reassortment, and recombination.
 
 \subsection{Recommendations for application of methods to new pathogens}
 
@@ -488,7 +488,7 @@ We chose these methods based on their wide use and availability in tools like sc
 \subsection{Current applications and future directions for applying dimensionality reduction methods to viral pathogens}
 
 Following the recommendations we outlined above, researchers can immediately put these methods into practice with viral pathogens.
-We provide optimal settings for each pathogen and embedding method in this study and open source tools to apply these methods to other pathogens through the \textit{pathogen-embed} toolkit.
+We provide optimal settings for each pathogen and embedding method in this study and open source tools to apply these methods to other pathogens through the \texttt{pathogen-embed} toolkit.
 We provide this toolkit through the standard Python package repository PyPI, Bioconda, and Nextstrain-managed Docker and Conda environments.
 These tools integrate easily into existing workflows for the genomic epidemiology of viruses and their results can be visualized with Nextstrain.
 Alternately, researchers may choose to apply similar existing tools developed for analysis of metagenomic or bacterial populations \citep{Schloss2009,Schloss2020,Bolyen2019,McMurdie2013,Lees2019} to the analysis of viral populations.
@@ -534,7 +534,7 @@ The perplexity controls the number of neighbors the algorithm uses per input sam
 This parameter effectively determines the balance between maintaining ``local'' or ``global'' structure in the embedding \citep{kobak_2019}.
 The learning rate controls how rapidly the t-SNE algorithm converges on a specific embedding \citep{Jacobs1988,maaten2008visualizing} and should scale with the number of input samples \citep{Belkina2019}.
 We initialized t-SNE embeddings with the first two components of the corresponding PCA embedding, as previously recommended to obtain more accurate global structure \citep{kobak_2019,kobak_2021}.
-Finally, we applied the \emph{umap-learn} Python package written by UMAP's authors, with options to set the number of ``nearest neighbors'' and the ``minimum distance'' \citep{lel2018umap}.
+Finally, we applied the \texttt{umap-learn} Python package written by UMAP's authors, with options to set the number of ``nearest neighbors'' and the ``minimum distance'' \citep{lel2018umap}.
 As with t-SNE's perplexity parameter, the nearest neighbors parameter determines how many adjacent samples the UMAP algorithm considers per sample to find an optimal embedding.
 The minimum distance sets the lower limit for how close any two samples can map next to each other in a UMAP embedding.
 Lower minimum distances allow tighter groups of samples to form.
@@ -606,12 +606,12 @@ The distance plots provide a qualitative assessment of each embedding's local an
 \subsection{Phylogenetic analysis}
 
 For each natural population described above, we created an annotated phylogenetic tree.
-For seasonal influenza H3N2 HA and NA sequences, we aligned sequences with MAAFT (version 7.486) \citep{Katoh2002,Katoh2013} using the \emph{augur align} command (version 22.0.3) \citep{Huddleston2021}.
+For seasonal influenza H3N2 HA and NA sequences, we aligned sequences with MAAFT (version 7.486) \citep{Katoh2002,Katoh2013} using the \texttt{augur align} command (version 22.0.3) \citep{Huddleston2021}.
 For SARS-CoV-2 sequences, we used existing reference-based alignments provided by the Nextstrain team (\href{https://docs.nextstrain.org/projects/ncov/en/latest/reference/remote_inputs.html#summary-of-available-genbank-open-files}{https://docs.nextstrain.org/projects/ncov/en/latest/reference/remote\_inputs.html}) and generated with Nextalign (version 2.14.0) \citep{Aksamentov2021}.
-We inferred each phylogeny with IQ-TREE (version 2.1.4-beta) \citep{Nguyen2014} using the \emph{augur tree} command with its default IQ-TREE parameters of \textit{-ninit 2 -n 2 -me 0.05} and a general time reversible (GTR) model.
+We inferred each phylogeny with IQ-TREE (version 2.1.4-beta) \citep{Nguyen2014} using the \texttt{augur tree} command with its default IQ-TREE parameters of \texttt{-ninit 2 -n 2 -me 0.05} and a general time reversible (GTR) model.
 These are the same parameters we use to build SARS-CoV-2 and seasonal influenza phylogenies for \href{nextstrain.org}{https://nextstrain.org}.
-We named internal nodes of the resulting divergence tree with TreeTime (version 0.10.1) \citep{Sagulenko2018} using the \emph{augur refine} command.
-We visualized phylogenies with Auspice \citep{Hadfield2018}, after first converting the trees to Auspice JSON format with \emph{augur export}.
+We named internal nodes of the resulting divergence tree with TreeTime (version 0.10.1) \citep{Sagulenko2018} using the \texttt{augur refine} command.
+We visualized phylogenies with Auspice \citep{Hadfield2018}, after first converting the trees to Auspice JSON format with \texttt{augur export}.
 To visualize phylogenetic relationships in the context of each pathogen embedding, we calculated the mean Euclidean position of each internal node in each dimension of a given embedding (e.g., MDS 1) based on the Euclidean positions of that node's immediate descendants and plotted line segments on the embedding connecting each node of the tree with its immediate parent to represent branches in the phylogeny.
 We only plotted these phylogenetic relationships on embeddings for pathogen datasets that lacked reassortment and recombination including early and late H3N2 HA and early SARS-CoV-2 datasets.
 
@@ -623,12 +623,12 @@ We used the latest clade definitions for H3N2 maintained by the Nextstrain team 
 
 As seasonal influenza clades only account for the HA gene and lack information about reassortment events, we assigned joint HA and NA genetic groups using a biologically-informed model, TreeKnit (version 0.5.6) \citep{Barrat-Charlaix2022}.
 TreeKnit infers ancestral reassortment graphs from two gene trees, finding groups of samples for which both genes share the same history.
-These groups, also known as maximally compatible clades (MCCs), represent samples whose HA and NA genes have reassorted together.
+These groups, also known as maximally compatible clades (MCCs), represent samples whose HA and NA genes have evolved together.
 TreeKnit attempts to resolve polytomies in one tree using information present in the other tree(s).
 Input trees for TreeKnit must contain the same samples and root on the same sample.
-Because of these TreeKnit expectations, we inferred HA and NA trees with IQ-TREE with a custom argument to collapse near-zero-length branches (`-czb`).
+Because of these TreeKnit expectations, we inferred HA and NA trees with IQ-TREE with a custom argument to collapse near-zero-length branches (\texttt{-czb}).
 We rooted the resulting trees on the same sample that we used as an alignment reference, A/Beijing/32/1992, and pruned this sample prior to downstream analyses.
-We applied TreeKnit to the rooted HA and NA trees with a gamma value of 2.0 and the `--better-MCCs` flag, as previously recommended for H3N2 analyses \citep{Barrat-Charlaix2022}.
+We applied TreeKnit to the rooted HA and NA trees with a gamma value of 2.0 and the \texttt{--better-MCCs} flag, as previously recommended for H3N2 analyses \citep{Barrat-Charlaix2022}.
 Finally, we filtered the MCCs identified by TreeKnit to retain only those with at least 10 samples and to omit the root MCC that represented the most recent common ancestor in both HA and NA trees.
 
 For SARS-CoV-2, we used both coarser ``Nextstrain clades'' \citep{Hodcroft2020,Bedford2021,Roemer2022} and more granular Pango lineages \citep{OToole2021} provided by Nextclade as ``Nextclade pango'' annotations.
@@ -681,7 +681,7 @@ We plotted the distribution of the resulting VI distances, to estimate the varia
 \subsection{Evaluating the monophyletic nature of embedding clusters}
 
 To quantify the degree to which embedding clusters represented monophyletic groups in a pathogen phylogeny, we counted the number of times clusters from each embedding method appeared in different parts of the tree.
-Specifically, we applied \emph{augur traits} with TreeTime (version 0.10.1) \citep{Sagulenko2018,Huddleston2021} to infer cluster labels for internal nodes of the phylogeny for each pathogen dataset and embedding method.
+Specifically, we applied \texttt{augur traits} with TreeTime (version 0.10.1) \citep{Sagulenko2018,Huddleston2021} to infer cluster labels for internal nodes of the phylogeny for each pathogen dataset and embedding method.
 Using a preorder traversal of the tree, we identified each transition between different cluster labels assigned to pairs of ancestral and derived internal nodes.
 Since the ``unclustered'' cluster label of ``-1'' produced by HBSCAN could occur in both ancestral and derived nodes and lead to overcounting transitions, we only logged transitions with this label in the ancestral state (e.g., transition from cluster -1 to cluster 0 but not cluster 0 to cluster -1).
 For each embedding, we counted the number of distinct clusters, total transitions, and excess transitions beyond the expected single transition between pairs of clusters.
@@ -717,7 +717,7 @@ Note that we used the original uncollapsed Pango annotations to identify samples
 The entire workflow for our analyses was implemented with Snakemake \citep{molder_2021}.
 We have provided all source code, configuration files, and datasets at \href{https://github.com/blab/cartography}{https://github.com/blab/cartography}.
 Interactive phylogenetic trees and corresponding embeddings for natural populations are available at \href{https://nextstrain.org/groups/blab/}{https://nextstrain.org/groups/blab/} under the ``cartography'' keyword.
-The \emph{pathogen-embed} Python package, available at \href{https://pypi.org/project/pathogen-embed/}{https://pypi.org/project/pathogen-embed/}, provides command line utilities to calculate distance matrices (\emph{pathogen-distance}), calculate embeddings per method (\emph{pathogen-embed}), and apply hierarchical clustering to embeddings (\emph{pathogen-cluster}).
+The \texttt{pathogen-embed} Python package, available at \href{https://pypi.org/project/pathogen-embed/}{https://pypi.org/project/pathogen-embed/}, provides command line utilities to calculate distance matrices (\texttt{pathogen-distance}), calculate embeddings per method (\texttt{pathogen-embed}), and apply hierarchical clustering to embeddings (\texttt{pathogen-cluster}).
 Supplementary data are published on Zenodo at \href{https://zenodo.org/doi/10.5281/zenodo.11111452}{https://zenodo.org/doi/10.5281/zenodo.11111452}.
 
 \section*{Competing interests}
