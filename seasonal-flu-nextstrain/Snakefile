@@ -389,7 +389,7 @@ rule seasonal_flu_training_cluster_distances_with_optimal_parameters:
         distances="seasonal-flu-nextstrain/results/distance_matrix_{ancestral}.csv",
         parameters="seasonal-flu-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
     output:
-        clustered="seasonal-flu-nextstrain/results/cluster_genetic_{ancestral}.csv",
+        clustered="seasonal-flu-nextstrain/results/cluster_embed_genetic_{ancestral}.csv",
     conda: "../cartography.yml"
     params:
         min_size=CLUSTER_MIN_SIZE,
@@ -436,9 +436,9 @@ rule seasonal_flu_training_create_node_output:
 
 rule seasonal_flu_training_create_node_output_for_genetic_clusters:
     input:
-        dataframe = "seasonal-flu-nextstrain/results/cluster_genetic_sequences.csv",
+        dataframe = "seasonal-flu-nextstrain/results/cluster_embed_genetic_sequences.csv",
     output:
-        node_data = "seasonal-flu-nextstrain/results/cluster_genetic_sequences.json",
+        node_data = "seasonal-flu-nextstrain/results/cluster_embed_genetic_sequences.json",
     conda: "../cartography.yml"
     shell:
         """
@@ -605,9 +605,8 @@ rule seasonal_flu_training_export:
         nt_muts = rules.seasonal_flu_training_ancestral.output.node_data,
         aa_muts = rules.seasonal_flu_training_translate.output.node_data,
         embeddings = expand("seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_{embedding}_sequences.json", embedding=EMBEDDING_METHODS),
-        genetic_clusters = "seasonal-flu-nextstrain/results/cluster_genetic_sequences.json",
+        genetic_clusters = "seasonal-flu-nextstrain/results/cluster_embed_genetic_sequences.json",
         auspice_config = seasonal_flu_training_files.auspice_config,
-        colors = "seasonal-flu-nextstrain/config/colors.tsv",
         clades = rules.seasonal_flu_training_clades.output.clade_data,
     output:
         auspice_tree = "auspice/cartography_flu-seasonal-h3n2-ha-2016-2018.json",
@@ -618,10 +617,9 @@ rule seasonal_flu_training_export:
         augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} \
+            --node-data {input.branch_lengths} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} {input.genetic_clusters} \
             --auspice-config {input.auspice_config} \
             --include-root-sequence \
-            --colors {input.colors} \
             --minify-json \
             --output {output.auspice_tree}
         """
@@ -632,7 +630,7 @@ rule seasonal_flu_training_create_distance_dataframe:
         dataframe_mds = "seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_mds_sequences.csv",
         dataframe_tsne = "seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_t-sne_sequences.csv",
         dataframe_umap = "seasonal-flu-nextstrain/results/cluster_embed_with_internal_nodes_umap_sequences.csv",
-        dataframe_genetic = "seasonal-flu-nextstrain/results/cluster_genetic_sequences.csv",
+        dataframe_genetic = "seasonal-flu-nextstrain/results/cluster_embed_genetic_sequences.csv",
     output:
         metadata = "seasonal-flu-nextstrain/results/embedding_data.csv",
     conda: "../cartography.yml"
