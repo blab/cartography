@@ -430,7 +430,6 @@ rule seasonal_flu_test_export:
         embeddings = expand("seasonal-flu-nextstrain-2018-2020/results/cluster_embed_with_internal_nodes_{embedding}_{ancestral}.json", embedding=EMBEDDING_METHODS, ancestral=INTERNAL_NODE),
         genetic_clusters = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_genetic_sequences.json",
         auspice_config = seasonal_flu_test_files.auspice_config,
-        colors = "seasonal-flu-nextstrain-2018-2020/config/colors.tsv",
         clades = rules.seasonal_flu_test_clades.output.clade_data
     output:
         auspice_tree = "auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json",
@@ -444,7 +443,6 @@ rule seasonal_flu_test_export:
             --node-data {input.branch_lengths} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} {input.genetic_clusters} \
             --auspice-config {input.auspice_config} \
             --include-root-sequence \
-            --colors {input.colors} \
             --validation-mode warn \
             --minify-json \
             --output {output.auspice_tree}
