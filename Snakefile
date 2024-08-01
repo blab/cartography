@@ -19,6 +19,7 @@ EMBEDDING_NAME_BY_METHOD = {
     "mds": "MDS",
     "t-sne": "t-SNE",
     "umap": "UMAP",
+    "genetic": "genetic",
 }
 
 DISTANCE_THRESHOLDS = [
