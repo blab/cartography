@@ -20,9 +20,9 @@ if __name__ == "__main__":
         tables.append(pd.read_csv(args.tables[i], sep=args.separator, dtype=str))
 
     if args.suffixes is not None:
-        df = reduce(lambda x, y: pd.merge(x, y, on = 'strain', suffixes=(args.suffixes[0], args.suffixes[1])), tables)
+        df = reduce(lambda x, y: pd.merge(x, y, on = 'strain', how="left", suffixes=(args.suffixes[0], args.suffixes[1])), tables)
     else:
-        df = reduce(lambda x, y: pd.merge(x, y, on = 'strain'), tables)
+        df = reduce(lambda x, y: pd.merge(x, y, on = 'strain', how="left"), tables)
 
 
     df.to_csv(args.output, sep=args.separator, header=True, index=False)
