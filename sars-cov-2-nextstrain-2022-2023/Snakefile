@@ -342,7 +342,7 @@ rule sarscov2_test_export:
         branch_lengths = "sars-cov-2-nextstrain-2022-2023/results/branch_lengths.json",
         nt_muts = "sars-cov-2-nextstrain-2022-2023/results/nt_muts.json",
         aa_muts = "sars-cov-2-nextstrain-2022-2023/results/aa_muts.json",
-        embeddings = expand("sars-cov-2-nextstrain-2022-2023/results/cluster_embed_{embedding}_for_{clade_membership}.json", embedding=EMBEDDING_METHODS, clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        embeddings = expand("sars-cov-2-nextstrain-2022-2023/results/cluster_embed_{embedding}_for_{clade_membership}.json", embedding=EMBEDDING_METHODS + ["genetic"], clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
         auspice_config = "sars-cov-2-nextstrain-2022-2023/config/auspice_config.json",
     output:
         auspice_tree = "auspice/cartography_ncov-2022-2023.json",
@@ -506,6 +506,28 @@ rule sarscov2_test_cluster_with_optimal_parameters:
             --output-figure {output.clustered_embedding_figure}
         """
 
+rule sarscov2_test_cluster_distances_with_optimal_parameters:
+    input:
+        distances="sars-cov-2-nextstrain-2022-2023/results/distance_matrix.csv",
+        parameters="sars-cov-2-nextstrain/results/optimal_cluster_accuracy_and_parameters_for_{clade_membership}.csv",
+    output:
+        clustered="sars-cov-2-nextstrain-2022-2023/results/cluster_embed_genetic_for_{clade_membership}.csv",
+    conda: "../cartography.yml"
+    params:
+        min_size=CLUSTER_MIN_SIZE,
+        min_samples=CLUSTER_MIN_SAMPLES,
+    shell:
+        """
+        pathogen-cluster \
+            --distance-matrix {input.distances} \
+            --label-attribute "genetic_label_for_{wildcards.clade_membership}" \
+            --min-size {params.min_size} \
+            --min-samples {params.min_samples} \
+            --distance-threshold "$(csvtk filter2 -f '$method=="genetic"' {input.parameters} | csvtk cut -f distance_threshold | csvtk del-header)" \
+            --output-dataframe /dev/stdout \
+            | tsv-select -H --delimiter "," -f strain,genetic_label_for_{wildcards.clade_membership} > {output.clustered}
+        """
+
 rule sarscov2_test_cluster_accuracy:
     input:
         metadata="sars-cov-2-nextstrain-2022-2023/data/metadata.tsv",
@@ -529,7 +551,7 @@ rule sarscov2_test_cluster_accuracy:
 
 rule sarscov2_test_concat_cluster_accuracy:
     input:
-        accuracies=expand("sars-cov-2-nextstrain-2022-2023/results/cluster_accuracy_{method}_for_{{clade_membership}}.csv", method=EMBEDDING_METHODS)
+        accuracies=expand("sars-cov-2-nextstrain-2022-2023/results/cluster_accuracy_{method}_for_{{clade_membership}}.csv", method=EMBEDDING_METHODS + ["genetic"])
     output:
         metadata = "sars-cov-2-nextstrain-2022-2023/results/full_HDBSCAN_metadata_for_{clade_membership}.csv"
     params:
@@ -583,7 +605,7 @@ rule sarscov2_test_tree_to_table:
 
 rule sarscov2_test_create_distance_dataframe:
     input:
-        dataframes=expand("sars-cov-2-nextstrain-2022-2023/results/cluster_embed_{method}_for_{{clade_membership}}.csv", method=EMBEDDING_METHODS),
+        dataframes=expand("sars-cov-2-nextstrain-2022-2023/results/cluster_embed_{method}_for_{{clade_membership}}.csv", method=EMBEDDING_METHODS + ["genetic"]),
     output:
         metadata = "sars-cov-2-nextstrain-2022-2023/results/embedding_data_for_{clade_membership}.csv",
     conda: "../cartography.yml"
@@ -605,7 +627,7 @@ rule sarscov2_test_infer_cluster_labels:
     params:
         columns=lambda wildcards: [
             f"{method}_label_for_{wildcards.clade_membership}"
-            for method in EMBEDDING_METHODS
+            for method in EMBEDDING_METHODS + ["genetic"]
         ],
     shell:
         """
@@ -627,11 +649,11 @@ rule sarscov2_test_find_monophyletic_clusters:
         dataset_name="sars-cov-2-2022-2023",
         methods=lambda wildcards: [
             f"{EMBEDDING_NAME_BY_METHOD[method]} ({'Nextstrain clade' if wildcards.clade_membership == 'Nextstrain_clade' else 'Pango'})"
-            for method in EMBEDDING_METHODS
+            for method in EMBEDDING_METHODS + ["genetic"]
         ],
         attributes=lambda wildcards: [
             f"{method}_label_for_{wildcards.clade_membership}"
-            for method in EMBEDDING_METHODS
+            for method in EMBEDDING_METHODS + ["genetic"]
         ],
     shell:
         """
@@ -763,7 +785,7 @@ rule sarscov2_test_create_mutation_table:
 
 rule sarscov2_test_concat_mutation_tables:
     input:
-        mutation_tables=expand("sars-cov-2-nextstrain-2022-2023/results/mutation_table_{method}_for_{{clade_membership}}.csv", method=EMBEDDING_METHODS),
+        mutation_tables=expand("sars-cov-2-nextstrain-2022-2023/results/mutation_table_{method}_for_{{clade_membership}}.csv", method=EMBEDDING_METHODS + ["genetic"]),
     output:
         metadata = "sars-cov-2-nextstrain-2022-2023/results/mutation_table_for_{clade_membership}.csv",
     params:
@@ -852,7 +874,7 @@ rule sarscov2_test_within_between_stats_methods:
 
 rule sarscov2_test_concat_within_between_stats_method:
     input:
-        tables=expand("sars-cov-2-nextstrain-2022-2023/results/within_between_stats/{clade_membership}/{method}.csv", method=EMBEDDING_METHODS, clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS)
+        tables=expand("sars-cov-2-nextstrain-2022-2023/results/within_between_stats/{clade_membership}/{method}.csv", method=EMBEDDING_METHODS + ["genetic"], clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS)
     output:
         metadata = "sars-cov-2-nextstrain-2022-2023/results/full_within_between_stats_method.csv"
     conda: "../cartography.yml"
@@ -1100,6 +1122,28 @@ rule sarscov2_test_replication_cluster_with_optimal_parameters:
             --output-dataframe {output.clustered_embedding}
         """
 
+rule sarscov2_test_replication_cluster_distances_with_optimal_parameters:
+    input:
+        distances="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/distance_matrix.csv",
+        parameters="sars-cov-2-nextstrain/results/optimal_cluster_accuracy_and_parameters_for_Nextstrain_clade.csv",
+    output:
+        clustered="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/cluster_embed_genetic.csv",
+    conda: "../cartography.yml"
+    params:
+        min_size=CLUSTER_MIN_SIZE,
+        min_samples=CLUSTER_MIN_SAMPLES,
+    shell:
+        """
+        pathogen-cluster \
+            --distance-matrix {input.distances} \
+            --label-attribute "genetic_label" \
+            --min-size {params.min_size} \
+            --min-samples {params.min_samples} \
+            --distance-threshold "$(csvtk filter2 -f '$method=="genetic"' {input.parameters} | csvtk cut -f distance_threshold | csvtk del-header)" \
+            --output-dataframe /dev/stdout \
+            | tsv-select -H --delimiter "," -f strain,genetic_label > {output.clustered}
+        """
+
 rule sarscov2_test_replication_cluster_accuracy:
     input:
         metadata="sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/metadata.tsv",
@@ -1127,7 +1171,7 @@ rule sarscov2_test_replication_cluster_accuracy:
 
 rule sarscov2_test_replication_aggregate_cluster_accuracy:
     input:
-        accuracies=expand("sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/cluster_accuracy_{method}.csv", subsampling_scheme=CLUSTER_REPLICATION_SUBSAMPLING_SCHEMES, method=EMBEDDING_METHODS, replicate=CLUSTER_REPLICATION_REPLICATES, subsample_max_sequences=CLUSTER_REPLICATION_SUBSAMPLE_MAX_SEQUENCES),
+        accuracies=expand("sars-cov-2-nextstrain-2022-2023/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/cluster_accuracy_{method}.csv", subsampling_scheme=CLUSTER_REPLICATION_SUBSAMPLING_SCHEMES, method=EMBEDDING_METHODS + ["genetic"], replicate=CLUSTER_REPLICATION_REPLICATES, subsample_max_sequences=CLUSTER_REPLICATION_SUBSAMPLE_MAX_SEQUENCES),
     output:
         accuracies="sars-cov-2-nextstrain-2022-2023/results/replication_analysis_cluster_accuracy.csv",
     conda: "../cartography.yml"
