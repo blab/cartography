@@ -1,0 +1,6 @@
+normalized_vi,method,predicted_clusters_column,n_predicted_clusters,n_ignored_predicted_clusters,n_true_clusters,n_ignored_true_clusters,n_vi_clusters
+0.05,mds,mds_concatenated_label,1401,207,1049,558,944
+0.06,t-sne,t-sne_concatenated_label,1602,6,1049,558,1045
+0.08,genetic,genetic_concatenated_label,1446,162,1049,558,971
+0.11,umap,umap_concatenated_label,1608,0,1049,558,1049
+0.12,pca,pca_concatenated_label,1595,13,1049,558,1044
