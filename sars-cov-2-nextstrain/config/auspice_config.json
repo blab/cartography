@@ -87,6 +87,11 @@
       "type": "categorical"
     },
     {
+      "key": "genetic_label_for_Nextstrain_clade",
+      "title": "genetic distance cluster (Nextstrain clade)",
+      "type": "categorical"
+    },
+    {
       "key": "pca_label_for_Nextclade_pango_collapsed",
       "title": "PCA cluster (Nextclade pango)",
       "type": "categorical"
@@ -104,6 +109,11 @@
     {
       "key": "umap_label_for_Nextclade_pango_collapsed",
       "title": "UMAP cluster (Nextclade pango)",
+      "type": "categorical"
+    },
+    {
+      "key": "genetic_label_for_Nextclade_pango_collapsed",
+      "title": "genetic distance cluster (Nextclade pango)",
       "type": "categorical"
     },
     {
@@ -158,10 +168,12 @@
     "mds_label_for_Nextstrain_clade",
     "t-sne_label_for_Nextstrain_clade",
     "umap_label_for_Nextstrain_clade",
+    "genetic_label_for_Nextstrain_clade",
     "pca_label_for_Nextclade_pango_collapsed",
     "mds_label_for_Nextclade_pango_collapsed",
     "t-sne_label_for_Nextclade_pango_collapsed",
     "umap_label_for_Nextclade_pango_collapsed",
+    "genetic_label_for_Nextclade_pango_collapsed",
     "region",
     "country",
     "division"

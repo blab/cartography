@@ -276,6 +276,7 @@ rule sarscov2_export:
         nt_muts = "sars-cov-2-nextstrain/results/nt_muts.json",
         aa_muts = "sars-cov-2-nextstrain/results/aa_muts.json",
         embeddings = expand("sars-cov-2-nextstrain/results/cluster_embed_with_internal_nodes_{embedding}_for_{clade_membership}.json", embedding=EMBEDDING_METHODS, clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        genetic_clusters=expand("sars-cov-2-nextstrain/results/cluster_embed_genetic_for_{clade_membership}.json", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
         auspice_config = "sars-cov-2-nextstrain/config/auspice_config.json",
     output:
         auspice_tree = "auspice/cartography_ncov-2020-2022.json",
@@ -286,7 +287,7 @@ rule sarscov2_export:
         augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.nt_muts} {input.aa_muts} {input.embeddings} \
+            --node-data {input.branch_lengths} {input.nt_muts} {input.aa_muts} {input.embeddings} {input.genetic_clusters} \
             --auspice-config {input.auspice_config} \
             --include-root-sequence \
             --minify-json \
@@ -515,7 +516,7 @@ rule sarscov2_get_optimal_cluster_parameters_and_accuracies:
     conda: "../cartography.yml"
     shell:
         """
-        csvtk mutate -f predicted_clusters_column -n distance_threshold -p "[pca|mds|t\-sne|umap]_cluster_at_(.*)" {input.accuracies} \
+        csvtk mutate -f predicted_clusters_column -n distance_threshold -p "[pca|mds|t\-sne|umap|genetic]_cluster_at_(.*)" {input.accuracies} \
             | csvtk sort -k normalized_vi -k method -k distance_threshold \
             | csvtk uniq -f method -n 1 > {output.accuracies}
         """
@@ -543,6 +544,28 @@ rule sarscov2_cluster_with_optimal_parameters:
             --output-figure {output.clustered_embedding_figure}
         """
 
+rule sarscov2_cluster_distances_with_optimal_parameters:
+    input:
+        distances="sars-cov-2-nextstrain/results/distance_matrix.csv",
+        parameters="sars-cov-2-nextstrain/results/optimal_cluster_accuracy_and_parameters_for_{clade_membership}.csv",
+    output:
+        clustered="sars-cov-2-nextstrain/results/cluster_embed_genetic_for_{clade_membership}.csv",
+    conda: "../cartography.yml"
+    params:
+        min_size=CLUSTER_MIN_SIZE,
+        min_samples=CLUSTER_MIN_SAMPLES,
+    shell:
+        """
+        pathogen-cluster \
+            --distance-matrix {input.distances} \
+            --label-attribute "genetic_label_for_{wildcards.clade_membership}" \
+            --min-size {params.min_size} \
+            --min-samples {params.min_samples} \
+            --distance-threshold "$(csvtk filter2 -f '$method=="genetic"' {input.parameters} | csvtk cut -f distance_threshold | csvtk del-header)" \
+            --output-dataframe /dev/stdout \
+            | tsv-select -H --delimiter "," -f strain,genetic_label_for_{wildcards.clade_membership} > {output.clustered}
+        """
+
 rule sarscov2_calculate_internal_node_embedding_positions:
     input:
         tree="sars-cov-2-nextstrain/results/tree.nwk",
@@ -563,6 +586,19 @@ rule sarscov2_create_node_output:
         dataframe = "sars-cov-2-nextstrain/results/cluster_embed_with_internal_nodes_{method}_for_{clade_membership}.csv"
     output:
         node_data = "sars-cov-2-nextstrain/results/cluster_embed_with_internal_nodes_{method}_for_{clade_membership}.json"
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/output_node_data.py \
+            --table {input.dataframe} \
+            --output {output.node_data}
+        """
+
+rule sarscov2_create_node_output_for_genetic_clusters:
+    input:
+        dataframe = "sars-cov-2-nextstrain/results/cluster_embed_genetic_for_{clade_membership}.csv",
+    output:
+        node_data = "sars-cov-2-nextstrain/results/cluster_embed_genetic_for_{clade_membership}.json",
     conda: "../cartography.yml"
     shell:
         """
@@ -597,13 +633,14 @@ rule sarscov2_tree_to_table:
 rule sarscov2_create_distance_dataframe:
     input:
         dataframes=expand("sars-cov-2-nextstrain/results/cluster_embed_with_internal_nodes_{method}_for_{{clade_membership}}.csv", method=EMBEDDING_METHODS),
+        dataframe_genetic="sars-cov-2-nextstrain/results/cluster_embed_genetic_for_{clade_membership}.csv",
     output:
         metadata = "sars-cov-2-nextstrain/results/embedding_data_for_{clade_membership}.csv",
     conda: "../cartography.yml"
     shell:
         """
         python3 notebooks/scripts/make_table.py \
-            --tables {input} \
+            --tables {input.dataframes} {input.dataframe_genetic} \
             --separator ',' \
             --output {output.metadata}
         """
@@ -618,7 +655,7 @@ rule sarscov2_infer_cluster_labels:
     params:
         columns=lambda wildcards: [
             f"{method}_label_for_{wildcards.clade_membership}"
-            for method in EMBEDDING_METHODS
+            for method in EMBEDDING_METHODS + ["genetic"]
         ],
     shell:
         """
@@ -640,11 +677,11 @@ rule sarscov2_find_monophyletic_clusters:
         dataset_name="sars-cov-2-2020-2022",
         methods=lambda wildcards: [
             f"{EMBEDDING_NAME_BY_METHOD[method]} ({'Nextstrain clade' if wildcards.clade_membership == 'Nextstrain_clade' else 'Pango'})"
-            for method in EMBEDDING_METHODS
+            for method in EMBEDDING_METHODS + ["genetic"]
         ],
         attributes=lambda wildcards: [
             f"{method}_label_for_{wildcards.clade_membership}"
-            for method in EMBEDDING_METHODS
+            for method in EMBEDDING_METHODS + ["genetic"]
         ],
     shell:
         """
@@ -776,7 +813,7 @@ rule sarscov2_create_mutation_table:
 
 rule sarscov2_concat_mutation_tables:
     input:
-        mutation_tables=expand("sars-cov-2-nextstrain/results/mutation_table_{method}_for_{{clade_membership}}.csv", method=EMBEDDING_METHODS),
+        mutation_tables=expand("sars-cov-2-nextstrain/results/mutation_table_{method}_for_{{clade_membership}}.csv", method=EMBEDDING_METHODS + ["genetic"]),
     output:
         metadata = "sars-cov-2-nextstrain/results/mutation_table_for_{clade_membership}.csv",
     params:
@@ -826,7 +863,7 @@ rule sarscov2_train_within_between_stats_methods:
 
 rule sarscov2_train_concat_within_between_stats_method:
     input:
-        tables=expand("sars-cov-2-nextstrain/results/within_between_stats/{clade_membership}/{method}.csv", method=EMBEDDING_METHODS, clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS)
+        tables=expand("sars-cov-2-nextstrain/results/within_between_stats/{clade_membership}/{method}.csv", method=EMBEDDING_METHODS + ["genetic"], clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS)
     output:
         metadata = "sars-cov-2-nextstrain/results/full_within_between_stats_method.csv"
     conda: "../cartography.yml"
