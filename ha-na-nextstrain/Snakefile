@@ -660,6 +660,7 @@ rule seasonal_flu_reassortment_cluster_accuracy:
     conda: "../cartography.yml"
     params:
         clade_column="MCC",
+        ignored_clusters="unassigned",
     shell:
         """
         python3 notebooks/scripts/metadata_HDBSCAN.py \
@@ -668,6 +669,7 @@ rule seasonal_flu_reassortment_cluster_accuracy:
             --true-clusters-column {params.clade_column:q} \
             --predicted-clusters {input.embedding} \
             --predicted-clusters-column "{wildcards.method}_{wildcards.ha_concatenated}_label" \
+            --ignored-clusters {params.ignored_clusters:q} \
             --output {output.dataframe}
         """
 
