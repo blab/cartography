@@ -284,7 +284,7 @@ These results suggest that applying dimensionality reduction methods prior to cl
 To understand whether these embedding methods and optimal cluster parameters could effectively cluster previously unseen sequences, we applied each method to the late H3N2 HA dataset (2018--2020), identified clusters per embedding, and calculated the VI distance between clusters and previously defined clades.
 The late dataset included 9 clades with at least 10 samples (Supplementary Fig.~S\ref{S_Fig_late_flu_embeddings_by_clade}).
 These clades had a greater average between-clade distance than clades in the early dataset (Supplementary Fig.~S\ref{S_Fig_flu_within_between_group_distances}).
-Clusters from PCA (N=5), MDS (N=6), t-SNE (N=7), and UMAP (N=8) were similarly accurate, with normalized VI distances of 0.07, 0.06, 0.05, and 0.09, respectively (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters} and Supplementary Fig.~S\ref{S_Fig_late_flu_mds_embeddings}).
+Clusters from PCA (N=5), MDS (N=6), t-SNE (N=7), and UMAP (N=8) were similarly accurate, with normalized VI distances of 0.07, 0.08, 0.05, and 0.09, respectively (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters} and Supplementary Fig.~S\ref{S_Fig_late_flu_mds_embeddings}).
 Genetic distance clusters (N=4) were farthest from Nextstrain clades (normalized VI=0.12, Supplementary Table~\ref{S_Table_optimal_cluster_parameters}).
 MDS split A3 samples into two widely separated groups in its Euclidean space, indicating substantial within-clade genetic differences.
 We found recurrent HA1 substitutions of 135K, 142G, and 193S in multiple subclades of A3 that MDS could not effectively represent.
@@ -323,9 +323,8 @@ We expected that clusters from HA-only embeddings could only reflect reassortmen
 We expected that the VI distances for clusters from HA/NA embeddings would improve on the baseline distances calculated with the HA-only clusters.
 
 All embedding methods produced more accurate clusters from the HA/NA alignments than the HA-only alignments (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-na-2016-2018-embeddings} and Supplementary Fig.~S\ref{S_Fig_full_ha_na_embeddings}).
-HA/NA clusters from MDS reduced the distance to known reassortment events from a normalized VI value of 0.16 with HA only to 0.05.
-Similarly, HA/NA clusters from t-SNE reduced the distance from 0.10 to 0.06 and reduced the distance for PCA clusters from 0.18 to 0.12.
-Adding NA to HA only modestly improved UMAP clusters, reducing the distance to MCCs from 0.14 to 0.11.
+HA/NA clusters from t-SNE were closest to reassortment events identified by TreeKnit (normalized VI=0.06) and almost twice as close to those reassortmernt events than the HA-only clusters (normalized VI=0.11).
+For the other three embedding methods, including NA with HA reduced the distance between clusters and reassortment events by a similar absolute values of 0.05, 0.07, and 0.03 for PCA, MDS, and UMAP, respectively.
 Embeddings with both genes produced more clusters in PCA, MDS, and t-SNE than the HA-only embeddings with 3 additional clusters in PCA (Supplementary Fig.~S\ref{S_Fig_flu_ha_na_pca_embeddings}), 9 in MDS (Supplementary Fig.~S\ref{S_Fig_flu_ha_na_mds_embeddings}), 2 in t-SNE (Supplementary Fig.~S\ref{S_Fig_flu_ha_na_tsne_embeddings} and Supplementary Fig.~S\ref{S_Fig_flu_ha_na_tsne_mcc_counts}), and 1 in UMAP (Supplementary Fig.~S\ref{S_Fig_flu_ha_na_umap_embeddings}).
 All embeddings of HA/NA alignments produced distinct clusters for the known reassortment event within clade A2 \citep{Potter2019} as represented by MCCs 14 and 11.
 Other larger events like those represented by MCCs 9 and 12 mapped far apart in all HA/NA embeddings except PCA.
