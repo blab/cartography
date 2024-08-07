@@ -142,20 +142,6 @@ rule seasonal_flu_reassortment_align:
             --nthreads {threads}
         """
 
-rule seasonal_flu_reassortment_concat:
-    input:
-        sequence_ha = "ha-na-nextstrain/results/aligned_ha.fasta",
-        sequence_na = "ha-na-nextstrain/results/aligned_na.fasta",
-    output:
-        fasta = "ha-na-nextstrain/results/aligned_concatenated.fasta"
-    conda: "../cartography.yml"
-    shell:
-        """
-        python3 ha-na-nextstrain/scripts/concat_sequences.py \
-            --sequences {input.sequence_ha} {input.sequence_na}\
-            --output {output.fasta} \
-        """
-
 rule seasonal_flu_reassortment_tree:
     input:
         alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta"
@@ -311,9 +297,9 @@ rule seasonal_flu_reassortment_clades:
 
 rule seasonal_flu_reassortment_create_distance_matrix:
     input:
-        alignment = "ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta"
+        alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta"
     output:
-        output = "ha-na-nextstrain/results/distance_matrix_{ha_concatenated}.csv"
+        output = "ha-na-nextstrain/results/distance_matrix_{segment}.csv"
     conda: "../cartography.yml"
     shell:
         """
@@ -324,12 +310,12 @@ rule seasonal_flu_reassortment_create_distance_matrix:
 
 rule seasonal_flu_reassortment_clean_alignment_for_pca:
     input:
-        alignment="ha-na-nextstrain/results/aligned_{ha_concatenated}.fasta",
+        alignment="ha-na-nextstrain/results/aligned_{segment}.fasta",
     output:
-        alignment="ha-na-nextstrain/results/cleaned_aligned_{ha_concatenated}.fasta",
+        alignment="ha-na-nextstrain/results/cleaned_aligned_{segment}.fasta",
     conda: "../cartography.yml"
     log:
-        "logs/seasonal_flu_reassortment_clean_alignment_for_pca_{ha_concatenated}.txt"
+        "logs/seasonal_flu_reassortment_clean_alignment_for_pca_{segment}.txt"
     shell:
         """
         python3 notebooks/scripts/clean_alignment.py \
@@ -337,9 +323,31 @@ rule seasonal_flu_reassortment_clean_alignment_for_pca:
             --output {output.alignment} 2>&1 | tee {log}
         """
 
+def get_h3n2_alignments_by_wildcards(wildcards):
+    alignments = [
+        "ha-na-nextstrain/results/cleaned_aligned_ha.fasta"
+    ]
+    if wildcards.ha_concatenated == "concatenated":
+        alignments.append(
+            "ha-na-nextstrain/results/cleaned_aligned_na.fasta"
+        )
+
+    return alignments
+
+def get_h3n2_distances_by_wildcards(wildcards):
+    distances = [
+        "ha-na-nextstrain/results/distance_matrix_ha.csv"
+    ]
+    if wildcards.ha_concatenated == "concatenated":
+        distances.append(
+            "ha-na-nextstrain/results/distance_matrix_na.csv"
+        )
+
+    return distances
+
 rule seasonal_flu_reassortment_embed_pca:
     input:
-        alignment = "ha-na-nextstrain/results/cleaned_aligned_{ha_concatenated}.fasta",
+        alignment = get_h3n2_alignments_by_wildcards,
         parameters="simulations/influenza-like/no-reassortment/pca_parameters.csv",
     output:
         dataframe = "ha-na-nextstrain/results/embed_pca_{ha_concatenated}.csv",
@@ -363,8 +371,7 @@ rule seasonal_flu_reassortment_embed_pca:
 
 rule seasonal_flu_reassortment_embed_mds:
     input:
-        alignment = "ha-na-nextstrain/results/cleaned_aligned_{ha_concatenated}.fasta",
-        distance_matrix = rules.seasonal_flu_reassortment_create_distance_matrix.output.output,
+        distance_matrix = get_h3n2_distances_by_wildcards,
         parameters="simulations/influenza-like/no-reassortment/mds_parameters.csv",
     output:
         dataframe = "ha-na-nextstrain/results/embed_mds_{ha_concatenated}.csv",
@@ -375,7 +382,6 @@ rule seasonal_flu_reassortment_embed_mds:
     shell:
         """
         pathogen-embed \
-            --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
             --embedding-parameters {input.parameters} \
             --random-seed {params.random_seed} \
@@ -386,8 +392,8 @@ rule seasonal_flu_reassortment_embed_mds:
 
 rule seasonal_flu_reassortment_embed_tsne:
     input:
-        alignment = "ha-na-nextstrain/results/cleaned_aligned_{ha_concatenated}.fasta",
-        distance_matrix = rules.seasonal_flu_reassortment_create_distance_matrix.output.output,
+        alignment = get_h3n2_alignments_by_wildcards,
+        distance_matrix = get_h3n2_distances_by_wildcards,
         parameters="simulations/influenza-like/no-reassortment/t-sne_parameters.csv",
     output:
         dataframe = "ha-na-nextstrain/results/embed_t-sne_{ha_concatenated}.csv",
@@ -410,8 +416,7 @@ rule seasonal_flu_reassortment_embed_tsne:
 
 rule seasonal_flu_reassortment_embed_umap:
     input:
-        alignment = "ha-na-nextstrain/results/cleaned_aligned_{ha_concatenated}.fasta",
-        distance_matrix = rules.seasonal_flu_reassortment_create_distance_matrix.output.output,
+        distance_matrix = get_h3n2_distances_by_wildcards,
         parameters="simulations/influenza-like/no-reassortment/umap_parameters.csv",
     output:
         dataframe = "ha-na-nextstrain/results/embed_umap_{ha_concatenated}.csv",
@@ -422,7 +427,6 @@ rule seasonal_flu_reassortment_embed_umap:
     shell:
         """
         pathogen-embed \
-            --alignment {input.alignment} \
             --distance-matrix {input.distance_matrix} \
             --embedding-parameters {input.parameters} \
             --random-seed {params.random_seed} \
