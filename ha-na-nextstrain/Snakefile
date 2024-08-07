@@ -295,9 +295,20 @@ rule seasonal_flu_reassortment_clades:
             --output {output.clade_data}
         """
 
+rule seasonal_flu_reassortment_sort_alignment:
+    input:
+        alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta",
+    output:
+        alignment = "ha-na-nextstrain/results/aligned_sorted_{segment}.fasta",
+    conda: "../cartography.yml"
+    shell:
+        """
+        seqkit sort -n {input.alignment} > {output.alignment}
+        """
+
 rule seasonal_flu_reassortment_create_distance_matrix:
     input:
-        alignment = "ha-na-nextstrain/results/aligned_{segment}.fasta"
+        alignment = "ha-na-nextstrain/results/aligned_sorted_{segment}.fasta"
     output:
         output = "ha-na-nextstrain/results/distance_matrix_{segment}.csv"
     conda: "../cartography.yml"
@@ -310,7 +321,7 @@ rule seasonal_flu_reassortment_create_distance_matrix:
 
 rule seasonal_flu_reassortment_clean_alignment_for_pca:
     input:
-        alignment="ha-na-nextstrain/results/aligned_{segment}.fasta",
+        alignment="ha-na-nextstrain/results/aligned_sorted_{segment}.fasta",
     output:
         alignment="ha-na-nextstrain/results/cleaned_aligned_{segment}.fasta",
     conda: "../cartography.yml"
