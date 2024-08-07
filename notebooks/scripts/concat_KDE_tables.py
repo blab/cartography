@@ -16,8 +16,9 @@ if __name__ == "__main__":
 
     columns_to_use = [
         "method",
-        "distance_threshold",
         "normalized_vi",
+        "n_predicted_clusters",
+        "distance_threshold",
     ]
     embedding_name_by_abbreviation = {
         "pca": "PCA",
@@ -33,8 +34,14 @@ if __name__ == "__main__":
         df = pd.read_csv(
             table_file,
             sep=args.separator,
-            usecols=columns_to_use,
         )
+
+        if "distance_threshold" in df.columns:
+            df = df.loc[:, columns_to_use].copy()
+        else:
+            df = df.loc[:, [column for column in columns_to_use if column != "distance_threshold"]].copy()
+            df["distance_threshold"] = ""
+
         df["Pathogen Dataset"] = [pathogen] + [""] * (len(embedding_name_by_abbreviation) - 1)
         df["Genetic Group Type"] = [genetic_group_type] + [""] * (len(embedding_name_by_abbreviation) - 1)
         tables.append(df)
@@ -44,8 +51,9 @@ if __name__ == "__main__":
     df["method"] = df["method"].map(embedding_name_by_abbreviation)
     df = df.rename(columns={
         "method": "Method",
-        "distance_threshold": "Threshold",
         "normalized_vi": "Variation of Information (VI)",
+        "n_predicted_clusters": "Number of clusters",
+        "distance_threshold": "Threshold",
     })
 
     if args.output_csv:
@@ -59,6 +67,7 @@ if __name__ == "__main__":
                 "Pathogen Dataset",
                 "Genetic Group Type",
                 "Method",
+                "Number of clusters",
                 "Variation of Information (VI)",
                 "Threshold",
             ],

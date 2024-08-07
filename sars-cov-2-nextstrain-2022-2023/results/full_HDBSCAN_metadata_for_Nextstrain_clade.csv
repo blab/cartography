@@ -1,6 +1,6 @@
-normalized_vi,method,predicted_clusters_column,n_predicted_clusters,n_ignored_predicted_clusters,n_true_clusters,n_ignored_true_clusters,n_vi_clusters
-0.09,t-sne,t-sne_label_for_Nextstrain_clade,2464,0,1799,666,1798
-0.09,umap,umap_label_for_Nextstrain_clade,2464,0,1799,666,1798
-0.16,mds,mds_label_for_Nextstrain_clade,2464,0,1799,666,1798
-0.21,pca,pca_label_for_Nextstrain_clade,2464,0,1799,666,1798
-0.21,genetic,genetic_label_for_Nextstrain_clade,2464,0,1799,666,1798
+normalized_vi,method,predicted_clusters_column,n_predicted_clusters,n_predicted_cluster_samples,n_ignored_predicted_clusters,n_true_cluster_samples,n_ignored_true_clusters,n_vi_cluster_samples
+0.09,t-sne,t-sne_label_for_Nextstrain_clade,67,2464,0,1799,666,1798
+0.09,umap,umap_label_for_Nextstrain_clade,13,2464,0,1799,666,1798
+0.16,mds,mds_label_for_Nextstrain_clade,19,2464,0,1799,666,1798
+0.21,pca,pca_label_for_Nextstrain_clade,8,2464,0,1799,666,1798
+0.21,genetic,genetic_label_for_Nextstrain_clade,17,2464,0,1799,666,1798
