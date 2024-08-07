@@ -32,6 +32,11 @@
             "type": "categorical"
         },
         {
+            "key": "genetic_concatenated_label",
+            "title": "HA/NA genetic distance cluster",
+            "type": "categorical"
+        },
+        {
             "key": "pca_ha_label",
             "title": "HA PCA cluster",
             "type": "categorical"
@@ -49,6 +54,11 @@
         {
             "key": "umap_ha_label",
             "title": "HA UMAP cluster",
+            "type": "categorical"
+        },
+        {
+            "key": "genetic_ha_label",
+            "title": "HA genetic distance cluster",
             "type": "categorical"
         },
         {
@@ -126,10 +136,12 @@
       "mds_ha_label",
       "t-sne_ha_label",
       "umap_ha_label",
+      "genetic_ha_label",
       "pca_concatenated_label",
       "mds_concatenated_label",
       "t-sne_concatenated_label",
       "umap_concatenated_label",
+      "genetic_concatenated_label",
       "clade_membership"
     ],
 

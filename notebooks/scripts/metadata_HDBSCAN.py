@@ -48,6 +48,11 @@ if __name__ == "__main__":
         ~predicted_clusters[args.predicted_clusters_column].isin(args.ignored_clusters)
     ].copy()
 
+    # Count the number of clusters assigned by HDBSCAN after dropping ignored
+    # clusters. We also want to ignore the "-1" cluster label which represents
+    # the lack of clustering.
+    n_predicted_clusters = len(set(predicted_clusters[args.predicted_clusters_column].drop_duplicates().values) - {"-1"})
+
     # Join true and predicted labels by strain name, keeping only records that
     # appear in both sets.
     clusters = true_clusters.join(predicted_clusters, how="inner").reset_index()
@@ -75,10 +80,11 @@ if __name__ == "__main__":
         "method": args.method,
         "predicted_clusters_column": args.predicted_clusters_column,
         "normalized_vi": np.round(normalized_vi, 2),
-        "n_predicted_clusters": predicted_clusters.shape[0],
+        "n_predicted_clusters": n_predicted_clusters,
+        "n_predicted_cluster_samples": predicted_clusters.shape[0],
         "n_ignored_predicted_clusters": n_ignored_predicted_clusters,
-        "n_true_clusters": true_clusters.shape[0],
+        "n_true_cluster_samples": true_clusters.shape[0],
         "n_ignored_true_clusters": n_ignored_true_clusters,
-        "n_vi_clusters": clusters.shape[0],
+        "n_vi_cluster_samples": clusters.shape[0],
     }])
     output_df.to_csv(args.output, index=False)

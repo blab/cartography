@@ -357,6 +357,28 @@ rule seasonal_flu_test_cluster_with_optimal_parameters:
             --output-figure {output.clustered_embedding_figure}
         """
 
+rule seasonal_flu_test_cluster_distances_with_optimal_parameters:
+    input:
+        distances="seasonal-flu-nextstrain-2018-2020/results/distance_matrix_{ancestral}.csv",
+        parameters="seasonal-flu-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
+    output:
+        clustered="seasonal-flu-nextstrain-2018-2020/results/cluster_embed_genetic_{ancestral}.csv",
+    conda: "../cartography.yml"
+    params:
+        min_size=CLUSTER_MIN_SIZE,
+        min_samples=CLUSTER_MIN_SAMPLES,
+    shell:
+        """
+        pathogen-cluster \
+            --distance-matrix {input.distances} \
+            --label-attribute "genetic_label" \
+            --min-size {params.min_size} \
+            --min-samples {params.min_samples} \
+            --distance-threshold "$(csvtk filter2 -f '$method=="genetic"' {input.parameters} | csvtk cut -f distance_threshold | csvtk del-header)" \
+            --output-dataframe /dev/stdout \
+            | tsv-select -H --delimiter "," -f strain,genetic_label > {output.clustered}
+        """
+
 rule seasonal_flu_test_calculate_internal_node_embedding_positions:
     input:
         tree="seasonal-flu-nextstrain-2018-2020/results/tree.nwk",
@@ -385,6 +407,19 @@ rule seasonal_flu_test_create_node_output:
             --output {output.node_data}
         """
 
+rule seasonal_flu_test_create_node_output_for_genetic_clusters:
+    input:
+        dataframe = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_genetic_sequences.csv",
+    output:
+        node_data = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_genetic_sequences.json",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/output_node_data.py \
+            --table {input.dataframe} \
+            --output {output.node_data}
+        """
+
 rule seasonal_flu_test_export:
     input:
         tree = rules.seasonal_flu_test_refine.output.tree,
@@ -393,8 +428,8 @@ rule seasonal_flu_test_export:
         nt_muts = rules.seasonal_flu_test_ancestral.output.node_data,
         aa_muts = rules.seasonal_flu_test_translate.output.node_data,
         embeddings = expand("seasonal-flu-nextstrain-2018-2020/results/cluster_embed_with_internal_nodes_{embedding}_{ancestral}.json", embedding=EMBEDDING_METHODS, ancestral=INTERNAL_NODE),
+        genetic_clusters = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_genetic_sequences.json",
         auspice_config = seasonal_flu_test_files.auspice_config,
-        colors = "seasonal-flu-nextstrain-2018-2020/config/colors.tsv",
         clades = rules.seasonal_flu_test_clades.output.clade_data
     output:
         auspice_tree = "auspice/cartography_flu-seasonal-h3n2-ha-2018-2020.json",
@@ -405,10 +440,9 @@ rule seasonal_flu_test_export:
         augur export v2 \
             --tree {input.tree} \
             --metadata {input.metadata} \
-            --node-data {input.branch_lengths} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} \
+            --node-data {input.branch_lengths} {input.clades} {input.nt_muts} {input.aa_muts} {input.embeddings} {input.genetic_clusters} \
             --auspice-config {input.auspice_config} \
             --include-root-sequence \
-            --colors {input.colors} \
             --validation-mode warn \
             --minify-json \
             --output {output.auspice_tree}
@@ -443,6 +477,7 @@ rule seasonal_flu_test_create_distance_dataframe:
         dataframe_mds = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_with_internal_nodes_mds_sequences.csv",
         dataframe_tsne = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_with_internal_nodes_t-sne_sequences.csv",
         dataframe_umap = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_with_internal_nodes_umap_sequences.csv",
+        dataframe_genetic = "seasonal-flu-nextstrain-2018-2020/results/cluster_embed_genetic_sequences.csv",
     output:
         metadata = "seasonal-flu-nextstrain-2018-2020/results/embedding_data.csv",
     conda: "../cartography.yml"
@@ -462,7 +497,7 @@ rule seasonal_flu_test_infer_cluster_labels:
         labels="seasonal-flu-nextstrain-2018-2020/results/ancestral_cluster_labels.json",
     conda: "../cartography.yml"
     params:
-        columns=lambda wildcards: [f"{method}_label" for method in EMBEDDING_METHODS],
+        columns=lambda wildcards: [f"{method}_label" for method in EMBEDDING_METHODS + ["genetic"]],
     shell:
         """
         augur traits \
@@ -481,8 +516,8 @@ rule seasonal_flu_test_find_monophyletic_clusters:
     conda: "../cartography.yml"
     params:
         dataset_name="seasonal-flu-h3n2-ha-2018-2020",
-        methods=lambda wildcards: [EMBEDDING_NAME_BY_METHOD[method] for method in EMBEDDING_METHODS],
-        attributes=lambda wildcards: [f"{method}_label" for method in EMBEDDING_METHODS],
+        methods=lambda wildcards: [EMBEDDING_NAME_BY_METHOD[method] for method in EMBEDDING_METHODS + ["genetic"]],
+        attributes=lambda wildcards: [f"{method}_label" for method in EMBEDDING_METHODS + ["genetic"]],
     shell:
         """
         python3 notebooks/scripts/find_monophyletic_clusters.py \
@@ -534,6 +569,7 @@ rule seasonal_flu_test_cluster_accuracy:
     conda: "../cartography.yml"
     params:
         clade_column="clade_membership",
+        ignored_clusters="unassigned",
     shell:
         """
         python3 notebooks/scripts/metadata_HDBSCAN.py \
@@ -542,13 +578,14 @@ rule seasonal_flu_test_cluster_accuracy:
             --true-clusters-column {params.clade_column:q} \
             --predicted-clusters {input.embedding} \
             --predicted-clusters-column "{wildcards.method}_label" \
+            --ignored-clusters {params.ignored_clusters:q} \
             --output {output.dataframe}
         """
 
 rule seasonal_flu_test_concat_HDBSCAN_table:
     message: "concatenating all the HDBSCAN data into one csv dataframe"
     input:
-        accuracies=expand("seasonal-flu-nextstrain-2018-2020/results/cluster_accuracy_{method}.csv", method=EMBEDDING_METHODS)
+        accuracies=expand("seasonal-flu-nextstrain-2018-2020/results/cluster_accuracy_{method}.csv", method=EMBEDDING_METHODS + ["genetic"])
     output:
         metadata = "seasonal-flu-nextstrain-2018-2020/results/full_HDBSCAN_metadata.csv"
     params:
@@ -592,7 +629,7 @@ rule seasonal_flu_test_create_mutation_table:
 
 rule seasonal_flu_test_concat_mutation_tables:
     input:
-        mutation_tables=expand("seasonal-flu-nextstrain-2018-2020/results/mutation_table_{method}.csv", method=EMBEDDING_METHODS),
+        mutation_tables=expand("seasonal-flu-nextstrain-2018-2020/results/mutation_table_{method}.csv", method=EMBEDDING_METHODS + ["genetic"]),
     output:
         metadata = "seasonal-flu-nextstrain-2018-2020/results/mutation_table.csv",
     params:
@@ -626,7 +663,7 @@ rule seasonal_flu_test_within_between_stats:
 
 rule seasonal_flu_test_concat_within_between_stats:
     input:
-        tables=expand("seasonal-flu-nextstrain-2018-2020/results/within_between_stats/{group_column}.csv", group_column=["clade_membership"] + [f"{method}_label" for method in EMBEDDING_METHODS])
+        tables=expand("seasonal-flu-nextstrain-2018-2020/results/within_between_stats/{group_column}.csv", group_column=["clade_membership"] + [f"{method}_label" for method in EMBEDDING_METHODS + ["genetic"]])
     output:
         metadata = "seasonal-flu-nextstrain-2018-2020/results/full_within_between_stats.csv"
     conda: "../cartography.yml"
@@ -884,6 +921,28 @@ rule seasonal_flu_test_replication_cluster_with_optimal_parameters:
             --output-dataframe {output.clustered_embedding}
         """
 
+rule seasonal_flu_test_replication_cluster_distances_with_optimal_parameters:
+    input:
+        distances="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/distance_matrix.csv",
+        parameters="seasonal-flu-nextstrain/results/optimal_cluster_accuracy_and_parameters.csv",
+    output:
+        clustered="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/cluster_embed_genetic.csv",
+    conda: "../cartography.yml"
+    params:
+        min_size=CLUSTER_MIN_SIZE,
+        min_samples=CLUSTER_MIN_SAMPLES,
+    shell:
+        """
+        pathogen-cluster \
+            --distance-matrix {input.distances} \
+            --label-attribute "genetic_label" \
+            --min-size {params.min_size} \
+            --min-samples {params.min_samples} \
+            --distance-threshold "$(csvtk filter2 -f '$method=="genetic"' {input.parameters} | csvtk cut -f distance_threshold | csvtk del-header)" \
+            --output-dataframe /dev/stdout \
+            | tsv-select -H --delimiter "," -f strain,genetic_label > {output.clustered}
+        """
+
 rule seasonal_flu_test_replication_tree:
     input:
         alignment="seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/aligned.fasta",
@@ -1022,6 +1081,7 @@ rule seasonal_flu_test_replication_cluster_accuracy:
     conda: "../cartography.yml"
     params:
         clade_column="clade_membership",
+        ignored_clusters="unassigned",
     shell:
         """
         python3 notebooks/scripts/metadata_HDBSCAN.py \
@@ -1030,6 +1090,7 @@ rule seasonal_flu_test_replication_cluster_accuracy:
             --true-clusters-column {params.clade_column:q} \
             --predicted-clusters {input.embedding} \
             --predicted-clusters-column "{wildcards.method}_label" \
+            --ignored-clusters {params.ignored_clusters:q} \
             --output /dev/stdout \
             | csvtk mutate2 -n "subsampling_scheme" -e "'{wildcards.subsampling_scheme}'" \
             | csvtk mutate2 -n "subsample_max_sequences" -e "'{wildcards.subsample_max_sequences}'" \
@@ -1038,7 +1099,7 @@ rule seasonal_flu_test_replication_cluster_accuracy:
 
 rule seasonal_flu_test_replication_aggregate_cluster_accuracy:
     input:
-        accuracies=expand("seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/cluster_accuracy_{method}.csv", subsampling_scheme=CLUSTER_REPLICATION_SUBSAMPLING_SCHEMES, method=EMBEDDING_METHODS, replicate=CLUSTER_REPLICATION_REPLICATES, subsample_max_sequences=CLUSTER_REPLICATION_SUBSAMPLE_MAX_SEQUENCES),
+        accuracies=expand("seasonal-flu-nextstrain-2018-2020/results/replication_analysis/{subsampling_scheme}/{subsample_max_sequences}/{replicate}/cluster_accuracy_{method}.csv", subsampling_scheme=CLUSTER_REPLICATION_SUBSAMPLING_SCHEMES, method=EMBEDDING_METHODS + ["genetic"], replicate=CLUSTER_REPLICATION_REPLICATES, subsample_max_sequences=CLUSTER_REPLICATION_SUBSAMPLE_MAX_SEQUENCES),
     output:
         accuracies="seasonal-flu-nextstrain-2018-2020/results/replication_analysis_cluster_accuracy.csv",
     conda: "../cartography.yml"

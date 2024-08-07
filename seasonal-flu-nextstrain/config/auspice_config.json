@@ -37,6 +37,11 @@
             "type": "categorical"
         },
         {
+            "key": "genetic_label",
+            "title": "genetic distance cluster",
+            "type": "categorical"
+        },
+        {
             "key": "pca1",
             "title": "PCA1",
             "type": "continuous"
@@ -95,6 +100,7 @@
       "mds_label",
       "t-sne_label",
       "umap_label",
+      "genetic_label",
       "clade_membership"
     ],
     "panels": [

@@ -14,27 +14,46 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # Concatenate tables.
-    tables = []
-    for table_file, pathogen, genetic_group_type in zip(args.tables, args.disease_names, args.genetic_group_types):
-        df = pd.read_csv(table_file, sep=args.separator)
-        df["Pathogen"] = [pathogen] + [""] * (df.shape[0] - 1)
-        df["Genetic Group Type"] = [genetic_group_type] + [""] * (df.shape[0] - 1)
-        tables.append(df)
-
-    df = pd.concat(tables, ignore_index=True)
-
+    columns_to_use = [
+        "method",
+        "normalized_vi",
+        "n_predicted_clusters",
+        "distance_threshold",
+    ]
     embedding_name_by_abbreviation = {
         "pca": "PCA",
         "mds": "MDS",
         "t-sne": "t-SNE",
         "umap": "UMAP",
+        "genetic": "genetic",
     }
+
+    # Concatenate tables.
+    tables = []
+    for table_file, pathogen, genetic_group_type in zip(args.tables, args.disease_names, args.genetic_group_types):
+        df = pd.read_csv(
+            table_file,
+            sep=args.separator,
+        )
+
+        if "distance_threshold" in df.columns:
+            df = df.loc[:, columns_to_use].copy()
+        else:
+            df = df.loc[:, [column for column in columns_to_use if column != "distance_threshold"]].copy()
+            df["distance_threshold"] = ""
+
+        df["Pathogen Dataset"] = [pathogen] + [""] * (len(embedding_name_by_abbreviation) - 1)
+        df["Genetic Group Type"] = [genetic_group_type] + [""] * (len(embedding_name_by_abbreviation) - 1)
+        tables.append(df)
+
+    df = pd.concat(tables, ignore_index=True)
+
     df["method"] = df["method"].map(embedding_name_by_abbreviation)
     df = df.rename(columns={
         "method": "Method",
+        "normalized_vi": "Variation of Information (VI)",
+        "n_predicted_clusters": "Total clusters",
         "distance_threshold": "Threshold",
-        "normalized_vi": "VI",
     })
 
     if args.output_csv:
@@ -44,7 +63,14 @@ if __name__ == "__main__":
         latex_table = df.reset_index().to_latex(
             bold_rows=True,
             index=False,
-            columns=["Pathogen", "Genetic Group Type", "Method", "VI", "Threshold"],
+            columns=[
+                "Pathogen Dataset",
+                "Genetic Group Type",
+                "Method",
+                "Total clusters",
+                "Variation of Information (VI)",
+                "Threshold",
+            ],
         )
         latex_table = latex_table.replace("bottomrule", "botrule")
 

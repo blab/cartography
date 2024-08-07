@@ -8,11 +8,17 @@
 
 \begin{table}[h!]
 \caption{
-  {\bf Optimal cluster thresholds per pathogen, known genetic group type, and embedding method based on normalized variation of information (VI) distances calculated from early pathogen datasets.}
+  {\bf Distances between clusters identified per pathogen dataset and method compared to known genetic groups.}
+  Distances are measured by normalized variation of information (VI).
   Smaller VI values indicate fewer differences between HDBSCAN clusters and known genetic groups.
   VI of 0 indicates identical clusters and 1 indicates maximally different clusters.
-  Threshold refers to the minimum Euclidean distance between initial clusters for HDBSCAN to consider them as distinct clusters.
-  We apply these optimal thresholds per pathogen, known genetic group type, and method to find clusters in corresponding late datasets for each pathogen.
+  Known genetic groups include Nextstrain clades, reassortment groups identified by TreeKnit as Maximally Compatible Clades (MCC), and Pango lineages.
+  Total clusters refers to the number of clusters identified for a given dataset and method not including the ``-1'' label that HDBSCAN assigns to records that could not be assigned to a cluster.
+  Threshold refers to the minimum distance between initial clusters for HDBSCAN to consider them as distinct clusters.
+  For embedding methods, the threshold represents the Euclidean distance between sequences in each embedding.
+  For the genetic distance method, the threshold represents the number of nucleotide differences between sequences.
+  We identified optimal thresholds per pathogen, genetic group, and method from early influenza and SARS-CoV-2 data and applied these optimal thresholds to the corresponding late datasets for each pathogen.
+  Datasets and methods without a threshold value in this table used the threshold from their corresponding early datasets.
   Rows appear in ascending order of VI values per method within each combination of pathogen and genetic group type.}\label{S_Table_optimal_cluster_parameters}
 \input{tables/accuracy_table.tex}
 \end{table}

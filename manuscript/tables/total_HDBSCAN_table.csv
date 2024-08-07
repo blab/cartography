@@ -1,13 +1,41 @@
-,VI,Method,predicted_clusters_column,n_predicted_clusters,n_ignored_predicted_clusters,n_true_clusters,n_ignored_true_clusters,n_vi_clusters,Threshold,Pathogen,Genetic Group Type
-0,0.09,t-SNE,t-sne_cluster_at_1.0,1523,0,1523,0,1523,1.0,Influenza H3N2,Nextstrain clade
-1,0.09,UMAP,umap_cluster_at_1.0,1523,0,1523,0,1523,1.0,,
-2,0.1,PCA,pca_cluster_at_0.5,1523,0,1523,0,1523,0.5,,
-3,0.11,MDS,mds_cluster_at_3.5,1523,0,1523,0,1523,3.5,,
-4,0.09,t-SNE,t-sne_cluster_at_1.0,1736,0,1736,0,1736,1.0,SARS-CoV-2,Nextstrain clade
-5,0.15,MDS,mds_cluster_at_0.0,1736,0,1736,0,1736,0.0,,
-6,0.16,UMAP,umap_cluster_at_0.5,1736,0,1736,0,1736,0.5,,
-7,0.23,PCA,pca_cluster_at_0.5,1736,0,1736,0,1736,0.5,,
-8,0.14,t-SNE,t-sne_cluster_at_1.0,1736,0,1736,0,1736,1.0,SARS-CoV-2,Pango
-9,0.23,MDS,mds_cluster_at_0.0,1736,0,1736,0,1736,0.0,,
-10,0.25,UMAP,umap_cluster_at_0.5,1736,0,1736,0,1736,0.5,,
-11,0.32,PCA,pca_cluster_at_0.5,1736,0,1736,0,1736,0.5,,
+,Method,Variation of Information (VI),Total clusters,Threshold,Pathogen Dataset,Genetic Group Type
+0,t-SNE,0.09,15,1.0,early influenza H3N2 HA (2016-2018),Nextstrain clade
+1,UMAP,0.09,7,1.0,,
+2,PCA,0.1,7,0.5,,
+3,MDS,0.11,9,3.5,,
+4,genetic,0.17,8,8.0,,
+5,t-SNE,0.05,7,,late influenza H3N2 HA (2018-2020),Nextstrain clade
+6,PCA,0.07,5,,,
+7,MDS,0.08,6,,,
+8,UMAP,0.09,8,,,
+9,genetic,0.12,4,,,
+10,t-SNE,0.11,15,,influenza H3N2 reassortment (HA only),MCC
+11,UMAP,0.14,7,,,
+12,PCA,0.18,6,,,
+13,MDS,0.18,8,,,
+14,genetic,0.2,8,,,
+15,t-SNE,0.06,17,,influenza H3N2 reassortment (HA and NA),MCC
+16,MDS,0.11,17,,,
+17,UMAP,0.11,8,,,
+18,genetic,0.11,24,,,
+19,PCA,0.13,9,,,
+20,t-SNE,0.09,19,1.0,early SARS-CoV-2 (2020-2022),Nextstrain clade
+21,MDS,0.15,16,0.0,,
+22,UMAP,0.16,6,0.5,,
+23,genetic,0.17,10,15.0,,
+24,PCA,0.23,3,0.5,,
+25,t-SNE,0.14,19,1.0,early SARS-CoV-2 (2020-2022),Pango
+26,MDS,0.23,16,0.0,,
+27,UMAP,0.25,6,0.5,,
+28,genetic,0.26,8,15.5,,
+29,PCA,0.32,3,0.5,,
+30,t-SNE,0.09,66,,late SARS-CoV-2 (2022-2023),Nextstrain clade
+31,UMAP,0.09,13,,,
+32,MDS,0.16,18,,,
+33,PCA,0.21,7,,,
+34,genetic,0.21,16,,,
+35,t-SNE,0.14,66,,late SARS-CoV-2 (2022-2023),Pango
+36,UMAP,0.3,13,,,
+37,MDS,0.37,18,,,
+38,genetic,0.43,15,,,
+39,PCA,0.46,7,,,

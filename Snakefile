@@ -19,6 +19,7 @@ EMBEDDING_NAME_BY_METHOD = {
     "mds": "MDS",
     "t-sne": "t-SNE",
     "umap": "UMAP",
+    "genetic": "genetic",
 }
 
 DISTANCE_THRESHOLDS = [
@@ -37,6 +38,32 @@ DISTANCE_THRESHOLDS = [
     6.0,
     6.5,
     7.0,
+    7.5,
+    8.0,
+    8.5,
+    9.0,
+    9.5,
+    10.0,
+    10.5,
+    11.0,
+    11.5,
+    12.0,
+    12.5,
+    13.0,
+    13.5,
+    14.0,
+    14.5,
+    15.0,
+    15.5,
+    16.0,
+    16.5,
+    17.0,
+    17.5,
+    18.0,
+    18.5,
+    19.0,
+    19.5,
+    20.0,
 ]
 CLUSTER_MIN_SIZE = 10
 CLUSTER_MIN_SAMPLES = 5
@@ -63,7 +90,7 @@ wildcard_constraints:
     ha_concatenated="(ha|na|concatenated)",
     ha_concat="(ha|concatenated)",
     clade_membership="(Nextstrain_clade|Nextclade_pango|Nextclade_pango_collapsed)",
-    replicate="\d+",
+    replicate="[0-9]+",
     subsampling_scheme="(even|random)",
 
 # Define final outputs for the workflow.

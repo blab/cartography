@@ -1,0 +1,13 @@
+comparison,mean,median,std,group,dataset_name
+between,52.62120724379293,50.0,17.461483780312808,MCC,seasonal-flu-h3n2-ha-na-2016-2018
+within,25.03519395094363,18.0,20.824024544878867,MCC,seasonal-flu-h3n2-ha-na-2016-2018
+between,49.03775789707037,45.0,17.646502082489178,pca_concatenated_label,seasonal-flu-h3n2-ha-na-2016-2018
+within,21.23224366722899,21.0,9.176271138084312,pca_concatenated_label,seasonal-flu-h3n2-ha-na-2016-2018
+between,46.55477667234857,43.0,18.296165389636226,mds_concatenated_label,seasonal-flu-h3n2-ha-na-2016-2018
+within,20.15751214404641,15.0,15.433420831086393,mds_concatenated_label,seasonal-flu-h3n2-ha-na-2016-2018
+between,47.26407165506307,43.0,18.0524801799966,t-sne_concatenated_label,seasonal-flu-h3n2-ha-na-2016-2018
+within,16.530859919452336,16.0,6.823419674837644,t-sne_concatenated_label,seasonal-flu-h3n2-ha-na-2016-2018
+between,48.764280944914695,45.0,17.634841931563823,umap_concatenated_label,seasonal-flu-h3n2-ha-na-2016-2018
+within,21.2107974170994,20.0,10.580981662906307,umap_concatenated_label,seasonal-flu-h3n2-ha-na-2016-2018
+between,45.97074825359922,42.0,18.648389707399943,genetic_concatenated_label,seasonal-flu-h3n2-ha-na-2016-2018
+within,18.72484394799831,14.0,13.85786212071416,genetic_concatenated_label,seasonal-flu-h3n2-ha-na-2016-2018
