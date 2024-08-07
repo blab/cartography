@@ -1,4 +1,4 @@
-,Method,Variation of Information (VI),Number of clusters,Threshold,Pathogen Dataset,Genetic Group Type
+,Method,Variation of Information (VI),Total clusters,Threshold,Pathogen Dataset,Genetic Group Type
 0,t-SNE,0.09,16,1.0,early influenza H3N2 HA (2016-2018),Nextstrain clade
 1,UMAP,0.09,7,1.0,,
 2,PCA,0.1,8,0.5,,

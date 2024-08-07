@@ -52,7 +52,7 @@ if __name__ == "__main__":
     df = df.rename(columns={
         "method": "Method",
         "normalized_vi": "Variation of Information (VI)",
-        "n_predicted_clusters": "Number of clusters",
+        "n_predicted_clusters": "Total clusters",
         "distance_threshold": "Threshold",
     })
 
@@ -67,7 +67,7 @@ if __name__ == "__main__":
                 "Pathogen Dataset",
                 "Genetic Group Type",
                 "Method",
-                "Number of clusters",
+                "Total clusters",
                 "Variation of Information (VI)",
                 "Threshold",
             ],
