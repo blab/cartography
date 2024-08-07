@@ -47,7 +47,11 @@ if __name__ == "__main__":
     predicted_clusters = predicted_clusters[
         ~predicted_clusters[args.predicted_clusters_column].isin(args.ignored_clusters)
     ].copy()
-    n_predicted_clusters = predicted_clusters[args.predicted_clusters_column].drop_duplicates().shape[0]
+
+    # Count the number of clusters assigned by HDBSCAN after dropping ignored
+    # clusters. We also want to ignore the "-1" cluster label which represents
+    # the lack of clustering.
+    n_predicted_clusters = len(set(predicted_clusters[args.predicted_clusters_column].drop_duplicates().values) - {"-1"})
 
     # Join true and predicted labels by strain name, keeping only records that
     # appear in both sets.
