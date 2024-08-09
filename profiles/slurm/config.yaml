@@ -16,6 +16,9 @@ stats: stats.json
 # can be quite slow and the workflow can fail unnecessarily due to this latency.
 latency-wait: 60
 
+# Rerun incomplete files to recover cleanly from a workflow crash.
+rerun-incomplete: True
+
 # Use conda environments for augur and related binaries. This is important in a
 # cluster environment where Docker is not available and Singularity may be
 # prohibitively complicated to setup.

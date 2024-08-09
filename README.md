@@ -137,12 +137,16 @@ You _cannot_ put this github repository in the Users file. Snakemake sees /U as 
 ### Run the full analysis
 
 Run the full analysis for the project which includes simulations, analysis of natural populations, and generation of the manuscript and its figures and tables.
+Use the following command to run the analysis on a single compute node (e.g., a local laptop, single cluster node through an interactive shell, etc.).
 
+```bash
+snakemake --profile profiles/local
 ```
-snakemake \
-    --use-conda \
-    --conda-frontend conda \
-    --cores all
+
+Use the following command to run the analysis on a SLURM cluster, submitting no more than 20 jobs at a time.
+
+``` bash
+snakemake -j 20 --profile profiles/slurm
 ```
 
 This is a complex workflow, so it will take several hours to run.
