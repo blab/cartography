@@ -640,7 +640,8 @@ Input trees for TreeKnit must contain the same samples and root on the same samp
 Because of these TreeKnit expectations, we inferred HA and NA trees with IQ-TREE with a custom argument to collapse near-zero-length branches (\texttt{-czb}).
 We rooted the resulting trees on the same sample that we used as an alignment reference, A/Beijing/32/1992, and pruned this sample prior to downstream analyses.
 We applied TreeKnit to the rooted HA and NA trees with a gamma value of 2.0 and the \texttt{--better-MCCs} flag, as previously recommended for H3N2 analyses \citep{Barrat-Charlaix2022}.
-Finally, we filtered the MCCs identified by TreeKnit to retain only those with at least 10 samples and to omit the root MCC that represented the most recent common ancestor in both HA and NA trees.
+Finally, we filtered the MCCs identified by TreeKnit to retain only those with at least 10 samples.
+We also omitted the root MCC which consistently included the most recent common ancestor of both HA and NA trees and did not represent a reassortment event, as described in TreeKnit's definition of MCCs \citep{Barrat-Charlaix2022}.
 
 For SARS-CoV-2, we used both coarser ``Nextstrain clades'' \citep{Hodcroft2020,Bedford2021,Roemer2022} and more granular Pango lineages \citep{OToole2021} provided by Nextclade as ``Nextclade pango'' annotations.
 Nextstrain clade definitions represent the World Health Organization's variants of concern along with post-Omicron phylogenetic clades that have reached minimum global and regional frequencies and growth rates.
