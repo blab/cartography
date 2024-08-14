@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     chart = alt.Chart(df).mark_circle().encode(
         x=alt.X(f"{args.lineage_column}:N", title="Pango lineage"),
-        y=alt.Y("{args.cluster_column}:N", title="Cluster from t-SNE"),
+        y=alt.Y(f"{args.cluster_column}:N", title="Cluster from t-SNE"),
         size="count:Q",
     ).properties(
         width=400,
