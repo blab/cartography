@@ -21,7 +21,7 @@ rule sarscov2:
         "sars-cov-2-nextstrain/results/single_clade/cluster_accuracy_without_unclustered_t-sne_for_Nextclade_pango_collapsed.csv",
         "sars-cov-2-nextstrain/results/single_clade/lineages_and_clusters_counts.tsv",
         "sars-cov-2-nextstrain/results/single_clade/lineages_and_clusters_counts_without_unclustered.tsv",
-        "manuscript/figures/sarscov2_single_clade_lineages_and_clusters_counts.png",
+        "manuscript/figures/sarscov2-single-clade-lineages-and-clusters-counts.png",
 
 rule sarscov2_download_filtered_metadata:
     output:
@@ -1192,7 +1192,7 @@ rule sarscov2_plot_lineages_and_clusters_for_single_clade:
     input:
         counts="sars-cov-2-nextstrain/results/single_clade/lineages_and_clusters_counts.tsv",
     output:
-        counts_plot="manuscript/figures/sarscov2_single_clade_lineages_and_clusters_counts.png",
+        counts_plot="manuscript/figures/sarscov2-single-clade-lineages-and-clusters-counts.png",
     conda: "../cartography.yml"
     params:
         lineage_column="Nextclade_pango_collapsed",
