@@ -17,6 +17,11 @@ rule sarscov2:
         "auspice/cartography_ncov-2020-2022.json",
         expand("sars-cov-2-nextstrain/results/mutation_table_for_{clade_membership}.csv", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
         "sars-cov-2-nextstrain/results/monophyletic_clusters.csv",
+        "sars-cov-2-nextstrain/results/single_clade/cluster_accuracy_t-sne_for_Nextclade_pango_collapsed.csv",
+        "sars-cov-2-nextstrain/results/single_clade/cluster_accuracy_without_unclustered_t-sne_for_Nextclade_pango_collapsed.csv",
+        "sars-cov-2-nextstrain/results/single_clade/lineages_and_clusters_counts.tsv",
+        "sars-cov-2-nextstrain/results/single_clade/lineages_and_clusters_counts_without_unclustered.tsv",
+        "manuscript/figures/sarscov2-single-clade-lineages-and-clusters-counts.png",
 
 rule sarscov2_download_filtered_metadata:
     output:
@@ -959,4 +964,244 @@ rule sarscov2_get_authors_for_accessions:
             | dataformat tsv virus-genome --fields {params.fields} \
             | csvtk rename -l -t -f "Isolate Lineage" -n "Virus Name" \
             | csvtk mutate2 -l -t -n "dataset" -e "'sars-cov-2-2020-2022'" > {output.authors}
+        """
+
+rule sarscov2_subsample_single_clade:
+    input:
+        metadata="sars-cov-2-nextstrain/data/filtered_metadata.tsv.zst",
+        outliers="sars-cov-2-nextstrain/config/exclude.txt",
+    output:
+        strains="sars-cov-2-nextstrain/data/single_clade/strains.txt",
+    params:
+        random_seed=RANDOM_SEED,
+        single_clade="21J (Delta)",
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur filter \
+            --metadata {input.metadata} \
+            --exclude {input.outliers} \
+            --min-date 2020-01-01 \
+            --max-date 2022-01-01 \
+            --query "Nextstrain_clade == '{params.single_clade}'" \
+            --group-by region year month \
+            --subsample-max-sequences 2000 \
+            --subsample-seed {params.random_seed} \
+            --output-strains {output.strains}
+        """
+
+rule sarscov2_extract_subsampled_data_for_single_clade:
+    input:
+        metadata="sars-cov-2-nextstrain/data/filtered_metadata.tsv.zst",
+        alignment="sars-cov-2-nextstrain/data/all_aligned.fasta.zst",
+        strains="sars-cov-2-nextstrain/data/single_clade/strains.txt",
+    output:
+        metadata="sars-cov-2-nextstrain/data/single_clade/metadata.tsv",
+        alignment="sars-cov-2-nextstrain/data/single_clade/aligned.fasta",
+    conda: "../cartography.yml"
+    shell:
+        """
+        augur filter \
+            --metadata {input.metadata} \
+            --sequences {input.alignment} \
+            --exclude-all \
+            --include {input.strains} \
+            --output-metadata {output.metadata} \
+            --output-sequences {output.alignment}
+        """
+
+rule sarscov2_collapse_pango_lineages_for_single_clade:
+    input:
+        metadata="sars-cov-2-nextstrain/data/single_clade/metadata.tsv",
+    output:
+        metadata="sars-cov-2-nextstrain/data/single_clade/metadata_Pango_collapsed.tsv",
+    conda: "../cartography.yml"
+    log:
+        "logs/sars-cov-2-nextstrain/collapse_pango_lineages_for_single_clade.txt",
+    params:
+        min_samples=10,
+        pango_column="Nextclade_pango",
+        new_column="Nextclade_pango_collapsed",
+    shell:
+        """
+        python3 notebooks/scripts/collapse_pango_lineages.py \
+            --metadata {input.metadata} \
+            --min-samples {params.min_samples} \
+            --pango-column {params.pango_column} \
+            --new-column {params.new_column} \
+            --output {output.metadata} 2>&1 | tee {log}
+        """
+
+rule sarscov2_create_distance_matrix_for_single_clade:
+    input:
+        alignment="sars-cov-2-nextstrain/data/single_clade/aligned.fasta",
+    output:
+        output="sars-cov-2-nextstrain/results/single_clade/distance_matrix.csv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-distance \
+            --alignment {input.alignment} \
+            --indel-distance \
+            --output {output.output}
+        """
+
+rule sarscov2_embed_tsne_for_single_clade:
+    input:
+        alignment="sars-cov-2-nextstrain/data/single_clade/aligned.fasta",
+        distance_matrix="sars-cov-2-nextstrain/results/single_clade/distance_matrix.csv",
+        parameters="simulations/coronavirus-like/moderate-recombination-rate/t-sne_parameters.csv",
+    output:
+        dataframe="sars-cov-2-nextstrain/results/single_clade/embed_t-sne.csv",
+    params:
+        random_seed=RANDOM_SEED,
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-embed \
+            --alignment {input.alignment} \
+            --distance-matrix {input.distance_matrix} \
+            --embedding-parameters {input.parameters} \
+            --random-seed {params.random_seed} \
+            --output-dataframe {output.dataframe} \
+            t-sne \
+                --pca-encoding simplex
+        """
+
+rule sarscov2_cluster_for_single_clade:
+    input:
+        embedding="sars-cov-2-nextstrain/results/single_clade/embed_t-sne.csv",
+        parameters="sars-cov-2-nextstrain/results/optimal_cluster_accuracy_and_parameters_for_Nextclade_pango_collapsed.csv",
+    output:
+        clustered_embedding="sars-cov-2-nextstrain/results/single_clade/cluster_embed_t-sne_for_Nextclade_pango_collapsed.csv",
+    params:
+        min_size=CLUSTER_MIN_SIZE,
+        min_samples=CLUSTER_MIN_SAMPLES,
+    conda: "../cartography.yml"
+    shell:
+        """
+        pathogen-cluster \
+            --embedding {input.embedding} \
+            --min-size {params.min_size} \
+            --min-samples {params.min_samples} \
+            --distance-threshold "$(csvtk filter2 -f '$method=="t-sne"' {input.parameters} | csvtk cut -f distance_threshold | csvtk del-header)" \
+            --label-attribute "t-sne_label_for_Nextclade_pango_collapsed" \
+            --output-dataframe {output.clustered_embedding}
+        """
+
+rule sarscov2_cluster_accuracy_for_single_clade:
+    input:
+        metadata="sars-cov-2-nextstrain/data/single_clade/metadata_Pango_collapsed.tsv",
+        clusters="sars-cov-2-nextstrain/results/single_clade/cluster_embed_t-sne_for_Nextclade_pango_collapsed.csv",
+    output:
+        dataframe="sars-cov-2-nextstrain/results/single_clade/cluster_accuracy_t-sne_for_Nextclade_pango_collapsed.csv",
+    params:
+        ignored_clusters="unassigned",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/metadata_HDBSCAN.py \
+            --method "t-sne" \
+            --true-clusters {input.metadata} \
+            --true-clusters-column "Nextclade_pango_collapsed" \
+            --predicted-clusters {input.clusters} \
+            --predicted-clusters-column "t-sne_label_for_Nextclade_pango_collapsed" \
+            --ignored-clusters {params.ignored_clusters:q} \
+            --output {output.dataframe}
+        """
+
+rule sarscov2_cluster_accuracy_without_unclustered_for_single_clade:
+    input:
+        metadata="sars-cov-2-nextstrain/data/single_clade/metadata_Pango_collapsed.tsv",
+        clusters="sars-cov-2-nextstrain/results/single_clade/cluster_embed_t-sne_for_Nextclade_pango_collapsed.csv",
+    output:
+        dataframe="sars-cov-2-nextstrain/results/single_clade/cluster_accuracy_without_unclustered_t-sne_for_Nextclade_pango_collapsed.csv",
+    params:
+        ignored_clusters=["unassigned", "-1"],
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/metadata_HDBSCAN.py \
+            --method "t-sne" \
+            --true-clusters {input.metadata} \
+            --true-clusters-column "Nextclade_pango_collapsed" \
+            --predicted-clusters {input.clusters} \
+            --predicted-clusters-column "t-sne_label_for_Nextclade_pango_collapsed" \
+            --ignored-clusters {params.ignored_clusters:q} \
+            --output {output.dataframe}
+        """
+
+rule sarscov2_select_lineages_for_single_clade:
+    input:
+        metadata="sars-cov-2-nextstrain/data/single_clade/metadata_Pango_collapsed.tsv",
+    output:
+        lineages="sars-cov-2-nextstrain/results/single_clade/lineages.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        tsv-select -H -f strain,Nextclade_pango_collapsed {input.metadata} > {output.lineages}
+        """
+
+rule sarscov2_select_clusters_for_single_clade:
+    input:
+        clusters="sars-cov-2-nextstrain/results/single_clade/cluster_embed_t-sne_for_Nextclade_pango_collapsed.csv",
+    output:
+        clusters="sars-cov-2-nextstrain/results/single_clade/clusters.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        tsv-select -d "," -H -f 'strain','t\-sne_label_for_Nextclade_pango_collapsed' {input.clusters} \
+            | csv2tsv > {output.clusters}
+        """
+
+rule sarscov2_merge_lineages_and_clusters_for_single_clade:
+    input:
+        lineages="sars-cov-2-nextstrain/results/single_clade/lineages.tsv",
+        clusters="sars-cov-2-nextstrain/results/single_clade/clusters.tsv",
+    output:
+        table="sars-cov-2-nextstrain/results/single_clade/lineages_and_clusters.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        tsv-join -H -f {input.lineages} -k strain -a Nextclade_pango_collapsed {input.clusters} > {output.table}
+        """
+
+rule sarscov2_summarize_lineages_and_clusters_for_single_clade:
+    input:
+        table="sars-cov-2-nextstrain/results/single_clade/lineages_and_clusters.tsv",
+    output:
+        counts="sars-cov-2-nextstrain/results/single_clade/lineages_and_clusters_counts.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        tsv-summarize -H -g 'Nextclade_pango_collapsed','t\-sne_label_for_Nextclade_pango_collapsed' --count {input.table} > {output.counts}
+        """
+
+rule sarscov2_filter_lineages_and_clusters_for_single_clade:
+    input:
+        counts="sars-cov-2-nextstrain/results/single_clade/lineages_and_clusters_counts.tsv",
+    output:
+        counts="sars-cov-2-nextstrain/results/single_clade/lineages_and_clusters_counts_without_unclustered.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        tsv-filter -H --str-ne "t\-sne_label_for_Nextclade_pango_collapsed:-1" {input.counts} > {output.counts}
+        """
+
+rule sarscov2_plot_lineages_and_clusters_for_single_clade:
+    input:
+        counts="sars-cov-2-nextstrain/results/single_clade/lineages_and_clusters_counts.tsv",
+    output:
+        counts_plot="manuscript/figures/sarscov2-single-clade-lineages-and-clusters-counts.png",
+    conda: "../cartography.yml"
+    params:
+        lineage_column="Nextclade_pango_collapsed",
+        cluster_column="t-sne_label_for_Nextclade_pango_collapsed",
+    shell:
+        """
+        python3 sars-cov-2-nextstrain/scripts/plot-single-clade-lineage-and-cluster-counts.py \
+            --counts {input.counts} \
+            --lineage-column {params.lineage_column:q} \
+            --cluster-column {params.cluster_column:q} \
+            --output {output.counts_plot}
         """

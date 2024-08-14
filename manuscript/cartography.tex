@@ -436,6 +436,16 @@ Clusters from other methods were at least twice as far from Pango lineages as t-
 With the exception of t-SNE's performance, these results replicate the patterns we observed with early SARS-CoV-2 data where clusters from embeddings more effectively represented broader genetic diversity than the finer resolution diversity denoted by Pango lineages.
 Unlike the Pango lineages in the early SARS-CoV-2 data, the lineages from the later data exhibited fewer pairwise genetic distances between samples in each lineage than samples in Nextstrain clades or any embedding cluster (Supplementary Fig.~S\ref{S_Fig_sarscov2_within_between_group_distances}).
 
+To understand whether t-SNE clusters could capture Pango-resolution genetic groups within a single Nextstrain clade, we evenly sampled approximately 2,000 sequences from a dominant Nextstrain clade with many Pango lineages, 21J (Delta), and identified clusters from a t-SNE embedding of those data.
+Within the 1,992 sequences sampled from 21J (Delta), we found 38 Pango lineages after collapsing lineages with fewer than 10 sequences into their parent lineages.
+We found 28 t-SNE clusters representing 1,806 sequences (91\%) with 186 sequences (9\%) assigned to the unclustered ``-1'' label (Supplementary Fig.~\ref{S_Fig_sarscov2_single_clade_embeddings_tsne_counts}).
+The VI distance between Pango lineages and all clusters (including the unclustered group) was 0.17 (Supplementary Table~\ref{S_Table_optimal_cluster_parameters}).
+This distance was consistent with the distance of 0.14 between Pango lineages and t-SNE clusters from both the full early and late SARS-CoV-2 datasets.
+The VI distance between Pango lineages and clusters without the unclustered sequences was 0.13, confirming that one quarter of the distance between t-SNE clusters and Pango lineages above came from unclustered sequences.
+Of the 38 Pango lineages with a t-SNE cluster, 30 lineages (79\%) had a single corresponding t-SNE cluster, seven lineages (18\%) had two or three t-SNE clusters, and one lineage (B.1.617.2) had five t-SNE clusters (Supplementary Fig.~\ref{S_Fig_sarscov2_single_clade_embeddings_tsne_counts}).
+Of the 28 t-SNE clusters, 21 clusters (75\%) had a single corresponding Pango lineage, six (21\%) mapped to two or three Pango lineages, and one (cluster 27) mapped to 18 Pango lineages with most sequences from B.1.617.2 and AY.4.
+These results suggest that clusters from t-SNE embeddings can capture more Pango-resolution genetic groups by analyzing sequences within a specific Nextstrain clade.
+
 \subsection{Distance-based embeddings reflect SARS-CoV-2 recombination events}
 
 Finally, we tested the ability of sequence embeddings to place known recombinant lineages of SARS-CoV-2 between their parental lineages in Euclidean space.
@@ -482,7 +492,8 @@ Implementing more efficient pairwise distance calculations remains a future dire
 
 Despite the promise of these simple methods to answer important public health questions about human pathogenic viruses, these methods and our analyses suffer from inherent limitations.
 The lack of an underlying biological model is both a strength and the clearest limitation of the dimensionality reduction methods we considered here.
-For example, embeddings of SARS-CoV-2 genomes cannot capture the same fine-grained genetic resolution as Pango lineage annotations.
+For example, embeddings of SARS-CoV-2 genomes that represent the complete circulating diversity at a given time cannot capture the same fine-grained genetic resolution as Pango lineage annotations.
+Only t-SNE clusters of SARS-CoV-2 genomes within a single Nextstrain clade get close to defining Pango-resolution genetic groups.
 Each method provides only a few parameters to tune its embeddings and these parameters have little effect on the qualitative outcome.
 In maintaining a linear relationship between Euclidean and genetic distances, MDS sacrifices the ability to form more accurate genetic clusters for viruses with large genomes like SARS-CoV-2.
 Neither t-SNE nor UMAP maintain a linear relationship between pairwise Euclidean and genetic distances across the observed range of genetic distances.

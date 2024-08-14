@@ -1,0 +1,2 @@
+method,predicted_clusters_column,normalized_vi,n_predicted_clusters,n_predicted_cluster_samples,n_ignored_predicted_clusters,n_true_cluster_samples,n_ignored_true_clusters,n_vi_cluster_samples
+t-sne,t-sne_label_for_Nextclade_pango_collapsed,0.17,28,1992,0,1992,0,1992
