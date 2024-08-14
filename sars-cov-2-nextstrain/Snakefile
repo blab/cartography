@@ -20,6 +20,8 @@ rule sarscov2:
         "sars-cov-2-nextstrain/results/single_clade/cluster_accuracy_t-sne_for_Nextclade_pango_collapsed.csv",
         "sars-cov-2-nextstrain/results/single_clade/cluster_accuracy_without_unclustered_t-sne_for_Nextclade_pango_collapsed.csv",
         "sars-cov-2-nextstrain/results/single_clade/lineages_and_clusters_counts.tsv",
+        "sars-cov-2-nextstrain/results/single_clade/lineages_and_clusters_counts_without_unclustered.tsv",
+        "manuscript/figures/sarscov2_single_clade_lineages_and_clusters_counts.png",
 
 rule sarscov2_download_filtered_metadata:
     output:
@@ -1173,4 +1175,33 @@ rule sarscov2_summarize_lineages_and_clusters_for_single_clade:
     shell:
         """
         tsv-summarize -H -g 'Nextclade_pango_collapsed','t\-sne_label_for_Nextclade_pango_collapsed' --count {input.table} > {output.counts}
+        """
+
+rule sarscov2_filter_lineages_and_clusters_for_single_clade:
+    input:
+        counts="sars-cov-2-nextstrain/results/single_clade/lineages_and_clusters_counts.tsv",
+    output:
+        counts="sars-cov-2-nextstrain/results/single_clade/lineages_and_clusters_counts_without_unclustered.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        tsv-filter -H --str-ne "t\-sne_label_for_Nextclade_pango_collapsed:-1" {input.counts} > {output.counts}
+        """
+
+rule sarscov2_plot_lineages_and_clusters_for_single_clade:
+    input:
+        counts="sars-cov-2-nextstrain/results/single_clade/lineages_and_clusters_counts.tsv",
+    output:
+        counts_plot="manuscript/figures/sarscov2_single_clade_lineages_and_clusters_counts.png",
+    conda: "../cartography.yml"
+    params:
+        lineage_column="Nextclade_pango_collapsed",
+        cluster_column="t-sne_label_for_Nextclade_pango_collapsed",
+    shell:
+        """
+        python3 sars-cov-2-nextstrain/scripts/plot-single-clade-lineage-and-cluster-counts.py \
+            --counts {input.counts} \
+            --lineage-column {params.lineage_column:q} \
+            --cluster-column {params.cluster_column:q} \
+            --output {output.counts_plot}
         """
