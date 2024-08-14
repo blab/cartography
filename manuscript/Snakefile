@@ -69,6 +69,7 @@ rule concat_HDBSCAN_tables:
             "sars-cov-2-nextstrain/results/optimal_cluster_accuracy_and_parameters_for_Nextclade_pango_collapsed.csv",
             "sars-cov-2-nextstrain-2022-2023/results/full_HDBSCAN_metadata_for_Nextstrain_clade.csv",
             "sars-cov-2-nextstrain-2022-2023/results/full_HDBSCAN_metadata_for_Nextclade_pango_collapsed.csv",
+            "sars-cov-2-nextstrain/results/single_clade/cluster_accuracy_t-sne_for_Nextclade_pango_collapsed.csv",
         ]
     output:
         fullKDE = "manuscript/tables/total_HDBSCAN_table.csv",
@@ -83,6 +84,7 @@ rule concat_HDBSCAN_tables:
             "early SARS-CoV-2 (2020-2022)",
             "late SARS-CoV-2 (2022-2023)",
             "late SARS-CoV-2 (2022-2023)",
+            "SARS-CoV-2 21J (Delta) only",
         ],
         genetic_group_types = [
             "Nextstrain clade",
@@ -92,6 +94,7 @@ rule concat_HDBSCAN_tables:
             "Nextstrain clade",
             "Pango",
             "Nextstrain clade",
+            "Pango",
             "Pango",
         ],
     conda: "../cartography.yml"
