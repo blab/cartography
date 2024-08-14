@@ -42,8 +42,9 @@ if __name__ == "__main__":
             df = df.loc[:, [column for column in columns_to_use if column != "distance_threshold"]].copy()
             df["distance_threshold"] = ""
 
-        df["Pathogen Dataset"] = [pathogen] + [""] * (len(embedding_name_by_abbreviation) - 1)
-        df["Genetic Group Type"] = [genetic_group_type] + [""] * (len(embedding_name_by_abbreviation) - 1)
+        number_of_methods = df["method"].drop_duplicates().shape[0]
+        df["Pathogen Dataset"] = [pathogen] + [""] * (number_of_methods - 1)
+        df["Genetic Group Type"] = [genetic_group_type] + [""] * (number_of_methods - 1)
         tables.append(df)
 
     df = pd.concat(tables, ignore_index=True)

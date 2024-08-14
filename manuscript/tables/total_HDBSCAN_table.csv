@@ -39,3 +39,4 @@
 37,MDS,0.37,18,,,
 38,genetic,0.43,15,,,
 39,PCA,0.46,7,,,
+40,t-SNE,0.17,28,,SARS-CoV-2 21J (Delta) only,Pango
