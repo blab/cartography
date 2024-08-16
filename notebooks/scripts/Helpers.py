@@ -253,7 +253,7 @@ def get_clade_label_chart(df, x_column, y_column, text_column):
 
     """
     clade_label_positions = df.loc[
-        (df["is_internal_node"]) & (df[text_column] != "other"),
+        (~df["is_internal_node"]) & (df[text_column] != "other"),
         [text_column, x_column, y_column]
     ].groupby(
         text_column
