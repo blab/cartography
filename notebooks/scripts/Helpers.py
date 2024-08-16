@@ -246,6 +246,32 @@ def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip,
     return chart
 
 
+def get_clade_label_chart(df, x_column, y_column, text_column):
+    """Build an Altair chart of text labels from the given data frame, placing
+    labels at the mean x and y position of the given x and y columns and using
+    text from the given text column.
+
+    """
+    clade_label_positions = df.loc[
+        (df["is_internal_node"]) & (df[text_column] != "other"),
+        [text_column, x_column, y_column]
+    ].groupby(
+        text_column
+    ).aggregate({
+        x_column: "mean",
+        y_column: "mean",
+    }).reset_index()
+
+    clade_labels_chart = alt.Chart(clade_label_positions).mark_text().encode(
+        x=f"{x_column}:Q",
+        y=f"{y_column}:Q",
+        text=f"{text_column}:N",
+        size=alt.SizeValue(10),
+    )
+
+    return clade_labels_chart
+
+
 def make_node_branch_widths(tree_path, min_width=1.0, max_width=4.0):
     """Build a data frame of branch widths for a given Newick tree path bounded
     by the given min and max width. Branch widths reflect the log of the number
@@ -425,8 +451,12 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
             "x": ("parent_mutation", "min"),
         }
 
-        if color_branches and color_field in dataFrame.columns:
-            vertical_line_aggregates[color_field] = (color_field, "first")
+        if color_branches and f"parent_{color_field}" in dataFrame.columns:
+            parent_tree_branch_color_spec = f"parent_{color_field}:N"
+            parent_tree_branch_color = alt.Color(parent_tree_branch_color_spec).scale(domain=domain, range=range_)
+            vertical_line_aggregates[f"parent_{color_field}"] = (f"parent_{color_field}", "first")
+        else:
+            parent_tree_branch_color = alt.ColorValue("#cccccc")
 
         if "branch_width" in dataFrame.columns:
             vertical_line_aggregates["branch_width"] = ("branch_width", "max")
@@ -436,7 +466,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
             x="x:Q",
             y="y_min:Q",
             y2="y_max:Q",
-            color=tree_branch_color,
+            color=parent_tree_branch_color,
             strokeWidth=tree_branch_width,
         )
 
