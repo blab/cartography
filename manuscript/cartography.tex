@@ -339,12 +339,13 @@ These results suggest that a single embedding of multiple gene segments could id
 \includegraphics[width=0.9\columnwidth]{figures/flu-2016-2018-ha-na-embeddings-by-mcc.png}
 \caption{{\bf Phylogeny of early (2016--2018) influenza H3N2 HA sequences plotted by nucleotide substitutions per site on the x-axis (top) and low-dimensional embeddings of the same HA sequences concatenated with matching NA sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
   Tips in the tree and embeddings are colored by their TreeKnit Maximally Compatible Clades (MCCs) label which represents putative HA/NA reassortment groups.
+  Tips from MCCs with fewer than 10 sequences are colored as ``unassigned''.
   The first normalized VI values per embedding reflect the distance between HA/NA clusters and known genetic groups (MCCs).
   VI values in parentheses reflect the distance between HA-only clusters and known genetic groups.
-  MCC labels for larger pairs of reassortment events appear in the tree and in each embedding at the average position on the x and y axis for sequences in a given MCC.
+  MCC labels appear in the tree and each embedding for larger pairs of reassortment events.
   MCC 9 represents two Nextstrain clades, so its labels appear twice in the tree.
   MCCs 14 and 11 represent a previously published reassortment event within Nextstrain clade A2 \citep{Potter2019}.
-  Labels for MCC 14 represents the sequences from clade A2.
+  Labels for MCC 14 represent the subset of its sequences from clade A2.
 }
 \label{fig:seasonal-influenza-h3n2-ha-na-2016-2018-embeddings}
 \end{figure}
