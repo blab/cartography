@@ -922,7 +922,16 @@ def get_early_sarscov2_clades_to_label(wildcards):
             "21K",
         ]
     else:
-        return []
+        return [
+            "B.1",
+            "B.1.1",
+            "B.1.351",
+            "B.1.1.7",
+            "P.1",
+            "B.1.617.2",
+            "AY.4",
+            "BA.1",
+        ]
 
 rule sarscov2_create_notebook_docs:
     input:
