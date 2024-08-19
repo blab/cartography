@@ -909,6 +909,30 @@ rule sarscov2_train_concat_within_between_stats:
             --output {output.metadata}
         """
 
+def get_early_sarscov2_clades_to_label(wildcards):
+    if wildcards.clade_membership == "Nextstrain_clade":
+        return [
+            "20A",
+            "20B",
+            "20H",
+            "20I",
+            "20J",
+            "21I",
+            "21J",
+            "21K",
+        ]
+    else:
+        return [
+            "B.1",
+            "B.1.1",
+            "B.1.351",
+            "B.1.1.7",
+            "P.1",
+            "B.1.617.2",
+            "AY.4",
+            "BA.1",
+        ]
+
 rule sarscov2_create_notebook_docs:
     input:
         colors="notebooks/config/color_schemes.tsv",
@@ -933,6 +957,7 @@ rule sarscov2_create_notebook_docs:
         tsne_label=lambda wildcards: f"t-sne_label_for_{wildcards.clade_membership}",
         umap_label=lambda wildcards: f"umap_label_for_{wildcards.clade_membership}",
         plot_branches=True,
+        clades_to_label=get_early_sarscov2_clades_to_label,
     conda: "../cartography.yml"
     notebook:
         "2022-03-29-final-figures.py.ipynb"

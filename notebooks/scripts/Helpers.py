@@ -246,6 +246,32 @@ def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip,
     return chart
 
 
+def get_clade_label_chart(df, x_column, y_column, text_column):
+    """Build an Altair chart of text labels from the given data frame, placing
+    labels at the mean x and y position of the given x and y columns and using
+    text from the given text column.
+
+    """
+    clade_label_positions = df.loc[
+        (~df["is_internal_node"]) & (df[text_column] != "other"),
+        [text_column, x_column, y_column]
+    ].groupby(
+        text_column
+    ).aggregate({
+        x_column: "mean",
+        y_column: "mean",
+    }).reset_index()
+
+    clade_labels_chart = alt.Chart(clade_label_positions).mark_text().encode(
+        x=f"{x_column}:Q",
+        y=f"{y_column}:Q",
+        text=f"{text_column}:N",
+        size=alt.SizeValue(10),
+    )
+
+    return clade_labels_chart
+
+
 def make_node_branch_widths(tree_path, min_width=1.0, max_width=4.0):
     """Build a data frame of branch widths for a given Newick tree path bounded
     by the given min and max width. Branch widths reflect the log of the number
@@ -300,7 +326,7 @@ def make_branch_lines_for_columns(embedding_segments, column1, column2, color_do
     return branch_lines
 
 
-def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color, legend_title, ToolTip, domain=None, range_=None, legend_columns=1, plot_legend=True):
+def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color, legend_title, ToolTip, domain=None, range_=None, legend_columns=1, plot_legend=True, color_branches=True):
     """Creates a linked brushable altair plot with the tree and the charts appended
     Parameters
     -----------
@@ -321,6 +347,8 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
     ---------
     A brushable altair plot combining the tree with the plots of columns passed in
     """
+    x_nice = 15.0
+    y_nice = True
 
     list_of_chart = []
     if(len(list_of_data) % 2 != 0 or len(list_of_titles) % 2 != 0):
@@ -360,7 +388,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
             x=alt.X(
                 "divergence:Q",
                 scale=alt.Scale(
-                    domain=(dataFrame["divergence"].min(), dataFrame["divergence"].max()), nice=True),
+                    domain=(dataFrame["parent_mutation"].min(), dataFrame["divergence"].max()), nice=x_nice),
                 title="Divergence",
                 axis=alt.Axis(labels=True, ticks=True)
             ),
@@ -378,7 +406,7 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
                 x=alt.X(
                     "divergence:Q",
                     scale=alt.Scale(
-                        domain=(dataFrame["divergence"].min(), dataFrame["divergence"].max()), nice=True),
+                        domain=(dataFrame["parent_mutation"].min(), dataFrame["divergence"].max()), nice=x_nice),
                     title="Divergence",
                     axis=alt.Axis(labels=True, ticks=True)
                 ),
@@ -398,8 +426,8 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
         # data frame to determine whether to color tree branches by that field.
         # This field allows us to color branches by the value of the node from
         # which the branch descends.
-        if f"parent_{color_field}" in dataFrame.columns:
-            tree_branch_color_spec = f"parent_{color_field}:N"
+        if color_branches and color_field in dataFrame.columns:
+            tree_branch_color_spec = f"{color_field}:N"
             tree_branch_color = alt.Color(tree_branch_color_spec).scale(domain=domain, range=range_)
         else:
             tree_branch_color = alt.ColorValue("#cccccc")
@@ -407,18 +435,42 @@ def linking_tree_with_plots_brush(dataFrame, list_of_data, list_of_titles, color
         if "branch_width" in dataFrame.columns:
             tree_branch_width = alt.StrokeWidth("branch_width", legend=None)
         else:
-            tree_branch_width = alt.StrokeValue(1)
+            tree_branch_width = alt.StrokeValue(1.25)
 
-        lines = alt.Chart(dataFrame).mark_rule().encode(
-                    x=alt.X("parent_mutation:Q", scale=alt.Scale(domain=(dataFrame["divergence"].min(), dataFrame["divergence"].max()), nice=True)),
-                    x2="divergence:Q",
-                    y=alt.Y("parent_y:Q", scale=alt.Scale(domain=(dataFrame["y_value"].min(), dataFrame["y_value"].max()), nice=True)),
-                    y2="y_value:Q",
-                    color=tree_branch_color,
-                    strokeWidth=tree_branch_width,
-                )
+        horizontal_lines = alt.Chart(dataFrame).mark_rule().encode(
+            x=alt.X("parent_mutation:Q", scale=alt.Scale(domain=(dataFrame["parent_mutation"].min(), dataFrame["divergence"].max()), nice=x_nice)),
+            x2="divergence:Q",
+            y=alt.Y("y_value:Q", scale=alt.Scale(domain=(dataFrame["y_value"].min(), dataFrame["y_value"].max()), nice=y_nice)),
+            color=tree_branch_color,
+            strokeWidth=tree_branch_width,
+        )
 
-        tree = (lines + tips).properties(width=560, height=250)
+        vertical_line_aggregates = {
+            "y_min": ("y_value", "min"),
+            "y_max": ("y_value", "max"),
+            "x": ("parent_mutation", "min"),
+        }
+
+        if color_branches and f"parent_{color_field}" in dataFrame.columns:
+            parent_tree_branch_color_spec = f"parent_{color_field}:N"
+            parent_tree_branch_color = alt.Color(parent_tree_branch_color_spec).scale(domain=domain, range=range_)
+            vertical_line_aggregates[f"parent_{color_field}"] = (f"parent_{color_field}", "first")
+        else:
+            parent_tree_branch_color = alt.ColorValue("#cccccc")
+
+        if "branch_width" in dataFrame.columns:
+            vertical_line_aggregates["branch_width"] = ("branch_width", "max")
+
+        vertical_line_positions = dataFrame.groupby("parent_name").aggregate(**vertical_line_aggregates)
+        vertical_lines = alt.Chart(vertical_line_positions).mark_rule().encode(
+            x="x:Q",
+            y="y_min:Q",
+            y2="y_max:Q",
+            color=parent_tree_branch_color,
+            strokeWidth=tree_branch_width,
+        )
+
+        tree = (horizontal_lines + vertical_lines + tips).properties(width=560, height=250)
         list_of_chart.append(tree)
 
         # Prepare embedding plots which are tips only.

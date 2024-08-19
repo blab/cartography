@@ -238,7 +238,9 @@ These results qualitatively replicate the patterns we observed in embeddings for
   Tips in the tree and embeddings are colored by their Nextstrain clade assignment.
   Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
   Line colors represent the clade membership of the most ancestral node in the pair of nodes connected by the segment.
-  Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.
+  Line thickness in the embeddings scales by the square root of the number of leaves descending from a given node in the phylogeny.
+  Clade labels appear in the tree at the earliest ancestral node of the tree for each clade.
+  Clade labels appear in each embedding at the average position on the x and y axis for sequences in a given clade.
 }
 \label{fig:seasonal-influenza-h3n2-ha-embeddings}
 \end{figure}
@@ -277,7 +279,7 @@ These results suggest that applying dimensionality reduction methods prior to cl
 \caption{{\bf Phylogenetic trees (left) and embeddings (right) of early (2016--2018) influenza H3N2 HA sequences colored by HDBSCAN cluster.}
   Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Nextstrain clades).
   Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
-  Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.}
+  Line thickness in the embeddings scales by the square root of the number of leaves descending from a given node in the phylogeny.}
 \label{fig:seasonal-influenza-h3n2-ha-2016-2018-clusters}
 \end{figure}
 
@@ -299,7 +301,7 @@ As with the early H3N2 HA dataset, clusters from genetic distances between late 
 \caption{{\bf Phylogenetic trees (left) and embeddings (right) of late (2018--2020) H3N2 HA sequences colored by HDBSCAN cluster.}
   Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Nextstrain clades).
   Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
-  Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.}
+  Line thickness in the embeddings scales by the square root of the number of leaves descending from a given node in the phylogeny.}
 \label{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters}
 \end{figure}
 
@@ -329,7 +331,7 @@ For the other three embedding methods, including NA with HA reduced the distance
 Clusters from genetic distances improved the most by the addition of NA from a normalized VI of 0.2 to 0.11 (Supplementary Table~\ref{S_Table_optimal_cluster_parameters}).
 Embeddings with both genes produced more clusters for all methods than the HA-only embeddings with 3 additional clusters in PCA (Supplementary Fig.~S\ref{S_Fig_flu_ha_na_pca_embeddings}), 9 in MDS (Supplementary Fig.~S\ref{S_Fig_flu_ha_na_mds_embeddings}), 2 in t-SNE (Supplementary Fig.~S\ref{S_Fig_flu_ha_na_tsne_embeddings} and Supplementary Fig.~S\ref{S_Fig_flu_ha_na_tsne_mcc_counts}), 1 in UMAP (Supplementary Fig.~S\ref{S_Fig_flu_ha_na_umap_embeddings}), and 16 in genetic distance clusters (Supplementary Table~\ref{S_Table_optimal_cluster_parameters}).
 All embeddings of HA/NA alignments produced distinct clusters for the known reassortment event within clade A2 \citep{Potter2019} as represented by MCCs 14 and 11.
-Other larger events like those represented by MCCs 9 and 12 mapped far apart in all HA/NA embeddings except PCA.
+Other pairs of larger reassortment events that occurred in the same part of the HA tree like MCCs 9 and 12 or MCCs 5 and 10 mapped farther apart in all HA/NA embeddings compared to HA-only embeddings (Supplementary Fig.~S\ref{S_Fig_full_ha_na_embeddings}).
 We noted that some of the additional clusters in HA/NA embeddings likely also reflected genetic diversity in NA that was independent of reassortment between HA and NA.
 These results suggest that a single embedding of multiple gene segments could identify biologically meaningful clusters within and between all genes.
 
@@ -337,9 +339,13 @@ These results suggest that a single embedding of multiple gene segments could id
 \includegraphics[width=0.9\columnwidth]{figures/flu-2016-2018-ha-na-embeddings-by-mcc.png}
 \caption{{\bf Phylogeny of early (2016--2018) influenza H3N2 HA sequences plotted by nucleotide substitutions per site on the x-axis (top) and low-dimensional embeddings of the same HA sequences concatenated with matching NA sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
   Tips in the tree and embeddings are colored by their TreeKnit Maximally Compatible Clades (MCCs) label which represents putative HA/NA reassortment groups.
+  Tips from MCCs with fewer than 10 sequences are colored as ``unassigned''.
   The first normalized VI values per embedding reflect the distance between HA/NA clusters and known genetic groups (MCCs).
   VI values in parentheses reflect the distance between HA-only clusters and known genetic groups.
-  ``A2'' and ``A2/re'' labels indicate a known reassortment event \citep{Potter2019}.
+  MCC labels appear in the tree and each embedding for larger pairs of reassortment events.
+  MCC 9 represents two Nextstrain clades, so its labels appear twice in the tree.
+  MCCs 14 and 11 represent a previously published reassortment event within Nextstrain clade A2 \citep{Potter2019}.
+  Labels for MCC 14 represent the subset of its sequences from clade A2.
 }
 \label{fig:seasonal-influenza-h3n2-ha-na-2016-2018-embeddings}
 \end{figure}
@@ -365,7 +371,8 @@ These results suggest that distance-based embedding methods can recapitulate bro
 \caption{{\bf Phylogeny of early (2020--2022) SARS-CoV-2 sequences plotted by number of nucleotide substitutions from the most recent common ancestor on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
   Tips in the tree and embeddings are colored by their Nextstrain clade assignment.
   Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
-  Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.
+  Line thickness in the embeddings scales by the square root of the number of leaves descending from a given node in the phylogeny.
+  Clade labels in the tree and embeddings highlight larger clades.
 }
 \label{fig:sars-cov-2-early-embeddings-by-Nextstrain-clade}
 \end{figure}
@@ -405,13 +412,13 @@ These results confirm quantitatively that these embeddings methods can accuratel
 \caption{{\bf Phylogenetic trees (left) and embeddings (right) of early (2020--2022) SARS-CoV-2 sequences colored by HDBSCAN cluster.}
   Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Nextstrain clades).
   Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
-  Line thickness scales by the square root of the number of leaves descending from a given node in the phylogeny.
+  Line thickness in the embeddings scales by the square root of the number of leaves descending from a given node in the phylogeny.
 }
 \label{fig:sars-cov-2-2020-2022-clusters-vs-Nextstrain-clade}
 \end{figure}
 
 To test the optimal cluster parameters identified above, we applied embedding methods to late SARS-CoV-2 data and compared clusters from these embeddings to the corresponding Nextstrain clades and Pango lineages.
-Compared to the 18 Nextstrain clades defined in this time period, the closest clusters were from t-SNE (normalized VI=0.09 with 66 clusters) and UMAP (normalized VI=0.09 with 13 clusters, Fig.~\ref{fig:sars-cov-2-2022-2023-clusters-vs-Nextstrain-clade} and Supplementary Table~S\ref{S_Table_optimal_cluster_parameters}).
+Compared to the 17 Nextstrain clades defined in this time period (Supplementary Fig.~S\ref{S_Fig_sarscov2_late_embeddings_by_Nextstrain_clade}), the closest clusters were from t-SNE (normalized VI=0.09 with 66 clusters) and UMAP (normalized VI=0.09 with 13 clusters, Fig.~\ref{fig:sars-cov-2-2022-2023-clusters-vs-Nextstrain-clade} and Supplementary Table~S\ref{S_Table_optimal_cluster_parameters}).
 We attributed t-SNE's additional clusters to recombinant lineages that were genetically distinct but which received a generic ``recombinant'' label in Nextstrain's clade definitions instead of a unique clade name.
 Only t-SNE, UMAP, and genetic distance clusters were fully monophyletic (Supplementary Table~S\ref{S_Table_monophyletic_clusters}).
 Genetic distance, PCA, and t-SNE clusters were best supported by cluster-specific mutations with 16 of 17 clusters (94\%), 6 of 7 clusters (86\%), and 51 of 66 clusters (77\%), respectively (Supplementary Table~S\ref{S_Table_mutations_per_cluster}).
@@ -428,7 +435,7 @@ In contrast to the same analysis for H3N2 HA populations, clusters from genetic 
 \label{fig:sars-cov-2-2022-2023-clusters-vs-Nextstrain-clade}
 \end{figure}
 
-All methods produced less accurate representations of the 137 Pango lineages (Supplementary Fig.~S\ref{S_Fig_sarscov2_late_embeddings_by_cluster_vs_Nextclade_pango} and Supplementary Table~\ref{S_Table_optimal_cluster_parameters}).
+All methods produced less accurate representations of the 137 Pango lineages (Supplementary Figs.~S\ref{S_Fig_sarscov2_late_embeddings_by_Pango} and S\ref{S_Fig_sarscov2_late_embeddings_by_cluster_vs_Nextclade_pango} and Supplementary Table~\ref{S_Table_optimal_cluster_parameters}).
 However, t-SNE clusters were nearly as accurate with a normalized VI of 0.14, suggesting that t-SNE's numerous additional clusters likely did represent many of the recombinant Pango lineages in the dataset that all received a ``recombinant'' Nextstrain clade label.
 Of the 80 recombinant Pango lineages that also had a t-SNE cluster, 79 (99\%) mapped to a single t-SNE cluster (Supplementary Fig.~S\ref{S_Fig_sarscov2_late_embeddings_tsne_recombinant_counts}).
 Of the 52 t-SNE clusters with recombinant Pango lineages, 43 (83\%) mapped to a single Pango lineage.
