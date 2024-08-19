@@ -1,151 +1,216 @@
 {
-    "title": "Seasonal influenza A/H3N2 phylogeny from 2016-2018",
-    "colorings": [
-        {
-            "key": "confidence",
-            "title": "Bootstrap support",
-            "type": "continuous"
-        },
-        {
-            "key": "MCC",
-            "title": "MCC",
-            "type": "categorical"
-        },
-		{
-            "key": "pca_concatenated_label",
-            "title": "HA/NA PCA cluster",
-            "type": "categorical"
-        },
-		{
-            "key": "mds_concatenated_label",
-            "title": "HA/NA MDS cluster",
-            "type": "categorical"
-        },
-		{
-            "key": "t-sne_concatenated_label",
-            "title": "HA/NA t-SNE cluster",
-            "type": "categorical"
-        },
-		{
-            "key": "umap_concatenated_label",
-            "title": "HA/NA UMAP cluster",
-            "type": "categorical"
-        },
-        {
-            "key": "genetic_concatenated_label",
-            "title": "HA/NA genetic distance cluster",
-            "type": "categorical"
-        },
-        {
-            "key": "pca_ha_label",
-            "title": "HA PCA cluster",
-            "type": "categorical"
-        },
-        {
-            "key": "mds_ha_label",
-            "title": "HA MDS cluster",
-            "type": "categorical"
-        },
-        {
-            "key": "t-sne_ha_label",
-            "title": "HA t-SNE cluster",
-            "type": "categorical"
-        },
-        {
-            "key": "umap_ha_label",
-            "title": "HA UMAP cluster",
-            "type": "categorical"
-        },
-        {
-            "key": "genetic_ha_label",
-            "title": "HA genetic distance cluster",
-            "type": "categorical"
-        },
-        {
-            "key": "gt",
-            "title": "Genotype",
-            "type": "categorical"
-        },
-        {
-            "key": "num_date",
-            "title": "Date",
-            "type": "continuous"
-        },
-        {
-            "key": "clade_membership",
-            "title": "Clade",
-            "type": "categorical"
-        },
-        {
-            "key": "pca1",
-            "title": "PCA1",
-            "type": "continuous"
-        },
-		{
-            "key": "pca2",
-            "title": "PCA2",
-            "type": "continuous"
-        },
-		{
-            "key": "mds1",
-            "title": "MDS1",
-            "type": "continuous"
-        },
-		{
-            "key": "mds2",
-            "title": "MDS2",
-            "type": "continuous"
-        },
-        {
-            "key": "mds3",
-            "title": "MDS3",
-            "type": "continuous"
-        },
-		{
-            "key": "tsne_x",
-            "title": "t-SNE 1",
-            "type": "continuous"
-        },
-		{
-            "key": "tsne_y",
-            "title": "t-SNE 2",
-            "type": "continuous"
-        },
-		{
-            "key": "umap_x",
-            "title": "UMAP 1",
-            "type": "continuous"
-        },
-		{
-            "key": "umap_y",
-            "title": "UMAP 2",
-            "type": "continuous"
-        }
-   ],
-    "display_defaults": {
-        "color_by": "MCC",
-        "distance_measure": "div"
+  "title": "Seasonal influenza A/H3N2 phylogeny from 2016-2018",
+  "colorings": [
+    {
+      "key": "confidence",
+      "title": "Bootstrap support",
+      "type": "continuous"
     },
-    "maintainers": [
-        {"name": "Sravani Nanduri"},
-        {"name": "John Huddleston"}
-    ],
-    "filters": [
-      "MCC",
-      "pca_ha_label",
-      "mds_ha_label",
-      "t-sne_ha_label",
-      "umap_ha_label",
-      "genetic_ha_label",
-      "pca_concatenated_label",
-      "mds_concatenated_label",
-      "t-sne_concatenated_label",
-      "umap_concatenated_label",
-      "genetic_concatenated_label",
-      "clade_membership"
-    ],
-
-    "panels": [
-        "tree"
-    ]
+    {
+      "key": "MCC",
+      "title": "MCC",
+      "type": "categorical",
+      "scale": [
+        [
+          "MCC_0",
+          "#4D21AD"
+        ],
+        [
+          "MCC_1",
+          "#403FC6"
+        ],
+        [
+          "MCC_2",
+          "#3F63CF"
+        ],
+        [
+          "MCC_3",
+          "#4783C8"
+        ],
+        [
+          "MCC_4",
+          "#539BB5"
+        ],
+        [
+          "MCC_5",
+          "#63AC9B"
+        ],
+        [
+          "MCC_6",
+          "#77B67F"
+        ],
+        [
+          "MCC_7",
+          "#8EBC66"
+        ],
+        [
+          "MCC_8",
+          "#A8BD53"
+        ],
+        [
+          "MCC_9",
+          "#C1BA47"
+        ],
+        [
+          "MCC_10",
+          "#D6B03F"
+        ],
+        [
+          "MCC_11",
+          "#E39C39"
+        ],
+        [
+          "MCC_12",
+          "#E67C33"
+        ],
+        [
+          "MCC_13",
+          "#E1532B"
+        ],
+        [
+          "MCC_14",
+          "#DB2823"
+        ]
+      ]
+    },
+    {
+      "key": "pca_concatenated_label",
+      "title": "HA/NA PCA cluster",
+      "type": "categorical"
+    },
+    {
+      "key": "mds_concatenated_label",
+      "title": "HA/NA MDS cluster",
+      "type": "categorical"
+    },
+    {
+      "key": "t-sne_concatenated_label",
+      "title": "HA/NA t-SNE cluster",
+      "type": "categorical"
+    },
+    {
+      "key": "umap_concatenated_label",
+      "title": "HA/NA UMAP cluster",
+      "type": "categorical"
+    },
+    {
+      "key": "genetic_concatenated_label",
+      "title": "HA/NA genetic distance cluster",
+      "type": "categorical"
+    },
+    {
+      "key": "pca_ha_label",
+      "title": "HA PCA cluster",
+      "type": "categorical"
+    },
+    {
+      "key": "mds_ha_label",
+      "title": "HA MDS cluster",
+      "type": "categorical"
+    },
+    {
+      "key": "t-sne_ha_label",
+      "title": "HA t-SNE cluster",
+      "type": "categorical"
+    },
+    {
+      "key": "umap_ha_label",
+      "title": "HA UMAP cluster",
+      "type": "categorical"
+    },
+    {
+      "key": "genetic_ha_label",
+      "title": "HA genetic distance cluster",
+      "type": "categorical"
+    },
+    {
+      "key": "gt",
+      "title": "Genotype",
+      "type": "categorical"
+    },
+    {
+      "key": "num_date",
+      "title": "Date",
+      "type": "continuous"
+    },
+    {
+      "key": "clade_membership",
+      "title": "Clade",
+      "type": "categorical"
+    },
+    {
+      "key": "pca1",
+      "title": "PCA1",
+      "type": "continuous"
+    },
+    {
+      "key": "pca2",
+      "title": "PCA2",
+      "type": "continuous"
+    },
+    {
+      "key": "mds1",
+      "title": "MDS1",
+      "type": "continuous"
+    },
+    {
+      "key": "mds2",
+      "title": "MDS2",
+      "type": "continuous"
+    },
+    {
+      "key": "mds3",
+      "title": "MDS3",
+      "type": "continuous"
+    },
+    {
+      "key": "tsne_x",
+      "title": "t-SNE 1",
+      "type": "continuous"
+    },
+    {
+      "key": "tsne_y",
+      "title": "t-SNE 2",
+      "type": "continuous"
+    },
+    {
+      "key": "umap_x",
+      "title": "UMAP 1",
+      "type": "continuous"
+    },
+    {
+      "key": "umap_y",
+      "title": "UMAP 2",
+      "type": "continuous"
+    }
+  ],
+  "display_defaults": {
+    "color_by": "MCC",
+    "distance_measure": "div"
+  },
+  "maintainers": [
+    {
+      "name": "Sravani Nanduri"
+    },
+    {
+      "name": "John Huddleston"
+    }
+  ],
+  "filters": [
+    "MCC",
+    "pca_ha_label",
+    "mds_ha_label",
+    "t-sne_ha_label",
+    "umap_ha_label",
+    "genetic_ha_label",
+    "pca_concatenated_label",
+    "mds_concatenated_label",
+    "t-sne_concatenated_label",
+    "umap_concatenated_label",
+    "genetic_concatenated_label",
+    "clade_membership"
+  ],
+  "panels": [
+    "tree"
+  ]
 }
