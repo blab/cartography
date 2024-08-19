@@ -413,7 +413,7 @@ These results confirm quantitatively that these embeddings methods can accuratel
 \end{figure}
 
 To test the optimal cluster parameters identified above, we applied embedding methods to late SARS-CoV-2 data and compared clusters from these embeddings to the corresponding Nextstrain clades and Pango lineages.
-Compared to the 18 Nextstrain clades defined in this time period, the closest clusters were from t-SNE (normalized VI=0.09 with 66 clusters) and UMAP (normalized VI=0.09 with 13 clusters, Fig.~\ref{fig:sars-cov-2-2022-2023-clusters-vs-Nextstrain-clade} and Supplementary Table~S\ref{S_Table_optimal_cluster_parameters}).
+Compared to the 17 Nextstrain clades defined in this time period (Supplementary Fig.~S\ref{S_Fig_sarscov2_late_embeddings_by_Nextstrain_clade}), the closest clusters were from t-SNE (normalized VI=0.09 with 66 clusters) and UMAP (normalized VI=0.09 with 13 clusters, Fig.~\ref{fig:sars-cov-2-2022-2023-clusters-vs-Nextstrain-clade} and Supplementary Table~S\ref{S_Table_optimal_cluster_parameters}).
 We attributed t-SNE's additional clusters to recombinant lineages that were genetically distinct but which received a generic ``recombinant'' label in Nextstrain's clade definitions instead of a unique clade name.
 Only t-SNE, UMAP, and genetic distance clusters were fully monophyletic (Supplementary Table~S\ref{S_Table_monophyletic_clusters}).
 Genetic distance, PCA, and t-SNE clusters were best supported by cluster-specific mutations with 16 of 17 clusters (94\%), 6 of 7 clusters (86\%), and 51 of 66 clusters (77\%), respectively (Supplementary Table~S\ref{S_Table_mutations_per_cluster}).
@@ -430,7 +430,7 @@ In contrast to the same analysis for H3N2 HA populations, clusters from genetic 
 \label{fig:sars-cov-2-2022-2023-clusters-vs-Nextstrain-clade}
 \end{figure}
 
-All methods produced less accurate representations of the 137 Pango lineages (Supplementary Fig.~S\ref{S_Fig_sarscov2_late_embeddings_by_cluster_vs_Nextclade_pango} and Supplementary Table~\ref{S_Table_optimal_cluster_parameters}).
+All methods produced less accurate representations of the 137 Pango lineages (Supplementary Figs.~S\ref{S_Fig_sarscov2_late_embeddings_by_Pango} and S\ref{S_Fig_sarscov2_late_embeddings_by_cluster_vs_Nextclade_pango} and Supplementary Table~\ref{S_Table_optimal_cluster_parameters}).
 However, t-SNE clusters were nearly as accurate with a normalized VI of 0.14, suggesting that t-SNE's numerous additional clusters likely did represent many of the recombinant Pango lineages in the dataset that all received a ``recombinant'' Nextstrain clade label.
 Of the 80 recombinant Pango lineages that also had a t-SNE cluster, 79 (99\%) mapped to a single t-SNE cluster (Supplementary Fig.~S\ref{S_Fig_sarscov2_late_embeddings_tsne_recombinant_counts}).
 Of the 52 t-SNE clusters with recombinant Pango lineages, 43 (83\%) mapped to a single Pango lineage.
