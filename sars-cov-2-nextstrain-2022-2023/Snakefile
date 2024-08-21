@@ -777,7 +777,7 @@ rule sarscov2_test_create_mutation_table:
             --reference-sequence {input.reference} \
             --alignment {input.alignment} \
             --clusters {input.embedding} \
-            --clusters-column {wildcards.method}_label_for_{wildcards.clade_membership} \
+            --cluster-column {wildcards.method}_label_for_{wildcards.clade_membership} \
             --min-allele-count {params.min_allele_count} \
             --min-allele-frequency {params.min_allele_frequency} \
             --verbose \
@@ -805,7 +805,7 @@ rule sarscov2_test_create_mutation_table_for_clades:
     params:
         min_allele_count=10,
         min_allele_frequency=0.5,
-        clusters_column="clade_membership",
+        cluster_column="clade_membership",
     conda: "../cartography.yml"
     benchmark:
         "benchmarks/sars-cov-2-nextstrain-2022-2023/create_mutation_table_for_clades.txt"
@@ -818,7 +818,7 @@ rule sarscov2_test_create_mutation_table_for_clades:
                 --reference-sequence {input.reference} \
                 --alignment {input.alignment} \
                 --clusters /dev/stdin \
-                --clusters-column {params.clusters_column} \
+                --cluster-column {params.cluster_column} \
                 --min-allele-count {params.min_allele_count} \
                 --min-allele-frequency {params.min_allele_frequency} \
                 --verbose \
@@ -831,7 +831,7 @@ rule sarscov2_test_concat_mutation_tables:
     output:
         metadata = "sars-cov-2-nextstrain-2022-2023/results/mutation_table.csv",
     params:
-        column = "metadata_column",
+        column = "cluster_column",
     conda: "../cartography.yml"
     shell:
         """

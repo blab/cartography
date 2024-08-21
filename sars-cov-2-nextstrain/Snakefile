@@ -15,7 +15,7 @@ rule sarscov2:
         "manuscript/figures/sarscov2-euclidean-distance-by-genetic-distance.png",
         "manuscript/figures/sarscov2-pc1-vs-bases-missing.png",
         "auspice/cartography_ncov-2020-2022.json",
-        expand("sars-cov-2-nextstrain/results/mutation_table_for_{clade_membership}.csv", clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS),
+        expand("sars-cov-2-nextstrain/results/mutation_table.csv",
         "sars-cov-2-nextstrain/results/monophyletic_clusters.csv",
         "sars-cov-2-nextstrain/results/single_clade/cluster_accuracy_t-sne_for_Nextclade_pango_collapsed.csv",
         "sars-cov-2-nextstrain/results/single_clade/cluster_accuracy_without_unclustered_t-sne_for_Nextclade_pango_collapsed.csv",
@@ -806,23 +806,65 @@ rule sarscov2_create_mutation_table:
         "logs/sarscov2_create_mutation_table_{method}_for_{clade_membership}.txt"
     shell:
         """
-        python3 notebooks/scripts/cluster_mutation.py \
+        pathogen-cluster-mutations \
             --reference-sequence {input.reference} \
             --alignment {input.alignment} \
-            --metadata {input.embedding} \
-            --metadata-column {wildcards.method}_label_for_{wildcards.clade_membership} \
+            --clusters {input.embedding} \
+            --cluster-column {wildcards.method}_label_for_{wildcards.clade_membership} \
             --min-allele-count {params.min_allele_count} \
             --min-allele-frequency {params.min_allele_frequency} \
+            --verbose \
             --output {output.table} 2>&1 | tee {log}
+        """
+
+rule sarscov2_get_table_of_tips:
+    input:
+        metadata="sars-cov-2-nextstrain/results/table.tsv",
+    output:
+        metadata="sars-cov-2-nextstrain/results/table_of_tips.tsv",
+    conda: "../cartography.yml"
+    shell:
+        """
+        csvtk filter2 -t -f '$is_internal_node=="False"' {input.metadata} > {output.metadata}
+        """
+
+rule sarscov2_create_mutation_table_for_clades:
+    input:
+        reference = "sars-cov-2-nextstrain/config/reference_sars-cov-2.fasta",
+        alignment = "sars-cov-2-nextstrain/data/aligned.fasta",
+        clades = "sars-cov-2-nextstrain/results/table_of_tips.tsv",
+    output:
+        table = "sars-cov-2-nextstrain/results/mutation_table_clade_membership.csv",
+    params:
+        min_allele_count=10,
+        min_allele_frequency=0.5,
+        cluster_column="clade_membership",
+    conda: "../cartography.yml"
+    benchmark:
+        "benchmarks/sarscov2_create_mutation_table_for_clades.txt"
+    log:
+        "logs/sarscov2_create_mutation_table_for_clades.txt"
+    shell:
+        """
+        csvtk tab2csv {input.clades} \
+            | pathogen-cluster-mutations \
+                --reference-sequence {input.reference} \
+                --alignment {input.alignment} \
+                --clusters /dev/stdin \
+                --cluster-column {params.cluster_column} \
+                --min-allele-count {params.min_allele_count} \
+                --min-allele-frequency {params.min_allele_frequency} \
+                --verbose \
+                --output {output.table} 2>&1 | tee {log}
         """
 
 rule sarscov2_concat_mutation_tables:
     input:
-        mutation_tables=expand("sars-cov-2-nextstrain/results/mutation_table_{method}_for_{{clade_membership}}.csv", method=EMBEDDING_METHODS + ["genetic"]),
+        mutation_tables=expand("sars-cov-2-nextstrain/results/mutation_table_{method}_for_{clade_membership}.csv", method=EMBEDDING_METHODS + ["genetic"], clade_membership=SARS_COV_2_CLADE_MEMBERSHIPS) + ["sars-cov-2-nextstrain/results/mutation_table_clade_membership.csv"],
     output:
-        metadata = "sars-cov-2-nextstrain/results/mutation_table_for_{clade_membership}.csv",
+        metadata = "sars-cov-2-nextstrain/results/mutation_table.csv",
     params:
-        column = "metadata_column",
+        column = "cluster_column",
     conda: "../cartography.yml"
     shell:
         """
