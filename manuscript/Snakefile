@@ -24,8 +24,7 @@ rule concat_mutation_tables:
             "ha-na-nextstrain/results/mutation_table.csv",
             "sars-cov-2-nextstrain/results/mutation_table_for_Nextstrain_clade.csv",
             "sars-cov-2-nextstrain/results/mutation_table_for_Nextclade_pango_collapsed.csv",
-            "sars-cov-2-nextstrain-2022-2023/results/mutation_table_for_Nextstrain_clade.csv",
-            "sars-cov-2-nextstrain-2022-2023/results/mutation_table_for_Nextclade_pango_collapsed.csv",
+            "sars-cov-2-nextstrain-2022-2023/results/mutation_table.csv",
         ]
     output:
         csv_table = "manuscript/tables/mutation_table.csv",

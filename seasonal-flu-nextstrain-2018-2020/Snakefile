@@ -617,19 +617,49 @@ rule seasonal_flu_test_create_mutation_table:
         "logs/seasonal_flu_test_create_mutation_table_{method}.txt"
     shell:
         """
-        python3 notebooks/scripts/cluster_mutation.py \
+        pathogen-cluster-mutations \
             --reference-sequence {input.reference} \
             --alignment {input.alignment} \
-            --metadata {input.embedding} \
-            --metadata-column {wildcards.method}_label \
+            --clusters {input.embedding} \
+            --clusters-column {wildcards.method}_label \
             --min-allele-count {params.min_allele_count} \
             --min-allele-frequency {params.min_allele_frequency} \
+            --verbose \
+            --output {output.table} 2>&1 | tee {log}
+        """
+
+rule seasonal_flu_test_create_mutation_table_for_clades:
+    input:
+        reference = "seasonal-flu-nextstrain-2018-2020/config/reference_h3n2_ha.fasta",
+        alignment = "seasonal-flu-nextstrain-2018-2020/results/aligned_sequences.fasta",
+        clades = "seasonal-flu-nextstrain-2018-2020/results/table_of_tips.tsv",
+    output:
+        table = "seasonal-flu-nextstrain-2018-2020/results/mutation_table_clade_membership.csv",
+    params:
+        min_allele_count=10,
+        min_allele_frequency=0.5,
+        clusters_column="clade_membership",
+    conda: "../cartography.yml"
+    benchmark:
+        "benchmarks/seasonal_flu_test_create_mutation_table_clade_membership.txt"
+    log:
+        "logs/seasonal_flu_test_create_mutation_table_clade_membership.txt"
+    shell:
+        """
+        pathogen-cluster-mutations \
+            --reference-sequence {input.reference} \
+            --alignment {input.alignment} \
+            --clusters {input.clades} \
+            --clusters-column {params.clusters_column} \
+            --min-allele-count {params.min_allele_count} \
+            --min-allele-frequency {params.min_allele_frequency} \
+            --verbose \
             --output {output.table} 2>&1 | tee {log}
         """
 
 rule seasonal_flu_test_concat_mutation_tables:
     input:
-        mutation_tables=expand("seasonal-flu-nextstrain-2018-2020/results/mutation_table_{method}.csv", method=EMBEDDING_METHODS + ["genetic"]),
+        mutation_tables=expand("seasonal-flu-nextstrain-2018-2020/results/mutation_table_{method}.csv", method=EMBEDDING_METHODS + ["genetic"]) + ["seasonal-flu-nextstrain-2018-2020/results/mutation_table_clade_membership.csv"],
     output:
         metadata = "seasonal-flu-nextstrain-2018-2020/results/mutation_table.csv",
     params:
