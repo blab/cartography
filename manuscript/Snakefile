@@ -22,8 +22,7 @@ rule concat_mutation_tables:
             "seasonal-flu-nextstrain/results/mutation_table.csv",
             "seasonal-flu-nextstrain-2018-2020/results/mutation_table.csv",
             "ha-na-nextstrain/results/mutation_table.csv",
-            "sars-cov-2-nextstrain/results/mutation_table_for_Nextstrain_clade.csv",
-            "sars-cov-2-nextstrain/results/mutation_table_for_Nextclade_pango_collapsed.csv",
+            "sars-cov-2-nextstrain/results/mutation_table.csv",
             "sars-cov-2-nextstrain-2022-2023/results/mutation_table.csv",
         ]
     output:

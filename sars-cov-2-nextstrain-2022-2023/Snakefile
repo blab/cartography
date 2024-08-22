@@ -805,7 +805,7 @@ rule sarscov2_test_create_mutation_table_for_clades:
     params:
         min_allele_count=10,
         min_allele_frequency=0.5,
-        cluster_column="clade_membership",
+        cluster_column="Nextstrain_clade",
     conda: "../cartography.yml"
     benchmark:
         "benchmarks/sars-cov-2-nextstrain-2022-2023/create_mutation_table_for_clades.txt"
@@ -819,6 +819,7 @@ rule sarscov2_test_create_mutation_table_for_clades:
                 --alignment {input.alignment} \
                 --clusters /dev/stdin \
                 --cluster-column {params.cluster_column} \
+                --ignored-clusters unassigned recombinant \
                 --min-allele-count {params.min_allele_count} \
                 --min-allele-frequency {params.min_allele_frequency} \
                 --verbose \

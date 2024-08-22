@@ -652,6 +652,7 @@ rule seasonal_flu_test_create_mutation_table_for_clades:
                 --alignment {input.alignment} \
                 --clusters /dev/stdin \
                 --cluster-column {params.cluster_column} \
+                --ignored-clusters unassigned \
                 --min-allele-count {params.min_allele_count} \
                 --min-allele-frequency {params.min_allele_frequency} \
                 --verbose \

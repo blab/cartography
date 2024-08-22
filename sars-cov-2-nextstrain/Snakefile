@@ -15,7 +15,7 @@ rule sarscov2:
         "manuscript/figures/sarscov2-euclidean-distance-by-genetic-distance.png",
         "manuscript/figures/sarscov2-pc1-vs-bases-missing.png",
         "auspice/cartography_ncov-2020-2022.json",
-        expand("sars-cov-2-nextstrain/results/mutation_table.csv",
+        "sars-cov-2-nextstrain/results/mutation_table.csv",
         "sars-cov-2-nextstrain/results/monophyletic_clusters.csv",
         "sars-cov-2-nextstrain/results/single_clade/cluster_accuracy_t-sne_for_Nextclade_pango_collapsed.csv",
         "sars-cov-2-nextstrain/results/single_clade/cluster_accuracy_without_unclustered_t-sne_for_Nextclade_pango_collapsed.csv",
@@ -838,7 +838,7 @@ rule sarscov2_create_mutation_table_for_clades:
     params:
         min_allele_count=10,
         min_allele_frequency=0.5,
-        cluster_column="clade_membership",
+        cluster_column="Nextstrain_clade",
     conda: "../cartography.yml"
     benchmark:
         "benchmarks/sarscov2_create_mutation_table_for_clades.txt"
@@ -852,6 +852,7 @@ rule sarscov2_create_mutation_table_for_clades:
                 --alignment {input.alignment} \
                 --clusters /dev/stdin \
                 --cluster-column {params.cluster_column} \
+                --ignored-clusters unassigned \
                 --min-allele-count {params.min_allele_count} \
                 --min-allele-frequency {params.min_allele_frequency} \
                 --verbose \
