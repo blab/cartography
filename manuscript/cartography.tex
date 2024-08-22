@@ -291,7 +291,7 @@ Genetic distance clusters (N=4) were farthest from Nextstrain clades (normalized
 MDS split clade A3's 17 samples into two widely separated groups in its Euclidean space.
 On further inspection of this clade in the tree, we found seven homoplasies (mutations that also occur elsewhere in the tree) on the branch leading to A3 and 10 homoplasies on the branch leading to one of A3's subclades.
 Previous work with MDS embeddings of HA sequences has shown that MDS's global optimization algorithm is sensitive to homoplasies \citep{Ito2011}.
-Clade A3 in this dataset represented an extreme example where MDS could not cluster a clade that had many homoplasies and few samples.
+In this dataset, clade A3 represented an extreme example where MDS could not cluster a clade that had many homoplasies and few samples.
 In contrast, PCA, t-SNE, and UMAP correctly clustered A3 samples together in their embeddings, showing the robustness of these methods to homoplasies.
 Accordingly, clusters from all methods except MDS were monophyletic (Supplementary Table~S\ref{S_Table_monophyletic_clusters}).
 The majority of clusters from all methods were supported by cluster-specific mutations (Supplementary Table~S\ref{S_Table_mutations_per_cluster}),
@@ -479,7 +479,7 @@ From our analysis of natural populations of seasonal influenza H3N2 HA and SARS-
 We found that clusters from t-SNE embeddings most accurately recapitulated previously defined genetic groups at the resolution of WHO variants and Nextstrain clades and consistently produced clusters that corresponded to monophyletic groups in phylogenies and were robust to the presence of homoplasies.
 Clusters from t-SNE embeddings of H3N2 HA and NA sequences most accurately matched reassortment clades identified by a biologically-informed model based on ancestral reassortment graphs.
 MDS embeddings consistently placed known recombinant lineages of SARS-CoV-2 between their parental lineages, while t-SNE clusters most accurately captured recombinant lineages.
-All embedding methods rely on pairwise comparisons between all samples making them robust to individual outliers caused by sequencing errors.
+All of the embedding methods and the HDBSCAN clustering method rely on pairwise comparisons between all samples making them robust to individual outliers caused by sequencing errors.
 Furthermore, distance-based methods like MDS, t-SNE, and UMAP easily ignore missing characters in individual sequences.
 These results show that tree-free dimensionality reduction methods can provide valuable biological insights for human pathogenic viruses through easily interpretable visualizations of genetic relationships and the ability to account for genetic variation that tree-based phylogenetic methods cannot use, including indels, reassortment, and recombination.
 
