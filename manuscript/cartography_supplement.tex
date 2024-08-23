@@ -92,6 +92,14 @@ Clade labels appear in each embedding at the average position on the x and y axi
 \end{figure}
 
 \begin{figure}[!h]
+\includegraphics[width=\columnwidth]{figures/group-specific-mutations-per-dataset-and-genetic-group.png}
+\caption{{\bf Number of group-specific mutations per pathogen dataset (rows) and genetic group type (x-axis).}
+  Each point represents an individual Nextstrain clade or embedding cluster and the number of nucleotide mutations that were specific to that group.
+  These counts come from filtering Supplementary Table S\ref{S_Table_mutations_per_cluster} to mutations with a cluster count of 1, grouping the remaining records by dataset name and cluster column, and counting the number of records per group.
+}\label{S_Fig_group_specific_mutations}
+\end{figure}
+
+\begin{figure}[!h]
 \includegraphics[width=\columnwidth]{figures/within_between_influenza.png}
 \caption{{\bf Pairwise nucleotide distances for early (2016--2018, left) and late (2018--2020, right) influenza H3N2 HA sequences within and between genetic groups defined by Nextstrain clades and clusters from PCA, MDS, t-SNE, and UMAP embeddings.}
   Each point represents the mean nucleotide distance for pairs of sequences within or between the genetic group in each row.
