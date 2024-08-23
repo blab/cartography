@@ -707,11 +707,11 @@ rule seasonal_flu_reassortment_create_mutation_table:
         "logs/seasonal_flu_reassortment_create_mutation_table_{method}_{segment}.txt"
     shell:
         """
-        python3 notebooks/scripts/cluster_mutation.py \
+        pathogen-cluster-mutations \
             --reference-sequence {input.reference} \
             --alignment {input.alignment} \
-            --metadata {input.embedding} \
-            --metadata-column {wildcards.method}_concatenated_label \
+            --clusters {input.embedding} \
+            --cluster-column {wildcards.method}_concatenated_label \
             --min-allele-count {params.min_allele_count} \
             --min-allele-frequency {params.min_allele_frequency} \
             --output /dev/stdout \
@@ -725,7 +725,7 @@ rule seasonal_flu_reassortment_concat_mutation_tables:
     output:
         metadata = "ha-na-nextstrain/results/mutation_table.csv",
     params:
-        column = "metadata_column",
+        column = "cluster_column",
     conda: "../cartography.yml"
     shell:
         """

@@ -745,23 +745,55 @@ rule seasonal_flu_training_create_mutation_table:
         "logs/seasonal_flu_training_create_mutation_table_{method}.txt"
     shell:
         """
-        python3 notebooks/scripts/cluster_mutation.py \
+        pathogen-cluster-mutations \
             --reference-sequence {input.reference} \
             --alignment {input.alignment} \
-            --metadata {input.embedding} \
-            --metadata-column {wildcards.method}_label \
+            --clusters {input.embedding} \
+            --cluster-column {wildcards.method}_label \
             --min-allele-count {params.min_allele_count} \
             --min-allele-frequency {params.min_allele_frequency} \
+            --verbose \
             --output {output.table} 2>&1 | tee {log}
+        """
+
+rule seasonal_flu_training_create_mutation_table_for_clades:
+    input:
+        reference = "seasonal-flu-nextstrain/config/reference_h3n2_ha.fasta",
+        alignment = "seasonal-flu-nextstrain/results/aligned_sequences.fasta",
+        clades = "seasonal-flu-nextstrain/results/table_of_tips.tsv",
+    output:
+        table = "seasonal-flu-nextstrain/results/mutation_table_clade_membership.csv",
+    params:
+        min_allele_count=10,
+        min_allele_frequency=0.5,
+        cluster_column="clade_membership",
+    conda: "../cartography.yml"
+    benchmark:
+        "benchmarks/seasonal_flu_training_create_mutation_table_for_clades.txt"
+    log:
+        "logs/seasonal_flu_training_create_mutation_table_for_clades.txt"
+    shell:
+        """
+        csvtk tab2csv {input.clades} \
+            | pathogen-cluster-mutations \
+                --reference-sequence {input.reference} \
+                --alignment {input.alignment} \
+                --clusters /dev/stdin \
+                --cluster-column {params.cluster_column} \
+                --ignored-clusters unassigned \
+                --min-allele-count {params.min_allele_count} \
+                --min-allele-frequency {params.min_allele_frequency} \
+                --verbose \
+                --output {output.table} 2>&1 | tee {log}
         """
 
 rule seasonal_flu_training_concat_mutation_tables:
     input:
-        mutation_tables=expand("seasonal-flu-nextstrain/results/mutation_table_{method}.csv", method=EMBEDDING_METHODS + ["genetic"]),
+        mutation_tables=expand("seasonal-flu-nextstrain/results/mutation_table_{method}.csv", method=EMBEDDING_METHODS + ["genetic"]) + ["seasonal-flu-nextstrain/results/mutation_table_clade_membership.csv"],
     output:
         metadata = "seasonal-flu-nextstrain/results/mutation_table.csv",
     params:
-        column = "metadata_column",
+        column = "cluster_column",
     conda: "../cartography.yml"
     shell:
         """

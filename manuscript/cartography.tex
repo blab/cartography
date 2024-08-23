@@ -268,7 +268,7 @@ We optimized this minimum distance threshold by minimizing the VI distance betwe
 Clusters from all four embedding methods captured broad phylogenetic clades (A1, A1b, A2, A3, 3c2.A, and 3c3.A) but failed to distinguish between A1b and its descendants (Fig~\ref{fig:seasonal-influenza-h3n2-ha-2016-2018-clusters}).
 The 15 clusters from t-SNE and 7 from UMAP most accurately captured expert clade assignments (normalized VI=0.09), followed by PCA's 7 clusters (normalized VI=0.10) and MDS's 9 clusters (normalized VI=0.11).
 PCA and UMAP clusters failed to distinguish between A4 and its ancestral clade of 3c2.A.
-Although all methods produced clusters that were generally supported by cluster-specific mutations (Supplementary Table~S\ref{S_Table_mutations_per_cluster}), only MDS and t-SNE produced monophyletic clusters (Supplementary Table~S\ref{S_Table_monophyletic_clusters}).
+Although all methods produced clusters that were generally supported by cluster-specific mutations (Supplementary Table~S\ref{S_Table_mutations_per_cluster} and Supplementary Fig.~S\ref{S_Fig_group_specific_mutations}), only MDS and t-SNE produced monophyletic clusters (Supplementary Table~S\ref{S_Table_monophyletic_clusters}).
 The average pairwise genetic diversity within and between clusters matched the diversity within Nextstrain clades (Supplementary Fig.~S\ref{S_Fig_flu_within_between_group_distances}).
 These results indicate all embedding methods could potentially be well-suited for clustering and classification of H3N2 HA sequences.
 Clusters based on genetic distances were the farthest from Nextstrain clades (normalized VI=0.17, Supplementary Table~S\ref{S_Table_optimal_cluster_parameters}) and had higher average genetic diversity than clusters from embedding methods (Supplementary Fig.~S\ref{S_Fig_flu_within_between_group_distances}).
@@ -294,7 +294,7 @@ Previous work with MDS embeddings of HA sequences has shown that MDS's global op
 In this dataset, clade A3 represented an extreme example where MDS could not cluster a clade that had many homoplasies and few samples.
 In contrast, PCA, t-SNE, and UMAP correctly clustered A3 samples together in their embeddings, showing the robustness of these methods to homoplasies.
 Accordingly, clusters from all methods except MDS were monophyletic (Supplementary Table~S\ref{S_Table_monophyletic_clusters}).
-The majority of clusters from all methods were supported by cluster-specific mutations (Supplementary Table~S\ref{S_Table_mutations_per_cluster}),
+The majority of clusters from all methods were supported by cluster-specific mutations (Supplementary Table~S\ref{S_Table_mutations_per_cluster} and Supplementary Fig.~S\ref{S_Fig_group_specific_mutations}),
 The average of pairwise nucleotide differences within clusters generally matched the diversity within Nextstrain clades (Supplementary Fig.~S\ref{S_Fig_flu_within_between_group_distances}).
 As with the early H3N2 HA dataset, clusters from genetic distances between late H3N2 HA sequences had the highest within and between group pairwise nucleotide differences.
 
@@ -401,7 +401,7 @@ Since Nextstrain clades and Pango lineages represented different resolutions of 
 However, we found that the optimal thresholds were the same for both lineage definitions, except for genetic distance clusters which had a slightly higher optimal threshold for Pango lineages than Nextstrain clades (Supplementary Table~S\ref{S_Table_optimal_cluster_parameters}).
 The 19 clusters from t-SNE were closest to the 24 Nextstrain clades (normalized VI=0.09) followed by MDS, UMAP, genetic distances, and PCA with distances of 0.15, 0.16, 0.17, and 0.23, respectively (Fig.~\ref{fig:sars-cov-2-2020-2022-clusters-vs-Nextstrain-clade} and Supplementary Table~S\ref{S_Table_optimal_cluster_parameters}).
 Clusters from PCA, t-SNE, and UMAP all represented completely monophyletic groups (Supplementary Table~S\ref{S_Table_monophyletic_clusters}).
-Clusters from all methods were generally supported by cluster-specific mutations including 2 of 3 (67\%) PCA clusters, 9 of 16 (56\%) MDS clusters, 15 of 19 (79\%) t-SNE clusters, 5 of 6 (83\%) UMAP clusters, and 7 of 9 (78\%) genetic distance clusters (Supplementary Table~S\ref{S_Table_mutations_per_cluster}).
+Clusters from all methods were generally supported by cluster-specific mutations including 2 of 3 (67\%) PCA clusters, 9 of 16 (56\%) MDS clusters, 15 of 19 (79\%) t-SNE clusters, 5 of 6 (83\%) UMAP clusters, and 7 of 9 (78\%) genetic distance clusters (Supplementary Table~S\ref{S_Table_mutations_per_cluster} and Supplementary Fig.~S\ref{S_Fig_group_specific_mutations}).
 Clusters from t-SNE had the most similar within-group distances to Nextstrain clades (Supplementary Fig.~S\ref{S_Fig_sarscov2_within_between_group_distances}).
 
 Clusters from all methods were farther from the 35 Pango lineages (Supplementary Fig.~S\ref{S_Fig_sarscov2_early_embeddings_by_cluster_vs_Nextclade_pango} and Supplementary Table~S\ref{S_Table_optimal_cluster_parameters}).
@@ -424,7 +424,7 @@ Compared to the 17 Nextstrain clades defined in this time period (Supplementary 
 We attributed t-SNE's additional clusters to recombinant lineages that were genetically distinct but which received a generic ``recombinant'' label in Nextstrain's clade definitions instead of a unique clade name (Supplementary Fig.~S\ref{S_Fig_sarscov2_late_embeddings_by_Nextstrain_clade}).
 Although we did not consider these non-monophyletic recombinant samples when calculating VI distances between clusters and Nextstrain clades, these samples appear in each embedding where they could form their own distinct clusters.
 Only t-SNE, UMAP, and genetic distance clusters were fully monophyletic (Supplementary Table~S\ref{S_Table_monophyletic_clusters}).
-Genetic distance, PCA, and t-SNE clusters were best supported by cluster-specific mutations with 16 of 17 clusters (94\%), 6 of 7 clusters (86\%), and 51 of 66 clusters (77\%), respectively (Supplementary Table~S\ref{S_Table_mutations_per_cluster}).
+Genetic distance, PCA, and t-SNE clusters were best supported by cluster-specific mutations with 16 of 17 clusters (94\%), 6 of 7 clusters (86\%), and 51 of 66 clusters (77\%), respectively (Supplementary Table~S\ref{S_Table_mutations_per_cluster} and Supplementary Fig.~S\ref{S_Fig_group_specific_mutations}).
 Clusters from t-SNE had the lowest average within-group distances (Supplementary Fig.~S\ref{S_Fig_sarscov2_within_between_group_distances}).
 We observed similar absolute and relative distances to Nextstrain clades across methods at different sampling densities under an even geographic and temporal sampling scheme with t-SNE and UMAP consistently producing the most accurate clusters (Supplementary Fig.~S\ref{S_Fig_late_sarscov2_replication_of_cluster_accuracy}A).
 In the presence of geographic and genetic bias associated with randomly sampling the late SARS-CoV-2 data, UMAP produced the most accurate clusters across all sampling densities while t-SNE clusters became less accurate as the number of biased sequences increased (Supplementary Fig.~S\ref{S_Fig_late_sarscov2_replication_of_cluster_accuracy}B).

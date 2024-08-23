@@ -41,6 +41,6 @@ dependencies:
   - tabulate=0.8.9
   - ncbi-datasets-cli=15.26.0
   - pip:
-    - pathogen-embed==2.3.0
+    - pathogen-embed==3.1.0
     - statistics==1.0.3.5
     - svglib==1.1.0

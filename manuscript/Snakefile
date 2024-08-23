@@ -22,10 +22,8 @@ rule concat_mutation_tables:
             "seasonal-flu-nextstrain/results/mutation_table.csv",
             "seasonal-flu-nextstrain-2018-2020/results/mutation_table.csv",
             "ha-na-nextstrain/results/mutation_table.csv",
-            "sars-cov-2-nextstrain/results/mutation_table_for_Nextstrain_clade.csv",
-            "sars-cov-2-nextstrain/results/mutation_table_for_Nextclade_pango_collapsed.csv",
-            "sars-cov-2-nextstrain-2022-2023/results/mutation_table_for_Nextstrain_clade.csv",
-            "sars-cov-2-nextstrain-2022-2023/results/mutation_table_for_Nextclade_pango_collapsed.csv",
+            "sars-cov-2-nextstrain/results/mutation_table.csv",
+            "sars-cov-2-nextstrain-2022-2023/results/mutation_table.csv",
         ]
     output:
         csv_table = "manuscript/tables/mutation_table.csv",
@@ -145,6 +143,19 @@ rule concat_accessions_and_authors_tables:
         csvtk concat -t {input.authors} > {output.authors}
         """
 
+rule manuscript_plot_group_specific_mutations:
+    input:
+        mutation_table="manuscript/tables/mutation_table.csv",
+    output:
+        figure="manuscript/figures/group-specific-mutations-per-dataset-and-genetic-group.png",
+    conda: "../cartography.yml"
+    shell:
+        """
+        python3 notebooks/scripts/plot_group_specific_mutations.py \
+            --mutation-table {input.mutation_table} \
+            --output {output.figure}
+        """
+
 rule manuscript_pdf:
     input:
         *rules.pathogens.input,
@@ -159,6 +170,7 @@ rule manuscript_pdf:
         "manuscript/figures/sarscov2-cluster-accuracy-by-parameter-for-Nextclade_pango_collapsed.png",
         "manuscript/figures/sarscov2-test-replication-of-cluster-accuracy.png",
         "manuscript/figures/sarscov2-test-tsne-recombinant-counts-Nextstrain_clade.png",
+        "manuscript/figures/group-specific-mutations-per-dataset-and-genetic-group.png",
         manuscript="manuscript/cartography.tex",
         bibliography="manuscript/cartography.bib",
         accuracy_table="manuscript/tables/accuracy_table.tex",

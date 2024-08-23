@@ -32,10 +32,10 @@
 \end{table}
 
 \begin{table}
-\caption{{\bf Mutations observed per embedding cluster relative to a reference genome sequence for each pathogen.}
-Each row reflects the alternate allele identified at a specific position of the given pathogen genome or gene sequence, the pathogen dataset, the embedding method, the number of clusters in the embedding with the observed mutation, and the list of distinct cluster labels with the mutation.
+\caption{{\bf Mutations observed per embedding cluster or Nextstrain clade relative to a reference genome sequence for each pathogen.}
+Each row reflects the alternate allele identified at a specific position of a given pathogen genome or gene sequence, the pathogen dataset, the genetic group (an embedding cluster or Nextstrain clade), the number of clusters in the genetic group with the observed mutation, and the list of distinct genetic group labels with the mutation.
 Mutations must have occurred in at least 10 samples of the given dataset with an allele frequency of at least 50\% to be reported in the table.
-Cluster-specific mutations appear in rows with a \emph{cluster\_count} value of 1.
+Cluster- or clade-specific mutations appear in rows with a \emph{cluster\_count} value of 1.
 Data available at \url{https://zenodo.org/records/11111453/files/S3_Table.csv}.}\label{S_Table_mutations_per_cluster}
 \end{table}
 
@@ -89,6 +89,14 @@ Line colors represent the clade membership of the most ancestral node in the pai
 Line thickness in the embeddings scales by the square root of the number of leaves descending from a given node in the phylogeny.
 Clade labels appear in the tree at the earliest ancestral node of the tree for each clade.
 Clade labels appear in each embedding at the average position on the x and y axis for sequences in a given clade.}\label{S_Fig_early_flu_mds_embeddings}
+\end{figure}
+
+\begin{figure}[!h]
+\includegraphics[width=0.9\columnwidth]{figures/group-specific-mutations-per-dataset-and-genetic-group.png}
+\caption{{\bf Number of group-specific mutations per pathogen dataset (rows) and genetic group type (x-axis).}
+  Each point represents an individual Nextstrain clade or embedding cluster and the number of nucleotide mutations that were specific to that group.
+  These counts come from filtering Supplementary Table S\ref{S_Table_mutations_per_cluster} to mutations with a cluster count of 1, grouping the remaining records by dataset name and cluster column, and counting the number of records per group.
+}\label{S_Fig_group_specific_mutations}
 \end{figure}
 
 \begin{figure}[!h]
