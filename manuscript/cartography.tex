@@ -125,11 +125,11 @@ Our open source implementation of these methods for analysis of viral genome seq
 
 Tracking the evolution of human pathogenic viruses in real time enables epidemiologists to respond quickly to emerging epidemics and local outbreaks \citep{Grubaugh2019}.
 Real-time analyses of viral evolution typically rely on phylogenetic methods that can reconstruct the evolutionary history of viral populations from their genome sequences and estimate states of inferred ancestral viruses from the resulting trees including their most likely genome sequence, time of circulation, and geographic location \citep{Volz2013,Baele2017,Sagulenko2018}.
-Importantly, these methods assume that the sequence diversity of sampled tips accrued through clonal evolution, that is, the occurrence of mutations on top of an inherited genomic background, that is further inherited by descendent pathogens.
+Importantly, these methods assume that the sequence diversity of sampled tips accrued through clonal evolution, that is, the occurrence of mutations on top of an inherited genomic background, that is further inherited by descendant pathogens.
 In practice, the evolutionary histories of many human pathogenic viruses violate this assumption through processes of reassortment or recombination, as seen in seasonal influenza \citep{Nelson2008,Marshall2013} and seasonal coronaviruses \citep{Su2016}, respectively.
 Researchers account for these evolutionary mechanisms by limiting their analyses to individual genes \citep{Lemey2007,Bhatt2011}, combining multiple genes despite their different evolutionary histories \citep{Wiens1998}, or developing more sophisticated models to represent the joint likelihoods of multiple co-evolving lineages with ancestral reassortment or recombination graphs \citep{Barrat-Charlaix2022,Muller2022}.
 However, several key questions in genomic epidemiology do not require inference of ancestral relationships and states, and therefore may be amenable to non-phylogenetic approaches for summarizing genetic relationships.
-For example, genomic epidemiologists commonly need to 1) visualize the genetic relationships among closely related virus samples \citep{Argimon2016,Campbell2021}, 2) identify clusters of closely-related genomes that represent regional outbreaks or new variants of concern \citep{OToole2022,McBroome2022,Stoddard2022,Tran-Kiem2023}, 3) place newly sequenced viral genomes in the evolutionary context of other circulating samples \citep{OToole2021,Turakhia2021,Aksamentov2021}.
+For example, genomic epidemiologists commonly need to 1) visualize the genetic relationships among closely related virus samples \citep{Argimon2016,Campbell2021}, 2) identify clusters of closely-related genomes that represent regional outbreaks or new variants of concern \citep{OToole2022,McBroome2022,Stoddard2022,Tran-Kiem2023}, and 3) place newly sequenced viral genomes in the evolutionary context of other circulating samples \citep{OToole2021,Turakhia2021,Aksamentov2021}.
 Given that these common use cases rely on genetic distances between samples, tree-free statistical methods that operate on pairwise distances could be sufficient to address each case.
 As these tree-free methods lack a formal biological model of evolutionary relationships, they make weak assumptions about the input data and therefore should be applicable to pathogen genomes that violate phylogenetic assumptions.
 Furthermore, methods that describe genetic relationships with network-like visualizations may feel more familiar to public health practitioners who are accustomed to viewing contact tracing networks alongside genomic information in tools like MicrobeTrace \citep{Campbell2021} or MicroReact \citep{Argimon2016} and for viral pathogens like HIV \citep{Wertheim2017,Campbell2020} and SARS-CoV-2 \citep{Kirbiyik2020,Vang2021}.
@@ -270,7 +270,7 @@ The 15 clusters from t-SNE and 7 from UMAP most accurately captured expert clade
 PCA and UMAP clusters failed to distinguish between A4 and its ancestral clade of 3c2.A.
 Although all methods produced clusters that were generally supported by cluster-specific mutations (Supplementary Table~S\ref{S_Table_mutations_per_cluster} and Supplementary Fig.~S\ref{S_Fig_group_specific_mutations}), only MDS and t-SNE produced monophyletic clusters (Supplementary Table~S\ref{S_Table_monophyletic_clusters}).
 The average pairwise genetic diversity within and between clusters matched the diversity within Nextstrain clades (Supplementary Fig.~S\ref{S_Fig_flu_within_between_group_distances}).
-These results indicate all embedding methods could potentially be well-suited for clustering and classification of H3N2 HA sequences.
+These results indicate that all embedding methods could potentially be well-suited for clustering and classification of H3N2 HA sequences.
 Clusters based on genetic distances were the farthest from Nextstrain clades (normalized VI=0.17, Supplementary Table~S\ref{S_Table_optimal_cluster_parameters}) and had higher average genetic diversity than clusters from embedding methods (Supplementary Fig.~S\ref{S_Fig_flu_within_between_group_distances}).
 These results suggest that applying dimensionality reduction methods prior to clustering could improve cluster accuracy.
 
@@ -289,12 +289,12 @@ These clades had a greater average between-clade distance than clades in the ear
 Clusters from PCA (N=5), MDS (N=6), t-SNE (N=7), and UMAP (N=8) were similarly accurate, with normalized VI distances of 0.07, 0.08, 0.05, and 0.09, respectively (Fig.~\ref{fig:seasonal-influenza-h3n2-ha-2018-2020-clusters}, Supplementary Fig.~S\ref{S_Fig_late_flu_mds_embeddings}, and Supplementary Table~S\ref{S_Table_optimal_cluster_parameters}).
 Genetic distance clusters (N=4) were farthest from Nextstrain clades (normalized VI=0.12, Supplementary Table~\ref{S_Table_optimal_cluster_parameters}).
 MDS split clade A3's 17 samples into two widely separated groups in its Euclidean space.
-On further inspection of this clade in the tree, we found seven homoplasies (mutations that also occur elsewhere in the tree) on the branch leading to A3 and ten homoplasies on the branch leading to one of A3's subclades.
+On further inspection of this clade in the tree, we found 7 homoplasies (mutations that also occur elsewhere in the tree) on the branch leading to A3 and 10 homoplasies on the branch leading to one of A3's subclades.
 Previous work with MDS embeddings of HA sequences has shown that MDS's global optimization algorithm is sensitive to homoplasies \citep{Ito2011}.
 In this dataset, clade A3 represented an extreme example where MDS could not cluster a clade that had many homoplasies and few samples.
 In contrast, PCA, t-SNE, and UMAP correctly clustered A3 samples together in their embeddings, showing the robustness of these methods to homoplasies.
 Accordingly, clusters from all methods except MDS were monophyletic (Supplementary Table~S\ref{S_Table_monophyletic_clusters}).
-The majority of clusters from all methods were supported by cluster-specific mutations (Supplementary Table~S\ref{S_Table_mutations_per_cluster} and Supplementary Fig.~S\ref{S_Fig_group_specific_mutations}),
+The majority of clusters from all methods were supported by cluster-specific mutations (Supplementary Table~S\ref{S_Table_mutations_per_cluster} and Supplementary Fig.~S\ref{S_Fig_group_specific_mutations}).
 The average of pairwise nucleotide differences within clusters generally matched the diversity within Nextstrain clades (Supplementary Fig.~S\ref{S_Fig_flu_within_between_group_distances}).
 As with the early H3N2 HA dataset, clusters from genetic distances between late H3N2 HA sequences had the highest within and between group pairwise nucleotide differences.
 
@@ -314,7 +314,7 @@ However, genetic distance clusters were consistently accurate under biased sampl
 These results show that all four methods can produce clusters that accurately capture known genetic groups when applied to previously unseen H3N2 HA samples with unbiased sampling.
 Clusters from PCA, MDS, and genetic distances are better choices when the composition of sequences is biased strongly by geography or time.
 
-\subsection{Joint embeddings of hemagglutinin and neuraminidase genomes identify seasonal influenza virus H3N2 reassortment events}
+\subsection{Joint embeddings of hemagglutinin and neuraminidase sequences identify seasonal influenza virus H3N2 reassortment events}
 
 Given that clusters from embedding methods could recapitulate expert-defined clades, we measured how well the same methods could capture reassortment events between multiple gene segments as detected by biologically-informed computational models.
 Evolution of HA and NA surface proteins contributes to the ability of influenza viruses to escape existing immunity \citep{Petrova2018} and HA and NA genes frequently reassort \citep{Nelson2008,Marshall2013,Potter2019}.
@@ -453,7 +453,7 @@ The VI distance between Pango lineages and all clusters (including the uncluster
 This distance was consistent with the distance of 0.14 between Pango lineages and t-SNE clusters from both the full early and late SARS-CoV-2 datasets.
 The VI distance between Pango lineages and clusters without the unclustered sequences was 0.13, confirming that one quarter of the distance between t-SNE clusters and Pango lineages above came from unclustered sequences.
 Of the 38 Pango lineages with a t-SNE cluster, 30 lineages (79\%) had a single corresponding t-SNE cluster, seven lineages (18\%) had two or three t-SNE clusters, and one lineage (B.1.617.2) had five t-SNE clusters (Supplementary Fig.~S\ref{S_Fig_sarscov2_single_clade_embeddings_tsne_counts}).
-Of the 28 t-SNE clusters, 21 clusters (75\%) had a single corresponding Pango lineage, six (21\%) mapped to two or three Pango lineages, and one (cluster 27) mapped to 18 Pango lineages with most sequences from B.1.617.2 and AY.4.
+Of the 28 t-SNE clusters, 21 clusters (75\%) had a single corresponding Pango lineage, 6 (21\%) mapped to two or three Pango lineages, and 1 (cluster 27) mapped to 18 Pango lineages with most sequences from B.1.617.2 and AY.4.
 These results suggest that clusters from t-SNE embeddings can capture more Pango-resolution genetic groups by analyzing sequences within a specific Nextstrain clade.
 
 \subsection{Distance-based embeddings reflect SARS-CoV-2 recombination events}
@@ -722,7 +722,7 @@ We plotted the distribution of the resulting VI distances, to estimate the robus
 To quantify the degree to which embedding clusters represented monophyletic groups in a pathogen phylogeny, we counted the number of times clusters from each embedding method appeared in different parts of the tree.
 Specifically, we applied \texttt{augur traits} with TreeTime (version 0.10.1) \citep{Sagulenko2018,Huddleston2021} to infer cluster labels for internal nodes of the phylogeny for each pathogen dataset and embedding method.
 Using a preorder traversal of the tree, we identified each transition between different cluster labels assigned to pairs of ancestral and derived internal nodes.
-Since the ``unclustered'' cluster label of ``-1'' produced by HBSCAN could occur in both ancestral and derived nodes and lead to overcounting transitions, we only logged transitions with this label in the ancestral state (e.g., transition from cluster -1 to cluster 0 but not cluster 0 to cluster -1).
+Since the ``unclustered'' cluster label of ``-1'' produced by HDBSCAN could occur in both ancestral and derived nodes and lead to overcounting transitions, we only logged transitions with this label in the ancestral state (e.g., transition from cluster -1 to cluster 0 but not cluster 0 to cluster -1).
 For each embedding, we counted the number of distinct clusters, total transitions, and excess transitions beyond the expected single transition between pairs of clusters.
 Embeddings with no excess transitions between clusters represented monophyletic groups.
 
