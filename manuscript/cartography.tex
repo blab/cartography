@@ -531,7 +531,7 @@ Alternately, researchers may choose to apply similar existing tools developed fo
 In the short term, these methods can identify biologically-relevant clusters from viral sequence alignments.
 For example, researchers can apply t-SNE and HDBSCAN clustering to alignments of unsegmented viruses like Zika or Ebola that lack existing clade definitions to identify candidate phylogenetic groups.
 Similarly, researchers can jointly build embeddings from alignments of segmented viruses like influenza and identify clusters corresponding to putative reassortment groups.
-This application benefits routine surveillance efforts for seasonal influenza performed by Nextstrain where identification of HA and NA reassortment may indicate important fitness or transmission patterns \citep{Huddleston2024}.
+For example, the Nextstrain team now routinely produces t-SNE embeddings and clusters from HA and NA sequences for weekly seasonal influenza analyses at \url{https://nextstrain.org/seasonal-flu/} to track reassortment events.
 Researchers can also quickly apply these methods in response to outbreaks like the recent H5N1 avian influenza outbreak in cattle in the United States \citep{Nguyen2024}.
 As a proof of concept, we applied t-SNE to all eight gene segments of recent H5N1 sequences, identified clusters with HDBSCAN, and confirmed the previously reported reassortment groups with PB2/NP and the other gene segments in the cattle outbreak.
 Researchers can easily visualize their embeddings in standard visualization tools for genomic epidemiology including Nextstrain's Auspice \citep{Hadfield2018}, MicrobeTrace \citep{Campbell2021}, or MicroReact \citep{Argimon2016}.
