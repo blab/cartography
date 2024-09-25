@@ -490,6 +490,7 @@ First, evenly sample the available genome sequences across time and geography, t
 Then, choose which embedding method to use based on the question under investigation.
 For analyses that require the most accurate low-dimensional representation of pairwise genetic distances across local and global scales, use MDS with 3 dimensions.
 For analyses that need to find clusters of closely related samples, use t-SNE with a perplexity of 100 (or less, if using fewer than 100 samples) and a learning rate that scales with the number of samples in the data.
+Since the HDBSCAN algorithm relies on the density of samples in a given coordinate space to find clusters and samples are less likely to place close together in higher dimensions \citep{campello2015hierarchical}, we recommend clustering with low-dimensional embeddings of sequences instead of the higher-dimensional pairwise distance matrices.
 In all cases, plot the relationship between pairwise genetic distances and Euclidean distances in each embedding.
 These plots reveal the range of genetic distances that an embedding can represent linearly and act as a sanity check akin to plotting the temporal signal present in samples prior to inferring a time-scaled phylogeny \citep{Rambaut2016,Sagulenko2018}.
 Before finding clusters in the t-SNE embedding, determine the minimum genetic distance desired between clusters, and use the pairwise genetic and Euclidean distance plot to find the corresponding Euclidean distance to use as a threshold for HDBSCAN.
