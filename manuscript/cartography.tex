@@ -680,7 +680,7 @@ We used these ``collapsed Nextclade Pango'' lineages for subsequent analyses.
 
 \subsection{Clustering of samples in embeddings}
 
-To understand how well embeddings of genetic data could capture previously defined genetic groups, we applied an unsupervised clustering algorithm, HDBSCAN \citep{campello2015hierarchical}, to each embedding.
+To understand how well embeddings of genetic data could capture previously defined genetic groups, we applied an unsupervised clustering algorithm, HDBSCAN \citep{campello2015hierarchical}, to each embedding using the Python-based \texttt{hdbscan} package \citep{McInnes2017}.
 In addition to the four embedding methods, we identified HDBSCAN clusters from a fifth ``method'' of precomputed pairwise genetic distances.
 This genetic distance method allowed us to understand how clusters differed between low- and high-dimensional inputs.
 HDBSCAN identifies initial clusters from high-density regions in the input space and merges these clusters hierarchically.
