@@ -1013,6 +1013,7 @@ rule sarscov2_test_create_notebook_docs:
         umap_label=lambda wildcards: f"umap_label_for_{wildcards.clade_membership}",
         plot_branches=False,
         clades_to_label=get_late_sarscov2_clades_to_label,
+        dataset="late",
     conda: "../cartography.yml"
     notebook:
         "../sars-cov-2-nextstrain/2022-03-29-final-figures.py.ipynb"

@@ -1001,6 +1001,7 @@ rule sarscov2_create_notebook_docs:
         umap_label=lambda wildcards: f"umap_label_for_{wildcards.clade_membership}",
         plot_branches=True,
         clades_to_label=get_early_sarscov2_clades_to_label,
+        dataset="early",
     conda: "../cartography.yml"
     notebook:
         "2022-03-29-final-figures.py.ipynb"

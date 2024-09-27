@@ -246,14 +246,23 @@ def scatterplot_with_tooltip_interactive(finalDf, x, y, Titlex, Titley, ToolTip,
     return chart
 
 
-def get_clade_label_chart(df, x_column, y_column, text_column):
+def get_clade_label_chart(
+    df, x_column, y_column, text_column, drop_labels=None,
+    xoffset_by_label=None,
+    yoffset_by_label=None,
+):
     """Build an Altair chart of text labels from the given data frame, placing
     labels at the mean x and y position of the given x and y columns and using
     text from the given text column.
 
     """
+    if drop_labels is None:
+        drop_labels = {"other"}
+    else:
+        drop_labels = set(drop_labels) | {"other"}
+
     clade_label_positions = df.loc[
-        (~df["is_internal_node"]) & (df[text_column] != "other"),
+        (~df["is_internal_node"]) & (~df[text_column].isin(drop_labels)),
         [text_column, x_column, y_column]
     ].groupby(
         text_column
@@ -261,6 +270,18 @@ def get_clade_label_chart(df, x_column, y_column, text_column):
         x_column: "mean",
         y_column: "mean",
     }).reset_index()
+
+    if xoffset_by_label is not None:
+        clade_label_positions[x_column] = clade_label_positions.apply(
+            lambda record: record[x_column] + xoffset_by_label.get(record[text_column], 0),
+            axis=1
+        ).values
+
+    if yoffset_by_label is not None:
+        clade_label_positions[y_column] = clade_label_positions.apply(
+            lambda record: record[y_column] + yoffset_by_label.get(record[text_column], 0),
+            axis=1
+        ).values
 
     clade_labels_chart = alt.Chart(clade_label_positions).mark_text().encode(
         x=f"{x_column}:Q",
