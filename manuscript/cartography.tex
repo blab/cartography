@@ -490,6 +490,7 @@ First, evenly sample the available genome sequences across time and geography, t
 Then, choose which embedding method to use based on the question under investigation.
 For analyses that require the most accurate low-dimensional representation of pairwise genetic distances across local and global scales, use MDS with 3 dimensions.
 For analyses that need to find clusters of closely related samples, use t-SNE with a perplexity of 100 (or less, if using fewer than 100 samples) and a learning rate that scales with the number of samples in the data.
+Since the HDBSCAN algorithm relies on the density of samples in a given coordinate space to find clusters and samples are less likely to place close together in higher dimensions \citep{campello2015hierarchical}, we recommend clustering with low-dimensional embeddings of sequences instead of the higher-dimensional pairwise distance matrices.
 In all cases, plot the relationship between pairwise genetic distances and Euclidean distances in each embedding.
 These plots reveal the range of genetic distances that an embedding can represent linearly and act as a sanity check akin to plotting the temporal signal present in samples prior to inferring a time-scaled phylogeny \citep{Rambaut2016,Sagulenko2018}.
 Before finding clusters in the t-SNE embedding, determine the minimum genetic distance desired between clusters, and use the pairwise genetic and Euclidean distance plot to find the corresponding Euclidean distance to use as a threshold for HDBSCAN.
@@ -620,7 +621,7 @@ For both viruses, we divided the available data into ``early'' and ``late'' data
 
 For analyses that focused only on H3N2 HA data, we defined the early dataset between January 2016 and January 2018 and the late dataset between January 2018 to January 2020.
 These datasets reflected two years of recent H3N2 evolution up to the time when the SARS-CoV-2 pandemic disrupted seasonal influenza circulation.
-For both early and late datasets, we evenly sampled 25 sequences per country, year, and month.
+For both early and late datasets, we evenly sampled 25 sequences per country and per month of each year.
 We excluded outliers which were sequences either labeled as environmental samples, containing over 100 gap characters within the HA sequence, or flagged by TreeTime \citep{Sagulenko2018} for having a phylogenetic divergence that exceeded four times the interquartile interval of residuals from a root-to-tip regression for all sequences in the same tree.
 With this sampling scheme, we selected 1,523 HA sequences for the early dataset and 1,073 for the late dataset.
 For analyses that combined H3N2 HA and NA data, we defined a single dataset between January 2016 and January 2018, keeping 1,607 samples for which both HA and NA have been sequenced.
@@ -680,7 +681,7 @@ We used these ``collapsed Nextclade Pango'' lineages for subsequent analyses.
 
 \subsection{Clustering of samples in embeddings}
 
-To understand how well embeddings of genetic data could capture previously defined genetic groups, we applied an unsupervised clustering algorithm, HDBSCAN \citep{campello2015hierarchical}, to each embedding.
+To understand how well embeddings of genetic data could capture previously defined genetic groups, we applied an unsupervised clustering algorithm, HDBSCAN \citep{campello2015hierarchical}, to each embedding using the Python-based \texttt{hdbscan} package \citep{McInnes2017}.
 In addition to the four embedding methods, we identified HDBSCAN clusters from a fifth ``method'' of precomputed pairwise genetic distances.
 This genetic distance method allowed us to understand how clusters differed between low- and high-dimensional inputs.
 HDBSCAN identifies initial clusters from high-density regions in the input space and merges these clusters hierarchically.
@@ -771,7 +772,7 @@ A.B. and T.B. reviewed and edited the manuscript.
 
 \section*{Acknowledgments}
 
-We thank James Hadfield, Katie Kistler, Maya Lewinsohn, Nicola Muller, Louise Moncla, Nidia Trovao, and Michael Zeller for constructive feedback on this project.
+We thank James Hadfield, Katie Kistler, Maya Lewinsohn, Nicola Muller, Louise Moncla, Nidia Trovao, Michael Zeller, and anonymous reviewers for their constructive feedback on this project.
 We gratefully acknowledge the originating and submitting laboratories of seasonal influenza and SARS-CoV-2 sequences from INSDC databases without whom this work would not be possible (Supplementary Table~S\ref{S_Table_accessions}).
 
 \subsection*{Funding}
