@@ -25,4 +25,4 @@ if __name__ == "__main__":
         width=400,
         height=400,
     )
-    chart.save(args.output, format="png", scale_factor=2.0)
+    chart.save(args.output, format="png", ppi=300)
