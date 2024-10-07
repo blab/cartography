@@ -13,3 +13,7 @@ pdflatex -draftmode ${TITLE}
 bibtex ${TITLE}
 pdflatex -draftmode ${TITLE}
 pdflatex ${TITLE}
+
+pdflatex -draftmode ${TITLE}_supplement
+pdflatex -draftmode ${TITLE}_supplement
+pdflatex ${TITLE}_supplement
