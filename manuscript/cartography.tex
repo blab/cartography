@@ -40,7 +40,7 @@
 
 %\usepackage{showframe}
 
-\graphicspath{{Fig/}}
+\graphicspath{{./}{./figures/}}
 
 % line numbers
 %\usepackage[mathlines, switch]{lineno}
@@ -195,9 +195,8 @@ MDS maintained the greatest continuity between generations for both population t
 In contrast, PCA, t-SNE, and UMAP all demonstrated tighter clusters of samples separated by potentially arbitrary space.
 These qualitative results matched our expectations based on how well each method maximized a linear relationship between genetic and Euclidean distances during parameter optimization (Supplementary Fig.~S\ref{S_Fig_simulated_flu_errors} and Supplementary Fig.~S\ref{S_Fig_simulated_coronavirus_errors}).
 
-\begin{figure}[!h]
-% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
-\includegraphics[width=\columnwidth]{figures/simulated-populations-representative-embeddings.png}
+\begin{figure}[!ht]
+\includegraphics[width=\columnwidth]{simulated-populations-representative-embeddings.png}
 \caption{{\bf Representative embeddings for simulated populations using optimal parameters per pathogen (rows) and embedding method (columns).}
   Each panel shows the embedding for sequences from the first four years of a single replicate population for the corresponding pathogen type.
   Each point represents a simulated viral sequence colored by its generation with darker values representing later generations.
@@ -231,9 +230,8 @@ These results qualitatively replicate the patterns we observed in embeddings for
 % For figure citations, please use "Fig" instead of "Figure".
 
 % Place figure captions after the first paragraph in which they are cited.
-\begin{figure}[!h]
-% TODO: remove includegraphics commands in final submission; figures must be uploaded separately from the manuscript.
-\includegraphics[width=0.9\columnwidth]{figures/flu-2016-2018-ha-embeddings-by-clade.png}
+\begin{figure}[!ht]
+\includegraphics[width=0.9\columnwidth]{flu-2016-2018-ha-embeddings-by-clade.png}
 \caption{{\bf Phylogeny of early (2016--2018) influenza H3N2 HA sequences plotted by nucleotide substitutions per site on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
   Tips in the tree and embeddings are colored by their Nextstrain clade assignment.
   Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
@@ -251,8 +249,8 @@ Only MDS consistently maintained that linearity as genetic distance increased (P
 We observed a less linear relationship for samples with more genetic differences in PCA (Pearson's $R^{2} = 0.75$), t-SNE (Pearson's $R^{2} = 0.38$), and UMAP (Pearson's $R^{2} = 0.52$) embeddings.
 While PCA and UMAP Euclidean distances increased monotonically with genetic distance, t-SNE embeddings placed some pairs of samples with intermediate distances of 35-45 nucleotides closer together than pairs of samples with lower genetic distances.
 
-\begin{figure}[!h]
-\includegraphics[width=0.9\columnwidth]{figures/flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png}
+\begin{figure}[!ht]
+\includegraphics[width=0.9\columnwidth]{flu-2016-2018-ha-euclidean-distance-by-genetic-distance.png}
 \caption{{\bf Relationship between pairwise genetic and Euclidean distances in embeddings of early (2016--2018) influenza H3N2 HA sequences by PCA (upper left), MDS (upper right), t-SNE (lower left), and UMAP (lower right).}
   Each boxplot represents the distribution of pairwise Euclidean distances at a given genetic distance.
   Panel titles include Pearson's $R^{2}$ values and linear regression coefficients between the plotted distances.
@@ -274,8 +272,8 @@ These results indicate that all embedding methods could potentially be well-suit
 Clusters based on genetic distances were the farthest from Nextstrain clades (normalized VI=0.17, Supplementary Table~S\ref{S_Table_optimal_cluster_parameters}) and had higher average genetic diversity than clusters from embedding methods (Supplementary Fig.~S\ref{S_Fig_flu_within_between_group_distances}).
 These results suggest that applying dimensionality reduction methods prior to clustering could improve cluster accuracy.
 
-\begin{figure}[!h]
-\includegraphics[width=0.9\columnwidth]{figures/flu-2016-2018-ha-embeddings-by-cluster.png}
+\begin{figure}[!ht]
+\includegraphics[width=0.9\columnwidth]{flu-2016-2018-ha-embeddings-by-cluster.png}
 \caption{{\bf Phylogenetic trees (left) and embeddings (right) of early (2016--2018) influenza H3N2 HA sequences colored by HDBSCAN cluster.}
   Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Nextstrain clades).
   Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
@@ -298,8 +296,8 @@ The majority of clusters from all methods were supported by cluster-specific mut
 The average of pairwise nucleotide differences within clusters generally matched the diversity within Nextstrain clades (Supplementary Fig.~S\ref{S_Fig_flu_within_between_group_distances}).
 As with the early H3N2 HA dataset, clusters from genetic distances between late H3N2 HA sequences had the highest within and between group pairwise nucleotide differences.
 
-\begin{figure}[!h]
-\includegraphics[width=0.9\columnwidth]{figures/flu-2018-2020-ha-embeddings-by-cluster.png}
+\begin{figure}[!ht]
+\includegraphics[width=0.9\columnwidth]{flu-2018-2020-ha-embeddings-by-cluster.png}
 \caption{{\bf Phylogenetic trees (left) and embeddings (right) of late (2018--2020) H3N2 HA sequences colored by HDBSCAN cluster.}
   Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Nextstrain clades).
   Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
@@ -337,8 +335,8 @@ Other pairs of larger reassortment events that occurred in the same part of the 
 We noted that some of the additional clusters in HA/NA embeddings likely also reflected genetic diversity in NA that was independent of reassortment between HA and NA.
 These results suggest that a single embedding of multiple gene segments could identify biologically meaningful clusters within and between all genes.
 
-\begin{figure}[!h]
-\includegraphics[width=0.9\columnwidth]{figures/flu-2016-2018-ha-na-embeddings-by-mcc.png}
+\begin{figure}[!ht]
+\includegraphics[width=0.9\columnwidth]{flu-2016-2018-ha-na-embeddings-by-mcc.png}
 \caption{{\bf Phylogeny of early (2016--2018) influenza H3N2 HA sequences plotted by nucleotide substitutions per site on the x-axis (top) and low-dimensional embeddings of the same HA sequences concatenated with matching NA sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
   Tips in the tree and embeddings are colored by their TreeKnit Maximally Compatible Clades (MCCs) label which represents putative HA/NA reassortment groups.
   Tips from MCCs with fewer than 10 sequences are colored as ``unassigned''.
@@ -368,8 +366,8 @@ We did not observe the same clear grouping of Pango lineages.
 For example, the Nextstrain clade 21J (Delta) contained 11 Pango lineages that all appeared to map into the same overlapping space in all four embeddings (Supplementary Fig.~S\ref{S_Fig_sarscov2_early_embeddings_by_Nextclade_pango}).
 These results suggest that distance-based embedding methods can recapitulate broader genetic groups of SARS-CoV-2, but that these methods lack the resolution of finer groups defined by Pango nomenclature.
 
-\begin{figure}[!h]
-\includegraphics[width=0.9\columnwidth]{figures/sarscov2-embeddings-by-Nextstrain_clade-clade.png}
+\begin{figure}[!ht]
+\includegraphics[width=0.9\columnwidth]{sarscov2-embeddings-by-Nextstrain_clade-clade.png}
 \caption{{\bf Phylogeny of early (2020--2022) SARS-CoV-2 sequences plotted by number of nucleotide substitutions from the most recent common ancestor on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
   Tips in the tree and embeddings are colored by their Nextstrain clade assignment.
   Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
@@ -387,8 +385,8 @@ These embeddings placed the most genetically similar samples close together and 
 However, these embeddings did not consistently place pairs of samples with intermediate genetic distances at an intermediate distance in Euclidean space.
 The linear relationship for genetically similar samples in t-SNE and UMAP remained consistent up to a genetic distance of approximately 30 nucleotides.
 
-\begin{figure}[!h]
-\includegraphics[width=\columnwidth]{figures/sarscov2-euclidean-distance-by-genetic-distance.png}
+\begin{figure}[!ht]
+\includegraphics[width=\columnwidth]{sarscov2-euclidean-distance-by-genetic-distance.png}
 \caption{{\bf Relationship between pairwise genetic and Euclidean distances in embeddings for early (2020--2022) SARS-CoV-2 sequences by PCA (upper left), MDS (upper right), t-SNE (lower left), and UMAP (lower right).}
   Each boxplot represents the distribution of pairwise Euclidean distances at a given genetic distance.
   Panel titles include Pearson's $R^{2}$ values and linear regression coefficients between the plotted distances.
@@ -409,8 +407,8 @@ The 19 clusters from t-SNE were the closest (normalized VI=0.14) followed by MDS
 We found that within-cluster distances for t-SNE were lower on average than within-lineage Pango distances, suggesting that Pango lineages were not as tightly scoped as we originally expected (Supplementary Fig.~S\ref{S_Fig_sarscov2_within_between_group_distances}).
 These results confirm quantitatively that these embeddings methods can accurately capture broader genetic diversity of SARS-CoV-2, but most methods cannot distinguish between fine resolution genetic groups defined by Pango lineage nomenclature.
 
-\begin{figure}[!h]
-\includegraphics[width=0.9\columnwidth]{figures/sarscov2-embeddings-by-cluster-vs-Nextstrain_clade.png}
+\begin{figure}[!ht]
+\includegraphics[width=0.9\columnwidth]{sarscov2-embeddings-by-cluster-vs-Nextstrain_clade.png}
 \caption{{\bf Phylogenetic trees (left) and embeddings (right) of early (2020--2022) SARS-CoV-2 sequences colored by HDBSCAN cluster.}
   Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Nextstrain clades).
   Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
@@ -430,8 +428,8 @@ We observed similar absolute and relative distances to Nextstrain clades across 
 In the presence of geographic and genetic bias associated with randomly sampling the late SARS-CoV-2 data, UMAP produced the most accurate clusters across all sampling densities while t-SNE clusters became less accurate as the number of biased sequences increased (Supplementary Fig.~S\ref{S_Fig_late_sarscov2_replication_of_cluster_accuracy}B).
 In contrast to the same analysis for H3N2 HA populations, clusters from genetic distances were consistently farther from Nextstrain clades than clusters from embeddings across all sampling densities and biases.
 
-\begin{figure}[!h]
-\includegraphics[width=0.9\columnwidth]{figures/sarscov2-test-embeddings-by-cluster-vs-Nextstrain_clade.png}
+\begin{figure}[!ht]
+\includegraphics[width=0.9\columnwidth]{sarscov2-test-embeddings-by-cluster-vs-Nextstrain_clade.png}
 \caption{{\bf Phylogenetic trees (left) and embeddings (right) of late (2022--2023) SARS-CoV-2 sequences colored by HDBSCAN cluster.}
   Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Nextstrain clades).
 }
@@ -788,6 +786,285 @@ This work was supported by NIH NIGMS award R35 GM119774 to T.B., BMGF award INV-
 \bibliographystyle{unsrt}
 \bibliography{cartography}
 
-\include{cartography_supplement}
+\pagebreak
+
+\section*{Supplementary data}
+
+\setcounter{figure}{0}
+\setcounter{table}{0}
+
+\captionsetup[figure]{name=Supplementary Fig. S}
+\captionsetup[table]{name=Supplementary Table S}
+
+\begin{table}[!ht]
+\caption{
+  {\bf Distances between clusters identified per pathogen dataset and method compared to known genetic groups.}
+  Distances are measured by normalized variation of information (VI).
+  Smaller VI values indicate fewer differences between HDBSCAN clusters and known genetic groups.
+  VI of 0 indicates identical clusters and 1 indicates maximally different clusters.
+  Known genetic groups include Nextstrain clades, reassortment groups identified by TreeKnit as Maximally Compatible Clades (MCC), and Pango lineages.
+  Total clusters refers to the number of clusters identified for a given dataset and method not including the ``-1'' label that HDBSCAN assigns to records that could not be assigned to a cluster.
+  Threshold refers to the minimum distance between initial clusters for HDBSCAN to consider them as distinct clusters.
+  For embedding methods, the threshold represents the Euclidean distance between sequences in each embedding.
+  For the genetic distance method, the threshold represents the number of nucleotide differences between sequences.
+  We identified optimal thresholds per pathogen, genetic group, and method from early influenza and SARS-CoV-2 data and applied these optimal thresholds to the corresponding late datasets for each pathogen.
+  Datasets and methods without a threshold value in this table used the threshold from their corresponding early datasets.
+  Rows appear in ascending order of VI values per method within each combination of pathogen and genetic group type.}\label{S_Table_optimal_cluster_parameters}
+%\input{accuracy_table.tex}
+\end{table}
+
+\begin{table}[!ht]
+\caption{{\bf Number of clusters (\emph{n\_clusters}) identified by HDBSCAN, transitions between clusters in the phylogeny, and excess transitions indicating non-monophyletic groups per pathogen dataset and embedding method.}
+  This table reports the list of specific clusters per dataset and method (\emph{clusters}), the number of transitions between different cluster labels on the phylogeny (\emph{n\_cluster\_transitions}), and the list of observed transitions for pairs of clusters (\emph{transitions}).
+  The number of excess transitions between clusters (\emph{n\_extra\_transitions}) reflects the number of times that we observed a transition from one source cluster to another beyond the one expected transition.
+  Embeddings without any excess transitions reflect monophyletic groups in the corresponding pathogen phylogeny.
+  Data available at \url{https://zenodo.org/records/13864652/files/S2_Table.csv}.}\label{S_Table_monophyletic_clusters}
+\end{table}
+
+\begin{table}[!ht]
+\caption{{\bf Mutations observed per embedding cluster or Nextstrain clade relative to a reference genome sequence for each pathogen.}
+Each row reflects the alternate allele identified at a specific position of a given pathogen genome or gene sequence, the pathogen dataset, the genetic group (an embedding cluster or Nextstrain clade), the number of clusters in the genetic group with the observed mutation, and the list of distinct genetic group labels with the mutation.
+Mutations must have occurred in at least 10 samples of the given dataset with an allele frequency of at least 50\% to be reported in the table.
+Cluster- or clade-specific mutations appear in rows with a \emph{cluster\_count} value of 1.
+Data available at \url{https://zenodo.org/records/13864652/files/S3_Table.csv}.}\label{S_Table_mutations_per_cluster}
+\end{table}
+
+\begin{table}[!ht]
+\caption{{\bf Average Euclidean distances between each known recombinant, $X$, and its parental lineages $A$ and $B$ per embedding method.}
+Distances include average pairwise comparisons between $A$ and $B$ (\emph{distance\_A\_B}), $A$ and $X$ (\emph{distance\_A\_X}), and $B$ and $X$ (\emph{distance\_B\_X}).
+Additional columns indicate whether each recombinant lineage maps closer to both parental lineages (or at least one) than those parents map to each other (\emph{X\_maps\_closer\_to\_both\_parentals} and \emph{X\_maps\_closer\_to\_any\_parental}, respectively).
+Records with values of ``True'' in the column \emph{X\_maps\_closer\_to\_both\_parentals} represent the expected placement of the recombinant lineage between its two parental lineages.
+Data available at \url{https://zenodo.org/records/13864652/files/S4_Table.csv}.}\label{S_Table_recombinant_distances}
+\end{table}
+
+\begin{table}[!ht]
+\caption{{\bf Accessions and authors from originating and submitting laboratories of seasonal influenza and SARS-CoV-2 sequences from INSDC databases.}
+Data available at \url{https://zenodo.org/records/13864652/files/S5_Table.tsv}.}\label{S_Table_accessions}
+\end{table}
+
+\begin{figure}[!ht]
+  %\includegraphics[width=0.9\columnwidth]{simulated-influenza-like-with-no-reassortment-scores-by-parameters.png}
+  \caption{{\bf Distribution of mean absolute errors (MAE) between observed and predicted pairwise genetic distances per embedding method parameters for simulated influenza-like populations.}
+    For each method and combination of parameters, we created 10 training and test datasets with four years of training data and four years of test data.
+    We created an embedding for each combination of method, parameters, and training/test data, fit a linear model to estimate pairwise genetic distance from pairwise Euclidean distance in the training embedding, estimated the pairwise genetic distance for genomes in the test data based on their Euclidean distances and the linear model fit to the training data, and calculated the mean absolute error (MAE) between estimated and observed genetic distances in the test data.
+    Box plots represent the distribution of MAEs for each combination of method parameters across all training/test datasets.
+    We identified optimal embedding parameters for t-SNE and UMAP as those that minimized the median MAE.
+    Optimal PCA and MDS parameters were the number of components beyond which the median MAE did not descrease by at least 1 nucleotide.
+  }\label{S_Fig_simulated_flu_errors}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{simulated-coronavirus-like-with-moderate-recombination-rate-scores-by-parameters.png}
+\caption{{\bf Distribution of mean absolute errors (MAE) between observed and predicted pairwise genetic distances per embedding method parameters for simulated coronavirus-like populations.}
+  For each method and combination of parameters, we created 10 training and test datasets with four years of training data and four years of test data.
+  We created an embedding for each combination of method, parameters, and training/test data, fit a linear model to estimate pairwise genetic distance from pairwise Euclidean distance in the training embedding, estimated the pairwise genetic distance for genomes in the test data based on their Euclidean distances and the linear model fit to the training data, and calculated the mean absolute error (MAE) between estimated and observed genetic distances in the test data.
+  Box plots represent the distribution of MAEs for each combination of method parameters across all training/test datasets.
+  We identified optimal embedding parameters for t-SNE and UMAP as those that minimized the median MAE.
+  Optimal PCA and MDS parameters were the number of components beyond which the median MAE did not descrease by at least 1 nucleotide.
+}\label{S_Fig_simulated_coronavirus_errors}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{simulated-populations-representative-mds-embeddings.png}
+\caption{{\bf Representative MDS embeddings for simulated populations using optimal parameters per pathogen (rows) and showing all three components.}
+  Each panel shows the embedding for sequences from the first four years of a single replicate population for the corresponding pathogen type.
+  Each point represents a simulated viral sequence colored by its generation with darker values representing later generations.}\label{S_Fig_simulated_representative_mds_embeddings}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{flu-2016-2018-mds-by-clade.png}
+\caption{{\bf MDS embeddings for early (2016--2018) influenza H3N2 HA sequences showing all three components.}
+Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+Line colors represent the clade membership of the most ancestral node in the pair of nodes connected by the segment.
+Line thickness in the embeddings scales by the square root of the number of leaves descending from a given node in the phylogeny.
+Clade labels appear in the tree at the earliest ancestral node of the tree for each clade.
+Clade labels appear in each embedding at the average position on the x and y axis for sequences in a given clade.}\label{S_Fig_early_flu_mds_embeddings}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=0.9\columnwidth]{group-specific-mutations-per-dataset-and-genetic-group.png}
+\caption{{\bf Number of group-specific mutations per pathogen dataset (rows) and genetic group type (x-axis).}
+  Each point represents an individual Nextstrain clade or embedding cluster and the number of nucleotide mutations that were specific to that group.
+  These counts come from filtering Supplementary Table S\ref{S_Table_mutations_per_cluster} to mutations with a cluster count of 1, grouping the remaining records by dataset name and cluster column, and counting the number of records per group.
+}\label{S_Fig_group_specific_mutations}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{within_between_influenza.png}
+\caption{{\bf Pairwise nucleotide distances for early (2016--2018, left) and late (2018--2020, right) influenza H3N2 HA sequences within and between genetic groups defined by Nextstrain clades and clusters from PCA, MDS, t-SNE, and UMAP embeddings and clusters from pairwise genetic distances.}
+  Each point represents the mean nucleotide distance for pairs of sequences within or between the genetic group in each row.
+  Error bars represent the corresponding standard deviation.}\label{S_Fig_flu_within_between_group_distances}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{flu-2018-2020-ha-embeddings-by-clade.png}
+\caption{{\bf Phylogeny of late (2018--2020) influenza H3N2 HA sequences plotted by nucleotide substitutions per site on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
+Tips in the tree and embeddings are colored by their Nextstrain clade assignment.
+Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+Line colors represent the clade membership of the most ancestral node in the pair of nodes connected by the segment.
+Line thickness in the embeddings scales by the square root of the number of leaves descending from a given node in the phylogeny.
+Clade labels appear in the tree at the earliest ancestral node of the tree for each clade.
+Clade labels appear in each embedding at the average position on the x and y axis for sequences in a given clade.}\label{S_Fig_late_flu_embeddings_by_clade}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{flu-2018-2020-mds-by-clade.png}
+\caption{{\bf MDS embeddings for late (2018--2020) influenza H3N2 HA sequences showing all three components.}
+Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+Line colors represent the clade membership of the most ancestral node in the pair of nodes connected by the segment.
+Line thickness in the embeddings scales by the square root of the number of leaves descending from a given node in the phylogeny.
+Clade labels appear in the tree at the earliest ancestral node of the tree for each clade.
+Clade labels appear in each embedding at the average position on the x and y axis for sequences in a given clade.}\label{S_Fig_late_flu_mds_embeddings}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{flu-2018-2020-replication-of-cluster-accuracy.png}
+\caption{{\bf Replication of cluster accuracy per embedding method for late (2018--2020) influenza H3N2 HA sequences across different sampling densities (total sequences sampled) and sampling schemes including A) even geographic and temporal sampling and B) random sampling.}
+  We measured cluster accuracy across five replicates per sampling density and scheme with the normalized VI distance between clusters from a given embedding and Nextstrain clades for the same samples.
+  The even sampling scheme selected sequences evenly across country, year, and month to minimize geographic and temporal bias.
+  The random sampling scheme uniformly sampled from the original dataset, reflecting the geographic and genetic bias in those data.}\label{S_Fig_late_flu_replication_of_cluster_accuracy}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{flu-2016-2018-ha-na-tangletree-by-mcc.png}
+\caption{{\bf Tanglegram view of phylogenetic trees for influenza H3N2 HA (left) and NA (right) with circles representing HA or NA samples, lines connecting the same samples in each tree, and colors showing Maximally Compatible Clades (MCCs) that represent reassortment events identified by TreeKnit.}
+  Samples from MCCs with fewer than 10 sequences appear in gray without circles in the tanglegram.
+  Branch labels in the HA tree show Nextstrain clades to help contextualize placement of each MCC.
+  \href{https://nextstrain.org/groups/blab/cartography/flu-seasonal-h3n2-ha-2016-2018-reassort:groups/blab/cartography/flu-seasonal-h3n2-na-2016-2018-reassort?f_MCC=MCC_0,MCC_1,MCC_10,MCC_11,MCC_12,MCC_13,MCC_14,MCC_2,MCC_3,MCC_4,MCC_5,MCC_6,MCC_7,MCC_8,MCC_9}{View an interactive version of this figure on nextstrain.org}.
+}\label{S_Fig_ha_na_tangletree}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=0.75\columnwidth]{flu-2016-2018-ha-na-all-embeddings-by-mcc.png}
+\caption{{\bf Embeddings influenza H3N2 HA-only (left) and combined HA/NA (right) showing the effects of additional NA genetic information on the placement of reassortment events detected by TreeKnit (MCCs).}
+  Sequences from MCCs with fewer than 10 sequences are colored as ``unassigned''.
+  Normalized VI values quantify the degree to which the combination of HA and NA sequences in an embedding reduces the distance of embedding clusters to TreeKnit reassortment groups represented by MCCs.
+  MCC labels for larger pairs of reassortment events appear in each embedding at the average position on the x and y axis for sequences in a given MCC.
+  MCCs 14 and 11 represent a previously published reassortment event within Nextstrain clade A2.
+  Labels for MCC 14 represents the sequences from clade A2.}\label{S_Fig_full_ha_na_embeddings}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{flu-2016-2018-ha-na-pca-by-cluster.png}
+\caption{{\bf PCA embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}
+  Normalized VI values quantify the degree to which the combination of HA and NA sequences in an embedding reduces the distance of embedding clusters to TreeKnit reassortment groups represented by MCCs.}\label{S_Fig_flu_ha_na_pca_embeddings}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{flu-2016-2018-ha-na-mds-by-cluster.png}
+\caption{{\bf MDS embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}
+  Normalized VI values quantify the degree to which the combination of HA and NA sequences in an embedding reduces the distance of embedding clusters to TreeKnit reassortment groups represented by MCCs.}\label{S_Fig_flu_ha_na_mds_embeddings}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{flu-2016-2018-ha-na-tsne-by-cluster.png}
+\caption{{\bf t-SNE embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}
+  Normalized VI values quantify the degree to which the combination of HA and NA sequences in an embedding reduces the distance of embedding clusters to TreeKnit reassortment groups represented by MCCs.}\label{S_Fig_flu_ha_na_tsne_embeddings}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{flu-2016-2018-ha-na-tsne-mcc-counts.png}
+\caption{{\bf Number of H3N2 strains per combination of reassortment group identified with TreeKnit (MCCs) and cluster identified from joint t-SNE embeddings of HA and NA where the count was at least 10 strains.}}\label{S_Fig_flu_ha_na_tsne_mcc_counts}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{flu-2016-2018-ha-na-umap-by-cluster.png}
+\caption{{\bf UMAP embeddings for influenza H3N2 HA sequences only (top row) and HA/NA sequences combined (bottom row) showing the HA trees colored by clusters identified in each embedding (left) and the corresponding embeddings colored by cluster (right).}
+  Normalized VI values quantify the degree to which the combination of HA and NA sequences in an embedding reduces the distance of embedding clusters to TreeKnit reassortment groups represented by MCCs.}\label{S_Fig_flu_ha_na_umap_embeddings}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{sarscov2-mds-by-Nextstrain_clade-clade.png}
+\caption{{\bf MDS embeddings for early SARS-CoV-2 sequences showing all three components.}
+  Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+  Line thickness in the embeddings scales by the square root of the number of leaves descending from a given node in the phylogeny.
+  Clade labels in the tree and embeddings highlight larger clades.}\label{S_Fig_sarscov2_early_mds}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{sarscov2-embeddings-by-Nextclade_pango_collapsed-clade.png}
+\caption{{\bf Phylogeny of early (2020--2022) SARS-CoV-2 sequences plotted by number of nucleotide substitutions from the most recent common ancestor on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
+  Tips in the tree and embeddings are colored by their Pango lineage assignment.
+  Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+  Line thickness in the embeddings scales by the square root of the number of leaves descending from a given node in the phylogeny.
+  Clade labels in the tree and embeddings highlight larger Pango lineages.
+}\label{S_Fig_sarscov2_early_embeddings_by_Nextclade_pango}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{within_between_sars.png}
+\caption{{\bf Pairwise nucleotide distances for early (2020--2022, left) and late (2022--2023, right) SARS-CoV-2 sequences within and between genetic groups defined by Nextstrain clades, Pango lineages, and clusters from PCA, MDS, t-SNE, and UMAP embeddings and clusters from pairwise genetic distances.}
+  Each point represents the mean nucleotide distance for pairs of sequences within or between the genetic group in each row.
+  Error bars represent the corresponding standard deviation.}\label{S_Fig_sarscov2_within_between_group_distances}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{sarscov2-embeddings-by-cluster-vs-Nextclade_pango_collapsed.png}
+\caption{{\bf Phylogenetic trees (left) and embeddings (right) of early (2020--2022) SARS-CoV-2 sequences colored by HDBSCAN cluster.}
+  Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Pango lineages).
+  Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+  Line thickness in the embeddings scales by the square root of the number of leaves descending from a given node in the phylogeny.
+}\label{S_Fig_sarscov2_early_embeddings_by_cluster_vs_Nextclade_pango}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=0.9\columnwidth]{sarscov2-test-embeddings-by-Nextstrain_clade-clade.png}
+\caption{{\bf Phylogeny of late (2022--2023) SARS-CoV-2 sequences plotted by number of nucleotide substitutions from the most recent common ancestor on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
+  Tips in the tree and embeddings are colored by their Nextstrain clade assignment.
+  Tips that could not be assigned to a predefined Nextstrain clade due to recombination were colored as ``recombinant''.
+  Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+  Line thickness in the embeddings scales by the square root of the number of leaves descending from a given node in the phylogeny.
+  Clade labels in the tree and embeddings highlight larger clades.
+  Where clade labels overlap in an embedding, the most ancestral clade's label is shown.
+}
+\label{S_Fig_sarscov2_late_embeddings_by_Nextstrain_clade}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=0.9\columnwidth]{sarscov2-test-embeddings-by-Nextclade_pango_collapsed-clade.png}
+\caption{{\bf Phylogeny of late (2022--2023) SARS-CoV-2 sequences plotted by number of nucleotide substitutions from the most recent common ancestor on the x-axis (top) and low-dimensional embeddings of the same sequences by PCA (middle left), MDS (middle right), t-SNE (bottom left), and UMAP (bottom right).}
+  Tips in the tree and embeddings are colored by their Pango lineage assignment.
+  Line segments in each embedding reflect phylogenetic relationships with internal node positions calculated from the mean positions of their immediate descendants in each dimension (see Methods).
+  Line thickness in the embeddings scales by the square root of the number of leaves descending from a given node in the phylogeny.
+  Clade labels in the tree and embeddings highlight larger Pango lineages.
+  Where clade labels overlap in an embedding, the most ancestral clade's label is shown.
+}
+\label{S_Fig_sarscov2_late_embeddings_by_Pango}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{sarscov2-test-replication-of-cluster-accuracy.png}
+\caption{{\bf Replication of cluster accuracy per embedding method for late (2022--2023) SARS-CoV-2 sequences across different sampling densities (total sequences sampled) and sampling schemes including A) even geographic and temporal sampling and B) random sampling.}
+  We measured cluster accuracy across five replicates per sampling density and scheme with the normalized VI distance between clusters from a given embedding and Nextstrain clades for the same samples.
+  The even sampling scheme selected sequences evenly across region, year, and month to minimize geographic and temporal bias.
+  The random sampling scheme uniformly sampled from the original dataset, reflecting the geographic and genetic bias in those data.
+}\label{S_Fig_late_sarscov2_replication_of_cluster_accuracy}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{sarscov2-test-embeddings-by-cluster-vs-Nextclade_pango_collapsed.png}
+\caption{{\bf Phylogenetic trees (left) and embeddings (right) of late (2022--2023) SARS-CoV-2 sequences colored by HDBSCAN cluster.}
+  Normalized VI values per embedding reflect the distance between clusters and known genetic groups (Pango lineages).
+}\label{S_Fig_sarscov2_late_embeddings_by_cluster_vs_Nextclade_pango}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{sarscov2-test-tsne-recombinant-counts-Nextclade_pango_collapsed.png}
+\caption{{\bf Number of late SARS-CoV-2 strains per combination of recombinant Pango lineage and t-SNE cluster where the count was at least 10 strains.}}\label{S_Fig_sarscov2_late_embeddings_tsne_recombinant_counts}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=\columnwidth]{sarscov2-single-clade-lineages-and-clusters-counts.png}
+\caption{{\bf Number of SARS-CoV-2 sequences from Nextstrain clade 21J (Delta) per combination of Pango lineage and t-SNE cluster showing the degree to which clusters of sequences from a single Nextstrain clade can capture Pango-resolution genetic groups.}
+  The size of each circle represents the number of sequences associated with each pair of t-SNE cluster and Pango lineage.
+  The cluster label ``-1'' represents sequences that could not be assigned to a cluster.}\label{S_Fig_sarscov2_single_clade_embeddings_tsne_counts}
+\end{figure}
+
+\begin{figure}[!ht]
+%\includegraphics[width=0.75\columnwidth]{sarscov2-test-mds-reassortment-XE-BA1-BA2.png}\\
+%\includegraphics[width=0.75\columnwidth]{sarscov2-test-mds-reassortment-XAS-BA2-BA5.png}
+\caption{{\bf Representative MDS embeddings (first two dimensions) of late SARS-CoV-2 samples filtered to known recombinant lineages and their parental lineages including A) XE which descended from BA.1 and BA.2 and B) XAS which descended from BA.2 and BA.5.}
+Larger circles represent the recombinant lineages in each figure.}\label{S_Fig_sarscov2_late_embeddings_mds_recombinant_examples}
+\end{figure}
 
 \end{document}
