@@ -7,7 +7,7 @@ rm -f *.bbl
 rm -f *.bcf
 rm -f *.blg
 rm -f .DS_Store
-rm -f ${TITLE}*.pdf
+rm -f ${TITLE}.pdf
 
 pdflatex -draftmode ${TITLE}
 bibtex ${TITLE}
