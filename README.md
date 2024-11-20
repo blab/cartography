@@ -7,7 +7,7 @@
 1. Howard Hughes Medical Institute, Seattle, WA, USA
 1. Corresponding author (jhuddles@fredhutch.org)
 
-Preprint: https://doi.org/10.1101/2024.02.07.579374
+DOI: https://doi.org/10.1093/ve/veae087
 
 ## Abstract
 
@@ -23,6 +23,22 @@ We found that MDS embeddings accurately represented pairwise genetic distances i
 Clusters from t-SNE embeddings accurately recapitulated known phylogenetic clades, H3N2 reassortment groups, and SARS-CoV-2 recombinant lineages.
 We show that simple statistical methods without a biological model can accurately represent known genetic relationships for relevant human pathogenic viruses.
 Our open source implementation of these methods for analysis of viral genome sequences can be easily applied when phylogenetic methods are either unnecessary or inappropriate.
+
+## Citation
+
+```bibtex
+@article{10.1093/ve/veae087,
+    author = {Nanduri, Sravani and Black, Allison and Bedford, Trevor and Huddleston, John},
+    title = {Dimensionality reduction distills complex evolutionary relationships in seasonal influenza and {SARS-CoV-2}},
+    journal = {Virus Evolution},
+    pages = {veae087},
+    year = {2024},
+    month = {11},
+    issn = {2057-1577},
+    doi = {10.1093/ve/veae087},
+    url = {https://doi.org/10.1093/ve/veae087}
+}
+```
 
 ## Phylogenetic trees and embeddings
 
